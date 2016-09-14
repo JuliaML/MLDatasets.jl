@@ -32,9 +32,7 @@ function gzread(dir, filename)
     url = "http://yann.lecun.com/exdb/mnist"
     path = joinpath(dir, filename)
     isfile(path) || download("$(url)/$(filename)", path)
-    f = gzopen(path)
-    data = read(f)
-    close(f)
+    data = gzopen(read, path)
     data
 end
 
