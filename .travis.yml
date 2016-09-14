@@ -1,0 +1,21 @@
+language: julia
+
+os:
+    - linux
+    - osx
+
+julia:
+    - 0.5
+
+notifications:
+    email: false
+
+before_script:
+  - export PATH=$HOME/.local/bin:$PATH
+
+install:
+  #- sudo pip install pymdown-extensions
+
+script:
+  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'Pkg.clone(pwd()); Pkg.build("MLDatasets"); Pkg.test("MLDatasets"; coverage=true)'
