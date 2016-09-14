@@ -1,6 +1,6 @@
 module MLDatasets
 
-export MNIST
 include("MNIST.jl")
+include("PTBLM.jl")
 
 end
