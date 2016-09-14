@@ -1,4 +1,6 @@
 # MLDatasets.jl
+[![Build Status](https://travis-ci.org/hshindo/Merlin.jl.svg?branch=master)](https://travis-ci.org/hshindo/Merlin.jl)
+
 `MLDatasets` provides an access to common machine learning datasets for [Julia](http://julialang.org/).
 
 The datasets are automatically downloaded to the specified directory.
