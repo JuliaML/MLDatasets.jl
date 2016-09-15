@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/hshindo/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/hshindo/MLDatasets.jl)
 
 `MLDatasets` provides an access to common machine learning datasets for [Julia](http://julialang.org/).  
-`MLDatasets` is tested against julia 0.5.
+Currently, julia 0.5 is supported.
 
 The datasets are automatically downloaded to the specified directory.  
 The default directory is `MLDatasets/datasets`.
