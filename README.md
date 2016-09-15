@@ -33,8 +33,7 @@ The [MNIST](http://yann.lecun.com/exdb/mnist/) dataset consists of 60000 28x28 i
 
 ### PTBLM
 The PTBLM dataset consists of Penn Treebank sentences for language modeling from [tomsercu/lstm](https://github.com/tomsercu/lstm).  
-The vocaburary is limited to 10000.
-The unknown word is replaced with `<unk>`.
+The vocaburary is limited to 10000 and the unknown word is replaced with `<unk>`.
 
 ### Data Size
 | | Type | Train x | Train y | Test x | Test y |
