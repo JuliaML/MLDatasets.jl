@@ -16,8 +16,8 @@ julia> Pkg.clone("https://github.com/hshindo/MLDatasets.jl.git")
 ```julia
 using MLDatasets
 
-traindata = MNIST.traindata()
-testdata = MNIST.testdata()
+train_x, train_y = MNIST.traindata()
+test_x, test_y = MNIST.testdata()
 ```
 
 ## Available Datasets
