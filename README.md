@@ -1,9 +1,10 @@
 # MLDatasets.jl
 [![Build Status](https://travis-ci.org/hshindo/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/hshindo/MLDatasets.jl)
 
-`MLDatasets` provides an access to common machine learning datasets for [Julia](http://julialang.org/).
+`MLDatasets` provides an access to common machine learning datasets for [Julia](http://julialang.org/).  
+`MLDatasets` is tested against julia 0.5.
 
-The datasets are automatically downloaded to the specified directory.
+The datasets are automatically downloaded to the specified directory.  
 The default directory is `MLDatasets/datasets`.
 
 ## Installation
@@ -11,18 +12,19 @@ The default directory is `MLDatasets/datasets`.
 julia> Pkg.clone("https://github.com/hshindo/MLDatasets.jl.git")
 ```
 
-## Supported Datasets
+## Datasets
 #### CIFAR-10
 The [CIFAR10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 60000 32x32 color images in 10 classes.
 
 #### CIFAR-100
-The [CIFAR100](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 600 32x32 color images in 100 classes. The 100 classes are grouped into 20 superclasses (fine and coarse labels).
+The [CIFAR100](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 600 32x32 color images in 100 classes.  
+The 100 classes are grouped into 20 superclasses (fine and coarse labels).
 
 #### MNIST
 The [MNIST](http://yann.lecun.com/exdb/mnist/) dataset consists of 60000 28x28 images of handwritten digits.
 
 #### PTBLM
-The PTBLM dataset consists of Penn Treebank sentences for language modeling.
+The PTBLM dataset consists of Penn Treebank sentences for language modeling.  
 The vocaburary is limited to 10000.
 The unknown word is replaced with `<unk>`.
 
