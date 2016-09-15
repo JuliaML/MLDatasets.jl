@@ -40,6 +40,6 @@ The unknown word is replaced with `<unk>`.
 | | Type | Train x | Train y | Test x | Test y |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | **CIFAR10** | image | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000 |
-| **CIFAR100** | image | 32x32x3x5000 | 2x500 | 32x32x3x100 | 2x100 |
+| **CIFAR100** | image | 32x32x3x500 | 2x500 | 32x32x3x100 | 2x100 |
 | **MNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
 | **PTBLM** | text | 42068 | - | 3761 | - |
