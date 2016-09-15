@@ -3,7 +3,7 @@ module CIFAR100
 
 using BinDeps
 
-const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets", "cifar100")
+const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/cifar100")
 
 function getdata(dir)
     mkpath(dir)
@@ -25,13 +25,13 @@ function readdata(data::Vector{UInt8})
 end
 
 function traindata(dir=defdir)
-    file = joinpath(dir,"cifar-100-binary", "train.bin")
+    file = joinpath(dir, "cifar-100-binary/train.bin")
     isfile(file) || getdata(dir)
     readdata(open(read,file))
 end
 
 function testdata(dir=defdir)
-    file = joinpath(dir,"cifar-100-binary", "test.bin")
+    file = joinpath(dir, "cifar-100-binary/test.bin")
     isfile(file) || getdata(dir)
     readdata(open(read,file))
 end
