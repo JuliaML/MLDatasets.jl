@@ -18,6 +18,9 @@ using MLDatasets
 
 train_x, train_y = MNIST.traindata()
 test_x, test_y = MNIST.testdata()
+
+train_x = PTBLM.traindata()
+test_x = PTBLM.testdata()
 ```
 
 ## Available Datasets
