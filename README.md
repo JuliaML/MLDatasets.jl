@@ -12,7 +12,15 @@ The default directory is `MLDatasets/datasets`.
 julia> Pkg.clone("https://github.com/hshindo/MLDatasets.jl.git")
 ```
 
-## Datasets
+## Basic Usage
+```julia
+using MLDatasets
+
+traindata = MNIST.traindata()
+testdata = MNIST.testdata()
+```
+
+## Available Datasets
 #### CIFAR-10
 The [CIFAR10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 60000 32x32 color images in 10 classes.
 
@@ -35,11 +43,3 @@ The unknown word is replaced with `<unk>`.
 | **CIFAR100** | image | 32x32x3x5000 | 2x500 | 32x32x3x100 | 2x100 |
 | **MNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
 | **PTBLM** | text | 42068 | - | 3761 | - |
-
-## Basic Usage
-```julia
-using MLDatasets
-
-traindata = MNIST.traindata()
-testdata = MNIST.testdata()
-```
