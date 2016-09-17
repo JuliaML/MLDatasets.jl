@@ -19,7 +19,7 @@ using MLDatasets
 train_x, train_y = MNIST.traindata()
 test_x, test_y = MNIST.testdata()
 ```
-Use `traindata(<directory>)` and `testdata(<directory>)` to set the default directory.
+Use `traindata(<directory>)` and `testdata(<directory>)` to change the default directory.
 
 ## Available Datasets
 ### CIFAR-10
