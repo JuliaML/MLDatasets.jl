@@ -4,11 +4,15 @@ module PTBLM
 const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/ptblm")
 
 function traindata(dir=defdir)
-    readdata(dir, "ptb.train.txt")
+    xs = readdata(dir, "ptb.train.txt")
+    ys = makeys(xs)
+    xs, ys
 end
 
 function testdata(dir=defdir)
-    readdata(dir, "ptb.test.txt")
+    xs = readdata(dir, "ptb.test.txt")
+    ys = makeys(xs)
+    xs, ys
 end
 
 function readdata(dir, filename)
@@ -17,8 +21,15 @@ function readdata(dir, filename)
     path = joinpath(dir, filename)
     isfile(path) || download("$(url)/$(filename)", path)
     lines = open(readlines, path)
-    data = map(l -> strip(chomp(l)), lines)
-    data
+    map(l -> Vector{String}(split(chomp(l))), lines)
+end
+
+function makeys(xs::Vector{Vector{String}})
+    map(xs) do x
+        y = copy(x)
+        shift!(y)
+        push!(y, "<EOS>")
+    end
 end
 
 end

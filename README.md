@@ -18,10 +18,8 @@ using MLDatasets
 
 train_x, train_y = MNIST.traindata()
 test_x, test_y = MNIST.testdata()
-
-train_x = PTBLM.traindata()
-test_x = PTBLM.testdata()
 ```
+Use `traindata(<directory>)` and `testdata(<directory>)` to set the default directory.
 
 ## Available Datasets
 ### CIFAR-10
@@ -36,7 +34,8 @@ The [MNIST](http://yann.lecun.com/exdb/mnist/) dataset consists of 60000 28x28 i
 
 ### PTBLM
 The PTBLM dataset consists of Penn Treebank sentences for language modeling, available from [tomsercu/lstm](https://github.com/tomsercu/lstm).  
-The unknown words are replaced with `<unk>` so that the total vocaburary size becomes 10000.
+The unknown words are replaced with `<unk>` so that the total vocaburary size becomes 10000.  
+Plus, the special word: `<EOS>` is added to the end of each sentence.
 
 ## Data Size
 | | Type | Train x | Train y | Test x | Test y |
@@ -44,7 +43,7 @@ The unknown words are replaced with `<unk>` so that the total vocaburary size be
 | **CIFAR-10** | image | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000 |
 | **CIFAR-100** | image | 32x32x3x500 | 2x500 | 32x32x3x100 | 2x100 |
 | **MNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
-| **PTBLM** | text | 42068 | - | 3761 | - |
+| **PTBLM** | text | 42068 | 42068 | 3761 | 3761 |
 
 ## Contributors
 * [hshindo](https://github.com/hshindo)
