@@ -28,7 +28,7 @@ function makeys(xs::Vector{Vector{String}})
     map(xs) do x
         y = copy(x)
         shift!(y)
-        push!(y, "<EOS>")
+        push!(y, "<eos>")
     end
 end
 
