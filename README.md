@@ -1,5 +1,5 @@
 # MLDatasets.jl
-[![Build Status](https://travis-ci.org/hshindo/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/hshindo/MLDatasets.jl)
+[![Build Status](https://travis-ci.org/JuliaML/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/JuliaML/MLDatasets.jl)
 
 `MLDatasets` provides an access to common machine learning datasets for [Julia](http://julialang.org/).  
 Currently, julia 0.5 is supported.
@@ -9,7 +9,7 @@ The default directory is `MLDatasets/datasets`.
 
 ## Installation
 ```julia
-julia> Pkg.clone("https://github.com/hshindo/MLDatasets.jl.git")
+julia> Pkg.clone("https://github.com/JuliaML/MLDatasets.jl.git")
 ```
 
 ## Basic Usage
@@ -37,9 +37,13 @@ The PTBLM dataset consists of Penn Treebank sentences for language modeling, ava
 The unknown words are replaced with `<unk>` so that the total vocaburary size becomes 10000.
 
 This is the first sentence of the PTBLM dataset.
-```
-x1 = ["no", "it", "was", "n't", "black", "monday"]
-y1 = ["it", "was", "n't", "black", "monday", "<eos>"]
+```julia
+x, y = PTBLM.traindata()
+
+x[1]
+> ["no", "it", "was", "n't", "black", "monday"]
+y[1]
+> ["it", "was", "n't", "black", "monday", "<eos>"]
 ```
 where `MLDataset` adds the special word: `<eos>` to the end of `y`.
 
