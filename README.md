@@ -22,7 +22,7 @@ test_x, test_y = MNIST.testdata()
 Use `traindata(<directory>)` and `testdata(<directory>)` to change the default directory.
 
 ## Available Datasets
-### Object Recognition
+### Image Classification
 #### CIFAR-10
 The [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 60000 32x32 color images in 10 classes.
 
