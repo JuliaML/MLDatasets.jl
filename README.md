@@ -22,18 +22,20 @@ test_x, test_y = MNIST.testdata()
 Use `traindata(<directory>)` and `testdata(<directory>)` to change the default directory.
 
 ## Available Datasets
-### CIFAR-10
+### Object Recognition
+#### CIFAR-10
 The [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 60000 32x32 color images in 10 classes.
 
-### CIFAR-100
+#### CIFAR-100
 The [CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html) dataset consists of 600 32x32 color images in 100 classes.  
 The 100 classes are grouped into 20 superclasses (fine and coarse labels).
 
-### MNIST
+#### MNIST
 The [MNIST](http://yann.lecun.com/exdb/mnist/) dataset consists of 60000 28x28 images of handwritten digits.
 
-### PTBLM
-The PTBLM dataset consists of Penn Treebank sentences for language modeling, available from [tomsercu/lstm](https://github.com/tomsercu/lstm).  
+### Language Modeling
+#### PTBLM
+The `PTBLM` dataset consists of Penn Treebank sentences for language modeling, available from [tomsercu/lstm](https://github.com/tomsercu/lstm).  
 The unknown words are replaced with `<unk>` so that the total vocaburary size becomes 10000.
 
 This is the first sentence of the PTBLM dataset.
@@ -46,6 +48,16 @@ y[1]
 > ["it", "was", "n't", "black", "monday", "<eos>"]
 ```
 where `MLDataset` adds the special word: `<eos>` to the end of `y`.
+
+### Text Analysis (POS-Tagging, Parsing, etc.)
+#### UD English
+The [UD_English](https://github.com/UniversalDependencies/UD_English) dataset is an annotated corpus of morphological features, POS-tags and syntactic trees. The dataset follows CoNLL-style format.
+```julia
+traindata = UD_English.traindata(col=[2,5])
+devdata = UD_English.devdata(col=1:6)
+testdata = UD_English.devdata()
+```
+where the optional argument: `col` specifies the column indices to be obtained.
 
 ## Data Size
 | | Type | Train x | Train y | Test x | Test y |

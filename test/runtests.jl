@@ -21,3 +21,8 @@ x, y = MNIST.testdata()
 # PTBLM
 x, y = PTBLM.traindata()
 x, y = PTBLM.testdata()
+
+# UD_English
+x = UD_English.traindata()
+x = UD_English.devdata()
+x = UD_English.testdata()
