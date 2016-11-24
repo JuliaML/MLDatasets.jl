@@ -4,18 +4,18 @@ using ..MLDatasets
 
 const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/ud_english")
 
-traindata(dir=defdir; col=Int[]) = readdata(dir, "en-ud-train.conllu", col)
+traindata(dir=defdir) = readdata(dir, "en-ud-train.conllu")
 
-devdata(dir=defdir; col=Int[]) = readdata(dir, "en-ud-dev.conllu", col)
+devdata(dir=defdir) = readdata(dir, "en-ud-dev.conllu")
 
-testdata(dir=defdir; col=Int[]) = readdata(dir, "en-ud-test.conllu", col)
+testdata(dir=defdir) = readdata(dir, "en-ud-test.conllu")
 
-function readdata(dir, filename, col)
+function readdata(dir, filename)
     mkpath(dir)
     url = "https://raw.githubusercontent.com/UniversalDependencies/UD_English/master"
     path = joinpath(dir, filename)
     isfile(path) || download("$(url)/$(filename)", path)
-    CoNLL.read(path, col)
+    CoNLL.read(path)
 end
 
 end
