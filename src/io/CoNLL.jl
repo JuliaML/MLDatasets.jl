@@ -1,7 +1,7 @@
 export CoNLL
 module CoNLL
 
-function read(path::String, col::Union{Int,Tuple{Vararg{Int}},Range,Vector{Int}})
+function read(f, path::String)
     doc = []
     sent = []
     lines = open(readlines, path)
@@ -11,21 +11,14 @@ function read(path::String, col::Union{Int,Tuple{Vararg{Int}},Range,Vector{Int}}
             length(sent) > 0 && push!(doc, sent)
             sent = []
         else
-            items = split(line, '\t')
-            if length(col) == 0
-                data = Vector{String}(items)
-            elseif typeof(col) == Int
-                data = String(items[col])
-            else
-                data = map(c -> String(items[c]), col)
-            end
-            push!(sent, data)
+            items = Vector{String}(split(line,'\t'))
+            push!(sent, f(items))
         end
     end
     length(sent) > 0 && push!(doc, sent)
     T = typeof(doc[1][1])
     Vector{Vector{T}}(doc)
 end
-read(path::String) = read(path, Int[])
+read(path::String) = read(identity, path)
 
 end
