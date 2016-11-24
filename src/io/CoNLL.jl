@@ -10,6 +10,8 @@ function read(f, path::String)
         if length(line) == 0
             length(sent) > 0 && push!(doc, sent)
             sent = []
+        elseif line[1] == '#' # comment line
+            continue
         else
             items = Vector{String}(split(line,'\t'))
             push!(sent, f(items))
