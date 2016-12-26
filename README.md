@@ -49,15 +49,14 @@ y[1]
 ```
 where `MLDataset` adds the special word: `<eos>` to the end of `y`.
 
-### Text Analysis (POS-Tagging, Parsing, etc.)
+### Text Analysis (POS-Tagging, Parsing)
 #### UD English
 The [UD_English](https://github.com/UniversalDependencies/UD_English) dataset is an annotated corpus of morphological features, POS-tags and syntactic trees. The dataset follows CoNLL-style format.
 ```julia
-traindata = UD_English.traindata(col=[2,5])
-devdata = UD_English.devdata(col=1:6)
+traindata = UD_English.traindata()
+devdata = UD_English.devdata()
 testdata = UD_English.devdata()
 ```
-where the optional argument: `col` specifies the column indices to be obtained.
 
 ## Data Size
 | | Type | Train x | Train y | Test x | Test y |
@@ -66,7 +65,4 @@ where the optional argument: `col` specifies the column indices to be obtained.
 | **CIFAR-100** | image | 32x32x3x500 | 2x500 | 32x32x3x100 | 2x100 |
 | **MNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
 | **PTBLM** | text | 42068 | 42068 | 3761 | 3761 |
-
-## Contributors
-* [hshindo](https://github.com/hshindo)
-* [goto-keisuke](https://github.com/goto-keisuke)
+| **UD_English** | text | 12543 | - | 2077 | - |
