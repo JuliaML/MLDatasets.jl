@@ -1,3 +1,5 @@
-julia 0.5-
+julia 0.5
+ImageCore 0.1.2
+ColorTypes 0.4
 GZip
 BinDeps
