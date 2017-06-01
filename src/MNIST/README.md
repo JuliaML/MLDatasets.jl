@@ -30,15 +30,18 @@ train_x, train_y = MNIST.traindata()
 test_x,  test_y  = MNIST.testdata()
 ```
 
-For more information on the provided interface take a look at the
-documentation (e.g. `?MNIST.traindata`).
+The provided functions also allow for optional arguments, such as
+the directory `dir` where the dataset is located, or the specific
+observation `indices` that one wants to work with. For more
+information on the interface take a look at the documentation
+(e.g. `?MNIST.traindata`).
 
 Function | Description
 ---------|-------------
 `download_helper([dir])` | Trigger interactive download of the dataset
-`traintensor([indices]; [dir], [decimal=true])` | Load the training images
+`traintensor([indices]; [dir], [decimal=true])` | Load the training images as an array
 `trainlabels([indices]; [dir])` | Load the labels for the training images
-`testtensor([indices]; [dir], [decimal=true])` | Load the test images
+`testtensor([indices]; [dir], [decimal=true])` | Load the test images as an array
 `testlabels([indices]; [dir])` | Load the labels for the test images
 `traindata([indices]; [dir], [decimal=true])` | Load images and labels of the training data
 `testdata([indices]; [dir], [decimal=true])` | Load images and labels of the test data
@@ -73,7 +76,8 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
 
 ## References
 
-Authors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
-Website: http://yann.lecun.com/exdb/mnist/
+- **Authors**: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
 
-- [LeCun et al., 1998a] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. "Gradient-based learning applied to document recognition." Proceedings of the IEEE, 86(11):2278-2324, November 1998
+- **Website**: http://yann.lecun.com/exdb/mnist/
+
+- **[LeCun et al., 1998a]** Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. "Gradient-based learning applied to document recognition." Proceedings of the IEEE, 86(11):2278-2324, November 1998

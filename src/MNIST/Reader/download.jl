@@ -65,12 +65,12 @@ function download_helper(dir; i_accept_the_terms_of_use = false)
             end
         end
         if i_accept_the_terms_of_use
-            mkdir(dir)
+            mkpath(dir)
             for file in files
                 url = "http://yann.lecun.com/exdb/mnist/$file"
                 path = joinpath(dir, file)
                 info("downloading $file from $url to $dir")
-                download_cmd(url, path) |> run
+                run(download_cmd(url, path))
             end
         else
             error("Unable to download the dataset. Please visit the website at http://yann.lecun.com/exdb/mnist and download the files manually.")
