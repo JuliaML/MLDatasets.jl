@@ -13,8 +13,8 @@ end
 
 function readdata(data::Vector{UInt8})
     n = Int(length(data)/3074)
-    x = Array(Float64, 3072, n)
-    y = Array(Int, 2, n)
+    x = Matrix{Float64}(3072, n)
+    y = Matrix{Int}(2, n)
     for i = 1:n
         k = (i-1) * 3074 + 1
         y[:,i] = data[k:k+1]
