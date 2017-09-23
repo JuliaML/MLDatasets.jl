@@ -1,5 +1,5 @@
-export MNIST
-module MNIST
+export FashionMNIST
+module FashionMNIST
     using ImageCore
     using ColorTypes
 
@@ -19,12 +19,12 @@ module MNIST
 
         download_helper
 
-    const DEFAULT_DIR = abspath(joinpath(dirname(@__FILE__), "..", "..", "datasets", "mnist"))
+    const DEFAULT_DIR = abspath(joinpath(dirname(@__FILE__), "..", "..", "datasets", "fashion_mnist"))
 
     include(joinpath("Reader","Reader.jl"))
     import .Reader.download_helper
     include("interface.jl")
-    include("utils.jl")
+    include(joinpath("..", "MNIST", "utils.jl"))
 
     Reader.download_helper(; nargs...) = Reader.download_helper(DEFAULT_DIR; nargs...)
 end

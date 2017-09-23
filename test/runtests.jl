@@ -2,6 +2,7 @@ using Base.Test
 using MLDatasets
 
 include("MNIST/runtests.jl")
+include("FashionMNIST/runtests.jl")
 
 # CIFAR10
 x, y = CIFAR10.traindata()
