@@ -1,5 +1,6 @@
 module MLDatasets
 
+include("io/download.jl")
 include("io/CoNLL.jl")
 
 include("CIFAR10.jl")

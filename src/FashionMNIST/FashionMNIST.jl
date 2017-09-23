@@ -21,10 +21,7 @@ module FashionMNIST
 
     const DEFAULT_DIR = abspath(joinpath(dirname(@__FILE__), "..", "..", "datasets", "fashion_mnist"))
 
-    include(joinpath("Reader","Reader.jl"))
-    import .Reader.download_helper
+    include("reader.jl")
     include("interface.jl")
     include(joinpath("..", "MNIST", "utils.jl"))
-
-    Reader.download_helper(; nargs...) = Reader.download_helper(DEFAULT_DIR; nargs...)
 end
