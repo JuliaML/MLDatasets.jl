@@ -1,27 +1,27 @@
-module FashionMNIST_Tests
+module MNIST_Tests
 using Base.Test
 using ColorTypes
 using MLDatasets
 
 @testset "Constants" begin
-    @test FashionMNIST.Reader.IMAGEOFFSET == 16
-    @test FashionMNIST.Reader.LABELOFFSET == 8
+    @test MNIST.Reader.IMAGEOFFSET == 16
+    @test MNIST.Reader.LABELOFFSET == 8
 
-    @test FashionMNIST.Reader.TRAINIMAGES == "train-images-idx3-ubyte.gz"
-    @test FashionMNIST.Reader.TRAINLABELS == "train-labels-idx1-ubyte.gz"
-    @test FashionMNIST.Reader.TESTIMAGES  == "t10k-images-idx3-ubyte.gz"
-    @test FashionMNIST.Reader.TESTLABELS  == "t10k-labels-idx1-ubyte.gz"
+    @test MNIST.TRAINIMAGES == "train-images-idx3-ubyte.gz"
+    @test MNIST.TRAINLABELS == "train-labels-idx1-ubyte.gz"
+    @test MNIST.TESTIMAGES  == "t10k-images-idx3-ubyte.gz"
+    @test MNIST.TESTLABELS  == "t10k-labels-idx1-ubyte.gz"
 
-    @test endswith(FashionMNIST.DEFAULT_DIR, "MLDatasets/datasets/fashion_mnist")
+    @test endswith(MNIST.DEFAULT_DIR, "MLDatasets/datasets/mnist")
 end
 
-const _TRAINIMAGES = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.Reader.TRAINIMAGES)
-const _TRAINLABELS = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.Reader.TRAINLABELS)
-const _TESTIMAGES = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.Reader.TESTIMAGES)
-const _TESTLABELS = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.Reader.TESTLABELS)
+const _TRAINIMAGES = joinpath(MNIST.DEFAULT_DIR, MNIST.TRAINIMAGES)
+const _TRAINLABELS = joinpath(MNIST.DEFAULT_DIR, MNIST.TRAINLABELS)
+const _TESTIMAGES = joinpath(MNIST.DEFAULT_DIR, MNIST.TESTIMAGES)
+const _TESTLABELS = joinpath(MNIST.DEFAULT_DIR, MNIST.TESTLABELS)
 
 if isfile(_TRAINIMAGES)
-    info("Skipping (pre-)download tests: FashionMNIST dataset already exists.")
+    info("Skipping (pre-)download tests: MNIST dataset already exists.")
     @assert all(map(isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
 else
     @assert all(map(!isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
@@ -29,51 +29,51 @@ else
         info("Skipping download-error tests: interactive session running.")
     else
         @testset "Pre-download Errors" begin
-            @test_throws ErrorException FashionMNIST.download_helper()
-            @test_throws ErrorException FashionMNIST.traintensor()
-            @test_throws ErrorException FashionMNIST.trainlabels()
-            @test_throws ErrorException FashionMNIST.traindata()
-            @test_throws ErrorException FashionMNIST.testtensor()
-            @test_throws ErrorException FashionMNIST.testlabels()
-            @test_throws ErrorException FashionMNIST.testdata()
+            @test_throws ErrorException MNIST.download()
+            @test_throws ErrorException MNIST.traintensor()
+            @test_throws ErrorException MNIST.trainlabels()
+            @test_throws ErrorException MNIST.traindata()
+            @test_throws ErrorException MNIST.testtensor()
+            @test_throws ErrorException MNIST.testlabels()
+            @test_throws ErrorException MNIST.testdata()
         end
     end
     @testset "Download" begin
-        @test FashionMNIST.download_helper(i_accept_the_terms_of_use=true) == nothing
+        @test MNIST.download(i_accept_the_terms_of_use=true) == nothing
     end
 end
 
 @testset "File Header" begin
-    @test FashionMNIST.Reader.readimageheader(_TRAINIMAGES) == (0x803,60000,28,28)
-    @test FashionMNIST.Reader.readimageheader(_TESTIMAGES)  == (0x803,10000,28,28)
-    @test FashionMNIST.Reader.readlabelheader(_TRAINLABELS) == (0x801,60000)
-    @test FashionMNIST.Reader.readlabelheader(_TESTLABELS)  == (0x801,10000)
+    @test MNIST.Reader.readimageheader(_TRAINIMAGES) == (0x803,60000,28,28)
+    @test MNIST.Reader.readimageheader(_TESTIMAGES)  == (0x803,10000,28,28)
+    @test MNIST.Reader.readlabelheader(_TRAINLABELS) == (0x801,60000)
+    @test MNIST.Reader.readlabelheader(_TESTLABELS)  == (0x801,10000)
 end
 
 @testset "Images" begin
     # Sanity check that the first trainimage is not the first testimage
-    @test FashionMNIST.traintensor(1) != FashionMNIST.testtensor(1)
+    @test MNIST.traintensor(1) != MNIST.testtensor(1)
     # Make sure other integer types work as indicies
-    @test FashionMNIST.traintensor(0xBAE) == FashionMNIST.traintensor(2990)
+    @test MNIST.traintensor(0xBAE) == MNIST.traintensor(2990)
 
     @testset "Test that traintensor are the train images" begin
         for i = rand(1:60_000, 10)
-            @test FashionMNIST.traintensor(i) == FashionMNIST.Reader.readimages(_TRAINIMAGES, i) ./ 255.0
+            @test MNIST.traintensor(i) == MNIST.Reader.readimages(_TRAINIMAGES, i) ./ 255.0
         end
     end
     @testset "Test that testtensor are the test images" begin
         for i = rand(1:10_000, 10)
-            @test FashionMNIST.testtensor(i) == FashionMNIST.Reader.readimages(_TESTIMAGES, i) ./ 255.0
+            @test MNIST.testtensor(i) == MNIST.Reader.readimages(_TESTIMAGES, i) ./ 255.0
         end
     end
 
     # Test that `readtrainimage` is the horizontal-major layout by
     # comparing to a hand checked result
-    @test FashionMNIST.Reader.readimages(_TRAINIMAGES, 1)[11:13,12:14] ==
+    @test MNIST.Reader.readimages(_TRAINIMAGES, 1)[11:13,12:14] ==
             [0x00 0x00 0x00;
              0x8b 0x0b 0x00;
              0xfd 0xbe 0x23]
-    @test FashionMNIST.traintensor(1, decimal=false)[11:13,12:14] ==
+    @test MNIST.traintensor(1, decimal=false)[11:13,12:14] ==
             [0x00 0x00 0x00;
              0x8b 0x0b 0x00;
              0xfd 0xbe 0x23]
@@ -82,8 +82,8 @@ end
     # results for different parameters (e.g. index as int or as vector).
     # That means no matter how you specify an index, you will always
     # get the same result for a specific index.
-    for (image_fun, nimages) in ((FashionMNIST.traintensor, 60_000),
-                                 (FashionMNIST.testtensor,  10_000))
+    for (image_fun, nimages) in ((MNIST.traintensor, 60_000),
+                                 (MNIST.testtensor,  10_000))
         @testset "$image_fun" begin
             # whole image set
             A = @inferred image_fun()
@@ -131,30 +131,30 @@ end
 
 @testset "Labels" begin
     # Sanity check that the first trainlabel is not the first testlabel
-    @test FashionMNIST.trainlabels(1) != FashionMNIST.testlabels(1)
+    @test MNIST.trainlabels(1) != MNIST.testlabels(1)
 
     # Check a few hand picked examples. I looked at both the pictures and
     # the native output to make sure these values are correspond to the
     # image at the same index.
-    @test FashionMNIST.trainlabels(1) === 5
-    @test FashionMNIST.trainlabels(2) === 0
-    @test FashionMNIST.trainlabels(1337) === 3
-    @test FashionMNIST.trainlabels(0xCAFE) === 6
-    @test FashionMNIST.trainlabels(60_000) === 8
-    @test FashionMNIST.testlabels(1) === 7
-    @test FashionMNIST.testlabels(2) === 2
-    @test FashionMNIST.testlabels(0xDAD) === 4
-    @test FashionMNIST.testlabels(10_000) === 6
+    @test MNIST.trainlabels(1) === 5
+    @test MNIST.trainlabels(2) === 0
+    @test MNIST.trainlabels(1337) === 3
+    @test MNIST.trainlabels(0xCAFE) === 6
+    @test MNIST.trainlabels(60_000) === 8
+    @test MNIST.testlabels(1) === 7
+    @test MNIST.testlabels(2) === 2
+    @test MNIST.testlabels(0xDAD) === 4
+    @test MNIST.testlabels(10_000) === 6
 
     # These tests check if the functions return internaly consistent
     # results for different parameters (e.g. index as int or as vector).
     # That means no matter how you specify an index, you will always
     # get the same result for a specific index.
     # -- However, technically these tests do not check if these are the
-    #    actual FashionMNIST labels of that index!
+    #    actual MNIST labels of that index!
     for (label_fun, nlabels) in
-                ((FashionMNIST.trainlabels, 60_000),
-                 (FashionMNIST.testlabels,  10_000))
+                ((MNIST.trainlabels, 60_000),
+                 (MNIST.testlabels,  10_000))
         @testset "$label_fun" begin
             # whole label set
             A = @inferred label_fun()
@@ -198,8 +198,8 @@ end
 # Check against the already tested tensor and labels functions
 @testset "Data" begin
     for (data_fun, feature_fun, label_fun, nobs) in
-            ((FashionMNIST.traindata, FashionMNIST.traintensor, FashionMNIST.trainlabels, 60_000),
-            (FashionMNIST.testdata,  FashionMNIST.testtensor,  FashionMNIST.testlabels,  10_000))
+            ((MNIST.traindata, MNIST.traintensor, MNIST.trainlabels, 60_000),
+            (MNIST.testdata,  MNIST.testtensor,  MNIST.testlabels,  10_000))
         @testset "check $data_fun against $feature_fun and $label_fun" begin
             data, labels = @inferred data_fun()
             @test data == feature_fun()
@@ -228,28 +228,28 @@ end
 end
 
 @testset "convert2features" begin
-    data = FashionMNIST.traintensor(1)
-    @test @inferred(FashionMNIST.convert2features(data)) == vec(data)
+    data = MNIST.traintensor(1)
+    @test @inferred(MNIST.convert2features(data)) == vec(data)
 
-    data = FashionMNIST.traintensor(3:4)
-    @test @inferred(FashionMNIST.convert2features(data)) == reshape(data, (28*28, 2))
+    data = MNIST.traintensor(3:4)
+    @test @inferred(MNIST.convert2features(data)) == reshape(data, (28*28, 2))
 end
 
 @testset "convert2images" begin
-    data = FashionMNIST.traintensor(1)
-    A = FashionMNIST.convert2image(data)
+    data = MNIST.traintensor(1)
+    A = MNIST.convert2image(data)
     @test A[1] == 1.0
     @test size(A) == (28,28)
     @test eltype(A) == Gray{Float64}
-    @test FashionMNIST.convert2image(vec(data)) == A
+    @test MNIST.convert2image(vec(data)) == A
 
-    data = FashionMNIST.traintensor(1:2)
-    A = FashionMNIST.convert2image(data)
+    data = MNIST.traintensor(1:2)
+    A = MNIST.convert2image(data)
     @test A[1] == 1.0
     @test size(A) == (28,28,2)
     @test eltype(A) == Gray{Float64}
-    @test FashionMNIST.convert2image(vec(data)) == A
-    @test FashionMNIST.convert2image(FashionMNIST.convert2features(data)) == A
+    @test MNIST.convert2image(vec(data)) == A
+    @test MNIST.convert2image(MNIST.convert2features(data)) == A
 end
 
 end

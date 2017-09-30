@@ -82,31 +82,3 @@ function readimages(file::AbstractString)
         readimages(io, 1:nimages, nrows, ncols)
     end::Array{UInt8,3}
 end
-
-"""
-    readtrainimages(dir::AbstractString, [indices]) -> Array{UInt8}
-
-Reads the images of the given `indices` from the file
-\"$TRAINIMAGES\" using the function [`readimages`](@ref), and
-returns them as a multi-dimensional array of `UInt8`.
-
-The file is expected to be located in the given directory `dir`.
-In the case that the file does not yet exist the function will
-provide you with download instructions.
-"""
-readtrainimages(dir) = readimages(downloaded_file(dir, TRAINIMAGES))
-readtrainimages(dir, indices) = readimages(downloaded_file(dir, TRAINIMAGES), indices)
-
-"""
-    readtestimages(dir::AbstractString, [indices]) -> Array{UInt8}
-
-Reads the images of the given `indices` from the file
-\"$TESTIMAGES\" using the function [`readimages`](@ref), and
-returns them as a multi-dimensional array of `UInt8`.
-
-The file is expected to be located in the given directory `dir`.
-In the case that the file does not yet exist the function will
-provide you with download instructions.
-"""
-readtestimages(dir) = readimages(downloaded_file(dir, TESTIMAGES))
-readtestimages(dir, indices) = readimages(downloaded_file(dir, TESTIMAGES), indices)

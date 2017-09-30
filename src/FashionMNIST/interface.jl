@@ -60,11 +60,8 @@ julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # convert to colu
 ```
 """
 function traintensor(args...; dir=DEFAULT_DIR, decimal=true)
-    if decimal
-        Reader.readtrainimages(dir, args...) ./ 255
-    else
-        convert(Array{Float64}, Reader.readtrainimages(dir, args...))
-    end
+    rawimages = Reader.readimages(downloaded_file(SETTINGS, dir, TRAINIMAGES), args...)
+    decimal ? rawimages ./ 255 : convert(Array{Float64}, rawimages)
 end
 
 """
@@ -129,11 +126,8 @@ julia> FashionMNIST.convert2image(FashionMNIST.testtensor(1)) # convert to colum
 ```
 """
 function testtensor(args...; dir=DEFAULT_DIR, decimal=true)
-    if decimal
-        Reader.readtestimages(dir, args...) ./ 255
-    else
-        convert(Array{Float64}, Reader.readtestimages(dir, args...))
-    end
+    rawimages = Reader.readimages(downloaded_file(SETTINGS, dir, TESTIMAGES), args...)
+    decimal ? rawimages ./ 255 : convert(Array{Float64}, rawimages)
 end
 
 """
@@ -174,8 +168,15 @@ julia> FashionMNIST.trainlabels(dir="/home/user/fashion_mnist")
 WARNING: The FashionMNIST file "train-labels-idx1-ubyte.gz" was not found in "/home/user/fashion_mnist". You can download [...]
 ```
 """
-trainlabels(args...; dir=DEFAULT_DIR) = Vector{Int}(Reader.readtrainlabels(dir, args...))
-trainlabels(index::Integer; dir=DEFAULT_DIR) = Int(Reader.readtrainlabels(dir, index))
+function trainlabels(args...; dir=DEFAULT_DIR)
+    path = downloaded_file(SETTINGS, dir, TRAINLABELS)
+    Vector{Int}(Reader.readlabels(path, args...))
+end
+
+function trainlabels(index::Integer; dir=DEFAULT_DIR)
+    path = downloaded_file(SETTINGS, dir, TRAINLABELS)
+    Int(Reader.readlabels(path, index))
+end
 
 """
     testlabels([indices]; [dir])
@@ -215,8 +216,15 @@ julia> FashionMNIST.testlabels(dir="/home/user/fashion_mnist")
 WARNING: The FashionMNIST file "t10k-labels-idx1-ubyte.gz" was not found in "/home/user/fashion_mnist". You can download [...]
 ```
 """
-testlabels(args...; dir=DEFAULT_DIR) = Vector{Int}(Reader.readtestlabels(dir, args...))
-testlabels(index::Integer; dir=DEFAULT_DIR) = Int(Reader.readtestlabels(dir, index))
+function testlabels(args...; dir=DEFAULT_DIR)
+    path = downloaded_file(SETTINGS, dir, TESTLABELS)
+    Vector{Int}(Reader.readlabels(path, args...))
+end
+
+function testlabels(index::Integer; dir=DEFAULT_DIR)
+    path = downloaded_file(SETTINGS, dir, TESTLABELS)
+    Int(Reader.readlabels(path, index))
+end
 
 """
     traindata([indices]; [dir], [decimal=true]) -> Tuple
