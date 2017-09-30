@@ -1,15 +1,12 @@
 module Reader
     using GZip
     using BinDeps
-
+    import ...MLDatasets.download_helper
     export
-
         readtrainimages,
         readtestimages,
         readtrainimages,
-        readtestlabels,
-
-        download_helper
+        readtestlabels
 
     # Constants
 
@@ -23,8 +20,8 @@ module Reader
 
     # Includes
 
+    include("download.jl")
     include("readheader.jl")
     include("readimages.jl")
     include("readlabels.jl")
-    include("download.jl")
 end

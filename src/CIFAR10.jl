@@ -3,7 +3,7 @@ module CIFAR10
 
 using BinDeps
 
-const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/cifar10")
+const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets", "cifar10")
 
 function getdata(dir)
     mkpath(dir)
@@ -25,7 +25,7 @@ function readdata(data::Vector{UInt8})
 end
 
 function traindata(dir=defdir)
-    files = ["$(dir)/cifar-10-batches-bin/data_batch_$(i).bin" for i=1:5]
+    files = [joinpath(dir,"cifar-10-batches-bin","data_batch_$i.bin") for i=1:5]
     all(isfile, files) || getdata(dir)
     data = UInt8[]
     for file in files
@@ -35,7 +35,7 @@ function traindata(dir=defdir)
 end
 
 function testdata(dir=defdir)
-    file = "$(dir)/cifar-10-batches-bin/test_batch.bin"
+    file = joinpath(dir,"cifar-10-batches-bin","test_batch.bin")
     isfile(file) || getdata(dir)
     readdata(open(read,file))
 end
