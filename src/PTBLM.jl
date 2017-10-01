@@ -1,7 +1,7 @@
 export PTBLM
 module PTBLM
 
-const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/ptblm")
+const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets", "ptblm")
 
 function traindata(dir=defdir)
     xs = readdata(dir, "ptb.train.txt")

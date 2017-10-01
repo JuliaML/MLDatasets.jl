@@ -64,31 +64,3 @@ function readlabels(file::AbstractString)
         readlabels(io, 1:nlabels)
     end::Vector{UInt8}
 end
-
-"""
-    readtrainlabels(dir::AbstractString, [indices])
-
-Reads the labels of the given `indices` from the file
-\"$TRAINLABELS\" using the function [`readlabels`](@ref), and
-returns them as `UInt8` or an array of `UInt8`.
-
-The file is expected to be located in the given directory `dir`.
-In the case that the file does not yet exist the function will
-provide you with download instructions.
-"""
-readtrainlabels(dir) = readlabels(downloaded_file(dir, TRAINLABELS))
-readtrainlabels(dir, indices) = readlabels(downloaded_file(dir, TRAINLABELS), indices)
-
-"""
-    readtestlabels(dir::AbstractString, [indices])
-
-Reads the labels of the given `indices` from the file
-\"$TESTLABELS\" using the function [`readlabels`](@ref), and
-returns them as `UInt8` or an array of `UInt8`.
-
-The file is expected to be located in the given directory `dir`.
-In the case that the file does not yet exist the function will
-provide you with download instructions.
-"""
-readtestlabels(dir) = readlabels(downloaded_file(dir, TESTLABELS))
-readtestlabels(dir, indices) = readlabels(downloaded_file(dir, TESTLABELS), indices)

@@ -1,16 +1,15 @@
-# THE MNIST DATABASE of handwritten digits
+# Fashion-MNIST
 
-Description from the [official website](http://yann.lecun.com/exdb/mnist/):
+Description from the [official website](https://github.com/zalandoresearch/fashion-mnist)
 
-> The MNIST database of handwritten digits, available from this
-> page, has a training set of 60,000 examples, and a test set of
-> 10,000 examples. It is a subset of a larger set available from
-> NIST. The digits have been size-normalized and centered in a
-> fixed-size image.
->
-> It is a good database for people who want to try learning
-> techniques and pattern recognition methods on real-world data
-> while spending minimal efforts on preprocessing and formatting.
+> Fashion-MNIST is a dataset of Zalando's article
+> images—consisting of a training set of 60,000 examples and a
+> test set of 10,000 examples. Each example is a 28x28 grayscale
+> image, associated with a label from 10 classes. We intend
+> Fashion-MNIST to serve as a direct drop-in replacement for the
+> original MNIST dataset for benchmarking machine learning
+> algorithms. It shares the same image size and structure of
+> training and testing splits.
 
 ## Usage
 
@@ -21,20 +20,20 @@ load, and work with the MNIST dataset of handwritten digits.
 using MLDatasets
 
 # download dataset
-MNIST.download()
+FashionMNIST.download()
 
 # load full training set
-train_x, train_y = MNIST.traindata()
+train_x, train_y = FashionMNIST.traindata()
 
 # load full test set
-test_x,  test_y  = MNIST.testdata()
+test_x,  test_y  = FashionMNIST.testdata()
 ```
 
 The provided functions also allow for optional arguments, such as
 the directory `dir` where the dataset is located, or the specific
 observation `indices` that one wants to work with. For more
 information on the interface take a look at the documentation
-(e.g. `?MNIST.traindata`).
+(e.g. `?FashionMNIST.traindata`).
 
 Function | Description
 ---------|-------------
@@ -47,37 +46,37 @@ Function | Description
 `testdata([indices]; [dir], [decimal=true])` | Load images and labels of the test data
 
 This module also provides utility functions to make working with
-the MNIST dataset in Julia more convenient.
+the FashionMNIST dataset in Julia more convenient.
 
 You can use the function `convert2features` to convert the given
-MNIST tensor to a feature matrix (or feature vector in the case
+FashionMNIST tensor to a feature matrix (or feature vector in the case
 of a single image). The purpose of this function is to drop the
 spatial dimensions such that traditional ML algorithms can
 process the dataset.
 
 ```julia
-julia> MNIST.convert2features(MNIST.traintensor()) # full training data
+julia> FashionMNIST.convert2features(FashionMNIST.traintensor()) # full training data
 784×60000 Array{Float64,2}:
 [...]
 ```
 
 To visualize an image or a prediction we provide the function
-`convert2image` to convert the given MNIST horizontal-major
+`convert2image` to convert the given FashionMNIST horizontal-major
 tensor (or feature matrix) to a vertical-major `Colorant` array.
 The values are also color corrected according to the website's
 description, which means that the digits are black on a white
 background.
 
 ```julia
-julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
+julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # first training image
 28×28 Array{Gray{Float64},2}:
 [...]
 ```
 
 ## References
 
-- **Authors**: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
+- **Authors**: Han Xiao, Kashif Rasul, Roland Vollgraf
 
-- **Website**: http://yann.lecun.com/exdb/mnist/
+- **Website**: https://github.com/zalandoresearch/fashion-mnist
 
-- **[LeCun et al., 1998a]** Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. "Gradient-based learning applied to document recognition." Proceedings of the IEEE, 86(11):2278-2324, November 1998
+- **[Han Xiao et al. 2017]** Han Xiao, Kashif Rasul, and Roland Vollgraf. "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms." arXiv:1708.07747

@@ -1,18 +1,18 @@
 """
     traintensor([indices]; [dir], [decimal=true]) -> Array{Float64}
 
-Returns the MNIST **training** images corresponding to the given
+Returns the FashionMNIST **training** images corresponding to the given
 `indices` as a multi-dimensional array.
 
 The corresponding source file of the dataset is expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 ```julia
-julia> MNIST.traintensor(dir="/home/user/MNIST")
-WARNING: The MNIST file "train-images-idx3-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
+julia> FashionMNIST.traintensor(dir="/home/user/fashion_mnist")
+WARNING: The FashionMNIST file "train-images-idx3-ubyte.gz" was not found in "/home/user/FashionMNIST". You can download [...]
 ```
 
 The image(s) is/are returned in the native horizontal-major
@@ -27,11 +27,11 @@ the image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
 ```julia
-julia> MNIST.traintensor() # load all training images
+julia> FashionMNIST.traintensor() # load all training images
 28×28×60000 Array{Float64,3}:
 [...]
 
-julia> MNIST.traintensor(1:3) # load first three training images
+julia> FashionMNIST.traintensor(1:3) # load first three training images
 28×28×3 Array{Float64,3}:
 [...]
 ```
@@ -42,7 +42,7 @@ the first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
 ```julia
-julia> MNIST.traintensor(1) # load first training image
+julia> FashionMNIST.traintensor(1) # load first training image
 28×28 Array{Float64,2}:
 [...]
 ```
@@ -50,11 +50,11 @@ julia> MNIST.traintensor(1) # load first training image
 As mentioned above, the images are returned in the native
 horizontal-major layout to preserve the original feature
 ordering. You can use the utility function
-[`convert2image`](@ref) to convert an MNIST array into a
+[`convert2image`](@ref) to convert an FashionMNIST array into a
 vertical-major Julia image with the corrected color values.
 
 ```
-julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major colorant array
+julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{Float64},2}:
 [...]
 ```
@@ -67,18 +67,18 @@ end
 """
     testtensor([indices]; [dir], [decimal=true]) -> Array{Float64}
 
-Returns the MNIST **test** images corresponding to the given
+Returns the FashionMNIST **test** images corresponding to the given
 `indices` as a multi-dimensional array.
 
 The corresponding source file of the dataset is expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 ```julia
-julia> MNIST.testtensor(dir="/home/user/MNIST")
-WARNING: The MNIST file "t10k-images-idx3-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
+julia> FashionMNIST.testtensor(dir="/home/user/FashionMNIST")
+WARNING: The FashionMNIST file "t10k-images-idx3-ubyte.gz" was not found in "/home/user/FashionMNIST". You can download [...]
 ```
 
 The image(s) is/are returned in the native horizontal-major
@@ -93,11 +93,11 @@ the image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
 ```julia
-julia> MNIST.testtensor() # load all test images
+julia> FashionMNIST.testtensor() # load all test images
 28×28×10000 Array{Float64,3}:
 [...]
 
-julia> MNIST.testtensor(1:3) # load first three test images
+julia> FashionMNIST.testtensor(1:3) # load first three test images
 28×28×3 Array{Float64,3}:
 [...]
 ```
@@ -108,7 +108,7 @@ the first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
 ```julia
-julia> MNIST.testtensor(1) # load first test image
+julia> FashionMNIST.testtensor(1) # load first test image
 28×28 Array{Float64,2}:
 [...]
 ```
@@ -116,11 +116,11 @@ julia> MNIST.testtensor(1) # load first test image
 As mentioned above, the images are returned in the native
 horizontal-major layout to preserve the original feature
 ordering. You can use the utility function
-[`convert2image`](@ref) to convert an MNIST array into a
+[`convert2image`](@ref) to convert an FashionMNIST array into a
 vertical-major Julia image with the corrected color values.
 
 ```
-julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colorant array
+julia> FashionMNIST.convert2image(FashionMNIST.testtensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{Float64},2}:
 [...]
 ```
@@ -133,13 +133,13 @@ end
 """
     trainlabels([indices]; [dir])
 
-Returns the MNIST **trainset** labels corresponding to the given
+Returns the FashionMNIST **trainset** labels corresponding to the given
 `indices` as an `Int` or `Vector{Int}`. The values of the labels
 denote the digit that they represent. If `indices` is omitted,
 all labels are returned.
 
 ```julia
-julia> MNIST.trainlabels() # full training set
+julia> FashionMNIST.trainlabels() # full training set
 60000-element Array{Int64,1}:
  5
  0
@@ -147,25 +147,25 @@ julia> MNIST.trainlabels() # full training set
  6
  8
 
-julia> MNIST.trainlabels(1:3) # first three labels
+julia> FashionMNIST.trainlabels(1:3) # first three labels
 3-element Array{Int64,1}:
  5
  0
  4
 
-julia> MNIST.trainlabels(1) # first label
+julia> FashionMNIST.trainlabels(1) # first label
 5
 ```
 
 The corresponding source file of the dataset is expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 ```julia
-julia> MNIST.trainlabels(dir="/home/user/MNIST")
-WARNING: The MNIST file "train-labels-idx1-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
+julia> FashionMNIST.trainlabels(dir="/home/user/fashion_mnist")
+WARNING: The FashionMNIST file "train-labels-idx1-ubyte.gz" was not found in "/home/user/fashion_mnist". You can download [...]
 ```
 """
 function trainlabels(args...; dir=DEFAULT_DIR)
@@ -181,13 +181,13 @@ end
 """
     testlabels([indices]; [dir])
 
-Returns the MNIST **testset** labels corresponding to the given
+Returns the FashionMNIST **testset** labels corresponding to the given
 `indices` as an `Int` or `Vector{Int}`. The values of the labels
 denote the digit that they represent. If `indices` is omitted,
 all labels are returned.
 
 ```julia
-julia> MNIST.testlabels() # full test set
+julia> FashionMNIST.testlabels() # full test set
 10000-element Array{Int64,1}:
  7
  2
@@ -195,25 +195,25 @@ julia> MNIST.testlabels() # full test set
  5
  6
 
-julia> MNIST.testlabels(1:3) # first three labels
+julia> FashionMNIST.testlabels(1:3) # first three labels
 3-element Array{Int64,1}:
  7
  2
  1
 
-julia> MNIST.testlabels(1) # first label
+julia> FashionMNIST.testlabels(1) # first label
 7
 ```
 
 The corresponding source file of the dataset is expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 ```julia
-julia> MNIST.testlabels(dir="/home/user/MNIST")
-WARNING: The MNIST file "t10k-labels-idx1-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
+julia> FashionMNIST.testlabels(dir="/home/user/fashion_mnist")
+WARNING: The FashionMNIST file "t10k-labels-idx1-ubyte.gz" was not found in "/home/user/fashion_mnist". You can download [...]
 ```
 """
 function testlabels(args...; dir=DEFAULT_DIR)
@@ -229,7 +229,7 @@ end
 """
     traindata([indices]; [dir], [decimal=true]) -> Tuple
 
-Returns the MNIST **trainingset** corresponding to the given
+Returns the FashionMNIST **trainingset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
 full trainingset is returned. The first element of thre return
 value will be the images as a multi-dimensional array, and the
@@ -242,16 +242,16 @@ values will be between `0.0` and `255.0`. The integer values of
 the labels correspond 1-to-1 the digit that they represent.
 
 ```julia
-train_x, train_y = MNIST.traindata() # full datatset
-train_x, train_y = MNIST.traindata(2) # only second observation
-train_x, train_y = MNIST.traindata(dir="./MNIST") # custom folder
+train_x, train_y = FashionMNIST.traindata() # full datatset
+train_x, train_y = FashionMNIST.traindata(2) # only second observation
+train_x, train_y = FashionMNIST.traindata(dir="./FashionMNIST") # custom folder
 ```
 
 The corresponding source files of the dataset are expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
 for more information.
@@ -264,7 +264,7 @@ end
 """
     testdata([indices]; [dir], [decimal=true]) -> Tuple
 
-Returns the MNIST **testset** corresponding to the given
+Returns the FashionMNIST **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
 full testset is returned. The first element of thre return value
 will be the images as a multi-dimensional array, and the second
@@ -277,16 +277,16 @@ values will be between `0.0` and `255.0`. The integer values of
 the labels correspond 1-to-1 the digit that they represent.
 
 ```julia
-test_x, test_y = MNIST.testdata() # full datatset
-test_x, test_y = MNIST.testdata(2) # only second observation
-test_x, test_y = MNIST.testdata(dir="./MNIST") # custom folder
+test_x, test_y = FashionMNIST.testdata() # full datatset
+test_x, test_y = FashionMNIST.testdata(2) # only second observation
+test_x, test_y = FashionMNIST.testdata(dir="./FashionMNIST") # custom folder
 ```
 
 The corresponding source files of the dataset are expected to be
 located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
+will default to `MLDatasets/datasets/fashion_mnist`. In the case the
 source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+`FashionMNIST.download_helper(dir)` to assist in the process.
 
 Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
 for more information.

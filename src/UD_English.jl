@@ -2,7 +2,7 @@ export UD_English
 module UD_English
 using ..MLDatasets
 
-const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets/ud_english")
+const defdir = joinpath(Pkg.dir("MLDatasets"), "datasets","ud_english")
 
 traindata(dir=defdir) = readdata(dir, "en-ud-train.conllu")
 

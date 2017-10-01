@@ -1,10 +1,13 @@
-export MNIST
-module MNIST
+export FashionMNIST
+module FashionMNIST
     using ImageCore
     using ColorTypes
     import ..downloaded_file
     import ..download_helper
     import ..DownloadSettings
+    import ..MNIST.convert2image
+    import ..MNIST.convert2features
+    import ..MNIST.Reader
 
     export
 
@@ -22,32 +25,44 @@ module MNIST
 
         download
 
-    const DEFAULT_DIR = abspath(joinpath(@__DIR__, "..", "..", "datasets", "mnist"))
+    const DEFAULT_DIR = abspath(joinpath(@__DIR__, "..", "..", "datasets", "fashion_mnist"))
 
     const TRAINIMAGES = "train-images-idx3-ubyte.gz"
     const TRAINLABELS = "train-labels-idx1-ubyte.gz"
     const TESTIMAGES  = "t10k-images-idx3-ubyte.gz"
     const TESTLABELS  = "t10k-labels-idx1-ubyte.gz"
 
-    const SETTINGS = DownloadSettings(
-        "http://yann.lecun.com/exdb/mnist/",
-        """
-        Dataset: THE MNIST DATABASE of handwritten digits
-        Authors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
-        Website: http://yann.lecun.com/exdb/mnist/
+    const CLASSES = [
+        "T-Shirt",
+        "Trouser",
+        "Pullover",
+        "Dress",
+        "Coat",
+        "Sandal",
+        "Shirt",
+        "Sneaker",
+        "Bag",
+        "Ankle boot"
+    ]
 
-        [LeCun et al., 1998a]
-            Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner.
-            "Gradient-based learning applied to document recognition."
-            Proceedings of the IEEE, 86(11):2278-2324, November 1998
+    const SETTINGS = DownloadSettings(
+        "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/",
+        """
+        Dataset: Fashion-MNIST
+        Authors: Han Xiao, Kashif Rasul, Roland Vollgraf
+        Website: https://github.com/zalandoresearch/fashion-mnist
+        License: MIT
+
+        [Han Xiao et al. 2017]
+            Han Xiao, Kashif Rasul, and Roland Vollgraf.
+            "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms."
+            arXiv:1708.07747
 
         The files are available for download at the offical
         website linked above. We can download these files for you
         if you wish, but that doesn't free you from the burden of
-        using the data responsibly and respect copyright. The
-        authors of MNIST aren't really explicit about any terms
-        of use, so please read the website to make sure you want
-        to download the dataset.
+        using the data responsibly and respect lincense and
+        authorship.
         """,
         [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS]
     )
@@ -55,7 +70,5 @@ module MNIST
     download(dir = DEFAULT_DIR; kw...) =
         download_helper(SETTINGS, dir; kw...)
 
-    include(joinpath("Reader","Reader.jl"))
     include("interface.jl")
-    include("utils.jl")
 end

@@ -1,7 +1,16 @@
 using Base.Test
 using MLDatasets
 
-include("MNIST/runtests.jl")
+tests = [
+    "tst_mnist.jl",
+    "tst_fashion_mnist.jl",
+]
+
+for t in tests
+    @testset "$t" begin
+        include(t)
+    end
+end
 
 # CIFAR10
 x, y = CIFAR10.traindata()
