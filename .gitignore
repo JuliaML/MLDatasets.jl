@@ -1,2 +1,5 @@
 datasets/
 sandbox.jl
+.juliahistory
+*~
+\#*
