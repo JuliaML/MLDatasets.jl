@@ -9,5 +9,6 @@ include("MNIST/MNIST.jl")
 include("FashionMNIST/FashionMNIST.jl")
 include("PTBLM.jl")
 include("UD_English.jl")
+include("Food101.jl")
 
 end
