@@ -64,8 +64,7 @@ function getobs!(buf::Array{UInt8,3}, data::Food101Data, idx::Integer)
 end
 
 
-function getobs!(buf::Array{UInt8,4}, data::Food101Data,
-                 idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}})
+function getobs!(buf::Array{UInt8,4}, data::Food101Data, idxs::Vector{<:Integer})
     for (i, idx) in enumerate(idxs)
         
         getobs!(buf[:,:,:,i], data, idx)
@@ -76,7 +75,7 @@ end
 
 getobs(data::Food101Data, idx::Integer) = getobs!(Array{UInt8}(512,512,3), data, idx)
 
-getobs(data::Food101Data, idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}}) =
+getobs(data::Food101Data, idxs::Vector{<:Integer}) =
     getobs!(Array{UInt8,4}(512, 512, 3, length(idxs)), data, idxs)
 
 
@@ -95,7 +94,7 @@ function getobs(targets::Food101Targets, idx::Integer)
 end
 
 
-function getobs(targets::Food101Targets, idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}})
+function getobs(targets::Food101Targets, idxs::Vector{<:Integer})
     ret = Vector{String}(length(idxs))
     for idx in idxs
         ret[idx] = getobs(targets, idx)
