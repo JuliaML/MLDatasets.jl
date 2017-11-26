@@ -26,7 +26,7 @@ end
 function Food101Dataset(dir::AbstractString, classes::Set{String}, train=true)
     isdir(dir) || getdata(dir)
     meta_fiile = train ? "train.json" : "test.json"
-    meta = open(JSON.parse, joinpath(defdir, "meta", "train.json"))    
+    meta = open(JSON.parse, joinpath(defdir, "meta", "train.json"))
     meta = isempty(classes) ? meta : Dict(k => v for (k, v) in meta if k in classes)
     files = vcat(values(meta)...)
     return Food101Dataset(dir, files)
@@ -47,26 +47,47 @@ Base.show(io::IO, X::Food101Targets) = print(io, "Food101Targets()")
 
 ## data
 
-function getobs(data::Food101Data, idx::Integer)
+function getobs!(buf::Array{UInt8,3}, data::Food101Data, idx::Integer)
     ds = data.dataset
     path = joinpath(ds.dir, "images", ds.files[idx] * ".jpg")
-    return permutedims(rawview(channelview(im)), (2,3,1))    
+    im_ = nothing
+    try
+        # println(idx)
+        im_ = load(path)
+        im = imresize(im_, (512, 512))
+        buf .= permutedims(rawview(channelview(im)), (2,3,1))
+    catch e
+        warn("Can't load $path")
+        buf .= zeros(UInt8, 512, 512, 3)
+    end    
+    return buf
 end
 
 
-function getobs(data::Food101Data, idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}})
-    ret = Array{UInt8,4}(512, 512, 3, length(idxs))
-    for idx in idxs
-        ret[:,:,:,idx] = getobs(data, idx)
+function getobs!(buf::Array{UInt8,4}, data::Food101Data,
+                 idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}})
+    for (i, idx) in enumerate(idxs)
+        
+        getobs!(buf[:,:,:,i], data, idx)
     end
-    return ret
+    return buf
 end
+
+
+getobs(data::Food101Data, idx::Integer) = getobs!(Array{UInt8}(512,512,3), data, idx)
+
+getobs(data::Food101Data, idxs::Union{Vector{<:Integer}, UnitRange{<:Integer}}) =
+    getobs!(Array{UInt8,4}(512, 512, 3, length(idxs)), data, idxs)
 
 
 nobs(data::Food101Data) = length(data.dataset.files)
 
+Base.length(data::Food101Data) = nobs(data)
+
 
 ## targets
+
+
 
 function getobs(targets::Food101Targets, idx::Integer)
     ds = targets.dataset
