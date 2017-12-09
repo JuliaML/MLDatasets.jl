@@ -9,6 +9,7 @@ import MLDataPattern: nobs, getobs
 const datadir = joinpath(Pkg.dir("MLDatasets"), "datasets")
 const defdir = joinpath(datadir, "food-101")
 
+const DEFAULT_SIZE = (512, 512)
 
 function getdata(dir=datadir)
     mkpath(dir)
@@ -18,18 +19,20 @@ end
 
 
 struct Food101Dataset
-    dir::AbstractString
-    files::Vector{String}
+    dir::AbstractString               # base directory
+    files::Vector{String}             # list of files to use
+    opts::Dict{Symbol, Any}           # dataset options, e.g. image size
 end
 
 
-function Food101Dataset(dir::AbstractString, classes::Set{String}, train=true)
+function Food101Dataset(dir::AbstractString, classes::Set{String}, train=true; opts...)
     isdir(dir) || getdata(dir)
-    meta_fiile = train ? "train.json" : "test.json"
-    meta = open(JSON.parse, joinpath(defdir, "meta", "train.json"))
+    meta_file = train ? "train.json" : "test.json"
+    meta = open(JSON.parse, joinpath(defdir, "meta", meta_file))
     meta = isempty(classes) ? meta : Dict(k => v for (k, v) in meta if k in classes)
     files = vcat(values(meta)...)
-    return Food101Dataset(dir, files)
+
+    return Food101Dataset(dir, files, Dict(opts))
 end
 
 
@@ -47,45 +50,48 @@ Base.show(io::IO, X::Food101Targets) = print(io, "Food101Targets()")
 
 ## data
 
-function getobs!(buf::Array{UInt8,3}, data::Food101Data, idx::Integer)
+function getobs!(buf::AbstractArray{UInt8,3}, data::Food101Data, idx::Integer)
     ds = data.dataset
     path = joinpath(ds.dir, "images", ds.files[idx] * ".jpg")
+    sz = get(data.dataset.opts, :size, DEFAULT_SIZE)
     im_ = nothing
     try
-        # println(idx)
         im_ = load(path)
-        im = imresize(im_, (512, 512))
+        im = imresize(im_, sz)
         buf .= permutedims(rawview(channelview(im)), (2,3,1))
     catch e
-        warn("Can't load $path")
-        buf .= zeros(UInt8, 512, 512, 3)
-    end    
-    return buf
-end
-
-
-function getobs!(buf::Array{UInt8,4}, data::Food101Data, idxs::AbstractVector{<:Integer})
-    for (i, idx) in enumerate(idxs)
-        
-        getobs!(buf[:,:,:,i], data, idx)
+        warn("Can't load $path", e)
+        buf .= zeros(UInt8, sz..., 3)
     end
     return buf
 end
 
 
-getobs(data::Food101Data, idx::Integer) = getobs!(Array{UInt8}(512,512,3), data, idx)
+function getobs!(buf::AbstractArray{UInt8,4}, data::Food101Data, idxs::AbstractVector{<:Integer})
+    for (i, idx) in enumerate(idxs)
+        getobs!(@view(buf[:,:,:,i]), data, idx)
+    end
+    return buf
+end
 
-getobs(data::Food101Data, idxs::AbstractVector{<:Integer}) =
-    getobs!(Array{UInt8,4}(512, 512, 3, length(idxs)), data, idxs)
+function getobs(data::Food101Data, idx::Integer)
+    sz = get(data.dataset.opts, :size, DEFAULT_SIZE)
+    getobs!(Array{UInt8}(sz..., 3), data, idx)
+end
 
+function getobs(data::Food101Data, idxs::AbstractVector{<:Integer})
+    sz = get(data.dataset.opts, :size, DEFAULT_SIZE)
+    getobs!(Array{UInt8,4}(sz..., 3, length(idxs)), data, idxs)
+end
+
+Base.getindex(data::Food101Data, idx) = getobs(data, idx)
 
 nobs(data::Food101Data) = length(data.dataset.files)
-
 Base.length(data::Food101Data) = nobs(data)
+Base.endof(data::Food101Data) = nobs(data)
 
 
 ## targets
-
 
 
 function getobs(targets::Food101Targets, idx::Integer)
@@ -102,19 +108,23 @@ function getobs(targets::Food101Targets, idxs::AbstractVector{<:Integer})
     return ret
 end
 
+Base.getindex(data::Food101Targets, idx) = getobs(data, idx)
+
 nobs(targets::Food101Targets) = length(targets.dataset.files)
+Base.length(targets::Food101Targets) = nobs(targets)
+Base.endof(targets::Food101Targets) = nobs(targets)
 
 
 ## interface
 
-function traindata(dir=defdir; classes=[])
-    dataset = Food101Dataset(dir, Set{String}(classes), true)
+function traindata(dir=defdir; classes=[], opts...)
+    dataset = Food101Dataset(dir, Set{String}(classes), true; opts...)
     return Food101Data(dataset), Food101Targets(dataset)
 end
 
 
-function testdata(dir=defdir; classes=[])
-    dataset = Food101Dataset(dir, Set{String}(classes), false)
+function testdata(dir=defdir; classes=[], opts...)
+    dataset = Food101Dataset(dir, Set{String}(classes), false; opts...)
     return Food101Data(dataset), Food101Targets(dataset)
 end
 
