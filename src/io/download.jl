@@ -1,78 +1,51 @@
 import BinDeps
+using DataDeps
 
-struct DownloadSettings
-    url::String
-    prompt::String
-    files::Vector{String}
-end
-
-function downloaded_file(settings::DownloadSettings, dir, filename)
-    path = joinpath(dir, filename)
-    if !isfile(path)
-        if isinteractive()
-            download_helper(dir, settings.url, settings.files,
-                            i_accept_the_terms_of_use = false,
-                            prompt = settings.prompt)
-        else
-            error("The file \"$filename\" was not found in \"$dir\". ",
-                  "You can download the dataset at $(settings.url), ",
-                  "or try again from the REPL in order for ",
-                  "`MLDatasets` to download it for you.")
-        end
-    end
-    path
-end
-
-"""
-    download_helper(dir, baseurl, files; [i_accept_the_terms_of_use = false], [prompt])
-
-Check if the `files` are present in the specified `dir`, or if
-any of the files are missing. In the case that any of the `files`
-are missing and `i_accept_the_terms_of_use=false` the function
-will raise a warning or an error depending on if julia is run in
-an interactive session. If an interactive session is detected the
-user will be presented with `prompt` and the option to
-download the dataset to the specified `dir`.
-"""
-function download_helper(
-        dir::AbstractString,
-        baseurl::AbstractString,
-        files::AbstractVector;
-        i_accept_the_terms_of_use = false,
-        prompt = error("Please provide a \"prompt\" for the given dataset"))
-    missing = filter(file->!isfile(joinpath(dir, file)), files)
-    if !isempty(missing)
-        info("The specified directory \"$dir\" is missing the files ",
-             join(map(f->"\"$f\"", missing), ", ", " and "),
-             "of the full data set.")
-        if !i_accept_the_terms_of_use && isinteractive()
-            prompt = "\n" * prompt * "\nDo you want to download the dataset from $baseurl to \"$dir\"? [y/n] "
-            print(prompt)
-            answer = first(readline())
-            if answer == 'y'
-                i_accept_the_terms_of_use = true
-            end
-        end
-        if i_accept_the_terms_of_use
-            mkpath(dir)
-            for file in missing
-                url = baseurl * "$file"
-                path = joinpath(dir, file)
-                info("downloading $file from $url to $dir")
-                run(BinDeps.download_cmd(url, path))
-            end
-        else
-            error("Unable to download the dataset. Please visit $baseurl and download the files manually.")
-        end
+function with_accept(f, manual_overwrite)
+    auto_accept = if manual_overwrite == nothing
+        get(ENV, "DATADEPS_ALWAY_ACCEPT", false)
     else
-        info("Nothing to do.")
+        manual_overwrite
     end
-    nothing
+    withenv(f, "DATADEPS_ALWAY_ACCEPT" => string(auto_accept))
 end
 
-function download_helper(settings::DownloadSettings,
-                         dir::AbstractString;
-                         kw...)
-    download_helper(dir, settings.url, settings.files;
-                    prompt = settings.prompt, kw...)
+function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)
+    with_accept(i_accept_the_terms_of_use) do
+        if dir == nothing
+            # use DataDeps defaults
+            @datadep_str depname
+        else
+            # use user-provided dir
+            if isdir(dir)
+                dir
+            else
+                !DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") || error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
+                DataDeps.download(DataDeps.registry[depname], dir)
+                dir
+            end
+        end
+    end
+end
+
+function datafile(depname, filename, dir = nothing; kw...)
+    path = joinpath(datadir(depname, dir; kw...), filename)
+    if !isfile(path)
+        warn("The file \"$path\" does not exist, even though the dataset-specific folder does. This is an unusual situation that may have been caused by a manual creation of an empty folder, or manual deletion of the given file \"$filename\".")
+        info("Retriggering DataDeps.jl for \"$depname\" to \"$dir\".")
+        download_dep(depname, dir; kw...)
+        datafile(depname, filename, dir; kw...)
+    else
+        path
+    end
+end
+
+function download_dep(depname,
+                      dir = DataDeps.determine_save_path(depname);
+                      i_accept_the_terms_of_use = nothing)
+    datadep = DataDeps.registry[depname]
+    with_accept(i_accept_the_terms_of_use) do
+        DataDeps.download(datadep, dir)
+        nothing
+    end
 end

@@ -4,17 +4,6 @@
 Returns the MNIST **training** images corresponding to the given
 `indices` as a multi-dimensional array.
 
-The corresponding source file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
-
-```julia
-julia> MNIST.traintensor(dir="/home/user/MNIST")
-WARNING: The MNIST file "train-images-idx3-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
-```
-
 The image(s) is/are returned in the native horizontal-major
 memory layout as a single floating point array. If `decimal=true`
 all values are scaled to be between `0.0` and `1.0`, otherwise
@@ -58,9 +47,21 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major color
 28×28 Array{Gray{Float64},2}:
 [...]
 ```
+
+The corresponding resource file of the dataset is expected to be
+located in the specified directory `dir`. If `dir` is omitted the
+directories in `DataDeps.default_loadpath` will be searched for
+an existing `$DEPNAME` subfolder. In case no such subfolder is
+found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
+that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 """
-function traintensor(args...; dir=DEFAULT_DIR, decimal=true)
-    rawimages = Reader.readimages(downloaded_file(SETTINGS, dir, TRAINIMAGES), args...)
+function traintensor(args...; dir = nothing, decimal = true)
+    path = datafile(DEPNAME, TRAINIMAGES, dir)
+    rawimages = Reader.readimages(path, args...)
     decimal ? rawimages ./ 255 : convert(Array{Float64}, rawimages)
 end
 
@@ -69,17 +70,6 @@ end
 
 Returns the MNIST **test** images corresponding to the given
 `indices` as a multi-dimensional array.
-
-The corresponding source file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
-
-```julia
-julia> MNIST.testtensor(dir="/home/user/MNIST")
-WARNING: The MNIST file "t10k-images-idx3-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
-```
 
 The image(s) is/are returned in the native horizontal-major
 memory layout as a single floating point array. If `decimal=true`
@@ -124,9 +114,21 @@ julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colora
 28×28 Array{Gray{Float64},2}:
 [...]
 ```
+
+The corresponding resource file of the dataset is expected to be
+located in the specified directory `dir`. If `dir` is omitted the
+directories in `DataDeps.default_loadpath` will be searched for
+an existing `$DEPNAME` subfolder. In case no such subfolder is
+found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
+that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 """
-function testtensor(args...; dir=DEFAULT_DIR, decimal=true)
-    rawimages = Reader.readimages(downloaded_file(SETTINGS, dir, TESTIMAGES), args...)
+function testtensor(args...; dir = nothing, decimal = true)
+    path = datafile(DEPNAME, TESTIMAGES, dir)
+    rawimages = Reader.readimages(path, args...)
     decimal ? rawimages ./ 255 : convert(Array{Float64}, rawimages)
 end
 
@@ -157,24 +159,24 @@ julia> MNIST.trainlabels(1) # first label
 5
 ```
 
-The corresponding source file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
-
-```julia
-julia> MNIST.trainlabels(dir="/home/user/MNIST")
-WARNING: The MNIST file "train-labels-idx1-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
-```
+The corresponding resource file of the dataset is expected to be
+located in the specified directory `dir`. If `dir` is omitted the
+directories in `DataDeps.default_loadpath` will be searched for
+an existing `$DEPNAME` subfolder. In case no such subfolder is
+found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
+that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 """
-function trainlabels(args...; dir=DEFAULT_DIR)
-    path = downloaded_file(SETTINGS, dir, TRAINLABELS)
+function trainlabels(args...; dir = nothing)
+    path = datafile(DEPNAME, TRAINLABELS, dir)
     Vector{Int}(Reader.readlabels(path, args...))
 end
 
-function trainlabels(index::Integer; dir=DEFAULT_DIR)
-    path = downloaded_file(SETTINGS, dir, TRAINLABELS)
+function trainlabels(index::Integer; dir = nothing)
+    path = datafile(DEPNAME, TRAINLABELS, dir)
     Int(Reader.readlabels(path, index))
 end
 
@@ -205,24 +207,24 @@ julia> MNIST.testlabels(1) # first label
 7
 ```
 
-The corresponding source file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
-
-```julia
-julia> MNIST.testlabels(dir="/home/user/MNIST")
-WARNING: The MNIST file "t10k-labels-idx1-ubyte.gz" was not found in "/home/user/MNIST". You can download [...]
-```
+The corresponding resource file of the dataset is expected to be
+located in the specified directory `dir`. If `dir` is omitted the
+directories in `DataDeps.default_loadpath` will be searched for
+an existing `$DEPNAME` subfolder. In case no such subfolder is
+found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
+that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 """
-function testlabels(args...; dir=DEFAULT_DIR)
-    path = downloaded_file(SETTINGS, dir, TESTLABELS)
+function testlabels(args...; dir = nothing)
+    path = datafile(DEPNAME, TESTLABELS, dir)
     Vector{Int}(Reader.readlabels(path, args...))
 end
 
-function testlabels(index::Integer; dir=DEFAULT_DIR)
-    path = downloaded_file(SETTINGS, dir, TESTLABELS)
+function testlabels(index::Integer; dir = nothing)
+    path = datafile(DEPNAME, TESTLABELS, dir)
     Int(Reader.readlabels(path, index))
 end
 
@@ -247,18 +249,23 @@ train_x, train_y = MNIST.traindata(2) # only second observation
 train_x, train_y = MNIST.traindata(dir="./MNIST") # custom folder
 ```
 
-The corresponding source files of the dataset are expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+The corresponding resource files of the dataset are expected to
+be located in the specified directory `dir`. If `dir` is omitted
+the directories in `DataDeps.default_loadpath` will be searched
+for an existing `$DEPNAME` subfolder. In case no such subfolder
+is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
+case that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 
 Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
 for more information.
 """
-function traindata(args...; dir=DEFAULT_DIR, decimal=true)
-    (traintensor(args...; dir=dir, decimal=decimal),
-     trainlabels(args...; dir=dir))
+function traindata(args...; dir = nothing, decimal = true)
+    (traintensor(args...; dir = dir, decimal = decimal),
+     trainlabels(args...; dir = dir))
 end
 
 """
@@ -282,16 +289,21 @@ test_x, test_y = MNIST.testdata(2) # only second observation
 test_x, test_y = MNIST.testdata(dir="./MNIST") # custom folder
 ```
 
-The corresponding source files of the dataset are expected to be
-located in the specified directory `dir`. If `dir` is omitted it
-will default to `MLDatasets/datasets/mnist`. In the case the
-source files have not been downloaded yet, you can use
-`MNIST.download_helper(dir)` to assist in the process.
+The corresponding resource files of the dataset are expected to
+be located in the specified directory `dir`. If `dir` is omitted
+the directories in `DataDeps.default_loadpath` will be searched
+for an existing `$DEPNAME` subfolder. In case no such subfolder
+is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
+case that `dir` does not yet exist, a download prompt will be
+triggered. You can also use `MNIST.download([dir])` explicitly
+for pre-downloading (or re-downloading) the dataset. Please take
+a look at the documentation of the package DataDeps.jl for more
+detail and configuration options.
 
 Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
 for more information.
 """
-function testdata(args...; dir=DEFAULT_DIR, decimal=true)
-    (testtensor(args...; dir=dir, decimal=decimal),
-     testlabels(args...; dir=dir))
+function testdata(args...; dir = nothing, decimal = true)
+    (testtensor(args...; dir = dir, decimal = decimal),
+     testlabels(args...; dir = dir))
 end

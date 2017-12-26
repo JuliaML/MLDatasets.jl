@@ -2,6 +2,7 @@ module FashionMNIST_Tests
 using Base.Test
 using ColorTypes
 using MLDatasets
+using DataDeps
 
 @testset "Constants" begin
     @test FashionMNIST.TRAINIMAGES == "train-images-idx3-ubyte.gz"
@@ -10,37 +11,16 @@ using MLDatasets
     @test FashionMNIST.TESTLABELS  == "t10k-labels-idx1-ubyte.gz"
     @test length(FashionMNIST.CLASSES) == 10
     @test length(unique(FashionMNIST.CLASSES)) == 10
-
-    @test endswith(FashionMNIST.DEFAULT_DIR, "MLDatasets/datasets/fashion_mnist")
 end
 
-const _TRAINIMAGES = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.TRAINIMAGES)
-const _TRAINLABELS = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.TRAINLABELS)
-const _TESTIMAGES = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.TESTIMAGES)
-const _TESTLABELS = joinpath(FashionMNIST.DEFAULT_DIR, FashionMNIST.TESTLABELS)
-
-if isfile(_TRAINIMAGES)
-    info("Skipping (pre-)download tests: FashionMNIST dataset already exists.")
-    @assert all(map(isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
-else
-    @assert all(map(!isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
-    if isinteractive()
-        info("Skipping download-error tests: interactive session running.")
-    else
-        @testset "Pre-download Errors" begin
-            @test_throws ErrorException FashionMNIST.download()
-            @test_throws ErrorException FashionMNIST.traintensor()
-            @test_throws ErrorException FashionMNIST.trainlabels()
-            @test_throws ErrorException FashionMNIST.traindata()
-            @test_throws ErrorException FashionMNIST.testtensor()
-            @test_throws ErrorException FashionMNIST.testlabels()
-            @test_throws ErrorException FashionMNIST.testdata()
-        end
-    end
-    @testset "Download" begin
-        @test FashionMNIST.download(i_accept_the_terms_of_use=true) == nothing
-    end
+data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
+    datadep"FashionMNIST"
 end
+
+const _TRAINIMAGES = joinpath(data_dir, FashionMNIST.TRAINIMAGES)
+const _TRAINLABELS = joinpath(data_dir, FashionMNIST.TRAINLABELS)
+const _TESTIMAGES = joinpath(data_dir, FashionMNIST.TESTIMAGES)
+const _TESTLABELS = joinpath(data_dir, FashionMNIST.TESTLABELS)
 
 @testset "Images" begin
     # Sanity check that the first trainimage is not the first testimage

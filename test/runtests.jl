@@ -1,6 +1,9 @@
 using Base.Test
 using MLDatasets
 
+# temporary to not stress CI
+if false
+
 tests = [
     "tst_mnist.jl",
     "tst_fashion_mnist.jl",
@@ -29,3 +32,4 @@ x = UD_English.traindata()
 x = UD_English.devdata()
 x = UD_English.testdata()
 nothing
+end

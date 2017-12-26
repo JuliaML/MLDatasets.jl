@@ -2,6 +2,7 @@ module MNIST_Tests
 using Base.Test
 using ColorTypes
 using MLDatasets
+using DataDeps
 
 @testset "Constants" begin
     @test MNIST.Reader.IMAGEOFFSET == 16
@@ -11,37 +12,16 @@ using MLDatasets
     @test MNIST.TRAINLABELS == "train-labels-idx1-ubyte.gz"
     @test MNIST.TESTIMAGES  == "t10k-images-idx3-ubyte.gz"
     @test MNIST.TESTLABELS  == "t10k-labels-idx1-ubyte.gz"
-
-    @test endswith(MNIST.DEFAULT_DIR, "MLDatasets/datasets/mnist")
 end
 
-const _TRAINIMAGES = joinpath(MNIST.DEFAULT_DIR, MNIST.TRAINIMAGES)
-const _TRAINLABELS = joinpath(MNIST.DEFAULT_DIR, MNIST.TRAINLABELS)
-const _TESTIMAGES = joinpath(MNIST.DEFAULT_DIR, MNIST.TESTIMAGES)
-const _TESTLABELS = joinpath(MNIST.DEFAULT_DIR, MNIST.TESTLABELS)
-
-if isfile(_TRAINIMAGES)
-    info("Skipping (pre-)download tests: MNIST dataset already exists.")
-    @assert all(map(isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
-else
-    @assert all(map(!isfile, [_TRAINIMAGES, _TRAINLABELS, _TESTIMAGES, _TESTLABELS])) "Only some files of the dataset are already present"
-    if isinteractive()
-        info("Skipping download-error tests: interactive session running.")
-    else
-        @testset "Pre-download Errors" begin
-            @test_throws ErrorException MNIST.download()
-            @test_throws ErrorException MNIST.traintensor()
-            @test_throws ErrorException MNIST.trainlabels()
-            @test_throws ErrorException MNIST.traindata()
-            @test_throws ErrorException MNIST.testtensor()
-            @test_throws ErrorException MNIST.testlabels()
-            @test_throws ErrorException MNIST.testdata()
-        end
-    end
-    @testset "Download" begin
-        @test MNIST.download(i_accept_the_terms_of_use=true) == nothing
-    end
+data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
+    datadep"MNIST"
 end
+
+const _TRAINIMAGES = joinpath(data_dir, MNIST.TRAINIMAGES)
+const _TRAINLABELS = joinpath(data_dir, MNIST.TRAINLABELS)
+const _TESTIMAGES = joinpath(data_dir, MNIST.TESTIMAGES)
+const _TESTLABELS = joinpath(data_dir, MNIST.TESTLABELS)
 
 @testset "File Header" begin
     @test MNIST.Reader.readimageheader(_TRAINIMAGES) == (0x803,60000,28,28)

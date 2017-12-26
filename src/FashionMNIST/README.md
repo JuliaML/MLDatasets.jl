@@ -14,7 +14,7 @@ Description from the [official website](https://github.com/zalandoresearch/fashi
 ## Usage
 
 This sub-module provides a programmatic interface to download,
-load, and work with the MNIST dataset of handwritten digits.
+load, and work with the Fashion MNIST dataset.
 
 ```julia
 using MLDatasets
