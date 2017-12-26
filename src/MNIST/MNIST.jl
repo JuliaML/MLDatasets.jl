@@ -1,5 +1,6 @@
 export MNIST
 module MNIST
+    using BinDeps
     using DataDeps
     using ImageCore
     using ColorTypes
@@ -28,6 +29,12 @@ module MNIST
     const TESTIMAGES  = "t10k-images-idx3-ubyte.gz"
     const TESTLABELS  = "t10k-labels-idx1-ubyte.gz"
 
+    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
+
+    include(joinpath("Reader","Reader.jl"))
+    include("interface.jl")
+    include("utils.jl")
+
     function __init__()
         RegisterDataDep(
             DEPNAME,
@@ -50,13 +57,8 @@ module MNIST
             to download the dataset.
             """,
             "http://yann.lecun.com/exdb/mnist/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
-            "0bb1d5775d852fc5bb32c76ca15a7eb4e9a3b1514a2493f7edfcf49b639d7975"
+            "0bb1d5775d852fc5bb32c76ca15a7eb4e9a3b1514a2493f7edfcf49b639d7975",
+            fetch_method = (src, dst) -> run(BinDeps.download_cmd(src, dst))
         )
     end
-
-    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
-
-    include(joinpath("Reader","Reader.jl"))
-    include("interface.jl")
-    include("utils.jl")
 end

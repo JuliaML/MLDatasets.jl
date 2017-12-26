@@ -1,5 +1,6 @@
 export FashionMNIST
 module FashionMNIST
+    using BinDeps
     using DataDeps
     using ImageCore
     using ColorTypes
@@ -44,6 +45,10 @@ module FashionMNIST
         "Ankle boot"
     ]
 
+    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
+
+    include("interface.jl")
+
     function __init__()
         RegisterDataDep(
             DEPNAME,
@@ -65,11 +70,8 @@ module FashionMNIST
             authorship.
             """,
             "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
-            "c916b6e00d3083643332b70f3c5c3543d3941334b802e252976893969ee6af67"
+            "c916b6e00d3083643332b70f3c5c3543d3941334b802e252976893969ee6af67",
+            fetch_method = (src, dst) -> run(BinDeps.download_cmd(src, dst))
         )
     end
-
-    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
-
-    include("interface.jl")
 end
