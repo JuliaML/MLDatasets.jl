@@ -1,9 +1,6 @@
 using Base.Test
 using MLDatasets
 
-# temporary to not stress CI
-if false
-
 tests = [
     "tst_mnist.jl",
     "tst_fashion_mnist.jl",
@@ -14,6 +11,9 @@ for t in tests
         include(t)
     end
 end
+
+# temporary to not stress CI
+if false
 
 # CIFAR10
 x, y = CIFAR10.traindata()
