@@ -4,6 +4,8 @@ module MNIST
     using DataDeps
     using ImageCore
     using ColorTypes
+    using FixedPointNumbers
+    using ..bytes_to_type
     using ..datafile
     using ..download_dep
 
