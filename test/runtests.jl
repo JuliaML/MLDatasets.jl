@@ -2,6 +2,7 @@ using Base.Test
 using MLDatasets
 
 tests = [
+    "tst_cifar10.jl",
     "tst_mnist.jl",
     "tst_fashion_mnist.jl",
 ]

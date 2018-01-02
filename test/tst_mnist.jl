@@ -118,7 +118,7 @@ else
                 (MNIST.testtensor,  Int,     10_000),
                 (MNIST.testtensor,  UInt8,   10_000)
             )
-            @testset "$image_fun" begin
+            @testset "$image_fun with T=$T" begin
                 # whole image set
                 A = @inferred image_fun(T)
                 @test typeof(A) <: Array{T,3}

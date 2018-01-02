@@ -58,6 +58,11 @@ function traintensor(args...; dir = nothing)
     traindata(args...; dir = dir)[1]
 end
 
+# needed for type inference for some reason
+function traintensor(::Type{T}, args...; dir = nothing) where T
+    traindata(T, args...; dir = dir)[1]
+end
+
 """
     testtensor([T = N0f8], [indices]; [dir]) -> Array{T}
 
@@ -116,6 +121,10 @@ $(download_docstring("CIFAR10", DEPNAME))
 """
 function testtensor(args...; dir = nothing)
     testdata(args...; dir = dir)[1]
+end
+
+function testtensor(::Type{T}, args...; dir = nothing) where T
+    testdata(T, args...; dir = dir)[1]
 end
 
 """
@@ -294,7 +303,7 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
         end
     end
     # optionally transform the image array before returning
-    bytes_to_type(T, images), labels
+    bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
 end
 
 """
@@ -371,5 +380,5 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
         end
     end
     # optionally transform the image array before returning
-    bytes_to_type(T, images), labels
+    bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
 end

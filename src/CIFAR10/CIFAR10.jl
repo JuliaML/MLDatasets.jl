@@ -49,6 +49,7 @@ module CIFAR10
 
     include(joinpath("Reader","Reader.jl"))
     include("interface.jl")
+    include("utils.jl")
 
     function __init__()
         RegisterDataDep(
