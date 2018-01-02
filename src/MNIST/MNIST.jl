@@ -8,6 +8,7 @@ module MNIST
     using ..bytes_to_type
     using ..datafile
     using ..download_dep
+    using ..download_docstring
 
     export
 

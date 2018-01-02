@@ -48,16 +48,7 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major color
 [...]
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 """
 function traintensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TRAINIMAGES, dir)
@@ -119,16 +110,7 @@ julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colora
 [...]
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 """
 function testtensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TESTIMAGES, dir)
@@ -167,16 +149,7 @@ julia> MNIST.trainlabels(1) # first label
 5
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 """
 function trainlabels(args...; dir = nothing)
     path = datafile(DEPNAME, TRAINLABELS, dir)
@@ -215,16 +188,7 @@ julia> MNIST.testlabels(1) # first label
 7
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 """
 function testlabels(args...; dir = nothing)
     path = datafile(DEPNAME, TESTLABELS, dir)
@@ -258,16 +222,7 @@ train_x, train_y = MNIST.traindata(2) # only second observation
 train_x, train_y = MNIST.traindata(dir="./MNIST") # custom folder
 ```
 
-The corresponding resource files of the dataset are expected to
-be located in the specified directory `dir`. If `dir` is omitted
-the directories in `DataDeps.default_loadpath` will be searched
-for an existing `$DEPNAME` subfolder. In case no such subfolder
-is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
-case that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 
 Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
 for more information.
@@ -301,16 +256,7 @@ test_x, test_y = MNIST.testdata(2) # only second observation
 test_x, test_y = MNIST.testdata(dir="./MNIST") # custom folder
 ```
 
-The corresponding resource files of the dataset are expected to
-be located in the specified directory `dir`. If `dir` is omitted
-the directories in `DataDeps.default_loadpath` will be searched
-for an existing `$DEPNAME` subfolder. In case no such subfolder
-is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
-case that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `MNIST.download([dir])` explicitly
-for pre-downloading (or re-downloading) the dataset. Please take
-a look at the documentation of the package DataDeps.jl for more
-detail and configuration options.
+$(download_docstring("MNIST", DEPNAME))
 
 Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
 for more information.

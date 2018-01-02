@@ -52,3 +52,20 @@ function download_dep(depname,
         nothing
     end
 end
+
+function download_docstring(modname, depname)
+    """
+    The corresponding resource file(s) of the dataset is/are
+    expected to be located in the specified directory `dir`. If
+    `dir` is omitted the directories in
+    `DataDeps.default_loadpath` will be searched for an existing
+    `$(depname)` subfolder. In case no such subfolder is found,
+    `dir` will default to `~/datadeps/$(depname)`. In the case
+    that `dir` does not yet exist, a download prompt will be
+    triggered. You can also use `$(modname).download([dir])`
+    explicitly for pre-downloading (or re-downloading) the
+    dataset. Please take a look at the documentation of the
+    package DataDeps.jl for more detail and configuration
+    options.
+    """
+end

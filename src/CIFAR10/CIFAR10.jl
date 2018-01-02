@@ -8,6 +8,7 @@ module CIFAR10
     using ..bytes_to_type
     using ..datafile
     using ..download_dep
+    using ..download_docstring
 
     export
 
@@ -24,6 +25,12 @@ module CIFAR10
 
     const DEPNAME = "CIFAR10"
     const NCHUNKS = 5
+
+    filename_for_chunk(file_index::Int) =
+        joinpath("cifar-10-batches-bin", "data_batch_$(file_index).bin")
+
+    const TESTSET_FILENAME =
+        joinpath("cifar-10-batches-bin", "test_batch.bin")
 
     const CLASSES = [
         "airplane",

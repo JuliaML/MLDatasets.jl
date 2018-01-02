@@ -6,6 +6,7 @@ module FashionMNIST
     using ..bytes_to_type
     using ..datafile
     using ..download_dep
+    using ..download_docstring
     import ..MNIST.convert2image
     import ..MNIST.convert2features
     import ..MNIST.Reader

@@ -8,7 +8,7 @@ export
 const NROW = 32
 const NCOL = 32
 const NCHAN = 3
-const NBYTE = NROW * NCOL * NCHAN + 1
+const NBYTE = NROW * NCOL * NCHAN + 1 # "+ 1" for label
 const CHUNK_SIZE = 10_000
 
 function readnext!(buffer::Array{UInt8}, io::IO)

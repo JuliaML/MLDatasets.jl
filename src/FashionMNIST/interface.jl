@@ -48,16 +48,7 @@ julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # convert to colu
 [...]
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 """
 function traintensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TRAINIMAGES, dir)
@@ -119,16 +110,7 @@ julia> FashionMNIST.convert2image(FashionMNIST.testtensor(1)) # convert to colum
 [...]
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 """
 function testtensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TESTIMAGES, dir)
@@ -145,38 +127,33 @@ end
 
 Returns the Fashion-MNIST **trainset** labels corresponding to
 the given `indices` as an `Int` or `Vector{Int}`. The values of
-the labels denote the digit that they represent. If `indices` is
-omitted, all labels are returned.
+the labels denote the zero-based class-index that they represent
+(see `FashionMNIST.CLASSES` for the corresponding names). If
+`indices` is omitted, all labels are returned.
 
 ```julia
 julia> FashionMNIST.trainlabels() # full training set
 60000-element Array{Int64,1}:
- 5
+ 9
  0
  ⋮
- 6
- 8
+ 0
+ 5
 
 julia> FashionMNIST.trainlabels(1:3) # first three labels
 3-element Array{Int64,1}:
- 5
+ 9
  0
- 4
+ 0
 
 julia> FashionMNIST.trainlabels(1) # first label
-5
+9
+
+julia> FashionMNIST.CLASSES[FashionMNIST.trainlabels(1) + 1] # corresponding name
+"Ankle boot"
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 """
 function trainlabels(args...; dir = nothing)
     path = datafile(DEPNAME, TRAINLABELS, dir)
@@ -191,40 +168,35 @@ end
 """
     testlabels([indices]; [dir])
 
-Returns the Fashion-MNIST **testset** labels corresponding to the
-given `indices` as an `Int` or `Vector{Int}`. The values of the
-labels denote the digit that they represent. If `indices` is
-omitted, all labels are returned.
+Returns the Fashion-MNIST **testset** labels corresponding to
+the given `indices` as an `Int` or `Vector{Int}`. The values of
+the labels denote the class-index that they represent (see
+`FashionMNIST.CLASSES` for the corresponding names). If `indices`
+is omitted, all labels are returned.
 
 ```julia
 julia> FashionMNIST.testlabels() # full test set
 10000-element Array{Int64,1}:
- 7
+ 9
  2
  ⋮
+ 1
  5
- 6
 
 julia> FashionMNIST.testlabels(1:3) # first three labels
 3-element Array{Int64,1}:
- 7
+ 9
  2
  1
 
 julia> FashionMNIST.testlabels(1) # first label
-7
+9
+
+julia> FashionMNIST.CLASSES[FashionMNIST.testlabels(1) + 1] # corresponding name
+"Ankle boot"
 ```
 
-The corresponding resource file of the dataset is expected to be
-located in the specified directory `dir`. If `dir` is omitted the
-directories in `DataDeps.default_loadpath` will be searched for
-an existing `$DEPNAME` subfolder. In case no such subfolder is
-found, `dir` will default to `~/datadeps/$DEPNAME`. In the case
-that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 """
 function testlabels(args...; dir = nothing)
     path = datafile(DEPNAME, TESTLABELS, dir)
@@ -258,16 +230,7 @@ train_x, train_y = FashionMNIST.traindata(2) # only second observation
 train_x, train_y = FashionMNIST.traindata(dir="./FashionMNIST") # custom folder
 ```
 
-The corresponding resource files of the dataset are expected to
-be located in the specified directory `dir`. If `dir` is omitted
-the directories in `DataDeps.default_loadpath` will be searched
-for an existing `$DEPNAME` subfolder. In case no such subfolder
-is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
-case that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 
 Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
 for more information.
@@ -301,16 +264,7 @@ test_x, test_y = FashionMNIST.testdata(2) # only second observation
 test_x, test_y = FashionMNIST.testdata(dir="./FashionMNIST") # custom folder
 ```
 
-The corresponding resource files of the dataset are expected to
-be located in the specified directory `dir`. If `dir` is omitted
-the directories in `DataDeps.default_loadpath` will be searched
-for an existing `$DEPNAME` subfolder. In case no such subfolder
-is found, `dir` will default to `~/datadeps/$DEPNAME`. In the
-case that `dir` does not yet exist, a download prompt will be
-triggered. You can also use `FashionMNIST.download([dir])`
-explicitly for pre-downloading (or re-downloading) the dataset.
-Please take a look at the documentation of the package
-DataDeps.jl for more detail and configuration options.
+$(download_docstring("FashionMNIST", DEPNAME))
 
 Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
 for more information.

@@ -2,12 +2,9 @@
 
 [![Build Status](https://travis-ci.org/JuliaML/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/JuliaML/MLDatasets.jl)
 
-`MLDatasets` provides an access to common machine learning
-datasets for [Julia](http://julialang.org/). Currently, julia 0.5
-is supported.
-
-The datasets are automatically downloaded to the specified
-directory. The default directory is `MLDatasets/datasets`.
+`MLDatasets` provides access to common machine learning datasets
+for [Julia](http://julialang.org/). Currently, julia 0.6 is
+supported.
 
 ## Installation
 
@@ -33,7 +30,10 @@ Use `traindata(<directory>)` and `testdata(<directory>)` to change the default d
 #### CIFAR-10
 
 The [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)
-dataset consists of 60000 32x32 color images in 10 classes.
+dataset consists of 60000 32x32 RGB images in 10 classes.
+
+Take a look at the [sub-module](src/CIFAR10/README.md) for more
+information
 
 #### CIFAR-100
 
