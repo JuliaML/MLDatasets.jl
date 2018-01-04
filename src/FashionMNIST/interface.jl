@@ -1,4 +1,12 @@
 """
+    classnames() -> Vector{String}
+
+Return the 10 names for the Fashion-MNIST classes as a vector of
+strings.
+"""
+classnames() = CLASSES
+
+"""
     traintensor([T = N0f8], [indices]; [dir]) -> Array{T}
 
 Returns the Fashion-MNIST **training** images corresponding to
@@ -15,7 +23,7 @@ the first dimension corresponds to the pixel *rows* (x) of the
 image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> FashionMNIST.traintensor() # load all training images
 28×28×60000 Array{N0f8,3}:
 [...]
@@ -30,7 +38,7 @@ If `indices` is an `Integer`, the single image is returned as
 first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
-```julia
+```julia-repl
 julia> FashionMNIST.traintensor(1) # load first training image
 28×28 Array{N0f8,2}:
 [...]
@@ -42,7 +50,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an FashionMNIST array into a
 vertical-major Julia image with the corrected color values.
 
-```
+```julia-repl
 julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{N0f8},2}:
 [...]
@@ -77,7 +85,7 @@ the first dimension corresponds to the pixel *rows* (x) of the
 image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> FashionMNIST.testtensor() # load all test images
 28×28×10000 Array{N0f8,3}:
 [...]
@@ -92,7 +100,7 @@ If `indices` is an `Integer`, the single image is returned as
 first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
-```julia
+```julia-repl
 julia> FashionMNIST.testtensor(1) # load first test image
 28×28 Array{N0f8,2}:
 [...]
@@ -104,7 +112,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an FashionMNIST array into a
 vertical-major Julia image with the corrected color values.
 
-```
+```julia-repl
 julia> FashionMNIST.convert2image(FashionMNIST.testtensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{N0f8},2}:
 [...]
@@ -128,10 +136,10 @@ end
 Returns the Fashion-MNIST **trainset** labels corresponding to
 the given `indices` as an `Int` or `Vector{Int}`. The values of
 the labels denote the zero-based class-index that they represent
-(see `FashionMNIST.CLASSES` for the corresponding names). If
-`indices` is omitted, all labels are returned.
+(see [`FashionMNIST.classnames`](@ref) for the corresponding
+names). If `indices` is omitted, all labels are returned.
 
-```julia
+```julia-repl
 julia> FashionMNIST.trainlabels() # full training set
 60000-element Array{Int64,1}:
  9
@@ -146,10 +154,10 @@ julia> FashionMNIST.trainlabels(1:3) # first three labels
  0
  0
 
-julia> FashionMNIST.trainlabels(1) # first label
+julia> y = FashionMNIST.trainlabels(1) # first label
 9
 
-julia> FashionMNIST.CLASSES[FashionMNIST.trainlabels(1) + 1] # corresponding name
+julia> FashionMNIST.classnames()[y + 1] # corresponding name
 "Ankle boot"
 ```
 
@@ -168,13 +176,13 @@ end
 """
     testlabels([indices]; [dir])
 
-Returns the Fashion-MNIST **testset** labels corresponding to
-the given `indices` as an `Int` or `Vector{Int}`. The values of
-the labels denote the class-index that they represent (see
-`FashionMNIST.CLASSES` for the corresponding names). If `indices`
-is omitted, all labels are returned.
+Returns the Fashion-MNIST **testset** labels corresponding to the
+given `indices` as an `Int` or `Vector{Int}`. The values of the
+labels denote the class-index that they represent (see
+[`FashionMNIST.classnames`](@ref) for the corresponding names).
+If `indices` is omitted, all labels are returned.
 
-```julia
+```julia-repl
 julia> FashionMNIST.testlabels() # full test set
 10000-element Array{Int64,1}:
  9
@@ -189,10 +197,10 @@ julia> FashionMNIST.testlabels(1:3) # first three labels
  2
  1
 
-julia> FashionMNIST.testlabels(1) # first label
+julia> y = FashionMNIST.testlabels(1) # first label
 9
 
-julia> FashionMNIST.CLASSES[FashionMNIST.testlabels(1) + 1] # corresponding name
+julia> FashionMNIST.classnames()[y + 1] # corresponding name
 "Ankle boot"
 ```
 
@@ -213,9 +221,9 @@ end
 
 Returns the Fashion-MNIST **trainingset** corresponding to the
 given `indices` as a two-element tuple. If `indices` is omitted
-the full trainingset is returned. The first element of thre
-return value will be the images as a multi-dimensional array, and
-the second element the corresponding labels as integers.
+the full trainingset is returned. The first element of three
+return values will be the images as a multi-dimensional array,
+and the second element the corresponding labels as integers.
 
 The image(s) is/are returned in the native horizontal-major
 memory layout as a single numeric array of eltype `T`. If `T <:
@@ -232,8 +240,8 @@ train_x, train_y = FashionMNIST.traindata(dir="./FashionMNIST") # custom folder
 
 $(download_docstring("FashionMNIST", DEPNAME))
 
-Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
-for more information.
+Take a look at [`FashionMNIST.traintensor`](@ref) and
+[`FashionMNIST.trainlabels`](@ref) for more information.
 """
 function traindata(::Type{T}, args...; dir = nothing) where T
     (traintensor(T, args...; dir = dir),
@@ -247,7 +255,7 @@ traindata(args...; dir = nothing) = traindata(N0f8, args...; dir = dir)
 
 Returns the Fashion-MNIST **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full testset is returned. The first element of thre return value
+full testset is returned. The first element of three return values
 will be the images as a multi-dimensional array, and the second
 element the corresponding labels as integers.
 
@@ -266,8 +274,8 @@ test_x, test_y = FashionMNIST.testdata(dir="./FashionMNIST") # custom folder
 
 $(download_docstring("FashionMNIST", DEPNAME))
 
-Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
-for more information.
+Take a look at [`FashionMNIST.testtensor`](@ref) and
+[`FashionMNIST.testlabels`](@ref) for more information.
 """
 function testdata(::Type{T}, args...; dir = nothing) where T
     (testtensor(T, args...; dir = dir),

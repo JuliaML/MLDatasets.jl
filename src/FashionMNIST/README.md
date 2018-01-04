@@ -38,6 +38,7 @@ information on the interface take a look at the documentation
 Function | Description
 ---------|-------------
 `download([dir])` | Trigger interactive download of the dataset
+`classnames()` | Return the class names as a vector of strings
 `traintensor([T], [indices]; [dir])` | Load the training images as an array of eltype `T`
 `trainlabels([indices]; [dir])` | Load the labels for the training images
 `testtensor([T], [indices]; [dir])` | Load the test images as an array of eltype `T`

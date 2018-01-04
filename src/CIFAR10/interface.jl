@@ -1,4 +1,11 @@
 """
+    classnames() -> Vector{String}
+
+Return the 10 names for the CIFAR10 classes as a vector of strings.
+"""
+classnames() = CLASSES
+
+"""
     traintensor([T = N0f8], [indices]; [dir]) -> Array{T}
 
 Return the CIFAR-10 **training** images corresponding to the
@@ -18,7 +25,7 @@ image, the second dimension to the pixel *columns* (y) of the
 image, the third dimension the RGB color channels, and the fourth
 dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> CIFAR10.traintensor() # load all training images
 32×32×3×50000 Array{N0f8,4}:
 [...]
@@ -34,7 +41,7 @@ first dimension denotes the pixel *rows* (x), the second
 dimension denotes the pixel *columns* (y), and the third
 dimension the RGB color channels of the image.
 
-```julia
+```julia-repl
 julia> CIFAR10.traintensor(1) # load first training image
 32×32×3 Array{N0f8,3}:
 [...]
@@ -46,7 +53,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
 vertical-major Julia image with the appropriate `RGB` eltype.
 
-```
+```julia-repl
 julia> CIFAR10.convert2image(CIFAR10.traintensor(1)) # convert to column-major colorant array
 32×32 Array{RGB{N0f8},2}:
 [...]
@@ -66,10 +73,10 @@ end
 """
     testtensor([T = N0f8], [indices]; [dir]) -> Array{T}
 
-Return the CIFAR-10 **test** images corresponding to the
-given `indices` as a multi-dimensional array of eltype `T`. If
-the corresponding labels are required as well, it is recommended
-to use [`CIFAR10.traindata`](@ref) instead.
+Return the CIFAR-10 **test** images corresponding to the given
+`indices` as a multi-dimensional array of eltype `T`. If the
+corresponding labels are required as well, it is recommended to
+use [`CIFAR10.testdata`](@ref) instead.
 
 The image(s) is/are returned in the native horizontal-major
 memory layout as a single numeric array. If `T <: Integer`, then
@@ -83,7 +90,7 @@ image, the second dimension to the pixel *columns* (y) of the
 image, the third dimension the RGB color channels, and the fourth
 dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> CIFAR10.testtensor() # load all training images
 32×32×3×10000 Array{N0f8,4}:
 [...]
@@ -99,7 +106,7 @@ first dimension denotes the pixel *rows* (x), the second
 dimension denotes the pixel *columns* (y), and the third
 dimension the RGB color channels of the image.
 
-```julia
+```julia-repl
 julia> CIFAR10.testtensor(1) # load first training image
 32×32×3 Array{N0f8,3}:
 [...]
@@ -111,7 +118,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
 vertical-major Julia image with the appropriate `RGB` eltype.
 
-```
+```julia-repl
 julia> CIFAR10.convert2image(CIFAR10.testtensor(1)) # convert to column-major colorant array
 32×32 Array{RGB{N0f8},2}:
 [...]
@@ -133,10 +140,10 @@ end
 Returns the CIFAR-10 **trainset** labels corresponding to the
 given `indices` as an `Int` or `Vector{Int}`. The values of the
 labels denote the zero-based class-index that they represent (see
-`CIFAR10.CLASSES` for the corresponding names). If `indices` is
-omitted, all labels are returned.
+[`CIFAR10.classnames`](@ref) for the corresponding names). If
+`indices` is omitted, all labels are returned.
 
-```julia
+```julia-repl
 julia> CIFAR10.trainlabels() # full training set
 50000-element Array{Int64,1}:
  6
@@ -154,7 +161,7 @@ julia> CIFAR10.trainlabels(1:3) # first three labels
 julia> CIFAR10.trainlabels(1) # first label
 6
 
-julia> CIFAR10.CLASSES[CIFAR10.trainlabels(1) + 1] # corresponding name
+julia> CIFAR10.classnames()[CIFAR10.trainlabels(1) + 1] # corresponding name
 "frog"
 ```
 
@@ -170,10 +177,10 @@ end
 Returns the CIFAR-10 **testset** labels corresponding to the
 given `indices` as an `Int` or `Vector{Int}`. The values of the
 labels denote the zero-based class-index that they represent (see
-`CIFAR10.CLASSES` for the corresponding names). If `indices` is
-omitted, all labels are returned.
+[`CIFAR10.classnames`](@ref) for the corresponding names). If
+`indices` is omitted, all labels are returned.
 
-```julia
+```julia-repl
 julia> CIFAR10.testlabels() # full training set
 10000-element Array{Int64,1}:
  3
@@ -191,7 +198,7 @@ julia> CIFAR10.testlabels(1:3) # first three labels
 julia> CIFAR10.testlabels(1) # first label
 3
 
-julia> CIFAR10.CLASSES[CIFAR10.testlabels(1) + 1] # corresponding name
+julia> CIFAR10.classnames()[CIFAR10.testlabels(1) + 1] # corresponding name
 "cat"
 ```
 
@@ -206,8 +213,8 @@ end
 
 Returns the CIFAR-10 **trainingset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full trainingset is returned. The first element of thre return
-value will be the images as a multi-dimensional array, and the
+full trainingset is returned. The first element of three return
+values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
 The image(s) is/are returned in the native horizontal-major
@@ -311,8 +318,8 @@ end
 
 Returns the CIFAR-10 **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full trainingset is returned. The first element of thre return
-value will be the images as a multi-dimensional array, and the
+full testset is returned. The first element of three return
+values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
 The image(s) is/are returned in the native horizontal-major
@@ -330,8 +337,8 @@ train_x, train_y = CIFAR10.testdata(dir="./CIFAR10") # custom folder
 
 $(download_docstring("CIFAR10", DEPNAME))
 
-Take a look at [`CIFAR10.traintensor`](@ref) and
-[`CIFAR10.trainlabels`](@ref) for more information.
+Take a look at [`CIFAR10.testtensor`](@ref) and
+[`CIFAR10.testlabels`](@ref) for more information.
 """
 function testdata(args...; dir = nothing)
     testdata(N0f8, args...; dir = dir)

@@ -15,7 +15,7 @@ the first dimension corresponds to the pixel *rows* (x) of the
 image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> MNIST.traintensor() # load all training images
 28×28×60000 Array{N0f8,3}:
 [...]
@@ -30,7 +30,7 @@ If `indices` is an `Integer`, the single image is returned as
 first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
-```julia
+```julia-repl
 julia> MNIST.traintensor(1) # load first training image
 28×28 Array{N0f8,2}:
 [...]
@@ -42,7 +42,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an MNIST array into a
 vertical-major Julia image with the corrected color values.
 
-```
+```julia-repl
 julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{N0f8},2}:
 [...]
@@ -77,7 +77,7 @@ the first dimension corresponds to the pixel *rows* (x) of the
 image, the second dimension to the pixel *columns* (y) of the
 image, and the third dimension denotes the index of the image.
 
-```julia
+```julia-repl
 julia> MNIST.testtensor() # load all test images
 28×28×10000 Array{N0f8,3}:
 [...]
@@ -92,7 +92,7 @@ If `indices` is an `Integer`, the single image is returned as
 first dimension denotes the pixel *rows* (x), and the second
 dimension denotes the pixel *columns* (y) of the image.
 
-```julia
+```julia-repl
 julia> MNIST.testtensor(1) # load first test image
 28×28 Array{N0f8,2}:
 [...]
@@ -104,7 +104,7 @@ ordering. You can use the utility function
 [`convert2image`](@ref) to convert an MNIST array into a
 vertical-major Julia image with the corrected color values.
 
-```
+```julia-repl
 julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colorant array
 28×28 Array{Gray{N0f8},2}:
 [...]
@@ -130,7 +130,7 @@ Returns the MNIST **trainset** labels corresponding to the given
 denote the digit that they represent. If `indices` is omitted,
 all labels are returned.
 
-```julia
+```julia-repl
 julia> MNIST.trainlabels() # full training set
 60000-element Array{Int64,1}:
  5
@@ -169,7 +169,7 @@ Returns the MNIST **testset** labels corresponding to the given
 denote the digit that they represent. If `indices` is omitted,
 all labels are returned.
 
-```julia
+```julia-repl
 julia> MNIST.testlabels() # full test set
 10000-element Array{Int64,1}:
  7
@@ -205,8 +205,8 @@ end
 
 Returns the MNIST **trainingset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full trainingset is returned. The first element of thre return
-value will be the images as a multi-dimensional array, and the
+full trainingset is returned. The first element of three return
+values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
 The image(s) is/are returned in the native horizontal-major
@@ -224,8 +224,8 @@ train_x, train_y = MNIST.traindata(dir="./MNIST") # custom folder
 
 $(download_docstring("MNIST", DEPNAME))
 
-Take a look at [`traintensor`](@ref) and [`trainlabels`](@ref)
-for more information.
+Take a look at [`MNIST.traintensor`](@ref) and
+[`MNIST.trainlabels`](@ref) for more information.
 """
 function traindata(::Type{T}, args...; dir = nothing) where T
     (traintensor(T, args...; dir = dir),
@@ -239,9 +239,9 @@ traindata(args...; dir = nothing) = traindata(N0f8, args...; dir = dir)
 
 Returns the MNIST **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full testset is returned. The first element of thre return value
-will be the images as a multi-dimensional array, and the second
-element the corresponding labels as integers.
+full testset is returned. The first element of three return
+values will be the images as a multi-dimensional array, and the
+second element the corresponding labels as integers.
 
 The image(s) is/are returned in the native horizontal-major
 memory layout as a single numeric array of eltype `T`. If `T <:
@@ -258,8 +258,8 @@ test_x, test_y = MNIST.testdata(dir="./MNIST") # custom folder
 
 $(download_docstring("MNIST", DEPNAME))
 
-Take a look at [`testtensor`](@ref) and [`testlabels`](@ref)
-for more information.
+Take a look at [`MNIST.testtensor`](@ref) and
+[`MNIST.testlabels`](@ref) for more information.
 """
 function testdata(::Type{T}, args...; dir = nothing) where T
     (testtensor(T, args...; dir = dir),

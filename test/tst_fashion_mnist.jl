@@ -10,8 +10,9 @@ using DataDeps
     @test FashionMNIST.TRAINLABELS == "train-labels-idx1-ubyte.gz"
     @test FashionMNIST.TESTIMAGES  == "t10k-images-idx3-ubyte.gz"
     @test FashionMNIST.TESTLABELS  == "t10k-labels-idx1-ubyte.gz"
-    @test length(FashionMNIST.CLASSES) == 10
-    @test length(unique(FashionMNIST.CLASSES)) == 10
+    @test FashionMNIST.classnames() isa Vector{String}
+    @test length(FashionMNIST.classnames()) == 10
+    @test length(unique(FashionMNIST.classnames())) == 10
 
     @test DataDeps.registry["FashionMNIST"] isa DataDeps.DataDep
 end

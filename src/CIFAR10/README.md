@@ -11,14 +11,6 @@ website](https://www.cs.toronto.edu/~kriz/cifar.html)
 > The CIFAR-10 dataset consists of 60000 32x32 colour images in
 > 10 classes, with 6000 images per class. There are 50000
 > training images and 10000 test images.
->
-> The dataset is divided into five training batches and one test
-> batch, each with 10000 images. The test batch contains exactly
-> 1000 randomly-selected images from each class. The training
-> batches contain the remaining images in random order, but some
-> training batches may contain more images from one class than
-> another. Between them, the training batches contain exactly
-> 5000 images from each class.
 
 ## Usage
 
@@ -47,6 +39,7 @@ information on the interface take a look at the documentation
 Function | Description
 ---------|-------------
 `download([dir])` | Trigger interactive download of the dataset
+`classnames()` | Return the class names as a vector of strings
 `traintensor([T], [indices]; [dir])` | Load the training images as an array of eltype `T`
 `trainlabels([indices]; [dir])` | Load the labels for the training images
 `testtensor([T], [indices]; [dir])` | Load the test images as an array of eltype `T`

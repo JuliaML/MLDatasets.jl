@@ -12,6 +12,8 @@ module CIFAR10
 
     export
 
+        classnames,
+
         traintensor,
         testtensor,
 
@@ -20,6 +22,9 @@ module CIFAR10
 
         traindata,
         testdata,
+
+        convert2image,
+        convert2features,
 
         download
 

@@ -14,8 +14,9 @@ using DataDeps
     @test CIFAR10.Reader.CHUNK_SIZE === 10000
 
     @test CIFAR10.NCHUNKS === 5
-    @test length(CIFAR10.CLASSES) == 10
-    @test length(unique(CIFAR10.CLASSES)) == 10
+    @test CIFAR10.classnames() isa Vector{String}
+    @test length(CIFAR10.classnames()) == 10
+    @test length(unique(CIFAR10.classnames())) == 10
 
     @test DataDeps.registry["CIFAR10"] isa DataDeps.DataDep
 end

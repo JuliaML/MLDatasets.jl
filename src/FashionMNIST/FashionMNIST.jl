@@ -13,6 +13,8 @@ module FashionMNIST
 
     export
 
+        classnames,
+
         traintensor,
         testtensor,
 
