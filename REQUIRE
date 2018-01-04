@@ -1,5 +1,6 @@
 julia 0.6
 ImageCore 0.1.2
+FixedPointNumbers 0.3
 ColorTypes 0.4
 DataDeps
 GZip
