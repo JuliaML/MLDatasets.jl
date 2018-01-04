@@ -38,9 +38,12 @@ information
 #### CIFAR-100
 
 The [CIFAR-100](https://www.cs.toronto.edu/~kriz/cifar.html)
-dataset consists of 600 32x32 color images in 100 classes. The
+dataset consists of 60000 32x32 color images in 100 classes. The
 100 classes are grouped into 20 superclasses (fine and coarse
 labels).
+
+Take a look at the [sub-module](src/CIFAR100/README.md) for more
+information
 
 #### MNIST
 
@@ -101,7 +104,7 @@ testdata = UD_English.devdata()
 | | Type | Train x | Train y | Test x | Test y |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | **CIFAR-10** | image | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000 |
-| **CIFAR-100** | image | 32x32x3x500 | 2x500 | 32x32x3x100 | 2x100 |
+| **CIFAR-100** | image | 32x32x3x5000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2) |
 | **MNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
 | **FashionMNIST** | image | 28x28x60000 | 60000 | 28x28x10000 | 10000 |
 | **PTBLM** | text | 42068 | 42068 | 3761 | 3761 |
