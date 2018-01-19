@@ -67,14 +67,12 @@ module FashionMNIST
                 arXiv:1708.07747
 
             The files are available for download at the offical
-            website linked above. We can download these files for you
-            if you wish, but that doesn't free you from the burden of
-            using the data responsibly and respect lincense and
-            authorship.
+            website linked above. Note that using the data
+            responsibly and respecting copyright remains your
+            responsibility.
             """,
             "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
             "c916b6e00d3083643332b70f3c5c3543d3941334b802e252976893969ee6af67",
-            fetch_method = (src, dst) -> run(BinDeps.download_cmd(src, dst))
         )
     end
 end

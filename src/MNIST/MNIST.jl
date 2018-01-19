@@ -52,16 +52,15 @@ module MNIST
                 Proceedings of the IEEE, 86(11):2278-2324, November 1998
 
             The files are available for download at the offical
-            website linked above. We can download these files for you
-            if you wish, but that doesn't free you from the burden of
-            using the data responsibly and respect copyright. The
-            authors of MNIST aren't really explicit about any terms
-            of use, so please read the website to make sure you want
-            to download the dataset.
+            website linked above. Note that using the data
+            responsibly and respecting copyright remains your
+            responsibility. The authors of MNIST aren't really
+            explicit about any terms of use, so please read the
+            website to make sure you want to download the
+            dataset.
             """,
             "http://yann.lecun.com/exdb/mnist/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
             "0bb1d5775d852fc5bb32c76ca15a7eb4e9a3b1514a2493f7edfcf49b639d7975",
-            fetch_method = (src, dst) -> run(BinDeps.download_cmd(src, dst))
         )
     end
 end

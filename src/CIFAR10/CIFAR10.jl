@@ -78,17 +78,15 @@ module CIFAR10
             The compressed archive file that contains the
             complete dataset is available for download at the
             offical website linked above; specifically the binary
-            version for C programs. We can download and unpack
-            this archive for you if you wish, but that doesn't
-            free you from the burden of using the data
-            responsibly and respect copyright. The authors of
-            CIFAR-10 aren't really explicit about any terms of
-            use, so please read the website to make sure you want
-            to download the dataset.
+            version for C programs. Note that using the data
+            responsibly and respecting copyright remains your
+            responsibility. The authors of CIFAR-10 aren't really
+            explicit about any terms of use, so please read the
+            website to make sure you want to download the
+            dataset.
             """,
             "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
             "c4a38c50a1bc5f3a1c5537f2155ab9d68f9f25eb1ed8d9ddda3db29a59bca1dd",
-            fetch_method = (src, dst) -> run(BinDeps.download_cmd(src, dst)),
             post_fetch_method = file -> (run(BinDeps.unpack_cmd(file,dirname(file), ".gz", ".tar")); rm(file))
         )
     end
