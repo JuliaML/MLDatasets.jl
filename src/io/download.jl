@@ -44,13 +44,8 @@ function datafile(depname, filename, dir = nothing; recurse = true, kw...)
     end::String
 end
 
-function download_dep(depname,
-                      dir = DataDeps.determine_save_path(depname);
-                      i_accept_the_terms_of_use = nothing)
-    with_accept(i_accept_the_terms_of_use) do
-        DataDeps.download(DataDeps.registry[depname], dir)
-        nothing
-    end
+function download_dep(depname, dir = DataDeps.determine_save_path(depname); kw...)
+    DataDeps.download(DataDeps.registry[depname], dir; kw...)
 end
 
 function download_docstring(modname, depname)
