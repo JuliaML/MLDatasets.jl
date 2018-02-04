@@ -1,15 +1,19 @@
 export FashionMNIST
 module FashionMNIST
-    using ImageCore
-    using ColorTypes
-    import ..downloaded_file
-    import ..download_helper
-    import ..DownloadSettings
+    using BinDeps
+    using DataDeps
+    using FixedPointNumbers
+    using ..bytes_to_type
+    using ..datafile
+    using ..download_dep
+    using ..download_docstring
     import ..MNIST.convert2image
     import ..MNIST.convert2features
     import ..MNIST.Reader
 
     export
+
+        classnames,
 
         traintensor,
         testtensor,
@@ -25,8 +29,7 @@ module FashionMNIST
 
         download
 
-    const DEFAULT_DIR = abspath(joinpath(@__DIR__, "..", "..", "datasets", "fashion_mnist"))
-
+    const DEPNAME = "FashionMNIST"
     const TRAINIMAGES = "train-images-idx3-ubyte.gz"
     const TRAINLABELS = "train-labels-idx1-ubyte.gz"
     const TESTIMAGES  = "t10k-images-idx3-ubyte.gz"
@@ -45,30 +48,31 @@ module FashionMNIST
         "Ankle boot"
     ]
 
-    const SETTINGS = DownloadSettings(
-        "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/",
-        """
-        Dataset: Fashion-MNIST
-        Authors: Han Xiao, Kashif Rasul, Roland Vollgraf
-        Website: https://github.com/zalandoresearch/fashion-mnist
-        License: MIT
-
-        [Han Xiao et al. 2017]
-            Han Xiao, Kashif Rasul, and Roland Vollgraf.
-            "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms."
-            arXiv:1708.07747
-
-        The files are available for download at the offical
-        website linked above. We can download these files for you
-        if you wish, but that doesn't free you from the burden of
-        using the data responsibly and respect lincense and
-        authorship.
-        """,
-        [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS]
-    )
-
-    download(dir = DEFAULT_DIR; kw...) =
-        download_helper(SETTINGS, dir; kw...)
+    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
     include("interface.jl")
+
+    function __init__()
+        RegisterDataDep(
+            DEPNAME,
+            """
+            Dataset: Fashion-MNIST
+            Authors: Han Xiao, Kashif Rasul, Roland Vollgraf
+            Website: https://github.com/zalandoresearch/fashion-mnist
+            License: MIT
+
+            [Han Xiao et al. 2017]
+                Han Xiao, Kashif Rasul, and Roland Vollgraf.
+                "Fashion-MNIST: a Novel Image Dataset for Benchmarking Machine Learning Algorithms."
+                arXiv:1708.07747
+
+            The files are available for download at the offical
+            website linked above. Note that using the data
+            responsibly and respecting copyright remains your
+            responsibility.
+            """,
+            "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
+            "c916b6e00d3083643332b70f3c5c3543d3941334b802e252976893969ee6af67",
+        )
+    end
 end

@@ -14,7 +14,7 @@ Description from the [official website](https://github.com/zalandoresearch/fashi
 ## Usage
 
 This sub-module provides a programmatic interface to download,
-load, and work with the MNIST dataset of handwritten digits.
+load, and work with the Fashion MNIST dataset.
 
 ```julia
 using MLDatasets
@@ -38,12 +38,13 @@ information on the interface take a look at the documentation
 Function | Description
 ---------|-------------
 `download([dir])` | Trigger interactive download of the dataset
-`traintensor([indices]; [dir], [decimal=true])` | Load the training images as an array
+`classnames()` | Return the class names as a vector of strings
+`traintensor([T], [indices]; [dir])` | Load the training images as an array of eltype `T`
 `trainlabels([indices]; [dir])` | Load the labels for the training images
-`testtensor([indices]; [dir], [decimal=true])` | Load the test images as an array
+`testtensor([T], [indices]; [dir])` | Load the test images as an array of eltype `T`
 `testlabels([indices]; [dir])` | Load the labels for the test images
-`traindata([indices]; [dir], [decimal=true])` | Load images and labels of the training data
-`testdata([indices]; [dir], [decimal=true])` | Load images and labels of the test data
+`traindata([T], [indices]; [dir])` | Load images and labels of the training data
+`testdata([T], [indices]; [dir])` | Load images and labels of the test data
 
 This module also provides utility functions to make working with
 the FashionMNIST dataset in Julia more convenient.
@@ -56,7 +57,7 @@ process the dataset.
 
 ```julia
 julia> FashionMNIST.convert2features(FashionMNIST.traintensor()) # full training data
-784×60000 Array{Float64,2}:
+784×60000 Array{N0f8,2}:
 [...]
 ```
 
@@ -69,7 +70,7 @@ background.
 
 ```julia
 julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # first training image
-28×28 Array{Gray{Float64},2}:
+28×28 Array{Gray{N0f8},2}:
 [...]
 ```
 

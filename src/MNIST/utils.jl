@@ -8,23 +8,23 @@ ML algorithms can process the dataset.
 
 ```julia
 julia> MNIST.convert2features(MNIST.traintensor()) # full training data
-784×60000 Array{Float64,2}:
+784×60000 Array{N0f8,2}:
 [...]
 
 julia> MNIST.convert2features(MNIST.traintensor(1)) # first observation
-784-element Array{Float64,1}:
+784-element Array{N0f8,1}:
 [...]
 ```
 """
-convert2features{T<:Number}(array::AbstractMatrix{T}) = vec(array)
+convert2features(array::AbstractMatrix{<:Number}) = vec(array)
 
-function convert2features{T<:Number}(array::AbstractArray{T,3})
+function convert2features(array::AbstractArray{<:Number,3})
     nrows, ncols, nimages = size(array)
     reshape(array, (nrows * ncols, nimages))
 end
 
 """
-    convert2image(array) -> Array{Gray{Float64}}
+    convert2image(array) -> Array{Gray}
 
 Convert the given MNIST horizontal-major tensor (or feature matrix)
 to a vertical-major `Colorant` array. The values are also color
@@ -33,15 +33,15 @@ the digits are black on a white background.
 
 ```julia
 julia> MNIST.convert2image(MNIST.traintensor()) # full training dataset
-28×28×60000 Array{Gray{Float64},3}:
+28×28×60000 Array{Gray{N0f8},3}:
 [...]
 
 julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
-28×28 Array{Gray{Float64},2}:
+28×28 Array{Gray{N0f8},2}:
 [...]
 ```
 """
-function convert2image{T<:Number}(array::AbstractVector{T})
+function convert2image(array::AbstractVector{<:Number})
     @assert length(array) % 784 == 0
     if length(array) == 784
         convert2image(reshape(array, 28, 28))
@@ -51,13 +51,13 @@ function convert2image{T<:Number}(array::AbstractVector{T})
     end
 end
 
-function convert2image{T<:Number}(array::AbstractMatrix{T})
+function convert2image(array::AbstractMatrix{T}) where {T<:Number}
     if size(array) == (28, 28)
         # simple check to see if values are normalized to [0,1]
         if any(x->x > 50, array)
-            colorview(Gray, 1 .- array.' ./ 255)
+            colorview(Gray, T(1) .- array.' ./ T(255))
         else
-            colorview(Gray, 1 .- array.')
+            colorview(Gray, T(1) .- array.')
         end
     else # feature matrix
         @assert size(array, 1) == 784
@@ -66,13 +66,13 @@ function convert2image{T<:Number}(array::AbstractMatrix{T})
     end
 end
 
-function convert2image{T<:Number}(array::AbstractArray{T,3})
+function convert2image(array::AbstractArray{T,3}) where {T<:Number}
     h, w, n = size(array)
     @assert h == 28 && w == 28
     # simple check to see if values are normalized to [0,1]
     if any(x->x > 50, array)
-        colorview(Gray, permutedims(1 .- array ./ 255, [2,1,3]))
+        colorview(Gray, permutedims(T(1) .- array ./ T(255), [2,1,3]))
     else
-        colorview(Gray, permutedims(1 .- array, [2,1,3]))
+        colorview(Gray, permutedims(T(1) .- array, [2,1,3]))
     end
 end
