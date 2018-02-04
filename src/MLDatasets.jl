@@ -9,14 +9,14 @@ bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
 
-include("io/download.jl")
-include("io/CoNLL.jl")
+include("download.jl")
+include("CoNLL.jl")
 
 include("CIFAR10/CIFAR10.jl")
 include("CIFAR100/CIFAR100.jl")
 include("MNIST/MNIST.jl")
 include("FashionMNIST/FashionMNIST.jl")
-include("PTBLM.jl")
-include("UD_English.jl")
+include("PTBLM/PTBLM.jl")
+include("UD_English/UD_English.jl")
 
 end
