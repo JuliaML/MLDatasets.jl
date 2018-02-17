@@ -22,6 +22,10 @@ before_script:
 install:
   #- sudo pip install pymdown-extensions
 
+after_success:
+  - julia -e 'Pkg.add("Documenter")'
+  - julia -e 'cd(Pkg.dir("MLDatasets")); include(joinpath("docs", "make.jl"))'
+
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd()); Pkg.build("MLDatasets"); Pkg.test("MLDatasets"; coverage=true)'
