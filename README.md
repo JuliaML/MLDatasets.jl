@@ -66,10 +66,10 @@ the purpose of image classification.
 
 Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
-[**MNIST**](https://juliaml.github.io/MLDatasets.jl/datasets/MNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
-[**FashionMNIST**](https://juliaml.github.io/MLDatasets.jl/datasets/FashionMNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
-[**CIFAR-10**](https://juliaml.github.io/MLDatasets.jl/datasets/CIFAR10/) | 10 | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000
-[**CIFAR-100**](https://juliaml.github.io/MLDatasets.jl/datasets/CIFAR100/) | 100 (20) | 32x32x3x50000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2)
+[**MNIST**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/MNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
+[**FashionMNIST**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/FashionMNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
+[**CIFAR-10**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR10/) | 10 | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000
+[**CIFAR-100**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/) | 100 (20) | 32x32x3x50000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2)
 
 ### Language Modeling
 
