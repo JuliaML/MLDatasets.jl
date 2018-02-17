@@ -110,9 +110,10 @@ testdata = UD_English.devdata()
 ```
 
 ## Data Size
-| | Type | Train x | Train y | Test x | Test y |
-| **PTBLM** | text | 42068 | 42068 | 3761 | 3761 |
-| **UD_English** | text | 12543 | - | 2077 | - |
+|    | Train x | Train y | Test x | Test y |
+|:--:|:-------:|:-------:|:------:|:------:|
+| **PTBLM** | 42068 | 42068 | 3761 | 3761 |
+| **UD_English** | 12543 | - | 2077 | - |
 
 ## Installation
 
