@@ -60,8 +60,8 @@ function download_docstring(modname, depname)
     `dir` is omitted the directories in
     `DataDeps.default_loadpath` will be searched for an existing
     `$(depname)` subfolder. In case no such subfolder is found,
-    `dir` will default to `~/datadeps/$(depname)`. In the case
-    that `dir` does not yet exist, a download prompt will be
+    `dir` will default to `~/.julia/datadeps/$(depname)`. In the
+    case that `dir` does not yet exist, a download prompt will be
     triggered. You can also use `$(modname).download([dir])`
     explicitly for pre-downloading (or re-downloading) the
     dataset. Please take a look at the documentation of the
