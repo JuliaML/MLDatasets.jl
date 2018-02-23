@@ -45,9 +45,9 @@ information on the interface take a look at the documentation
 
 Function | Description
 ---------|-------------
-`download([dir])` | Trigger interactive download of the dataset
-[`classnames_coarse()`](@ref CIFAR100.classnames_coarse) | Return the 20 super-class names as a vector of strings
-[`classnames_fine()`](@ref CIFAR100.classnames_fine) | Return the 100 class names as a vector of strings
+[`download([dir])`](@ref CIFAR100.download) | Trigger interactive download of the dataset
+[`classnames_coarse(; [dir])`](@ref CIFAR100.classnames_coarse) | Return the 20 super-class names as a vector of strings
+[`classnames_fine(; [dir])`](@ref CIFAR100.classnames_fine) | Return the 100 class names as a vector of strings
 [`traintensor([T], [indices]; [dir])`](@ref CIFAR100.traintensor) | Load the training images as an array of eltype `T`
 [`trainlabels([indices]; [dir])`](@ref CIFAR100.trainlabels) | Load the labels for the training images
 [`testtensor([T], [indices]; [dir])`](@ref CIFAR100.testtensor) | Load the test images as an array of eltype `T`
@@ -111,6 +111,7 @@ See [`CIFAR10.convert2features`](@ref) and
 [`CIFAR10.convert2image`](@ref)
 
 ```@docs
+CIFAR100.download
 CIFAR100.classnames_coarse
 CIFAR100.classnames_fine
 ```

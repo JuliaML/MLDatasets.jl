@@ -42,7 +42,7 @@ information on the interface take a look at the documentation
 
 Function | Description
 ---------|-------------
-`download([dir])` | Trigger (interactive) download of the dataset
+[`download([dir])`](@ref FashionMNIST.download) | Trigger (interactive) download of the dataset
 [`classnames()`](@ref FashionMNIST.classnames) | Return the class names as a vector of strings
 [`traintensor([T], [indices]; [dir])`](@ref FashionMNIST.traintensor) | Load the training images as an array of eltype `T`
 [`trainlabels([indices]; [dir])`](@ref FashionMNIST.trainlabels) | Load the labels for the training images
@@ -109,6 +109,7 @@ See [`MNIST.convert2features`](@ref) and
 [`MNIST.convert2image`](@ref)
 
 ```@docs
+FashionMNIST.download
 FashionMNIST.classnames
 ```
 

@@ -43,7 +43,7 @@ information on the interface take a look at the documentation
 
 Function | Description
 ---------|-------------
-`download([dir])` | Trigger (interactive) download of the dataset
+[`download([dir])`](@ref MNIST.download) | Trigger (interactive) download of the dataset
 [`traintensor([T], [indices]; [dir])`](@ref MNIST.traintensor) | Load the training images as an array of eltype `T`
 [`trainlabels([indices]; [dir])`](@ref MNIST.trainlabels) | Load the labels for the training images
 [`testtensor([T], [indices]; [dir])`](@ref MNIST.testtensor) | Load the test images as an array of eltype `T`
@@ -105,6 +105,7 @@ MNIST.testdata
 ### Utilities
 
 ```@docs
+MNIST.download
 MNIST.convert2features
 MNIST.convert2image
 ```

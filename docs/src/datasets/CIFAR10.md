@@ -42,7 +42,7 @@ information on the interface take a look at the documentation
 
 Function | Description
 ---------|-------------
-`download([dir])` | Trigger interactive download of the dataset
+[`download([dir])`](@ref CIFAR10.download) | Trigger interactive download of the dataset
 [`classnames()`](@ref CIFAR10.classnames) | Return the class names as a vector of strings
 [`traintensor([T], [indices]; [dir])`](@ref CIFAR10.traintensor) | Load the training images as an array of eltype `T`
 [`trainlabels([indices]; [dir])`](@ref CIFAR10.trainlabels) | Load the labels for the training images
@@ -104,6 +104,7 @@ CIFAR10.testdata
 ### Utilities
 
 ```@docs
+CIFAR10.download
 CIFAR10.classnames
 CIFAR10.convert2features
 CIFAR10.convert2image
