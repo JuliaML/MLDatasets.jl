@@ -1,6 +1,5 @@
 export MNIST
 module MNIST
-    using BinDeps
     using DataDeps
     using ImageCore
     using ColorTypes

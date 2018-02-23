@@ -1,6 +1,5 @@
 export FashionMNIST
 module FashionMNIST
-    using BinDeps
     using DataDeps
     using FixedPointNumbers
     using ..bytes_to_type
