@@ -169,6 +169,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/MNIST/#MLDatasets.MNIST.download",
+    "page": "MNIST handwritten digits",
+    "title": "MLDatasets.MNIST.download",
+    "category": "Function",
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/MNIST\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/MNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+},
+
+{
     "location": "datasets/MNIST/#MLDatasets.MNIST.convert2features",
     "page": "MNIST handwritten digits",
     "title": "MLDatasets.MNIST.convert2features",
@@ -189,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "MNIST handwritten digits",
     "title": "Utilities",
     "category": "section",
-    "text": "MNIST.convert2features\nMNIST.convert2image"
+    "text": "MNIST.download\nMNIST.convert2features\nMNIST.convert2image"
 },
 
 {
@@ -393,6 +401,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/FashionMNIST/#MLDatasets.FashionMNIST.download",
+    "page": "Fashion MNIST",
+    "title": "MLDatasets.FashionMNIST.download",
+    "category": "Function",
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/FashionMNIST\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/FashionMNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+},
+
+{
     "location": "datasets/FashionMNIST/#MLDatasets.FashionMNIST.classnames",
     "page": "Fashion MNIST",
     "title": "MLDatasets.FashionMNIST.classnames",
@@ -405,7 +421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Fashion MNIST",
     "title": "Utilities",
     "category": "section",
-    "text": "See MNIST.convert2features and MNIST.convert2imageFashionMNIST.classnames"
+    "text": "See MNIST.convert2features and MNIST.convert2imageFashionMNIST.download\nFashionMNIST.classnames"
 },
 
 {
@@ -521,6 +537,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/CIFAR10/#MLDatasets.CIFAR10.download",
+    "page": "CIFAR-10",
+    "title": "MLDatasets.CIFAR10.download",
+    "category": "Function",
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/CIFAR10\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR10\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+},
+
+{
     "location": "datasets/CIFAR10/#MLDatasets.CIFAR10.classnames",
     "page": "CIFAR-10",
     "title": "MLDatasets.CIFAR10.classnames",
@@ -549,7 +573,7 @@ var documenterSearchIndex = {"docs": [
     "page": "CIFAR-10",
     "title": "Utilities",
     "category": "section",
-    "text": "CIFAR10.classnames\nCIFAR10.convert2features\nCIFAR10.convert2image"
+    "text": "CIFAR10.download\nCIFAR10.classnames\nCIFAR10.convert2features\nCIFAR10.convert2image"
 },
 
 {
@@ -589,7 +613,7 @@ var documenterSearchIndex = {"docs": [
     "page": "CIFAR-100",
     "title": "Overview",
     "category": "section",
-    "text": "The MLDatasets.CIFAR100 sub-module provides a programmatic interface to download, load, and work with the CIFAR-100 dataset.using MLDatasets\n\n# load full training set\ntrain_x, train_y_coarse, train_y_fine = CIFAR100.traindata()\n\n# load full test set\ntest_x, test_y_coarse, test_y_fine  = CIFAR100.testdata()The provided functions also allow for optional arguments, such as the directory dir where the dataset is located, or the specific observation indices that one wants to work with. For more information on the interface take a look at the documentation (e.g. ?CIFAR100.traindata).Function Description\ndownload([dir]) Trigger interactive download of the dataset\nclassnames_coarse() Return the 20 super-class names as a vector of strings\nclassnames_fine() Return the 100 class names as a vector of strings\ntraintensor([T], [indices]; [dir]) Load the training images as an array of eltype T\ntrainlabels([indices]; [dir]) Load the labels for the training images\ntesttensor([T], [indices]; [dir]) Load the test images as an array of eltype T\ntestlabels([indices]; [dir]) Load the labels for the test images\ntraindata([T], [indices]; [dir]) Load images and labels of the training data\ntestdata([T], [indices]; [dir]) Load images and labels of the test dataThis module also provides utility functions to make working with the CIFAR-100 dataset in Julia more convenient.Function Description\nconvert2features(array) Convert the CIFAR-100 tensor to a flat feature matrix\nconvert2image(array) Convert the CIFAR-100 tensor/matrix to a colorant arrayYou can use the function convert2features to convert the given CIFAR-100 tensor to a feature matrix (or feature vector in the case of a single image). The purpose of this function is to drop the spatial dimensions such that traditional ML algorithms can process the dataset.julia> CIFAR100.convert2features(CIFAR100.traintensor()) # full training data\n3072×50000 Array{N0f8,2}:\n[...]To visualize an image or a prediction we provide the function convert2image to convert the given CIFAR-100 horizontal-major tensor (or feature matrix) to a vertical-major Colorant array.julia> CIFAR100.convert2image(CIFAR100.traintensor(1)) # first training image\n32×32 Array{RGB{N0f8},2}:\n[...]"
+    "text": "The MLDatasets.CIFAR100 sub-module provides a programmatic interface to download, load, and work with the CIFAR-100 dataset.using MLDatasets\n\n# load full training set\ntrain_x, train_y_coarse, train_y_fine = CIFAR100.traindata()\n\n# load full test set\ntest_x, test_y_coarse, test_y_fine  = CIFAR100.testdata()The provided functions also allow for optional arguments, such as the directory dir where the dataset is located, or the specific observation indices that one wants to work with. For more information on the interface take a look at the documentation (e.g. ?CIFAR100.traindata).Function Description\ndownload([dir]) Trigger interactive download of the dataset\nclassnames_coarse(; [dir]) Return the 20 super-class names as a vector of strings\nclassnames_fine(; [dir]) Return the 100 class names as a vector of strings\ntraintensor([T], [indices]; [dir]) Load the training images as an array of eltype T\ntrainlabels([indices]; [dir]) Load the labels for the training images\ntesttensor([T], [indices]; [dir]) Load the test images as an array of eltype T\ntestlabels([indices]; [dir]) Load the labels for the test images\ntraindata([T], [indices]; [dir]) Load images and labels of the training data\ntestdata([T], [indices]; [dir]) Load images and labels of the test dataThis module also provides utility functions to make working with the CIFAR-100 dataset in Julia more convenient.Function Description\nconvert2features(array) Convert the CIFAR-100 tensor to a flat feature matrix\nconvert2image(array) Convert the CIFAR-100 tensor/matrix to a colorant arrayYou can use the function convert2features to convert the given CIFAR-100 tensor to a feature matrix (or feature vector in the case of a single image). The purpose of this function is to drop the spatial dimensions such that traditional ML algorithms can process the dataset.julia> CIFAR100.convert2features(CIFAR100.traintensor()) # full training data\n3072×50000 Array{N0f8,2}:\n[...]To visualize an image or a prediction we provide the function convert2image to convert the given CIFAR-100 horizontal-major tensor (or feature matrix) to a vertical-major Colorant array.julia> CIFAR100.convert2image(CIFAR100.traintensor(1)) # first training image\n32×32 Array{RGB{N0f8},2}:\n[...]"
 },
 
 {
@@ -665,6 +689,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/CIFAR100/#MLDatasets.CIFAR100.download",
+    "page": "CIFAR-100",
+    "title": "MLDatasets.CIFAR100.download",
+    "category": "Function",
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/CIFAR100\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR100\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+},
+
+{
     "location": "datasets/CIFAR100/#MLDatasets.CIFAR100.classnames_coarse",
     "page": "CIFAR-100",
     "title": "MLDatasets.CIFAR100.classnames_coarse",
@@ -685,7 +717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "CIFAR-100",
     "title": "Utilities",
     "category": "section",
-    "text": "See CIFAR10.convert2features and CIFAR10.convert2imageCIFAR100.classnames_coarse\nCIFAR100.classnames_fine"
+    "text": "See CIFAR10.convert2features and CIFAR10.convert2imageCIFAR100.download\nCIFAR100.classnames_coarse\nCIFAR100.classnames_fine"
 },
 
 {
