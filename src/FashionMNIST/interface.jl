@@ -217,11 +217,11 @@ function testlabels(index::Integer; dir = nothing)
 end
 
 """
-    traindata([T = N0f8], [indices]; [dir]) -> Tuple
+    traindata([T = N0f8], [indices]; [dir]) -> images, labels
 
 Returns the Fashion-MNIST **trainingset** corresponding to the
 given `indices` as a two-element tuple. If `indices` is omitted
-the full trainingset is returned. The first element of three
+the full trainingset is returned. The first element of the
 return values will be the images as a multi-dimensional array,
 and the second element the corresponding labels as integers.
 
@@ -251,11 +251,11 @@ end
 traindata(args...; dir = nothing) = traindata(N0f8, args...; dir = dir)
 
 """
-    testdata([T = N0f8], [indices]; [dir]) -> Tuple
+    testdata([T = N0f8], [indices]; [dir]) -> images, labels
 
 Returns the Fashion-MNIST **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full testset is returned. The first element of three return values
+full testset is returned. The first element of the return values
 will be the images as a multi-dimensional array, and the second
 element the corresponding labels as integers.
 

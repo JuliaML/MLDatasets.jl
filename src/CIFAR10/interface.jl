@@ -209,11 +209,11 @@ function testlabels(args...; dir = nothing)
 end
 
 """
-    traindata([T = N0f8], [indices]; [dir]) -> Tuple
+    traindata([T = N0f8], [indices]; [dir]) -> images, labels
 
 Returns the CIFAR-10 **trainingset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full trainingset is returned. The first element of three return
+full trainingset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
@@ -314,11 +314,11 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
 end
 
 """
-    testdata([T = N0f8], [indices]; [dir]) -> Tuple
+    testdata([T = N0f8], [indices]; [dir]) -> images, labels
 
 Returns the CIFAR-10 **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
-full testset is returned. The first element of three return
+full testset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
@@ -330,9 +330,9 @@ values of the labels correspond 1-to-1 the digit that they
 represent.
 
 ```julia
-train_x, train_y = CIFAR10.testdata() # full datatset
-train_x, train_y = CIFAR10.testdata(2) # only second observation
-train_x, train_y = CIFAR10.testdata(dir="./CIFAR10") # custom folder
+test_x, test_y = CIFAR10.testdata() # full datatset
+test_x, test_y = CIFAR10.testdata(2) # only second observation
+test_x, test_y = CIFAR10.testdata(dir="./CIFAR10") # custom folder
 ```
 
 $(download_docstring("CIFAR10", DEPNAME))

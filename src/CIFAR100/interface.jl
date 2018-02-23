@@ -236,10 +236,10 @@ end
 
 Returns the CIFAR-100 **trainset** corresponding to the given
 `indices` as a three-element tuple. If `indices` is omitted the
-full trainingset is returned. The first element of three return
-values (`X`) will be the images as a multi-dimensional array, the
-second element (`Yc`) the corresponding coarse labels as
-integers, and the third element (`Yf`) the fine labels
+full trainingset is returned. The first element of the three
+return values (`X`) will be the images as a multi-dimensional
+array, the second element (`Yc`) the corresponding coarse labels
+as integers, and the third element (`Yf`) the fine labels
 respectively.
 
 The image(s) is/are returned in the native horizontal-major
@@ -317,7 +317,7 @@ end
 
 Returns the CIFAR-100 **testset** corresponding to the given
 `indices` as a three-element tuple. If `indices` is omitted the
-full testset is returned. The first element of three return
+full testset is returned. The first element of the three return
 values (`X`) will be the images as a multi-dimensional array, the
 second element (`Yc`) the corresponding coarse labels as
 integers, and the third element (`Yf`) the fine labels
