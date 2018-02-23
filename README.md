@@ -70,6 +70,9 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 [**FashionMNIST**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/FashionMNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
 [**CIFAR-10**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR10/) | 10 | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000
 [**CIFAR-100**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/) | 100 (20) | 32x32x3x50000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2)
+[**SVHN-2**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/SVHN2/)(*) | 10 | 32x32x3x73257 | 73257 | 32x32x3x26032 | 26032
+
+(*) Note that the SVHN-2 dataset provides an additional 531131 observations aside from the training- and testset
 
 ### Language Modeling
 
