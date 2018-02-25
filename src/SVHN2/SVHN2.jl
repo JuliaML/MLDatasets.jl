@@ -17,12 +17,13 @@ additional to use as extra training data.
 
 ## Interface
 
-- [`SVHN2.traindata`](@ref)
-- [`SVHN2.testdata`](@ref)
-- [`SVHN2.extradata`](@ref)
+- [`SVHN2.traintensor`](@ref), [`SVHN2.trainlabels`](@ref), [`SVHN2.traindata`](@ref)
+- [`SVHN2.testtensor`](@ref), [`SVHN2.testlabels`](@ref), [`SVHN2.testdata`](@ref)
+- [`SVHN2.extratensor`](@ref), [`SVHN2.extralabels`](@ref), [`SVHN2.extradata`](@ref)
 
 ## Utilities
 
+- [`SVHN2.download`](@ref)
 - [`SVHN2.classnames`](@ref)
 - [`SVHN2.convert2features`](@ref)
 - [`SVHN2.convert2image`](@ref)
@@ -39,6 +40,14 @@ module SVHN2
     using ..download_docstring
 
     export
+
+        traintensor,
+        testtensor,
+        extratensor,
+
+        trainlabels,
+        testlabels,
+        extralabels,
 
         traindata,
         testdata,

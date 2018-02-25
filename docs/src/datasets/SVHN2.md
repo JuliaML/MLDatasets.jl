@@ -62,8 +62,14 @@ Function | Description
 ---------|-------------
 [`download([dir])`](@ref SVHN2.download) | Trigger interactive download of the dataset
 [`classnames()`](@ref SVHN2.classnames) | Return the class names as a vector of strings
+[`traintensor([T], [indices]; [dir])`](@ref SVHN2.traintensor) | Load the training images as an array of eltype `T`
+[`trainlabels([indices]; [dir])`](@ref SVHN2.trainlabels) | Load the labels for the training images
 [`traindata([T], [indices]; [dir])`](@ref SVHN2.traindata) | Load images and labels of the training data
+[`testtensor([T], [indices]; [dir])`](@ref SVHN2.testtensor) | Load the test images as an array of eltype `T`
+[`testlabels([indices]; [dir])`](@ref SVHN2.testlabels) | Load the labels for the test images
 [`testdata([T], [indices]; [dir])`](@ref SVHN2.testdata) | Load images and labels of the test data
+[`extratensor([T], [indices]; [dir])`](@ref SVHN2.extratensor) | Load the extra images as an array of eltype `T`
+[`extralabels([indices]; [dir])`](@ref SVHN2.extralabels) | Load the labels for the extra training images
 [`extradata([T], [indices]; [dir])`](@ref SVHN2.extradata) | Load images and labels of the extra training data
 
 This module also provides utility functions to make working with
@@ -107,18 +113,24 @@ SVHN2
 ### Trainingset
 
 ```@docs
+SVHN2.traintensor
+SVHN2.trainlabels
 SVHN2.traindata
 ```
 
 ### Testset
 
 ```@docs
+SVHN2.testtensor
+SVHN2.testlabels
 SVHN2.testdata
 ```
 
 ### Extraset
 
 ```@docs
+SVHN2.extratensor
+SVHN2.extralabels
 SVHN2.extradata
 ```
 

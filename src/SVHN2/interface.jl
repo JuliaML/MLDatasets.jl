@@ -5,146 +5,192 @@ Return the 10 digits for the SVHN classes as a vector of integers.
 """
 classnames() = CLASSES
 
-"""
-    traindata([T = N0f8], [indices]; [dir]) -> images, labels
+for (FUN, PATH, COUNT, DESC) in (
+        (:traintensor, TRAINDATA, 73257,  "training"),
+        (:testtensor,  TESTDATA,  26032,  "test"),
+        (:extratensor, EXTRADATA, 531131, "extra training"),
+       )
+    FUN_STR = string(FUN)
+    @eval begin
+        """
+            $($FUN_STR)([T = N0f8], [indices]; [dir]) -> Array{T}
 
-Returns the SVHN **trainset** corresponding to the given
-`indices` as a two-element tuple. If `indices` is omitted the
-full trainset is returned. The first element of the return values
-will be the images as a multi-dimensional array, and the second
-element the corresponding labels as integers.
+        Return the SVHN **$($DESC)** images corresponding to the
+        given `indices` as a multi-dimensional array of eltype
+        `T`.
 
-The image(s) is/are returned in the native vertical-major memory
-layout as a single numeric array of eltype `T`. If `T <:
-Integer`, then all values will be within `0` and `255`, otherwise
-the values are scaled to be between `0` and `1`. You can use the
-utility function [`convert2image`](@ref) to convert an SVHN array
-into a Julia image with the appropriate `RGB` eltype. The integer
-values of the labels correspond 1-to-1 the digit that they
-represent with the exception of 0 which is encoded as `10`.
+        The image(s) is/are returned in the native vertical-major
+        memory layout as a single numeric array. If `T <:
+        Integer`, then all values will be within `0` and `255`,
+        otherwise the values are scaled to be between `0` and
+        `1`.
 
-Note that because of the nature of how the dataset is stored on
-disk, `SVHN2.traindata` will always load the full trainset,
-regardless of which observations are requested. In the case
-`indices` are provided by the user, it will simply result in a
-sub-setting. This option is just provided for convenience.
+        If the parameter `indices` is omitted or an
+        `AbstractVector`, the images are returned as a 4D array
+        (i.e. a `Array{T,4}`), in which the first dimension
+        corresponds to the pixel *columns* (y) of the image, the
+        second dimension to the pixel *rows* (x) of the image,
+        the third dimension the RGB color channels, and the
+        fourth dimension denotes the index of the image.
 
-```julia
-train_x, train_y = SVHN2.traindata() # full dataset
-train_x, train_y = SVHN2.traindata(2) # only second observation
-train_x, train_y = SVHN2.traindata(dir="./SVHN") # custom folder
-```
+        ```julia-repl
+        julia> SVHN2.$($FUN_STR)() # load all $($DESC) images
+        32×32×3×$($COUNT) Array{N0f8,4}:
+        [...]
 
-$(download_docstring("SVHN2", DEPNAME))
-"""
-function traindata(args...; dir = nothing)
-    traindata(N0f8, args...; dir = dir)
+        julia> SVHN.$($FUN_STR)(Float32, 1:3) # first three images as Float32
+        32×32×3×3 Array{Float32,4}:
+        [...]
+        ```
+
+        If `indices` is an `Integer`, the single image is
+        returned as `Array{T,3}` in vertical-major layout, which
+        means that the first dimension denotes the pixel
+        *columns* (y), the second dimension denotes the pixel
+        *rows* (x), and the third dimension the RGB color
+        channels of the image.
+
+        ```julia-repl
+        julia> SVHN2.$($FUN_STR)(1) # load first $($DESC) image
+        32×32×3 Array{N0f8,3}:
+        [...]
+        ```
+
+        As mentioned above, the color channel is encoded in the
+        third dimension. You can use the utility function
+        [`convert2image`](@ref) to convert an SVHN array into a
+        Julia image with the appropriate `RGB` eltype.
+
+        ```julia-repl
+        julia> SVHN2.convert2image(SVHN2.$($FUN_STR)(1))
+        32×32 Array{RGB{N0f8},2}:
+        [...]
+        ```
+
+        $(download_docstring("SVHN2", DEPNAME))
+        """
+        function ($FUN)(args...; dir = nothing)
+            ($FUN)(N0f8, args...; dir = dir)
+        end
+
+        function ($FUN)(::Type{T}; dir = nothing) where T
+            path = datafile(DEPNAME, $PATH, dir)
+            images = matopen(io->read(io, "X"), path)
+            bytes_to_type(T, images)
+        end
+
+        function ($FUN)(::Type{T}, indices; dir = nothing) where T
+            images = ($FUN)(T, dir = dir)
+            images[:,:,:,indices]
+        end
+    end
 end
 
-function traindata(::Type{T}; dir = nothing) where T
-    path = datafile(DEPNAME, TRAINDATA, dir)
-    vars = matread(path)
-    images, labels = vars["X"], vars["y"]
-    bytes_to_type(T, images), Vector{Int}(vec(labels))
+for (FUN, PATH, COUNT, DESC) in (
+        (:trainlabels, TRAINDATA, 73257,  "training"),
+        (:testlabels,  TESTDATA,  26032,  "test"),
+        (:extralabels, EXTRADATA, 531131, "extra training"),
+       )
+    FUN_STR = string(FUN)
+    @eval begin
+        """
+            $($FUN_STR)([indices]; [dir])
+
+        Returns the SVHN **$($DESC)** labels corresponding to
+        the given `indices` as an `Int` or `Vector{Int}`. The
+        values of the labels denote the zero-based class-index
+        that they represent (see [`SVHN2.classnames`](@ref) for
+        the corresponding names). If `indices` is omitted, all
+        labels are returned.
+
+        ```julia-repl
+        julia> SVHN2.$($FUN_STR)() # full $($DESC) set
+        $($COUNT)-element Array{Int64,1}:
+        [...]
+
+        julia> SVHN2.$($FUN_STR)(1:3) # first three labels
+        3-element Array{Int64,1}:
+        [...]
+
+        julia> SVHN2.$($FUN_STR)(1) # first label
+        [...]
+
+        julia> SVHN2.classnames()[SVHN2.$($FUN_STR)(1)] # corresponding class
+        [...]
+        ```
+
+        $(download_docstring("SVHN2", DEPNAME))
+        """
+        function ($FUN)(; dir = nothing)
+            path = datafile(DEPNAME, $PATH, dir)
+            labels = matopen(io->read(io, "y"), path)
+            Vector{Int}(vec(labels))
+        end
+
+        function ($FUN)(indices; dir = nothing)
+            labels = ($FUN)(dir = dir)
+            labels[indices]
+        end
+    end
 end
 
-function traindata(::Type{T}, indices; dir = nothing) where T
-    images, labels = traindata(T, dir = dir)
-    images[:,:,:,indices], labels[indices]
-end
+for (FUN, PATH, DESC) in (
+        (:traindata, TRAINDATA, "trainset"),
+        (:testdata,  TESTDATA,  "testset"),
+        (:extradata, EXTRADATA, "extra trainset"),
+       )
+    FUN_STR = string(FUN)
+    @eval begin
+        """
+            $($FUN_STR)([T = N0f8], [indices]; [dir]) -> images, labels
 
-"""
-    testdata([T = N0f8], [indices]; [dir]) -> images, labels
+        Returns the SVHN **$($DESC)** corresponding to the given
+        `indices` as a two-element tuple. If `indices` is omitted
+        the full $($DESC) is returned. The first element of the
+        return values will be the images as a multi-dimensional
+        array, and the second element the corresponding labels as
+        integers.
 
-Returns the SVHN **testset** corresponding to the given
-`indices` as a two-element tuple. If `indices` is omitted the
-full testset is returned. The first element of the return
-values will be the images as a multi-dimensional array, and the
-second element the corresponding labels as integers.
+        The image(s) is/are returned in the native vertical-major
+        memory layout as a single numeric array of eltype `T`. If
+        `T <: Integer`, then all values will be within `0` and
+        `255`, otherwise the values are scaled to be between `0`
+        and `1`. You can use the utility function
+        [`convert2image`](@ref) to convert an SVHN array into a
+        Julia image with the appropriate `RGB` eltype. The
+        integer values of the labels correspond 1-to-1 the digit
+        that they represent with the exception of 0 which is
+        encoded as `10`.
 
-The image(s) is/are returned in the native vertical-major memory
-layout as a single numeric array of eltype `T`. If `T <:
-Integer`, then all values will be within `0` and `255`, otherwise
-the values are scaled to be between `0` and `1`. You can use the
-utility function [`convert2image`](@ref) to convert an SVHN array
-into a Julia image with the appropriate `RGB` eltype. The integer
-values of the labels correspond 1-to-1 the digit that they
-represent with the exception of 0 which is encoded as `10`.
+        Note that because of the nature of how the dataset is
+        stored on disk, `SVHN2.$($FUN_STR)` will always load the
+        full $($DESC), regardless of which observations are
+        requested. In the case `indices` are provided by the
+        user, it will simply result in a sub-setting. This option
+        is just provided for convenience.
 
-Note that because of the nature of how the dataset is stored on
-disk, `SVHN2.testdata` will always load the full testset,
-regardless of which observations are requested. In the case
-`indices` are provided by the user, it will simply result in a
-sub-setting. This option is just provided for convenience.
+        ```julia
+        images, labels = SVHN2.$($FUN_STR)() # full dataset
+        images, labels = SVHN2.$($FUN_STR)(2) # only second observation
+        images, labels = SVHN2.$($FUN_STR)(dir="./SVHN") # custom folder
+        ```
 
-```julia
-test_x, test_y = SVHN2.testdata() # full dataset
-test_x, test_y = SVHN2.testdata(2) # only second observation
-test_x, test_y = SVHN2.testdata(dir="./SVHN") # custom folder
-```
+        $(download_docstring("SVHN2", DEPNAME))
+        """
+        function ($FUN)(args...; dir = nothing)
+            ($FUN)(N0f8, args...; dir = dir)
+        end
 
-$(download_docstring("SVHN2", DEPNAME))
-"""
-function testdata(args...; dir = nothing)
-    testdata(N0f8, args...; dir = dir)
-end
+        function ($FUN)(::Type{T}; dir = nothing) where T
+            path = datafile(DEPNAME, $PATH, dir)
+            vars = matread(path)
+            images, labels = vars["X"], vars["y"]
+            bytes_to_type(T, images), Vector{Int}(vec(labels))
+        end
 
-function testdata(::Type{T}; dir = nothing) where T
-    path = datafile(DEPNAME, TESTDATA, dir)
-    vars = matread(path)
-    images, labels = vars["X"], vars["y"]
-    bytes_to_type(T, images), Vector{Int}(vec(labels))
-end
-
-function testdata(::Type{T}, indices; dir = nothing) where T
-    images, labels = testdata(T, dir = dir)
-    images[:,:,:,indices], labels[indices]
-end
-
-"""
-    extradata([T = N0f8], [indices]; [dir]) -> images, labels
-
-Returns the SVHN **extra trainset** corresponding to the given
-`indices` as a two-element tuple. If `indices` is omitted the
-full dataset is returned. The first element of the return values
-will be the images as a multi-dimensional array, and the second
-element the corresponding labels as integers.
-
-The image(s) is/are returned in the native vertical-major memory
-layout as a single numeric array of eltype `T`. If `T <:
-Integer`, then all values will be within `0` and `255`, otherwise
-the values are scaled to be between `0` and `1`. You can use the
-utility function [`convert2image`](@ref) to convert an SVHN array
-into a Julia image with the appropriate `RGB` eltype. The integer
-values of the labels correspond 1-to-1 the digit that they
-represent with the exception of 0 which is encoded as `10`.
-
-Note that because of the nature of how the dataset is stored on
-disk, `SVHN2.extradata` will always load the full extra trainset,
-regardless of which observations are requested. In the case
-`indices` are provided by the user, it will simply result in a
-sub-setting. This option is just provided for convenience.
-
-```julia
-extra_x, extra_y = SVHN2.extradata() # full dataset
-extra_x, extra_y = SVHN2.extradata(2) # only second observation
-extra_x, extra_y = SVHN2.extradata(dir="./SVHN") # custom folder
-```
-
-$(download_docstring("SVHN2", DEPNAME))
-"""
-function extradata(args...; dir = nothing)
-    extradata(N0f8, args...; dir = dir)
-end
-
-function extradata(::Type{T}; dir = nothing) where T
-    path = datafile(DEPNAME, EXTRADATA, dir)
-    vars = matread(path)
-    images, labels = vars["X"], vars["y"]
-    bytes_to_type(T, images), Vector{Int}(vec(labels))
-end
-
-function extradata(::Type{T}, indices; dir = nothing) where T
-    images, labels = extradata(T, dir = dir)
-    images[:,:,:,indices], labels[indices]
+        function ($FUN)(::Type{T}, indices; dir = nothing) where T
+            images, labels = ($FUN)(T, dir = dir)
+            images[:,:,:,indices], labels[indices]
+        end
+    end
 end
