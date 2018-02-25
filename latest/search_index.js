@@ -97,11 +97,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/MNIST/#MLDatasets.MNIST",
+    "page": "MNIST handwritten digits",
+    "title": "MLDatasets.MNIST",
+    "category": "Module",
+    "text": "The MNIST database of handwritten digits\n\nAuthors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges\nWebsite: http://yann.lecun.com/exdb/mnist/\n\nMNIST is a classic image-classification dataset that is often used in small-scale machine learning experiments. It contains 70,000 images of handwritten digits. Each observation is a 28x28 pixel gray-scale image that depicts a handwritten version of 1 of the 10 possible digits (0-9).\n\nInterface\n\nMNIST.traintensor, MNIST.trainlabels, MNIST.traindata\nMNIST.testtensor, MNIST.testlabels, MNIST.testdata\n\nUtilities\n\nMNIST.download\nMNIST.convert2features\nMNIST.convert2image\n\n\n\n"
+},
+
+{
     "location": "datasets/MNIST/#API-Documentation-1",
     "page": "MNIST handwritten digits",
     "title": "API Documentation",
     "category": "section",
-    "text": ""
+    "text": "MNIST"
 },
 
 {
