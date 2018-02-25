@@ -11,7 +11,7 @@ julia> SVHN2.convert2features(SVHN2.traindata(Float32)[1]) # full training data
 3072×50000 Array{Float32,2}:
 [...]
 
-julia> SVHN2.convert2features(SVHN2.traindata(Float32)[1][:,:,:,1]) # first observation
+julia> SVHN2.convert2features(SVHN2.traindata(Float32,1)[1]) # first observation
 3072-element Array{Float32,1}:
 [...]
 ```
@@ -45,7 +45,7 @@ julia> SVHN2.convert2image(SVHN2.traindata()[1]) # full training dataset
 32×32×50000 Array{RGB{N0f8},3}:
 [...]
 
-julia> SVHN2.convert2image(SVHN2.traindata()[1][:,:,:,1]) # first training image
+julia> SVHN2.convert2image(SVHN2.traindata(1)[1]) # first training image
 32×32 Array{RGB{N0f8},2}:
 [...]
 ```

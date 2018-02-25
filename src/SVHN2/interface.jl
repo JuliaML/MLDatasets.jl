@@ -35,7 +35,7 @@ train_x, train_y = SVHN2.traindata(2) # only second observation
 train_x, train_y = SVHN2.traindata(dir="./SVHN") # custom folder
 ```
 
-$(download_docstring("SVHN", DEPNAME))
+$(download_docstring("SVHN2", DEPNAME))
 """
 function traindata(args...; dir = nothing)
     traindata(N0f8, args...; dir = dir)
@@ -83,7 +83,7 @@ test_x, test_y = SVHN2.testdata(2) # only second observation
 test_x, test_y = SVHN2.testdata(dir="./SVHN") # custom folder
 ```
 
-$(download_docstring("SVHN", DEPNAME))
+$(download_docstring("SVHN2", DEPNAME))
 """
 function testdata(args...; dir = nothing)
     testdata(N0f8, args...; dir = dir)
@@ -131,7 +131,7 @@ extra_x, extra_y = SVHN2.extradata(2) # only second observation
 extra_x, extra_y = SVHN2.extradata(dir="./SVHN") # custom folder
 ```
 
-$(download_docstring("SVHN", DEPNAME))
+$(download_docstring("SVHN2", DEPNAME))
 """
 function extradata(args...; dir = nothing)
     extradata(N0f8, args...; dir = dir)

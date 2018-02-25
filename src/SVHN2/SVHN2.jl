@@ -3,8 +3,8 @@ export SVHN2
 """
 The Street View House Numbers (SVHN) Dataset
 
-Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
-Website: http://ufldl.stanford.edu/housenumbers
+- Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
+- Website: http://ufldl.stanford.edu/housenumbers
 
 SVHN was obtained from house numbers in Google Street View
 images. As such they are quite diverse in terms of orientation
@@ -17,14 +17,15 @@ additional to use as extra training data.
 
 ## Interface
 
-- [SVHN2.traindata](@ref)
-- [SVHN2.testdata](@ref)
-- [SVHN2.extradata](@ref)
+- [`SVHN2.traindata`](@ref)
+- [`SVHN2.testdata`](@ref)
+- [`SVHN2.extradata`](@ref)
 
 ## Utilities
 
-- [SVHN2.convert2features](@ref)
-- [SVHN2.convert2image](@ref)
+- [`SVHN2.classnames`](@ref)
+- [`SVHN2.convert2features`](@ref)
+- [`SVHN2.convert2image`](@ref)
 """
 module SVHN2
     using DataDeps
@@ -54,6 +55,19 @@ module SVHN2
     const EXTRADATA = "extra_32x32.mat"
     const CLASSES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
+    """
+        download([dir]; [i_accept_the_terms_of_use])
+
+    Trigger the (interactive) download of the full dataset into
+    "<`dir`>/$DEPNAME". If no `dir` is provided the dataset will
+    be downloaded into "~/.julia/datadeps/$DEPNAME".
+
+    This function will display an interactive dialog unless
+    either the keyword parameter `i_accept_the_terms_of_use` or
+    the environment variable `DATADEPS_ALWAY_ACCEPT` is set to
+    `true`. Note that using the data responsibly and respecting
+    copyright/terms-of-use remains your responsibility.
+    """
     download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
     include("interface.jl")
@@ -87,6 +101,7 @@ module SVHN2
             dataset.
             """,
             "http://ufldl.stanford.edu/housenumbers/" .* [TRAINDATA, TESTDATA, EXTRADATA],
+            "2fa3b0b79baf39de36ed7579e6947760e6241f4c52b6b406cabc44d654c13a50"
         )
     end
 end

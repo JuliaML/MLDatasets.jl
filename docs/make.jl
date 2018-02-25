@@ -18,6 +18,7 @@ makedocs(
                 "Fashion MNIST" => "datasets/FashionMNIST.md",
                 "CIFAR-10" => "datasets/CIFAR10.md",
                 "CIFAR-100" => "datasets/CIFAR100.md",
+                "SVHN format 2" => "datasets/SVHN2.md",
             ],
         ],
         hide("Indices" => "indices.md"),
