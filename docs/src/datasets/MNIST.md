@@ -86,6 +86,10 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
 
 ## API Documentation
 
+```@docs
+MNIST
+```
+
 ### Trainingset
 
 ```@docs

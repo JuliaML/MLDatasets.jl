@@ -1,4 +1,28 @@
 export MNIST
+
+"""
+The MNIST database of handwritten digits
+
+- Authors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges
+- Website: http://yann.lecun.com/exdb/mnist/
+
+MNIST is a classic image-classification dataset that is often
+used in small-scale machine learning experiments. It contains
+70,000 images of handwritten digits. Each observation is a 28x28
+pixel gray-scale image that depicts a handwritten version of 1 of
+the 10 possible digits (0-9).
+
+## Interface
+
+- [`MNIST.traintensor`](@ref), [`MNIST.trainlabels`](@ref), [`MNIST.traindata`](@ref)
+- [`MNIST.testtensor`](@ref), [`MNIST.testlabels`](@ref), [`MNIST.testdata`](@ref)
+
+## Utilities
+
+- [`MNIST.download`](@ref)
+- [`MNIST.convert2features`](@ref)
+- [`MNIST.convert2image`](@ref)
+"""
 module MNIST
     using DataDeps
     using ImageCore
