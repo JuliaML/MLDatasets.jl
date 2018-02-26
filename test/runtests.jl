@@ -6,6 +6,7 @@ tests = [
     "tst_cifar100.jl",
     "tst_mnist.jl",
     "tst_fashion_mnist.jl",
+    "tst_svhn2.jl",
 ]
 
 for t in tests

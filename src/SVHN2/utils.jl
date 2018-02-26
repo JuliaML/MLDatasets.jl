@@ -29,10 +29,10 @@ function convert2features(array::AbstractArray{<:Number,4})
 end
 
 convert2features(array::AbstractArray{<:RGB,2}) =
-    convert2features(permutedims(channelview(array), (3,1,2)))
+    convert2features(permutedims(channelview(array), (2,3,1)))
 
 convert2features(array::AbstractArray{<:RGB,3}) =
-    convert2features(permutedims(channelview(array), (3,1,2,4)))
+    convert2features(permutedims(channelview(array), (2,3,1,4)))
 
 """
     convert2image(array) -> Array{RGB}
