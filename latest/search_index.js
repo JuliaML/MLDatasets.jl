@@ -181,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "MNIST handwritten digits",
     "title": "MLDatasets.MNIST.download",
     "category": "Function",
-    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/MNIST\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/MNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"dir\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/MNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
 },
 
 {
@@ -413,7 +413,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Fashion MNIST",
     "title": "MLDatasets.FashionMNIST.download",
     "category": "Function",
-    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/FashionMNIST\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/FashionMNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"dir\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/FashionMNIST\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
 },
 
 {
@@ -549,7 +549,7 @@ var documenterSearchIndex = {"docs": [
     "page": "CIFAR-10",
     "title": "MLDatasets.CIFAR10.download",
     "category": "Function",
-    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/CIFAR10\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR10\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"dir\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR10\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
 },
 
 {
@@ -701,7 +701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "CIFAR-100",
     "title": "MLDatasets.CIFAR100.download",
     "category": "Function",
-    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"<dir>/CIFAR100\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR100\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"dir\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/CIFAR100\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
 },
 
 {
