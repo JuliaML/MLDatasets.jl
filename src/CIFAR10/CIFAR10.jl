@@ -54,8 +54,8 @@ module CIFAR10
         download([dir]; [i_accept_the_terms_of_use])
 
     Trigger the (interactive) download of the full dataset into
-    "<`dir`>/$DEPNAME". If no `dir` is provided the dataset will
-    be downloaded into "~/.julia/datadeps/$DEPNAME".
+    "`dir`". If no `dir` is provided the dataset will be
+    downloaded into "~/.julia/datadeps/$DEPNAME".
 
     This function will display an interactive dialog unless
     either the keyword parameter `i_accept_the_terms_of_use` or
