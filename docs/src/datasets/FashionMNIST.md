@@ -87,6 +87,10 @@ julia> FashionMNIST.convert2image(FashionMNIST.traintensor(1)) # first training 
 
 ## API Documentation
 
+```@docs
+FashionMNIST
+```
+
 ### Trainingset
 
 ```@docs
