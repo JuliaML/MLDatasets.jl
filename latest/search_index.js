@@ -337,11 +337,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "datasets/FashionMNIST/#MLDatasets.FashionMNIST",
+    "page": "Fashion MNIST",
+    "title": "MLDatasets.FashionMNIST",
+    "category": "Module",
+    "text": "Fashion-MNIST\n\nAuthors: Han Xiao, Kashif Rasul, Roland Vollgraf\nWebsite: https://github.com/zalandoresearch/fashion-mnist\n\nFashion-MNIST is a dataset of Zalando\'s article images—consisting of a training set of 60,000 examples and a test set of 10,000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. It can serve as a drop-in replacement for MNIST.\n\nInterface\n\nFashionMNIST.traintensor, FashionMNIST.trainlabels, FashionMNIST.traindata\nFashionMNIST.testtensor, FashionMNIST.testlabels, FashionMNIST.testdata\n\nUtilities\n\nFashionMNIST.download\nMNIST.convert2features\nMNIST.convert2image\n\n\n\n"
+},
+
+{
     "location": "datasets/FashionMNIST/#API-Documentation-1",
     "page": "Fashion MNIST",
     "title": "API Documentation",
     "category": "section",
-    "text": ""
+    "text": "FashionMNIST"
 },
 
 {
