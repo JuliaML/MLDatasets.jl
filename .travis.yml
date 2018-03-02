@@ -1,31 +1,28 @@
 language: julia
-
 os:
-    - linux
-    - osx
-
+  - linux
+  - osx
 julia:
-    - 0.6
-    - nightly
-matrix:
-    allow_failures:
-        - julia: nightly
-git:
-    depth: 5000
-
+  - 0.6
+  - nightly
 notifications:
-    email: false
+  email: false
+git:
+  depth: 99999999
 
-before_script:
-  - export PATH=$HOME/.local/bin:$PATH
+matrix:
+  allow_failures:
+    - julia: nightly
+
+addons:
+  apt: # apt-get for linux
+    packages:
+      - hdf5-tools
 
 install:
   #- sudo pip install pymdown-extensions
 
 after_success:
+  - julia -e 'cd(Pkg.dir("MLDatasets")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   - julia -e 'Pkg.add("Documenter")'
   - julia -e 'cd(Pkg.dir("MLDatasets")); include(joinpath("docs", "make.jl"))'
-
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone(pwd()); Pkg.build("MLDatasets"); Pkg.test("MLDatasets"; coverage=true)'
