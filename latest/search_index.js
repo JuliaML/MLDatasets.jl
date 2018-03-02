@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Home",
     "title": "Image Classification",
     "category": "section",
-    "text": "This package provides a variety of common benchmark datasets for the purpose of image classification.Dataset Classes traintensor trainlabels testtensor testlabels\nMNIST 10 28x28x60000 60000 28x28x10000 10000\nFashionMNIST 10 28x28x60000 60000 28x28x10000 10000\nCIFAR-10 10 32x32x3x50000 50000 32x32x3x10000 10000\nCIFAR-100 100 (20) 32x32x3x50000 50000 (x2) 32x32x3x10000 10000 (x2)"
+    "text": "This package provides a variety of common benchmark datasets for the purpose of image classification.Dataset Classes traintensor trainlabels testtensor testlabels\nMNIST 10 28x28x60000 60000 28x28x10000 10000\nFashionMNIST 10 28x28x60000 60000 28x28x10000 10000\nCIFAR-10 10 32x32x3x50000 50000 32x32x3x10000 10000\nCIFAR-100 100 (20) 32x32x3x50000 50000 (x2) 32x32x3x10000 10000 (x2)\nSVHN-2 (*) 10 32x32x3x73257 73257 32x32x3x26032 26032(*) Note that the SVHN-2 dataset provides an additional 531131 observations aside from the training- and testset"
 },
 
 {
@@ -742,6 +742,198 @@ var documenterSearchIndex = {"docs": [
     "title": "References",
     "category": "section",
     "text": "Authors: Alex Krizhevsky, Vinod Nair, Geoffrey Hinton\nWebsite: https://www.cs.toronto.edu/~kriz/cifar.html\n[Krizhevsky, 2009] Alex Krizhevsky. \"Learning Multiple Layers of Features from Tiny Images\", Tech Report, 2009."
+},
+
+{
+    "location": "datasets/SVHN2/#",
+    "page": "SVHN format 2",
+    "title": "SVHN format 2",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "datasets/SVHN2/#SVHN2-1",
+    "page": "SVHN format 2",
+    "title": "The Street View House Numbers (SVHN) Dataset",
+    "category": "section",
+    "text": "Description from the official website:SVHN is a real-world image dataset for developing machine learning and object recognition algorithms with minimal requirement on data preprocessing and formatting. It can be seen as similar in flavor to MNIST (e.g., the images are of small cropped digits), but incorporates an order of magnitude more labeled data (over 600,000 digit images) and comes from a significantly harder, unsolved, real world problem (recognizing digits and numbers in natural scene images). SVHN is obtained from house numbers in Google Street View images.About Format 2 (Cropped Digits):All digits have been resized to a fixed resolution of 32-by-32 pixels. The original character bounding boxes are extended in the appropriate dimension to become square windows, so that resizing them to 32-by-32 pixels does not introduce aspect ratio distortions. Nevertheless this preprocessing introduces some distracting digits to the sides of the digit of interest.note: Note\nFor non-commercial use only"
+},
+
+{
+    "location": "datasets/SVHN2/#Contents-1",
+    "page": "SVHN format 2",
+    "title": "Contents",
+    "category": "section",
+    "text": "Pages = [\"SVHN2.md\"]\nDepth = 3"
+},
+
+{
+    "location": "datasets/SVHN2/#Overview-1",
+    "page": "SVHN format 2",
+    "title": "Overview",
+    "category": "section",
+    "text": "The MLDatasets.SVHN2 sub-module provides a programmatic interface to download, load, and work with the SVHN2 dataset of handwritten digits.using MLDatasets\n\n# load full training set\ntrain_x, train_y = SVHN2.traindata()\n\n# load full test set\ntest_x,  test_y  = SVHN2.testdata()\n\n# load additional train set\nextra_x, extra_y = SVHN2.extradata()The provided functions also allow for optional arguments, such as the directory dir where the dataset is located, or the specific observation indices that one wants to work with. For more information on the interface take a look at the documentation (e.g. ?SVHN2.traindata).Function Description\ndownload([dir]) Trigger interactive download of the dataset\nclassnames() Return the class names as a vector of strings\ntraintensor([T], [indices]; [dir]) Load the training images as an array of eltype T\ntrainlabels([indices]; [dir]) Load the labels for the training images\ntraindata([T], [indices]; [dir]) Load images and labels of the training data\ntesttensor([T], [indices]; [dir]) Load the test images as an array of eltype T\ntestlabels([indices]; [dir]) Load the labels for the test images\ntestdata([T], [indices]; [dir]) Load images and labels of the test data\nextratensor([T], [indices]; [dir]) Load the extra images as an array of eltype T\nextralabels([indices]; [dir]) Load the labels for the extra training images\nextradata([T], [indices]; [dir]) Load images and labels of the extra training dataThis module also provides utility functions to make working with the SVHN (format 2) dataset in Julia more convenient.Function Description\nconvert2features(array) Convert the SVHN tensor to a flat feature matrix\nconvert2image(array) Convert the SVHN tensor/matrix to a colorant arrayYou can use the function convert2features to convert the given SVHN tensor to a feature matrix (or feature vector in the case of a single image). The purpose of this function is to drop the spatial dimensions such that traditional ML algorithms can process the dataset.julia> SVHN2.convert2features(SVHN2.traindata()[1]) # full training data\n3072×73257 Array{N0f8,2}:\n[...]To visualize an image or a prediction we provide the function convert2image to convert the given SVHN2 horizontal-major tensor (or feature matrix) to a vertical-major Colorant array.julia> SVHN2.convert2image(SVHN2.traindata(1)[1]) # first training image\n32×32 Array{RGB{N0f8},2}:\n[...]"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2",
+    "category": "Module",
+    "text": "The Street View House Numbers (SVHN) Dataset\n\nAuthors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng\nWebsite: http://ufldl.stanford.edu/housenumbers\n\nSVHN was obtained from house numbers in Google Street View images. As such they are quite diverse in terms of orientation and image background. Similar to MNIST, SVHN has 10 classes (the digits 0-9), but unlike MNIST there is more data and the images are a little bigger (32x32 instead of 28x28) with an additional RGB color channel. The dataset is split up into three subsets: 73257 digits for training, 26032 digits for testing, and 531131 additional to use as extra training data.\n\nInterface\n\nSVHN2.traintensor, SVHN2.trainlabels, SVHN2.traindata\nSVHN2.testtensor, SVHN2.testlabels, SVHN2.testdata\nSVHN2.extratensor, SVHN2.extralabels, SVHN2.extradata\n\nUtilities\n\nSVHN2.download\nSVHN2.classnames\nSVHN2.convert2features\nSVHN2.convert2image\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#API-Documentation-1",
+    "page": "SVHN format 2",
+    "title": "API Documentation",
+    "category": "section",
+    "text": "SVHN2"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.traintensor",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.traintensor",
+    "category": "Function",
+    "text": "traintensor([T = N0f8], [indices]; [dir]) -> Array{T}\n\nReturn the SVHN training images corresponding to the given indices as a multi-dimensional array of eltype T.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1.\n\nIf the parameter indices is omitted or an AbstractVector, the images are returned as a 4D array (i.e. a Array{T,4}), in which the first dimension corresponds to the pixel columns (y) of the image, the second dimension to the pixel rows (x) of the image, the third dimension the RGB color channels, and the fourth dimension denotes the index of the image.\n\njulia> SVHN2.traintensor() # load all training images\n32×32×3×73257 Array{N0f8,4}:\n[...]\n\njulia> SVHN.traintensor(Float32, 1:3) # first three images as Float32\n32×32×3×3 Array{Float32,4}:\n[...]\n\nIf indices is an Integer, the single image is returned as Array{T,3} in vertical-major layout, which means that the first dimension denotes the pixel columns (y), the second dimension denotes the pixel rows (x), and the third dimension the RGB color channels of the image.\n\njulia> SVHN2.traintensor(1) # load first training image\n32×32×3 Array{N0f8,3}:\n[...]\n\nAs mentioned above, the color channel is encoded in the third dimension. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype.\n\njulia> SVHN2.convert2image(SVHN2.traintensor(1))\n32×32 Array{RGB{N0f8},2}:\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.trainlabels",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.trainlabels",
+    "category": "Function",
+    "text": "trainlabels([indices]; [dir])\n\nReturns the SVHN training labels corresponding to the given indices as an Int or Vector{Int}. The values of the labels denote the zero-based class-index that they represent (see SVHN2.classnames for the corresponding names). If indices is omitted, all labels are returned.\n\njulia> SVHN2.trainlabels() # full training set\n73257-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.trainlabels(1:3) # first three labels\n3-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.trainlabels(1) # first label\n[...]\n\njulia> SVHN2.classnames()[SVHN2.trainlabels(1)] # corresponding class\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.traindata",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.traindata",
+    "category": "Function",
+    "text": "traindata([T = N0f8], [indices]; [dir]) -> images, labels\n\nReturns the SVHN trainset corresponding to the given indices as a two-element tuple. If indices is omitted the full trainset is returned. The first element of the return values will be the images as a multi-dimensional array, and the second element the corresponding labels as integers.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array of eltype T. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype. The integer values of the labels correspond 1-to-1 the digit that they represent with the exception of 0 which is encoded as 10.\n\nNote that because of the nature of how the dataset is stored on disk, SVHN2.traindata will always load the full trainset, regardless of which observations are requested. In the case indices are provided by the user, it will simply result in a sub-setting. This option is just provided for convenience.\n\nimages, labels = SVHN2.traindata() # full dataset\nimages, labels = SVHN2.traindata(2) # only second observation\nimages, labels = SVHN2.traindata(dir=\"./SVHN\") # custom folder\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#Trainingset-1",
+    "page": "SVHN format 2",
+    "title": "Trainingset",
+    "category": "section",
+    "text": "SVHN2.traintensor\nSVHN2.trainlabels\nSVHN2.traindata"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.testtensor",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.testtensor",
+    "category": "Function",
+    "text": "testtensor([T = N0f8], [indices]; [dir]) -> Array{T}\n\nReturn the SVHN test images corresponding to the given indices as a multi-dimensional array of eltype T.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1.\n\nIf the parameter indices is omitted or an AbstractVector, the images are returned as a 4D array (i.e. a Array{T,4}), in which the first dimension corresponds to the pixel columns (y) of the image, the second dimension to the pixel rows (x) of the image, the third dimension the RGB color channels, and the fourth dimension denotes the index of the image.\n\njulia> SVHN2.testtensor() # load all test images\n32×32×3×26032 Array{N0f8,4}:\n[...]\n\njulia> SVHN.testtensor(Float32, 1:3) # first three images as Float32\n32×32×3×3 Array{Float32,4}:\n[...]\n\nIf indices is an Integer, the single image is returned as Array{T,3} in vertical-major layout, which means that the first dimension denotes the pixel columns (y), the second dimension denotes the pixel rows (x), and the third dimension the RGB color channels of the image.\n\njulia> SVHN2.testtensor(1) # load first test image\n32×32×3 Array{N0f8,3}:\n[...]\n\nAs mentioned above, the color channel is encoded in the third dimension. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype.\n\njulia> SVHN2.convert2image(SVHN2.testtensor(1))\n32×32 Array{RGB{N0f8},2}:\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.testlabels",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.testlabels",
+    "category": "Function",
+    "text": "testlabels([indices]; [dir])\n\nReturns the SVHN test labels corresponding to the given indices as an Int or Vector{Int}. The values of the labels denote the zero-based class-index that they represent (see SVHN2.classnames for the corresponding names). If indices is omitted, all labels are returned.\n\njulia> SVHN2.testlabels() # full test set\n26032-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.testlabels(1:3) # first three labels\n3-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.testlabels(1) # first label\n[...]\n\njulia> SVHN2.classnames()[SVHN2.testlabels(1)] # corresponding class\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.testdata",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.testdata",
+    "category": "Function",
+    "text": "testdata([T = N0f8], [indices]; [dir]) -> images, labels\n\nReturns the SVHN testset corresponding to the given indices as a two-element tuple. If indices is omitted the full testset is returned. The first element of the return values will be the images as a multi-dimensional array, and the second element the corresponding labels as integers.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array of eltype T. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype. The integer values of the labels correspond 1-to-1 the digit that they represent with the exception of 0 which is encoded as 10.\n\nNote that because of the nature of how the dataset is stored on disk, SVHN2.testdata will always load the full testset, regardless of which observations are requested. In the case indices are provided by the user, it will simply result in a sub-setting. This option is just provided for convenience.\n\nimages, labels = SVHN2.testdata() # full dataset\nimages, labels = SVHN2.testdata(2) # only second observation\nimages, labels = SVHN2.testdata(dir=\"./SVHN\") # custom folder\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#Testset-1",
+    "page": "SVHN format 2",
+    "title": "Testset",
+    "category": "section",
+    "text": "SVHN2.testtensor\nSVHN2.testlabels\nSVHN2.testdata"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.extratensor",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.extratensor",
+    "category": "Function",
+    "text": "extratensor([T = N0f8], [indices]; [dir]) -> Array{T}\n\nReturn the SVHN extra training images corresponding to the given indices as a multi-dimensional array of eltype T.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1.\n\nIf the parameter indices is omitted or an AbstractVector, the images are returned as a 4D array (i.e. a Array{T,4}), in which the first dimension corresponds to the pixel columns (y) of the image, the second dimension to the pixel rows (x) of the image, the third dimension the RGB color channels, and the fourth dimension denotes the index of the image.\n\njulia> SVHN2.extratensor() # load all extra training images\n32×32×3×531131 Array{N0f8,4}:\n[...]\n\njulia> SVHN.extratensor(Float32, 1:3) # first three images as Float32\n32×32×3×3 Array{Float32,4}:\n[...]\n\nIf indices is an Integer, the single image is returned as Array{T,3} in vertical-major layout, which means that the first dimension denotes the pixel columns (y), the second dimension denotes the pixel rows (x), and the third dimension the RGB color channels of the image.\n\njulia> SVHN2.extratensor(1) # load first extra training image\n32×32×3 Array{N0f8,3}:\n[...]\n\nAs mentioned above, the color channel is encoded in the third dimension. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype.\n\njulia> SVHN2.convert2image(SVHN2.extratensor(1))\n32×32 Array{RGB{N0f8},2}:\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.extralabels",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.extralabels",
+    "category": "Function",
+    "text": "extralabels([indices]; [dir])\n\nReturns the SVHN extra training labels corresponding to the given indices as an Int or Vector{Int}. The values of the labels denote the zero-based class-index that they represent (see SVHN2.classnames for the corresponding names). If indices is omitted, all labels are returned.\n\njulia> SVHN2.extralabels() # full extra training set\n531131-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.extralabels(1:3) # first three labels\n3-element Array{Int64,1}:\n[...]\n\njulia> SVHN2.extralabels(1) # first label\n[...]\n\njulia> SVHN2.classnames()[SVHN2.extralabels(1)] # corresponding class\n[...]\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.extradata",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.extradata",
+    "category": "Function",
+    "text": "extradata([T = N0f8], [indices]; [dir]) -> images, labels\n\nReturns the SVHN extra trainset corresponding to the given indices as a two-element tuple. If indices is omitted the full extra trainset is returned. The first element of the return values will be the images as a multi-dimensional array, and the second element the corresponding labels as integers.\n\nThe image(s) is/are returned in the native vertical-major memory layout as a single numeric array of eltype T. If T <: Integer, then all values will be within 0 and 255, otherwise the values are scaled to be between 0 and 1. You can use the utility function convert2image to convert an SVHN array into a Julia image with the appropriate RGB eltype. The integer values of the labels correspond 1-to-1 the digit that they represent with the exception of 0 which is encoded as 10.\n\nNote that because of the nature of how the dataset is stored on disk, SVHN2.extradata will always load the full extra trainset, regardless of which observations are requested. In the case indices are provided by the user, it will simply result in a sub-setting. This option is just provided for convenience.\n\nimages, labels = SVHN2.extradata() # full dataset\nimages, labels = SVHN2.extradata(2) # only second observation\nimages, labels = SVHN2.extradata(dir=\"./SVHN\") # custom folder\n\nThe corresponding resource file(s) of the dataset is/are expected to be located in the specified directory dir. If dir is omitted the directories in DataDeps.default_loadpath will be searched for an existing SVHN2 subfolder. In case no such subfolder is found, dir will default to ~/.julia/datadeps/SVHN2. In the case that dir does not yet exist, a download prompt will be triggered. You can also use SVHN2.download([dir]) explicitly for pre-downloading (or re-downloading) the dataset. Please take a look at the documentation of the package DataDeps.jl for more detail and configuration options.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#Extraset-1",
+    "page": "SVHN format 2",
+    "title": "Extraset",
+    "category": "section",
+    "text": "SVHN2.extratensor\nSVHN2.extralabels\nSVHN2.extradata"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.download",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.download",
+    "category": "Function",
+    "text": "download([dir]; [i_accept_the_terms_of_use])\n\nTrigger the (interactive) download of the full dataset into \"dir\". If no dir is provided the dataset will be downloaded into \"~/.julia/datadeps/SVHN2\".\n\nThis function will display an interactive dialog unless either the keyword parameter i_accept_the_terms_of_use or the environment variable DATADEPS_ALWAY_ACCEPT is set to true. Note that using the data responsibly and respecting copyright/terms-of-use remains your responsibility.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.classnames",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.classnames",
+    "category": "Function",
+    "text": "classnames() -> Vector{Int}\n\nReturn the 10 digits for the SVHN classes as a vector of integers.\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.convert2features",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.convert2features",
+    "category": "Function",
+    "text": "convert2features(array)\n\nConvert the given SVHN tensor to a feature matrix (or feature vector in the case of a single image). The purpose of this function is to drop the spatial dimensions such that traditional ML algorithms can process the dataset.\n\njulia> SVHN2.convert2features(SVHN2.traindata(Float32)[1]) # full training data\n3072×50000 Array{Float32,2}:\n[...]\n\njulia> SVHN2.convert2features(SVHN2.traindata(Float32,1)[1]) # first observation\n3072-element Array{Float32,1}:\n[...]\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#MLDatasets.SVHN2.convert2image",
+    "page": "SVHN format 2",
+    "title": "MLDatasets.SVHN2.convert2image",
+    "category": "Function",
+    "text": "convert2image(array) -> Array{RGB}\n\nConvert the given SVHN tensor (or feature vector/matrix) to a RGB array.\n\njulia> SVHN2.convert2image(SVHN2.traindata()[1]) # full training dataset\n32×32×50000 Array{RGB{N0f8},3}:\n[...]\n\njulia> SVHN2.convert2image(SVHN2.traindata(1)[1]) # first training image\n32×32 Array{RGB{N0f8},2}:\n[...]\n\n\n\n"
+},
+
+{
+    "location": "datasets/SVHN2/#Utilities-1",
+    "page": "SVHN format 2",
+    "title": "Utilities",
+    "category": "section",
+    "text": "SVHN2.download\nSVHN2.classnames\nSVHN2.convert2features\nSVHN2.convert2image"
+},
+
+{
+    "location": "datasets/SVHN2/#References-1",
+    "page": "SVHN format 2",
+    "title": "References",
+    "category": "section",
+    "text": "Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng\nWebsite: http://ufldl.stanford.edu/housenumbers\n[Netzer et al., 2011] Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng. \"Reading Digits in Natural Images with Unsupervised Feature Learning\" NIPS Workshop on Deep Learning and Unsupervised Feature Learning 2011"
 },
 
 {
