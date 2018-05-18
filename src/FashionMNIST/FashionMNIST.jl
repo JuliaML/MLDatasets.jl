@@ -89,7 +89,7 @@ module FashionMNIST
     include("interface.jl")
 
     function __init__()
-        RegisterDataDep(
+        register(DataDep(
             DEPNAME,
             """
             Dataset: Fashion-MNIST
@@ -109,6 +109,6 @@ module FashionMNIST
             """,
             "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
             "c916b6e00d3083643332b70f3c5c3543d3941334b802e252976893969ee6af67",
-        )
+        ))
     end
 end
