@@ -44,7 +44,7 @@ module CIFAR100
     include("interface.jl")
 
     function __init__()
-        RegisterDataDep(
+        register(DataDep(
             DEPNAME,
             """
             Dataset: The CIFAR-100 dataset
@@ -80,6 +80,6 @@ module CIFAR100
             "https://www.cs.toronto.edu/~kriz/cifar-100-binary.tar.gz",
             "58a81ae192c23a4be8b1804d68e518ed807d710a4eb253b1f2a199162a40d8ec",
             post_fetch_method = file -> (run(BinDeps.unpack_cmd(file,dirname(file), ".gz", ".tar")); rm(file))
-        )
+        ))
     end
 end

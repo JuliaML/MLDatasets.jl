@@ -34,7 +34,7 @@ module UD_English
     end
 
     function __init__()
-        RegisterDataDep(
+        register(DataDep(
             DEPNAME,
             """
             Dataset: Universal Dependencies - English Dependency Treebank Universal Dependencies English Web Treebank
@@ -72,6 +72,6 @@ module UD_English
             """,
             "https://raw.githubusercontent.com/UniversalDependencies/UD_English/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
             "2311e260488453d5ba170cfd94e58ac4bd536263ea9545c7b25f0804e87b28a2",
-        )
+        ))
     end
 end

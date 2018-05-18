@@ -49,7 +49,7 @@ module PTBLM
     end
 
     function __init__()
-        RegisterDataDep(
+        register(DataDep(
             DEPNAME,
             """
             Dataset: Penn Treebank sentences for language modeling
@@ -76,6 +76,6 @@ module PTBLM
             """,
             "https://raw.githubusercontent.com/tomsercu/lstm/master/data/" .* [TRAINFILE, TESTFILE],
             "218f4e6c7288bb5efeb03cc4cb8ae9c04ecd8462ebfba8e13e3549fab69dc25f",
-        )
+        ))
     end
 end
