@@ -83,7 +83,7 @@ module SVHN2
     include("utils.jl")
 
     function __init__()
-        RegisterDataDep(
+        register(DataDep(
             DEPNAME,
             """
             Dataset: The Street View House Numbers (SVHN) Dataset
@@ -111,6 +111,6 @@ module SVHN2
             """,
             "http://ufldl.stanford.edu/housenumbers/" .* [TRAINDATA, TESTDATA, EXTRADATA],
             "2fa3b0b79baf39de36ed7579e6947760e6241f4c52b6b406cabc44d654c13a50"
-        )
+        ))
     end
 end
