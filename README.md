@@ -1,5 +1,9 @@
 # MLDatasets.jl
 
+[![Julia 0.6 Status](http://pkg.julialang.org/badges/MLDatasets_0.6.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.6)
+[![Julia 0.7 Status](http://pkg.julialang.org/badges/MLDatasets_0.7.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.7)
+[![Julia 1.0 Status](http://pkg.julialang.org/badges/MLDatasets_1.0.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=1.0)
+
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/stable)
 [![Build Status](https://travis-ci.org/JuliaML/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/JuliaML/MLDatasets.jl)
 
