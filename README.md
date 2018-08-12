@@ -81,7 +81,7 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 The `PTBLM` dataset consists of Penn Treebank sentences for
 language modeling, available from
 [tomsercu/lstm](https://github.com/tomsercu/lstm). The unknown
-words are replaced with `<unk>` so that the total vocaburary size
+words are replaced with `<unk>` so that the total vocabulary size
 becomes 10000.
 
 This is the first sentence of the PTBLM dataset.
