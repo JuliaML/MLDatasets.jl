@@ -3,11 +3,11 @@ using DataDeps
 
 function with_accept(f, manual_overwrite)
     auto_accept = if manual_overwrite == nothing
-        get(ENV, "DATADEPS_ALWAY_ACCEPT", false)
+        get(ENV, "DATADEPS_ALWAYS_ACCEPT", false)
     else
         manual_overwrite
     end
-    withenv(f, "DATADEPS_ALWAY_ACCEPT" => string(auto_accept))
+    withenv(f, "DATADEPS_ALWAYS_ACCEPT" => string(auto_accept))
 end
 
 function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)

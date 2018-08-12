@@ -80,7 +80,7 @@ module FashionMNIST
 
     This function will display an interactive dialog unless
     either the keyword parameter `i_accept_the_terms_of_use` or
-    the environment variable `DATADEPS_ALWAY_ACCEPT` is set to
+    the environment variable `DATADEPS_ALWAYS_ACCEPT` is set to
     `true`. Note that using the data responsibly and respecting
     copyright/terms-of-use remains your responsibility.
     """
