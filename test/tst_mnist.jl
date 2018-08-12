@@ -52,9 +52,6 @@ end
 
 # NOT executed on CI. only executed locally.
 # This involves dataset download etc.
-if isCI()
-    @info "CI detected: skipping dataset download"
-else
     data_dir = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         datadep"MNIST"
     end
@@ -252,6 +249,5 @@ else
             @test labels == @inferred label_fun(indices)
         end
     end
-end
 
 end
