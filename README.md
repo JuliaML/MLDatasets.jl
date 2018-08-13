@@ -101,8 +101,8 @@ where `MLDataset` adds the special word: `<eos>` to the end of `y`.
 
 #### UD English
 
-The [UD_English](https://github.com/UniversalDependencies/UD_English)
-dataset is an annotated corpus of morphological features,
+The [UD_English](https://github.com/UniversalDependencies/UD_English-EWT)
+Universal Dependencies English Web Treebank dataset is an annotated corpus of morphological features,
 POS-tags and syntactic trees. The dataset follows CoNLL-style
 format.
 
