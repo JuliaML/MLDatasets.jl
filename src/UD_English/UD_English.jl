@@ -14,9 +14,9 @@ module UD_English
         download
 
     const DEPNAME = "UD_English"
-    const TRAINFILE = "en-ud-train.conllu"
-    const DEVFILE   = "en-ud-dev.conllu"
-    const TESTFILE  = "en-ud-test.conllu"
+    const TRAINFILE = "en_ewt-ud-train.conllu"
+    const DEVFILE   = "en_ewt-ud-dev.conllu"
+    const TESTFILE  = "en_ewt-ud-test.conllu"
 
     download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
@@ -42,7 +42,7 @@ module UD_English
                      Marie-Catherine de Marneffe and Samuel
                      Bowman and Miriam Connor and John Bauer and
                      Christopher D. Manning
-            Website: https://github.com/UniversalDependencies/UD_English
+            Website: https://github.com/UniversalDependencies/UD_English-EWT
 
             A Gold Standard Universal Dependencies Corpus for
             English, built over the source material of the
@@ -70,7 +70,7 @@ module UD_English
             responsibility. Copyright and License is discussed in
             detail on the Website.
             """,
-            "https://raw.githubusercontent.com/UniversalDependencies/UD_English/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
+            "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
             "2311e260488453d5ba170cfd94e58ac4bd536263ea9545c7b25f0804e87b28a2",
         ))
     end
