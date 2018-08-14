@@ -241,8 +241,8 @@ end
 
 function traindata(::Type{T}; dir = nothing) where T
     # placeholders for the chunks
-    Xs = Vector{Array{UInt8,4}}(NCHUNKS)
-    Ys = Vector{Vector{Int}}(NCHUNKS)
+    Xs = Vector{Array{UInt8,4}}(undef, NCHUNKS)
+    Ys = Vector{Vector{Int}}(undef, NCHUNKS)
     # loop over all 5 trainingset files (i.e. chunks)
     for file_index in 1:NCHUNKS
         file_name = filename_for_chunk(file_index)
@@ -255,7 +255,7 @@ function traindata(::Type{T}; dir = nothing) where T
     end
     # cat all the placeholders into one image array
     # and one label array. (good enough)
-    images = cat(4, Xs...)::Array{UInt8,4}
+    images = cat(Xs..., dims=4)::Array{UInt8,4}
     labels = vcat(Ys...)::Vector{Int}
     # optionally transform the image array before returning
     bytes_to_type(T, images), labels
@@ -281,11 +281,11 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
     @assert mi >= 1 && ma <= NCHUNKS * Reader.CHUNK_SIZE "not all elements in parameter \"indices\" are in 1:$(NCHUNKS*Reader.CHUNK_SIZE)"
     # preallocate a buffer we will reuse for reading individual
     # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(Reader.NROW, Reader.NCOL, Reader.NCHAN)
+    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
     # we know the types and dimensions of the return values,
     # so we can preallocate them
-    images = Array{UInt8,4}(Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels = Array{Int,1}(length(indices))
+    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
+    labels = Array{Int,1}(undef, length(indices))
     # loop over all 5 trainingset files (i.e. chunks)
     for file_index in 1:NCHUNKS
         file_name = filename_for_chunk(file_index)
@@ -303,7 +303,7 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
                 _, y = Reader.readdata!(buffer, io, sub_index)
                 # write the image into the appropriate position
                 # of our preallocated "images" array.
-                copy!(view(images,:,:,:,i), buffer)
+                copyto!(view(images,:,:,:,i), buffer)
                 # same with labels
                 labels[i] = y
             end
@@ -366,11 +366,11 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
     @assert mi >= 1 && ma <= Reader.CHUNK_SIZE "not all elements in parameter \"indices\" are in 1:$(Reader.CHUNK_SIZE)"
     # preallocate a buffer we will reuse for reading individual
     # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(Reader.NROW, Reader.NCOL, Reader.NCHAN)
+    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
     # we know the types and dimensions of the return values,
     # so we can preallocate them
-    images = Array{UInt8,4}(Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels = Array{Int,1}(length(indices))
+    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
+    labels = Array{Int,1}(undef, length(indices))
     # in contrast to the trainset, the testset only has one file
     file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
     open(file_path, "r") do io
@@ -381,7 +381,7 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
             _, y = Reader.readdata!(buffer, io, index)
             # write the image into the appropriate position
             # of our preallocated "images" array.
-            copy!(view(images,:,:,:,i), buffer)
+            copyto!(view(images,:,:,:,i), buffer)
             # same with labels
             labels[i] = y
         end

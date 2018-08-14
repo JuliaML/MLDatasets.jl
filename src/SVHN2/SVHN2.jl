@@ -34,10 +34,7 @@ module SVHN2
     using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..bytes_to_type
-    using ..datafile
-    using ..download_dep
-    using ..download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
 
     export
 

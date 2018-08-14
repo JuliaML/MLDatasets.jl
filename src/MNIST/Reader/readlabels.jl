@@ -17,7 +17,7 @@ in a `Vector{UInt8}` of length `length(indices)` in the same order
 as denoted by `indices`.
 """
 function readlabels(io::IO, indices::AbstractVector)
-    labels = Array{UInt8}(length(indices))
+    labels = Array{UInt8}(undef, length(indices))
     dst_index = 1
     for src_index in indices
         labels[dst_index] = readlabels(io, src_index)

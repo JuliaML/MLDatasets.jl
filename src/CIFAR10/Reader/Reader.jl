@@ -23,17 +23,17 @@ function readdata!(buffer::Array{UInt8}, io::IO, index::Integer)
 end
 
 function readdata(io::IO, index::Integer)
-    buffer = Array{UInt8}(NROW, NCOL, NCHAN)
+    buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     readdata!(buffer, io, index)
 end
 
 function readdata(io::IO)
-    X = Array{UInt8}(NROW, NCOL, NCHAN, CHUNK_SIZE)
-    Y = Array{Int}(CHUNK_SIZE)
-    buffer = Array{UInt8}(NROW, NCOL, NCHAN)
+    X = Array{UInt8}(undef, NROW, NCOL, NCHAN, CHUNK_SIZE)
+    Y = Array{Int}(undef, CHUNK_SIZE)
+    buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     @inbounds for index in 1:CHUNK_SIZE
         _, ty = readnext!(buffer, io)
-        copy!(view(X,:,:,:,index), buffer)
+        copyto!(view(X,:,:,:,index), buffer)
         Y[index] = ty
     end
     X, Y

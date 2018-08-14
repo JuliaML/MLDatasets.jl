@@ -2,8 +2,7 @@ export PTBLM
 module PTBLM
 
     using DataDeps
-    using ..datafile
-    using ..download_dep
+    using ..MLDatasets: datafile, download_dep
 
     export
 
@@ -43,7 +42,7 @@ module PTBLM
     function makeys(xs::Vector{Vector{String}})
         map(xs) do x
             y = copy(x)
-            shift!(y)
+            popfirst!(y)
             push!(y, "<eos>")
         end
     end

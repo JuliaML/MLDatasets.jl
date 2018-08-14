@@ -3,8 +3,7 @@ module UD_English
 
     using DataDeps
     using ..MLDatasets
-    using ..datafile
-    using ..download_dep
+    using ..MLDatasets: datafile, download_dep
 
     export
 
@@ -71,7 +70,7 @@ module UD_English
             detail on the Website.
             """,
             "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
-            "2311e260488453d5ba170cfd94e58ac4bd536263ea9545c7b25f0804e87b28a2",
+            "6e9e43922c7d3cf8e0ce72a8e402f48c15cab30ec74649a5af997a886da83c9c"
         ))
     end
 end

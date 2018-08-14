@@ -1,5 +1,5 @@
 module CIFAR100_Tests
-using Base.Test
+using Test
 using ColorTypes
 using ImageCore
 using FixedPointNumbers
@@ -70,12 +70,12 @@ else
             @test CIFAR100.testtensor(UInt8, 10_000) == CIFAR100.Reader.readdata(path, 10_000, 10_000)[1]
         end
 
-        @test CIFAR100.traintensor(UInt8, 1)[11:13, 12:14] == [
+        @test CIFAR100.traintensor(UInt8, 1)[11:13, 12:14, 1] == [
             0x5b  0x49  0x49;
             0x45  0x2a  0x6a;
             0x93  0x9b  0xb1;
         ]
-        @test CIFAR100.testtensor(UInt8, 1)[11:13, 12:14] == [
+        @test CIFAR100.testtensor(UInt8, 1)[11:13, 12:14, 1] == [
             0xef  0xe7  0xe5;
             0xf1  0xe6  0xe0;
             0xf3  0xe5  0xd6;
@@ -101,7 +101,7 @@ else
             @testset "$image_fun with T=$T" begin
                 # whole image set
                 A = @inferred image_fun(T)
-                @test typeof(A) <: Array{T,4}
+                @test typeof(A) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                 @test size(A) == (32,32,3,nimages)
 
                 @test_throws AssertionError image_fun(T,-1)
@@ -112,7 +112,7 @@ else
                     # Sample a few random images to compare
                     for i = rand(1:nimages, 10)
                         A_i = @inferred image_fun(T,i)
-                        @test typeof(A_i) <: Array{T,3}
+                        @test typeof(A_i) <: Union{Array{T,3},Base.ReinterpretArray{T,3}}
                         @test size(A_i) == (32,32,3)
                         @test A_i == A[:,:,:,i]
                     end
@@ -120,7 +120,7 @@ else
 
                 @testset "load multiple images" begin
                     A_5_10 = @inferred image_fun(T,5:10)
-                    @test typeof(A_5_10) <: Array{T,4}
+                    @test typeof(A_5_10) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_5_10) == (32,32,3,6)
                     for i = 1:6
                         @test A_5_10[:,:,:,i] == A[:,:,:,i+4]
@@ -130,8 +130,8 @@ else
                     indices = [10,3,9,1,nimages]
                     A_vec   = image_fun(T,indices)
                     A_vec_f = image_fun(T,Vector{Int32}(indices))
-                    @test typeof(A_vec)   <: Array{T,4}
-                    @test typeof(A_vec_f) <: Array{T,4}
+                    @test typeof(A_vec) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
+                    @test typeof(A_vec_f) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_vec)   == (32,32,3,5)
                     @test size(A_vec_f) == (32,32,3,5)
                     for i in 1:5

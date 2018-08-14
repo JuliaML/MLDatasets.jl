@@ -1,5 +1,5 @@
 module SVHN2_Tests
-using Base.Test
+using Test
 using ColorTypes
 using ImageCore
 using FixedPointNumbers
@@ -105,7 +105,7 @@ else
             @testset "$image_fun with T=$T" begin
                 # whole image set
                 A = @inferred image_fun(T)
-                @test typeof(A) <: Array{T,4}
+                @test typeof(A) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                 @test size(A) == (32,32,3,nimages)
 
                 @test_throws BoundsError image_fun(T,-1)
@@ -116,7 +116,7 @@ else
                     # Sample a few random images to compare
                     for i = rand(1:nimages, 3)
                         A_i = @inferred image_fun(T,i)
-                        @test typeof(A_i) <: Array{T,3}
+                        @test typeof(A_i) <: Union{Array{T,3},Base.ReinterpretArray{T,3}}
                         @test size(A_i) == (32,32,3)
                         @test A_i == A[:,:,:,i]
                     end
@@ -124,7 +124,7 @@ else
 
                 @testset "load multiple images" begin
                     A_5_10 = @inferred image_fun(T,5:10)
-                    @test typeof(A_5_10) <: Array{T,4}
+                    @test typeof(A_5_10) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_5_10) == (32,32,3,6)
                     for i = 1:6
                         @test A_5_10[:,:,:,i] == A[:,:,:,i+4]
@@ -134,8 +134,8 @@ else
                     indices = [10,3,9,1,nimages]
                     A_vec   = image_fun(T,indices)
                     A_vec_f = image_fun(T,Vector{Int32}(indices))
-                    @test typeof(A_vec)   <: Array{T,4}
-                    @test typeof(A_vec_f) <: Array{T,4}
+                    @test typeof(A_vec) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
+                    @test typeof(A_vec_f) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_vec)   == (32,32,3,5)
                     @test size(A_vec_f) == (32,32,3,5)
                     for i in 1:5
