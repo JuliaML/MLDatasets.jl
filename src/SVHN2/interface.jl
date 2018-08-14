@@ -80,7 +80,7 @@ for (FUN, PATH, COUNT, DESC) in (
         end
 
         function ($FUN)(::Type{T}, indices; dir = nothing) where T
-            images = ($FUN)(T, dir = dir)::Array{T,4}
+            images = ($FUN)(T, dir = dir)#::Array{T,4}
             images[:,:,:,indices]
         end
     end

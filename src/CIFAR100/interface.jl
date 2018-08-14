@@ -286,12 +286,12 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
     @assert mi >= 1 && ma <= TRAINSET_SIZE "not all elements in parameter \"indices\" are in 1:$(TRAINSET_SIZE)"
     # preallocate a buffer we will reuse for reading individual
     # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(Reader.NROW, Reader.NCOL, Reader.NCHAN)
+    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
     # we know the types and dimensions of the return values,
     # so we can preallocate them
-    images = Array{UInt8,4}(Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels_c = Array{Int,1}(length(indices))
-    labels_f = Array{Int,1}(length(indices))
+    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
+    labels_c = Array{Int,1}(undef, length(indices))
+    labels_f = Array{Int,1}(undef, length(indices))
     file_path = datafile(DEPNAME, TRAINSET_FILENAME, dir)
     open(file_path, "r") do io
         # iterate over the given "indices"
@@ -302,7 +302,7 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
             _, yc, yf = Reader.readdata!(buffer, io, index)
             # write the image into the appropriate position
             # of our preallocated "images" array.
-            copy!(view(images,:,:,:,i), buffer)
+            copyto!(view(images,:,:,:,i), buffer)
             # same with labels
             labels_c[i] = yc
             labels_f[i] = yf
@@ -367,12 +367,12 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
     @assert mi >= 1 && ma <= TESTSET_SIZE "not all elements in parameter \"indices\" are in 1:$(TESTSET_SIZE)"
     # preallocate a buffer we will reuse for reading individual
     # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(Reader.NROW, Reader.NCOL, Reader.NCHAN)
+    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
     # we know the types and dimensions of the return values,
     # so we can preallocate them
-    images = Array{UInt8,4}(Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels_c = Array{Int,1}(length(indices))
-    labels_f = Array{Int,1}(length(indices))
+    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
+    labels_c = Array{Int,1}(undef, length(indices))
+    labels_f = Array{Int,1}(undef, length(indices))
     file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
     open(file_path, "r") do io
         # iterate over the given "indices"
@@ -383,7 +383,7 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
             _, yc, yf = Reader.readdata!(buffer, io, index)
             # write the image into the appropriate position
             # of our preallocated "images" array.
-            copy!(view(images,:,:,:,i), buffer)
+            copyto!(view(images,:,:,:,i), buffer)
             # same with labels
             labels_c[i] = yc
             labels_f[i] = yf

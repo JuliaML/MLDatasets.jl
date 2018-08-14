@@ -26,12 +26,8 @@ replacement for MNIST.
 module FashionMNIST
     using DataDeps
     using FixedPointNumbers
-    using ..bytes_to_type
-    using ..datafile
-    using ..download_dep
-    using ..download_docstring
-    import ..MNIST.convert2image
-    import ..MNIST.convert2features
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    import ..MNIST: convert2image, convert2features
     import ..MNIST.Reader
 
     export

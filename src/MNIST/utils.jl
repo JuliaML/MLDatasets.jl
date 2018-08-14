@@ -55,9 +55,9 @@ function convert2image(array::AbstractMatrix{T}) where {T<:Number}
     if size(array) == (28, 28)
         # simple check to see if values are normalized to [0,1]
         if any(x->x > 50, array)
-            colorview(Gray, T(1) .- array.' ./ T(255))
+            colorview(Gray, T(1) .- transpose(array) ./ T(255))
         else
-            colorview(Gray, T(1) .- array.')
+            colorview(Gray, T(1) .- transpose(array))
         end
     else # feature matrix
         @assert size(array, 1) == 784

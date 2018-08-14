@@ -11,7 +11,7 @@ image are located and reads the next `nrows` * `ncols` bytes. The
 read bytes are returned as a `Matrix{UInt8}` of size `(nrows, ncols)`.
 """
 function readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
-    buffer = Array{UInt8}(nrows, ncols)
+    buffer = Array{UInt8}(undef, nrows, ncols)
     readimages!(buffer, io, index, nrows, ncols)
 end
 
@@ -24,12 +24,12 @@ ncols, length(indices))` in the same order as denoted by
 `indices`.
 """
 function readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
-    images = Array{UInt8}(nrows, ncols, length(indices))
-    buffer = Array{UInt8}(nrows, ncols)
+    images = Array{UInt8}(undef, nrows, ncols, length(indices))
+    buffer = Array{UInt8}(undef, nrows, ncols)
     dst_index = 1
     for src_index in indices
         readimages!(buffer, io, src_index, nrows, ncols)
-        copy!(images, 1 + nrows * ncols * (dst_index - 1), buffer, 1, nrows * ncols)
+        copyto!(images, 1 + nrows * ncols * (dst_index - 1), buffer, 1, nrows * ncols)
         dst_index += 1
     end
     images

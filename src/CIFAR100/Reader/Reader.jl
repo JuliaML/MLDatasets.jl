@@ -23,18 +23,18 @@ function readdata!(buffer::Array{UInt8}, io::IO, index::Integer)
 end
 
 function readdata(io::IO, nobs::Int, index::Integer)
-    buffer = Array{UInt8}(NROW, NCOL, NCHAN)
+    buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     readdata!(buffer, io, index)
 end
 
 function readdata(io::IO, nobs::Int)
-    X = Array{UInt8}(NROW, NCOL, NCHAN, nobs)
-    C = Array{Int}(nobs)
-    F = Array{Int}(nobs)
-    buffer = Array{UInt8}(NROW, NCOL, NCHAN)
+    X = Array{UInt8}(undef, NROW, NCOL, NCHAN, nobs)
+    C = Array{Int}(undef, nobs)
+    F = Array{Int}(undef, nobs)
+    buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     @inbounds for index in 1:nobs
         _, tc, tf = readnext!(buffer, io)
-        copy!(view(X,:,:,:,index), buffer)
+        copyto!(view(X,:,:,:,index), buffer)
         C[index] = tc
         F[index] = tf
     end
