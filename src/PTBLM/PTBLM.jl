@@ -5,10 +5,7 @@ module PTBLM
     using ..MLDatasets: datafile, download_dep
 
     export
-
-        traindata,
-        testdata,
-
+        traindata, testdata,
         download
 
     const DEPNAME = "PTBLM"

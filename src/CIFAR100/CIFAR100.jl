@@ -4,25 +4,14 @@ module CIFAR100
     using BinDeps
     using FixedPointNumbers
     using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-    import ..CIFAR10: convert2image, convert2features
+    using ..CIFAR10: convert2image, convert2features
 
     export
-
-        classnames_coarse,
-        classnames_fine,
-
-        traintensor,
-        testtensor,
-
-        trainlabels,
-        testlabels,
-
-        traindata,
-        testdata,
-
-        convert2image,
-        convert2features,
-
+        classnames_coarse, classnames_fine,
+        traintensor, testtensor,
+        trainlabels, testlabels,
+        traindata, testdata,
+        convert2image, convert2features,
         download
 
     const DEPNAME = "CIFAR100"
@@ -49,7 +38,7 @@ module CIFAR100
     """
     download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
-    include(joinpath("Reader","Reader.jl"))
+    include(joinpath("Reader", "Reader.jl"))
     include("interface.jl")
 
     function __init__()

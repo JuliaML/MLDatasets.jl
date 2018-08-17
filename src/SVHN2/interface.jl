@@ -69,19 +69,17 @@ for (FUN, PATH, COUNT, DESC) in (
 
         $(download_docstring("SVHN2", DEPNAME))
         """
-        function ($FUN)(args...; dir = nothing)
-            ($FUN)(N0f8, args...; dir = dir)
-        end
+        ($FUN)(indices = nothing; dir = nothing) = ($FUN)(N0f8, indices; dir = dir)
 
-        function ($FUN)(::Type{T}; dir = nothing) where T
+        function ($FUN)(::Type{T}, indices = nothing; dir = nothing) where T
             path = datafile(DEPNAME, $PATH, dir)
-            images = matopen(io->read(io, "X"), path)::Array{UInt8,4}
-            bytes_to_type(T, images)
-        end
-
-        function ($FUN)(::Type{T}, indices; dir = nothing) where T
-            images = ($FUN)(T, dir = dir)#::Array{T,4}
-            images[:,:,:,indices]
+            images = _matopen(io->read(io, "X"), path)::Array{UInt8,4}
+            if indices isa Integer
+                return bytes_to_type(T, images[:,:,:,indices])
+            elseif indices !== nothing
+                images = images[:,:,:,indices]
+            end
+            return bytes_to_type(T, images)
         end
     end
 end
@@ -121,15 +119,15 @@ for (FUN, PATH, COUNT, DESC) in (
 
         $(download_docstring("SVHN2", DEPNAME))
         """
-        function ($FUN)(; dir = nothing)
+        function ($FUN)(indices = nothing; dir = nothing)
             path = datafile(DEPNAME, $PATH, dir)
-            labels = matopen(io->read(io, "y"), path)
-            Vector{Int}(vec(labels))::Vector{Int}
-        end
-
-        function ($FUN)(indices; dir = nothing)
-            labels = ($FUN)(dir = dir)::Vector{Int}
-            labels[indices]
+            labels = vec(_matopen(io->read(io, "y"), path))::Vector{Float64}
+            if indices isa Integer
+                return convert(Int, labels[indices])
+            elseif indices !== nothing
+                labels = labels[indices]
+            end
+            return convert(Vector{Int}, labels)
         end
     end
 end
@@ -177,21 +175,21 @@ for (FUN, PATH, DESC) in (
 
         $(download_docstring("SVHN2", DEPNAME))
         """
-        function ($FUN)(args...; dir = nothing)
-            ($FUN)(N0f8, args...; dir = dir)
-        end
+        ($FUN)(indices = nothing; dir = nothing) = ($FUN)(N0f8, indices; dir = dir)
 
-        function ($FUN)(::Type{T}; dir = nothing) where T
+        function ($FUN)(::Type{T}, indices = nothing; dir = nothing) where T
             path = datafile(DEPNAME, $PATH, dir)
-            vars = matread(path)
+            vars = _matread(path)
             images = vars["X"]::Array{UInt8,4}
-            labels = vars["y"]
-            bytes_to_type(T, images), Vector{Int}(vec(labels))::Vector{Int}
-        end
-
-        function ($FUN)(::Type{T}, indices; dir = nothing) where T
-            images, labels = ($FUN)(T, dir = dir)
-            images[:,:,:,indices], labels[indices]
+            labels = vec(vars["y"])::Vector{Float64}
+            if indices isa Integer
+                return bytes_to_type(T, images[:, :, :, indices]),
+                       convert(Int, labels[indices])
+            elseif indices !== nothing
+                images = images[:, :, :, indices]
+                labels = labels[indices]
+            end
+            return bytes_to_type(T, images), convert(Vector{Int}, labels)
         end
     end
 end

@@ -1,8 +1,7 @@
 julia 0.7
-ImageCore 0.1.2
+Requires
 FixedPointNumbers 0.3
 ColorTypes 0.4
 DataDeps 0.3
-GZip
+CodecZlib
 BinDeps
-MAT

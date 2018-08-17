@@ -25,25 +25,15 @@ the 10 possible digits (0-9).
 """
 module MNIST
     using DataDeps
-    using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring, _colorview
 
     export
-
-        traintensor,
-        testtensor,
-
-        trainlabels,
-        testlabels,
-
-        traindata,
-        testdata,
-
-        convert2image,
-        convert2features,
-
+        traintensor, testtensor,
+        trainlabels, testlabels,
+        traindata, testdata,
+        convert2image, convert2features,
         download
 
     const DEPNAME = "MNIST"
@@ -67,7 +57,7 @@ module MNIST
     """
     download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
-    include(joinpath("Reader","Reader.jl"))
+    include(joinpath("Reader", "Reader.jl"))
     include("interface.jl")
     include("utils.jl")
 

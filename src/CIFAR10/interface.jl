@@ -61,14 +61,7 @@ julia> CIFAR10.convert2image(CIFAR10.traintensor(1)) # convert to column-major c
 
 $(download_docstring("CIFAR10", DEPNAME))
 """
-function traintensor(args...; dir = nothing)
-    traindata(args...; dir = dir)[1]
-end
-
-# needed for type inference for some reason
-function traintensor(::Type{T}, args...; dir = nothing) where T
-    traindata(T, args...; dir = dir)[1]
-end
+traintensor(args...; dir = nothing) = traindata(args...; dir = dir)[1]
 
 """
     testtensor([T = N0f8], [indices]; [dir]) -> Array{T}
@@ -126,13 +119,7 @@ julia> CIFAR10.convert2image(CIFAR10.testtensor(1)) # convert to column-major co
 
 $(download_docstring("CIFAR10", DEPNAME))
 """
-function testtensor(args...; dir = nothing)
-    testdata(args...; dir = dir)[1]
-end
-
-function testtensor(::Type{T}, args...; dir = nothing) where T
-    testdata(T, args...; dir = dir)[1]
-end
+testtensor(args...; dir = nothing) = testdata(args...; dir = dir)[1]
 
 """
     trainlabels([indices]; [dir])
@@ -167,9 +154,7 @@ julia> CIFAR10.classnames()[CIFAR10.trainlabels(1) + 1] # corresponding name
 
 $(download_docstring("CIFAR10", DEPNAME))
 """
-function trainlabels(args...; dir = nothing)
-    traindata(args...; dir = dir)[2]
-end
+trainlabels(args...; dir = nothing) = traindata(args...; dir = dir)[2]
 
 """
     testlabels([indices]; [dir])
@@ -204,8 +189,36 @@ julia> CIFAR10.classnames()[CIFAR10.testlabels(1) + 1] # corresponding name
 
 $(download_docstring("CIFAR10", DEPNAME))
 """
-function testlabels(args...; dir = nothing)
-    testdata(args...; dir = dir)[2]
+testlabels(args...; dir = nothing) = testdata(args...; dir = dir)[2]
+
+function _traindata(::Type{T}, indices::AbstractVector{<:Integer}; dir = nothing) where T
+    all(in(1:(NCHUNKS*Reader.CHUNK_SIZE)), indices) ||
+        throw(ArgumentError("not all elements in parameter \"indices\" are in 1:$(NCHUNKS*Reader.CHUNK_SIZE)"))
+    # we know the types and dimensions of the return values,
+    # so we can preallocate them
+    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
+    labels = fill!(Vector{UInt8}(undef, length(indices)), 0)
+    # split indices into chunks (1 chunk = 1 trainingset file)
+    index_chunks = Dict{Int, Tuple{Vector{Int}, Vector{Int}}}()
+    for (dst_ix, src_ix) in enumerate(indices)
+        file_ix = fld1(src_ix, Reader.CHUNK_SIZE)
+        @assert 1 <= file_ix <= NCHUNKS "file_ix=$file_ix for image #$src_ix, expected to be in 1:$NCHUNKS range"
+        file_imgs = get!(() -> (Vector{Int}(), Vector{Int}()), index_chunks, file_ix)
+        push!(file_imgs[1], dst_ix)
+        push!(file_imgs[2], src_ix)
+    end
+    # read selected images from files
+    for (file_index, (dst_indices, src_indices)) in index_chunks
+        file_path = datafile(DEPNAME, filename_for_chunk(file_index), dir)
+        if !issorted(src_indices)
+            perm = sortperm(src_indices)
+            permute!(src_indices, perm)
+            permute!(dst_indices, perm)
+        end
+        Reader._readdata!(file_path, images, labels, Reader.CHUNK_SIZE, src_indices,
+                          (file_index-1)*Reader.CHUNK_SIZE, dst_indices)
+    end
+    return images, labels
 end
 
 """
@@ -235,83 +248,26 @@ $(download_docstring("CIFAR10", DEPNAME))
 Take a look at [`CIFAR10.traintensor`](@ref) and
 [`CIFAR10.trainlabels`](@ref) for more information.
 """
-function traindata(args...; dir = nothing)
-    traindata(N0f8, args...; dir = dir)
+function traindata(::Type{T}, indices::Nothing = nothing; dir = nothing) where T
+    images, labels = _traindata(T, 1:(NCHUNKS*Reader.CHUNK_SIZE), dir=dir)
+    # optionally transform the image array before returning
+    return bytes_to_type(T, images), Vector{Int}(labels)
 end
 
-function traindata(::Type{T}; dir = nothing) where T
-    # placeholders for the chunks
-    Xs = Vector{Array{UInt8,4}}(undef, NCHUNKS)
-    Ys = Vector{Vector{Int}}(undef, NCHUNKS)
-    # loop over all 5 trainingset files (i.e. chunks)
-    for file_index in 1:NCHUNKS
-        file_name = filename_for_chunk(file_index)
-        file_path = datafile(DEPNAME, file_name, dir)
-        # load all the data from each file and append it to
-        # the placeholders X and Y
-        X, Y = Reader.readdata(file_path)
-        Xs[file_index] = X
-        Ys[file_index] = Y
-    end
-    # cat all the placeholders into one image array
-    # and one label array. (good enough)
-    images = cat(Xs..., dims=4)::Array{UInt8,4}
-    labels = vcat(Ys...)::Vector{Int}
+function traindata(::Type{T}, indices::AbstractVector{<:Integer}; dir = nothing) where T
+    images, labels = _traindata(T, indices, dir=dir)
     # optionally transform the image array before returning
-    bytes_to_type(T, images), labels
+    return bytes_to_type(T, images), Vector{Int}(labels)
 end
 
 function traindata(::Type{T}, index::Integer; dir = nothing) where T
-    @assert 1 <= index <= NCHUNKS * Reader.CHUNK_SIZE "parameter \"index\" ($index) not in 1:$(NCHUNKS*Reader.CHUNK_SIZE)"
-    # we only need to return a single image, so the task breaks
-    # down to computing which file that image is in.
-    file_index = ceil(Int, index / Reader.CHUNK_SIZE)
-    file_name = filename_for_chunk(file_index)
-    file_path = datafile(DEPNAME, file_name, dir)
-    # once we know the file we just need to compute the approriate
-    # offset of the image realtive to that file.
-    sub_index = ((index - 1) % Reader.CHUNK_SIZE) + 1
-    image, label = Reader.readdata(file_path, sub_index)
+    images, labels = _traindata(T, [index], dir=dir)
     # optionally transform the image array before returning
-    bytes_to_type(T, image), label
+    return bytes_to_type(T, dropdims(images, dims=4)), convert(Int, @inbounds(labels[1]))
 end
 
-function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
-    mi, ma = extrema(indices)
-    @assert mi >= 1 && ma <= NCHUNKS * Reader.CHUNK_SIZE "not all elements in parameter \"indices\" are in 1:$(NCHUNKS*Reader.CHUNK_SIZE)"
-    # preallocate a buffer we will reuse for reading individual
-    # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
-    # we know the types and dimensions of the return values,
-    # so we can preallocate them
-    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels = Array{Int,1}(undef, length(indices))
-    # loop over all 5 trainingset files (i.e. chunks)
-    for file_index in 1:NCHUNKS
-        file_name = filename_for_chunk(file_index)
-        file_path = datafile(DEPNAME, file_name, dir)
-        open(file_path, "r") do io
-            # for each chunk we loop through indices once
-            @inbounds for (i, index) in enumerate(indices)
-                # check if "index" is part of the current chunk
-                cur_file_index = ceil(Int, index / Reader.CHUNK_SIZE)
-                cur_file_index == file_index || continue
-                # if it is, then compute the relative offset
-                sub_index = ((index - 1) % Reader.CHUNK_SIZE) + 1
-                # read the corresponding image into "buffer"
-                # and the corresponding label into "y"
-                _, y = Reader.readdata!(buffer, io, sub_index)
-                # write the image into the appropriate position
-                # of our preallocated "images" array.
-                copyto!(view(images,:,:,:,i), buffer)
-                # same with labels
-                labels[i] = y
-            end
-        end
-    end
-    # optionally transform the image array before returning
-    bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
-end
+traindata(indices = nothing; dir = nothing) =
+    traindata(N0f8, indices, dir=dir)
 
 """
     testdata([T = N0f8], [indices]; [dir]) -> images, labels
@@ -340,52 +296,12 @@ $(download_docstring("CIFAR10", DEPNAME))
 Take a look at [`CIFAR10.testtensor`](@ref) and
 [`CIFAR10.testlabels`](@ref) for more information.
 """
-function testdata(args...; dir = nothing)
-    testdata(N0f8, args...; dir = dir)
-end
-
-function testdata(::Type{T}; dir = nothing) where T
-    file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
-    # simply read the complete content of the testset file
-    images, labels = Reader.readdata(file_path)
+function testdata(::Type{T}, indices = nothing; dir = nothing) where T
+    # read the single image+label corresponding to "index"
+    images, labels = Reader.readdata(datafile(DEPNAME, TESTSET_FILENAME, dir), indices)
     # optionally transform the image array before returning
     bytes_to_type(T, images), labels
 end
 
-function testdata(::Type{T}, index::Integer; dir = nothing) where T
-    @assert 1 <= index <= Reader.CHUNK_SIZE "parameter \"index\" ($index) not in 1:$(Reader.CHUNK_SIZE)"
-    file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
-    # read the single image+label corresponding to "index"
-    image, label = Reader.readdata(file_path, index)
-    # optionally transform the image array before returning
-    bytes_to_type(T, image), label
-end
-
-function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
-    mi, ma = extrema(indices)
-    @assert mi >= 1 && ma <= Reader.CHUNK_SIZE "not all elements in parameter \"indices\" are in 1:$(Reader.CHUNK_SIZE)"
-    # preallocate a buffer we will reuse for reading individual
-    # images. "buffer" is written to length(indices) times
-    buffer = Array{UInt8,3}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN)
-    # we know the types and dimensions of the return values,
-    # so we can preallocate them
-    images = Array{UInt8,4}(undef, Reader.NROW, Reader.NCOL, Reader.NCHAN, length(indices))
-    labels = Array{Int,1}(undef, length(indices))
-    # in contrast to the trainset, the testset only has one file
-    file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
-    open(file_path, "r") do io
-        # iterate over the given "indices"
-        @inbounds for (i, index) in enumerate(indices)
-            # read the corresponding image into "buffer" and
-            # the corresponding label into "y"
-            _, y = Reader.readdata!(buffer, io, index)
-            # write the image into the appropriate position
-            # of our preallocated "images" array.
-            copyto!(view(images,:,:,:,i), buffer)
-            # same with labels
-            labels[i] = y
-        end
-    end
-    # optionally transform the image array before returning
-    bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
-end
+testdata(indices = nothing; dir = nothing) =
+    testdata(N0f8, indices, dir=dir)

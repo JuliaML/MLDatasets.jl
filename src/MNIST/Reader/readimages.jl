@@ -1,42 +1,41 @@
-function readimages!(buffer::Matrix{UInt8}, io::IO, index::Integer, nrows::Integer, ncols::Integer)
-    seek(io, IMAGEOFFSET + nrows * ncols * (index - 1))
-    read!(io, buffer)
-end
-
-"""
-    readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
-
-Jumps to the position of `io` where the bytes for the `index`'th
-image are located and reads the next `nrows` * `ncols` bytes. The
-read bytes are returned as a `Matrix{UInt8}` of size `(nrows, ncols)`.
-"""
-function readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
-    buffer = Array{UInt8}(undef, nrows, ncols)
-    readimages!(buffer, io, index, nrows, ncols)
-end
-
-"""
-    readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
-
-Reads the first `nrows` * `ncols` bytes for each image index in
-`indices` and stores them in a `Array{UInt8,3}` of size `(nrows,
-ncols, length(indices))` in the same order as denoted by
-`indices`.
-"""
-function readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
-    images = Array{UInt8}(undef, nrows, ncols, length(indices))
-    buffer = Array{UInt8}(undef, nrows, ncols)
-    dst_index = 1
-    for src_index in indices
-        readimages!(buffer, io, src_index, nrows, ncols)
-        copyto!(images, 1 + nrows * ncols * (dst_index - 1), buffer, 1, nrows * ncols)
-        dst_index += 1
+# Reads nrows×ncols images at src_indices positions from io
+# and puts them to dst_indices positions into the resulting 3D-array
+# with (x, y, #image) dimensions.
+# src_indices should be sorted in ascending order,
+# otherwise io would fail to go to the already read position.
+function _readimages(io::IO, nrows::Integer, ncols::Integer,
+                     src_indices::AbstractVector{<:Integer},
+                     dst_indices::AbstractVector{<:Integer})
+    @assert length(src_indices) == length(dst_indices)
+    images = Array{UInt8, 3}(undef, nrows, ncols, length(src_indices))
+    imagesize = nrows * ncols
+    if length(src_indices) == 1
+        # avoid allocating buffer for single image
+        src_ix = src_indices[1]
+        @assert dst_indices[1] == 1
+        skip(io, imagesize * (src_ix-1))
+        read!(io, images)
+    else
+        buffer = Matrix{UInt8}(undef, nrows, ncols)
+        pos = IMAGEOFFSET
+        for (dst_ix, src_ix) in zip(dst_indices, src_indices)
+            nextpos = IMAGEOFFSET + imagesize * (src_ix - 1)
+            skip(io, nextpos - pos)
+            read!(io, buffer)
+            copyto!(view(images, :, :, dst_ix), buffer)
+            pos = nextpos + imagesize
+        end
     end
-    images
+    return images
 end
 
 """
-    readimages(file, [indices])
+    readimages(file::AbstractString, [indices])
+    readimages(io::IO, [indices])
+
+Reads the label denoted by `indices` from `file` or `io`. The given file
+is assumed to be in the MNIST label-file format, as it is described
+on the official homepage at http://yann.lecun.com/exdb/mnist/
 
 Reads the images denoted by `indices` from `file`. The given
 `file` can either be specified using an IO-stream or a string
@@ -44,41 +43,31 @@ that denotes the fully qualified path. The conent of `file` is
 assumed to be in the MNIST image-file format, as it is described
 on the official homepage at http://yann.lecun.com/exdb/mnist/
 
-- if `indices` is an `Integer`, the single image is returned as
-  `Matrix{UInt8}` in horizontal major layout, which means that
-  the first dimension denotes the pixel *rows* (x), and the
-  second dimension denotes the pixel *columns* (y) of the image.
+If specified, `indices` could be either a single 1-based image index or a vector of indices.
+If `indices` is not specified, all images are read.
 
-- if `indices` is a `AbstractVector`, the images are returned as
-  a 3D array (i.e. a `Array{UInt8,3}`), in which the first
-  dimension corresponds to the pixel *rows* (x) of the image, the
-  second dimension to the pixel *columns* (y) of the image, and
-  the third dimension denotes the index of the image.
-
-- if `indices` is ommited all images are returned
-  (as 3D array described above)
+Returns a 3D array (`Array{UInt8,3}`), in which the first
+dimension corresponds to the pixel *rows* (x) of the image, the
+second dimension to the pixel *columns* (y) of the image, and
+the third dimension denotes the index of the image.
 """
-function readimages(io::IO, indices)
+function readimages(io::IO, indices::Union{AbstractVector{<:Integer}, Nothing} = nothing)
     _, nimages, nrows, ncols = readimageheader(io)
-    @assert minimum(indices) >= 1 && maximum(indices) <= nimages
-    readimages(io, indices, nrows, ncols)
+    _indices = indices !== nothing ? indices : (1:nimages)
+    @assert isa(_indices, AbstractVector)
+    all(i -> 1 <= i <= nimages, _indices) ||
+        throw(ArgumentError("not all elements in parameter \"indices\" are in 1:$nimages"))
+
+    issorted(_indices) && return _readimages(io, nrows, ncols, _indices, 1:length(_indices))
+    # sort indices, because IO might not support seek()
+    perm = sortperm(_indices)
+    return _readimages(io, nrows, ncols, _indices[perm], (1:length(_indices))[perm])
 end
 
-function readimages(file::AbstractString, index::Integer)
-    gzopen(file, "r") do io
-        readimages(io, index)
-    end::Matrix{UInt8}
-end
+readimages(io::IO, index::Integer) = dropdims(readimages(io, [index]), dims=3)
 
-function readimages(file::AbstractString, indices::AbstractVector)
-    gzopen(file, "r") do io
+function readimages(file::AbstractString, indices = nothing)
+    open(GzipDecompressorStream, file) do io
         readimages(io, indices)
-    end::Array{UInt8,3}
-end
-
-function readimages(file::AbstractString)
-    gzopen(file, "r") do io
-        _, nimages, nrows, ncols = readimageheader(io)
-        readimages(io, 1:nimages, nrows, ncols)
-    end::Array{UInt8,3}
+    end
 end

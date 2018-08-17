@@ -2,27 +2,16 @@ export CIFAR10
 module CIFAR10
     using DataDeps
     using BinDeps
-    using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring, _colorview, _channelview
 
     export
-
         classnames,
-
-        traintensor,
-        testtensor,
-
-        trainlabels,
-        testlabels,
-
-        traindata,
-        testdata,
-
-        convert2image,
-        convert2features,
-
+        traintensor, testtensor,
+        trainlabels, testlabels,
+        traindata, testdata,
+        convert2image, convert2features,
         download
 
     const DEPNAME = "CIFAR10"
@@ -62,7 +51,7 @@ module CIFAR10
     """
     download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
 
-    include(joinpath("Reader","Reader.jl"))
+    include(joinpath("Reader", "Reader.jl"))
     include("interface.jl")
     include("utils.jl")
 

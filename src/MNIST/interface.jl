@@ -50,15 +50,10 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major color
 
 $(download_docstring("MNIST", DEPNAME))
 """
-function traintensor(::Type{T}, args...; dir = nothing) where T
-    path = datafile(DEPNAME, TRAINIMAGES, dir)
-    images = Reader.readimages(path, args...)
-    bytes_to_type(T, images)
-end
+traintensor(::Type{T}, indices = nothing; dir = nothing) where T =
+    bytes_to_type(T, Reader.readimages(datafile(DEPNAME, TRAINIMAGES, dir), indices))
 
-function traintensor(args...; dir = nothing)
-    traintensor(N0f8, args...; dir = dir)
-end
+traintensor(indices = nothing; dir = nothing) = traintensor(N0f8, indices; dir = dir)
 
 """
     testtensor([T = N0f8], [indices]; [dir]) -> Array{T}
@@ -112,15 +107,10 @@ julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colora
 
 $(download_docstring("MNIST", DEPNAME))
 """
-function testtensor(::Type{T}, args...; dir = nothing) where T
-    path = datafile(DEPNAME, TESTIMAGES, dir)
-    images = Reader.readimages(path, args...)
-    bytes_to_type(T, images)
-end
+testtensor(::Type{T}, indices = nothing; dir = nothing) where T =
+    bytes_to_type(T, Reader.readimages(datafile(DEPNAME, TESTIMAGES, dir), indices))
 
-function testtensor(args...; dir = nothing)
-    testtensor(N0f8, args...; dir = dir)
-end
+testtensor(indices = nothing; dir = nothing) = testtensor(N0f8, indices; dir = dir)
 
 """
     trainlabels([indices]; [dir])
@@ -151,15 +141,11 @@ julia> MNIST.trainlabels(1) # first label
 
 $(download_docstring("MNIST", DEPNAME))
 """
-function trainlabels(args...; dir = nothing)
-    path = datafile(DEPNAME, TRAINLABELS, dir)
-    Vector{Int}(Reader.readlabels(path, args...))
-end
+trainlabels(indices = nothing; dir = nothing) =
+    Vector{Int}(Reader.readlabels(datafile(DEPNAME, TRAINLABELS, dir), indices))
 
-function trainlabels(index::Integer; dir = nothing)
-    path = datafile(DEPNAME, TRAINLABELS, dir)
-    Int(Reader.readlabels(path, index))
-end
+trainlabels(index::Integer; dir = nothing) =
+    Int(Reader.readlabels(datafile(DEPNAME, TRAINLABELS, dir), index))
 
 """
     testlabels([indices]; [dir])
@@ -190,15 +176,11 @@ julia> MNIST.testlabels(1) # first label
 
 $(download_docstring("MNIST", DEPNAME))
 """
-function testlabels(args...; dir = nothing)
-    path = datafile(DEPNAME, TESTLABELS, dir)
-    Vector{Int}(Reader.readlabels(path, args...))
-end
+testlabels(indices = nothing; dir = nothing) =
+    Vector{Int}(Reader.readlabels(datafile(DEPNAME, TESTLABELS, dir), indices))
 
-function testlabels(index::Integer; dir = nothing)
-    path = datafile(DEPNAME, TESTLABELS, dir)
-    Int(Reader.readlabels(path, index))
-end
+testlabels(index::Integer; dir = nothing) =
+    Int(Reader.readlabels(datafile(DEPNAME, TESTLABELS, dir), index))
 
 """
     traindata([T = N0f8], [indices]; [dir]) -> Tuple
@@ -227,12 +209,11 @@ $(download_docstring("MNIST", DEPNAME))
 Take a look at [`MNIST.traintensor`](@ref) and
 [`MNIST.trainlabels`](@ref) for more information.
 """
-function traindata(::Type{T}, args...; dir = nothing) where T
-    (traintensor(T, args...; dir = dir),
-     trainlabels(args...; dir = dir))
-end
+traindata(::Type{T}, indices = nothing; dir = nothing) where T =
+    (traintensor(T, indices; dir = dir),
+     trainlabels(indices; dir = dir))
 
-traindata(args...; dir = nothing) = traindata(N0f8, args...; dir = dir)
+traindata(indices = nothing; dir = nothing) = traindata(N0f8, indices; dir = dir)
 
 """
     testdata([T = N0f8], [indices]; [dir]) -> Tuple
@@ -261,9 +242,8 @@ $(download_docstring("MNIST", DEPNAME))
 Take a look at [`MNIST.testtensor`](@ref) and
 [`MNIST.testlabels`](@ref) for more information.
 """
-function testdata(::Type{T}, args...; dir = nothing) where T
-    (testtensor(T, args...; dir = dir),
-     testlabels(args...; dir = dir))
-end
+testdata(::Type{T}, indices = nothing; dir = nothing) where T =
+    (testtensor(T, indices; dir = dir),
+     testlabels(indices; dir = dir))
 
-testdata(args...; dir = nothing) = testdata(N0f8, args...; dir = dir)
+testdata(indices = nothing; dir = nothing) = testdata(N0f8, indices; dir = dir)

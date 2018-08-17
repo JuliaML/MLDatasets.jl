@@ -1,31 +1,43 @@
 using Test
 using MLDatasets
 
-tests = [
-    "tst_cifar10.jl",
-    "tst_cifar100.jl",
-    "tst_mnist.jl",
-    "tst_fashion_mnist.jl",
-    "tst_svhn2.jl",
-]
+module MLDatasetsTestUtils
+export isCI
 
-for t in tests
-    @testset "$t" begin
-        include(t)
-    end
+# detect whether the tests are running in CI environment
+isCI() = parse(Bool, get(ENV, "CI", "false"))
+end # module
+
+@testset "CIFAR10" begin
+    include("tst_cifar10.jl")
+end
+@testset "CIFAR100" begin
+    include("tst_cifar100.jl")
+end
+@testset "MNIST" begin
+    include("tst_mnist.jl")
+end
+@testset "FashionMNIST" begin
+    include("tst_fashion_mnist.jl")
+end
+@testset "SVHN2" begin
+    include("tst_svhn2.jl")
 end
 
+using .MLDatasetsTestUtils
+
 # temporary to not stress CI
-if !parse(Bool, get(ENV, "CI", "false"))
-    @testset "other tests" begin
-        # PTBLM
+if !isCI()
+    @testset "PTBLM" begin
         x, y = PTBLM.traindata()
         x, y = PTBLM.testdata()
+    end
 
-        # UD_English
+    @testset "UD_English" begin
         x = UD_English.traindata()
         x = UD_English.devdata()
         x = UD_English.testdata()
     end
 end
+
 nothing

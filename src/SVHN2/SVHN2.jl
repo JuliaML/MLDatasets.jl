@@ -30,29 +30,16 @@ additional to use as extra training data.
 """
 module SVHN2
     using DataDeps
-    using MAT
-    using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
+                        _colorview, _channelview, _matopen, _matread
 
     export
-
-        traintensor,
-        testtensor,
-        extratensor,
-
-        trainlabels,
-        testlabels,
-        extralabels,
-
-        traindata,
-        testdata,
-        extradata,
-
-        convert2image,
-        convert2features,
-
+        traintensor, testtensor, extratensor,
+        trainlabels, testlabels, extralabels,
+        traindata, testdata, extradata,
+        convert2image, convert2features,
         download
 
     const DEPNAME = "SVHN2"
@@ -70,7 +57,7 @@ module SVHN2
 
     This function will display an interactive dialog unless
     either the keyword parameter `i_accept_the_terms_of_use` or
-    the environment variable `DATADEPS_ALWAY_ACCEPT` is set to
+    the environment variable `DATADEPS_ALWAYS_ACCEPT` is set to
     `true`. Note that using the data responsibly and respecting
     copyright/terms-of-use remains your responsibility.
     """

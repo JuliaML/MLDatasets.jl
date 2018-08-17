@@ -5,6 +5,8 @@ using ImageCore
 using FixedPointNumbers
 using MLDatasets
 using DataDeps
+using MAT
+using ..MLDatasetsTestUtils
 
 @testset "Constants" begin
     @test SVHN2.classnames() isa Vector{Int}
@@ -51,10 +53,10 @@ end
 
 # NOT executed on CI. only executed locally.
 # This involves dataset download etc.
-if parse(Bool, get(ENV, "CI", "false"))
-    info("CI detected: skipping dataset download")
+if isCI()
+    @info "CI detected: skipping dataset download"
 else
-    data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
+    data_dir = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
         datadep"SVHN2"
     end
 
@@ -95,54 +97,51 @@ else
         # as int or as vector). That means no matter how you
         # specify an index, you will always get the same result
         # for a specific index.
-        for (image_fun, T, nimages) in (
+        @testset "$image_fun with T=$T" for (image_fun, T, nimages) in (
                 (SVHN2.testtensor, UInt8,   26_032),
                 (SVHN2.testtensor, Int,     26_032),
                 (SVHN2.testtensor, Float64, 26_032),
                 (SVHN2.testtensor, Float32, 26_032),
                 (SVHN2.testtensor, N0f8,    26_032),
             )
-            @testset "$image_fun with T=$T" begin
-                # whole image set
-                A = @inferred image_fun(T)
-                @test typeof(A) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
-                @test size(A) == (32,32,3,nimages)
 
-                @test_throws BoundsError image_fun(T,-1)
-                @test_throws BoundsError image_fun(T,0)
-                @test_throws BoundsError image_fun(T,nimages+1)
+            # whole image set
+            A = @inferred image_fun(T)
+            @test A isa AbstractArray{T,4}
+            @test size(A) == (32,32,3,nimages)
 
-                @testset "load single images" begin
-                    # Sample a few random images to compare
-                    for i = rand(1:nimages, 3)
-                        A_i = @inferred image_fun(T,i)
-                        @test typeof(A_i) <: Union{Array{T,3},Base.ReinterpretArray{T,3}}
-                        @test size(A_i) == (32,32,3)
-                        @test A_i == A[:,:,:,i]
-                    end
+            @test_throws BoundsError image_fun(T,-1)
+            @test_throws BoundsError image_fun(T,0)
+            @test_throws BoundsError image_fun(T,nimages+1)
+
+            @testset "load single images" begin
+                # Sample a few random images to compare
+                for i = rand(1:nimages, 3)
+                    A_i = @inferred image_fun(T,i)
+                    @test A_i isa AbstractArray{T,3}
+                    @test size(A_i) == (32,32,3)
+                    @test A_i == A[:,:,:,i]
+                end
+            end
+
+            @testset "load multiple images" begin
+                A_5_10 = @inferred image_fun(T,5:10)
+                @test A_5_10 isa AbstractArray{T,4}
+                @test size(A_5_10) == (32,32,3,6)
+                for i = 1:6
+                    @test A_5_10[:,:,:,i] == A[:,:,:,i+4]
                 end
 
-                @testset "load multiple images" begin
-                    A_5_10 = @inferred image_fun(T,5:10)
-                    @test typeof(A_5_10) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
-                    @test size(A_5_10) == (32,32,3,6)
-                    for i = 1:6
-                        @test A_5_10[:,:,:,i] == A[:,:,:,i+4]
-                    end
-
-                    # also test edge cases `1`, `nimages`
-                    indices = [10,3,9,1,nimages]
-                    A_vec   = image_fun(T,indices)
-                    A_vec_f = image_fun(T,Vector{Int32}(indices))
-                    @test typeof(A_vec) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
-                    @test typeof(A_vec_f) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
-                    @test size(A_vec)   == (32,32,3,5)
-                    @test size(A_vec_f) == (32,32,3,5)
-                    for i in 1:5
-                        @test A_vec[:,:,:,i] == A[:,:,:,indices[i]]
-                        @test A_vec[:,:,:,i] == A_vec_f[:,:,:,i]
-                    end
-                end
+                # also test edge cases `1`, `nimages`
+                indices = [10,3,9,1,nimages]
+                A_vec   = image_fun(T,indices)
+                A_vec_f = image_fun(T,Vector{Int32}(indices))
+                @test A_vec   isa AbstractArray{T,4}
+                @test A_vec_f isa AbstractArray{T,4}
+                @test size(A_vec)   == (32,32,3,5)
+                @test size(A_vec_f) == (32,32,3,5)
+                @test A_vec == A[:,:,:,indices]
+                @test A_vec == A_vec_f
             end
         end
     end
@@ -177,78 +176,73 @@ else
         # for a specific index.
         # -- However, technically these tests do not check if
         #    these are the actual SVHN labels of that index!
-        for (label_fun, nlabels) in
-                    ((SVHN2.trainlabels, 73_257),
-                     (SVHN2.testlabels,  26_032),
-                     (SVHN2.extralabels, 531_131))
-            @testset "$label_fun" begin
-                # whole label set
-                A = @inferred label_fun()
-                @test typeof(A) <: Vector{Int64}
-                @test size(A) == (nlabels,)
+        @testset "$label_fun" for (label_fun, nlabels) in
+            ((SVHN2.trainlabels, 73_257),
+             (SVHN2.testlabels,  26_032),
+             (SVHN2.extralabels, 531_131))
 
-                @testset "load single label" begin
-                    # Sample a few random labels to compare
-                    for i = rand(1:nlabels, 10)
-                        A_i = @inferred label_fun(i)
-                        @test typeof(A_i) <: Int64
-                        @test A_i == A[i]
-                    end
+            # whole label set
+            A = @inferred label_fun()
+            @test A isa Vector{Int64}
+            @test size(A) == (nlabels,)
+
+            @testset "load single label" begin
+                # Sample a few random labels to compare
+                for i = rand(1:nlabels, 10)
+                    A_i = @inferred label_fun(i)
+                    @test A_i isa Int64
+                    @test A_i == A[i]
                 end
+            end
 
-                @testset "load multiple labels" begin
-                    A_5_10 = @inferred label_fun(5:10)
-                    @test typeof(A_5_10) <: Vector{Int64}
-                    @test size(A_5_10) == (6,)
-                    for i = 1:6
-                        @test A_5_10[i] == A[i+4]
-                    end
+            @testset "load multiple labels" begin
+                A_5_10 = @inferred label_fun(5:10)
+                @test A_5_10 isa Vector{Int64}
+                @test size(A_5_10) == (6,)
+                @test A_5_10 == A[5:10]
 
-                    # also test edge cases `1`, `nlabels`
-                    indices = [10,3,9,1,nlabels]
-                    A_vec   = @inferred label_fun(indices)
-                    A_vec_f = @inferred label_fun(Vector{Int32}(indices))
-                    @test typeof(A_vec)   <: Vector{Int64}
-                    @test typeof(A_vec_f) <: Vector{Int64}
-                    @test size(A_vec)   == (5,)
-                    @test size(A_vec_f) == (5,)
-                    for i in 1:5
-                        @test A_vec[i] == A[indices[i]]
-                        @test A_vec[i] == A_vec_f[i]
-                    end
-                end
+                # also test edge cases `1`, `nlabels`
+                indices = [10,3,9,1,nlabels]
+                A_vec   = @inferred label_fun(indices)
+                A_vec_f = @inferred label_fun(Vector{Int32}(indices))
+                @test A_vec   isa Vector{Int64}
+                @test A_vec_f isa Vector{Int64}
+                @test size(A_vec)   == (5,)
+                @test size(A_vec_f) == (5,)
+                @test A_vec == A[indices]
+                @test A_vec == A_vec_f
             end
         end
     end
 
     # Check against the already tested tensor and labels functions
     @testset "Data" begin
-        for (data_fun, feature_fun, label_fun, nobs) in
+        @testset "check $data_fun against $feature_fun and $label_fun" for
+            (data_fun, feature_fun, label_fun, nobs) in
                  ((SVHN2.testdata,  SVHN2.testtensor,  SVHN2.testlabels,  26_032),)
-            @testset "check $data_fun against $feature_fun and $label_fun" begin
-                data, labels = @inferred data_fun()
-                @test data == @inferred feature_fun()
-                @test labels == @inferred label_fun()
 
-                for i = rand(1:nobs, 10)
-                    d_i, l_i = @inferred data_fun(i)
-                    @test d_i == @inferred feature_fun(i)
-                    @test l_i == @inferred label_fun(i)
-                end
+            data, labels = @inferred data_fun()
+            @test data == @inferred feature_fun()
+            @test labels == @inferred label_fun()
 
-                data, labels = @inferred data_fun(5:10)
-                @test data == @inferred feature_fun(5:10)
-                @test labels == @inferred label_fun(5:10)
-
-                data, labels = @inferred data_fun(Int, 5:10)
-                @test data == @inferred feature_fun(Int, 5:10)
-                @test labels == @inferred label_fun(5:10)
-
-                indices = [10,3,9,1,nobs]
-                data, labels = @inferred data_fun(indices)
-                @test data == @inferred feature_fun(indices)
-                @test labels == @inferred label_fun(indices)
+            for i = rand(1:nobs, 10)
+                d_i, l_i = @inferred data_fun(i)
+                @test d_i == @inferred feature_fun(i)
+                @test l_i == @inferred label_fun(i)
             end
+
+            data, labels = @inferred data_fun(5:10)
+            @test data == @inferred feature_fun(5:10)
+            @test labels == @inferred label_fun(5:10)
+
+            data, labels = @inferred data_fun(Int, 5:10)
+            @test data == @inferred feature_fun(Int, 5:10)
+            @test labels == @inferred label_fun(5:10)
+
+            indices = [10,3,9,1,nobs]
+            data, labels = @inferred data_fun(indices)
+            @test data == @inferred feature_fun(indices)
+            @test labels == @inferred label_fun(indices)
         end
     end
 end
