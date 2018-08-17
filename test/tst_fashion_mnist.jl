@@ -105,13 +105,13 @@ else
                 @test A_5_10 == A[:,:,5:10]
 
                 # also test edge cases `1`, `nimages`
-                indices = [10,3,9,1,nimages]
+                indices = [10,1,3,3,9,1,nimages]
                 A_vec   = image_fun(T,indices)
                 A_vec_f = image_fun(T,Vector{Int32}(indices))
                 @test A_vec   isa AbstractArray{T,3}
                 @test A_vec_f isa AbstractArray{T,3}
-                @test size(A_vec)   == (28,28,5)
-                @test size(A_vec_f) == (28,28,5)
+                @test size(A_vec)   == (28,28,7)
+                @test size(A_vec_f) == (28,28,7)
                 @test A_vec == A[:,:,indices]
                 @test A_vec == A_vec_f
             end
@@ -164,13 +164,13 @@ else
                 @test A_5_10 == A[5:10]
 
                 # also test edge cases `1`, `nlabels`
-                indices = [10,3,9,1,nlabels]
+                indices = [10,1,3,3,9,1,nlabels]
                 A_vec   = @inferred label_fun(indices)
                 A_vec_f = @inferred label_fun(Vector{Int32}(indices))
                 @test A_vec   isa Vector{Int64}
                 @test A_vec_f isa Vector{Int64}
-                @test size(A_vec)   == (5,)
-                @test size(A_vec_f) == (5,)
+                @test size(A_vec)   == (7,)
+                @test size(A_vec_f) == (7,)
                 @test A_vec == A[indices]
                 @test A_vec == A_vec_f
             end
@@ -202,7 +202,7 @@ else
             @test data == @inferred feature_fun(Int, 5:10)
             @test labels == @inferred label_fun(5:10)
 
-            indices = [10,3,9,1,nobs]
+            indices = [10,1,3,3,9,1,nobs]
             data, labels = @inferred data_fun(indices)
             @test data == @inferred feature_fun(indices)
             @test labels == @inferred label_fun(indices)
