@@ -30,4 +30,4 @@ install:
 
 after_success:
   - julia -e 'using Pkg, MLDatasets; cd(joinpath(dirname(pathof(MLDatasets)), "..")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
-  - julie -e 'using Pkg; Pkg.add("Documenter"); cd(joinpath(dirname(pathof(MLDatasets)), "..")); include(joinpath("docs", "make.jl"))'
+  - julia -e 'using Pkg, MLDatasets; Pkg.add("Documenter"); cd(joinpath(dirname(pathof(MLDatasets)), "..")); include(joinpath("docs", "make.jl"))'
