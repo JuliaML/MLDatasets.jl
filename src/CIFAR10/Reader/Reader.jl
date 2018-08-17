@@ -29,13 +29,19 @@ function _readdata!(io::IO,
     else
         buffer = Array{UInt8}(undef, img_size)
         pos = 0
+        last_src_ix = 0
+        last_label = first(labels)
         @inbounds for (dst_ix, src_ix) in zip(dst_indices, src_indices)
-            nextpos = imagesize * (src_ix - src_offset - 1)
-            skip(io, nextpos - pos)
-            labels[dst_ix] = read(io, eltype(labels))
-            read!(io, buffer)
+            if src_ix != last_src_ix
+                nextpos = imagesize * (src_ix - src_offset - 1)
+                skip(io, nextpos - pos)
+                last_label = read(io, eltype(labels))
+                read!(io, buffer)
+                pos = nextpos + imagesize
+                last_src_ix = src_ix
+            end
             copyto!(view(images, :,:,:, dst_ix), buffer)
-            pos = nextpos + imagesize
+            labels[dst_ix] = last_label
         end
     end
     return images, labels

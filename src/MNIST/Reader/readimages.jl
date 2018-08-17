@@ -18,12 +18,16 @@ function _readimages(io::IO, nrows::Integer, ncols::Integer,
     else
         buffer = Matrix{UInt8}(undef, nrows, ncols)
         pos = IMAGEOFFSET
+        last_src_ix = 0
         for (dst_ix, src_ix) in zip(dst_indices, src_indices)
-            nextpos = IMAGEOFFSET + imagesize * (src_ix - 1)
-            skip(io, nextpos - pos)
-            read!(io, buffer)
+            if src_ix != last_src_ix
+                nextpos = IMAGEOFFSET + imagesize * (src_ix - 1)
+                skip(io, nextpos - pos)
+                read!(io, buffer)
+                pos = nextpos + imagesize
+                last_src_ix = src_ix
+            end
             copyto!(view(images, :, :, dst_ix), buffer)
-            pos = nextpos + imagesize
         end
     end
     return images

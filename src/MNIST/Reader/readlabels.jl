@@ -8,11 +8,17 @@ function _readlabels(io::IO,
     @assert length(src_indices) == length(dst_indices)
     labels = Vector{UInt8}(undef, length(src_indices))
     pos = LABELOFFSET
+    last_src_ix = 0
+    last_label = UInt8(0)
     for (dst_ix, src_ix) in zip(dst_indices, src_indices)
-        nextpos = LABELOFFSET + (src_ix - 1)
-        skip(io, nextpos - pos)
-        labels[dst_ix] = read(io, UInt8)
-        pos = nextpos + 1
+        if src_ix != last_src_ix
+            nextpos = LABELOFFSET + (src_ix - 1)
+            skip(io, nextpos - pos)
+            last_label = read(io, UInt8)
+            pos = nextpos + 1
+            last_src_ix = src_ix
+        end
+        labels[dst_ix] = last_label
     end
     return labels
 end
