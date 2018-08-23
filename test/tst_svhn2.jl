@@ -53,7 +53,7 @@ end
 # NOT executed on CI. only executed locally.
 # This involves dataset download etc.
 if parse(Bool, get(ENV, "CI", "false"))
-    info("CI detected: skipping dataset download")
+    @info "CI detected: skipping dataset download"
 else
     data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
         datadep"SVHN2"
