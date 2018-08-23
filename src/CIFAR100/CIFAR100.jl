@@ -4,7 +4,7 @@ module CIFAR100
     using BinDeps
     using FixedPointNumbers
     using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-    import ..CIFAR10: convert2image, convert2features
+    using ..CIFAR10: convert2image, convert2features
 
     export
 

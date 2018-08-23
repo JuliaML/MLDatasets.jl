@@ -25,10 +25,10 @@ the 10 possible digits (0-9).
 """
 module MNIST
     using DataDeps
-    using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
+                        _colorview
 
     export
 

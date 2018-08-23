@@ -29,10 +29,10 @@ function convert2features(array::AbstractArray{<:Number,4})
 end
 
 convert2features(array::AbstractArray{<:RGB,2}) =
-    convert2features(permutedims(channelview(array), (3,2,1)))
+    convert2features(permutedims(_channelview(array), (3,2,1)))
 
 convert2features(array::AbstractArray{<:RGB,3}) =
-    convert2features(permutedims(channelview(array), (3,2,1,4)))
+    convert2features(permutedims(_channelview(array), (3,2,1,4)))
 
 """
     convert2image(array) -> Array{RGB}
@@ -68,13 +68,13 @@ end
 function convert2image(array::AbstractArray{<:Number,3})
     nrows, ncols, nchan = size(array)
     @assert nchan == 3 "the given array should have the RGB channel in the third dimension"
-    colorview(RGB, permutedims(_norm_array(array), (3,2,1)))
+    _colorview(RGB, permutedims(_norm_array(array), (3,2,1)))
 end
 
 function convert2image(array::AbstractArray{<:Number,4})
     nrows, ncols, nchan, nimages = size(array)
     @assert nchan == 3 "the given array should have the RGB channel in the third dimension"
-    colorview(RGB, permutedims(_norm_array(array), (3,2,1,4)))
+    _colorview(RGB, permutedims(_norm_array(array), (3,2,1,4)))
 end
 
 _norm_array(array::AbstractArray) = array

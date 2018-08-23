@@ -5,6 +5,7 @@ using ImageCore
 using FixedPointNumbers
 using MLDatasets
 using DataDeps
+using MAT
 
 @testset "Constants" begin
     @test SVHN2.classnames() isa Vector{Int}
