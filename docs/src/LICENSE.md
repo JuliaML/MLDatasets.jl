@@ -1,5 +1,6 @@
 # LICENSE
 
 ```@eval
-Markdown.parse_file(joinpath(@__DIR__, "../LICENSE"))
+using Markdown
+Markdown.parse_file(joinpath(@__DIR__, "..", "..", "LICENSE"))
 ```

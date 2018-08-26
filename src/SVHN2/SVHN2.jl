@@ -30,11 +30,10 @@ additional to use as extra training data.
 """
 module SVHN2
     using DataDeps
-    using MAT
-    using ImageCore
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
+                        _colorview, _channelview, _matopen, _matread
 
     export
 

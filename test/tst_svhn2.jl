@@ -5,6 +5,7 @@ using ImageCore
 using FixedPointNumbers
 using MLDatasets
 using DataDeps
+using MAT
 
 @testset "Constants" begin
     @test SVHN2.classnames() isa Vector{Int}
@@ -52,7 +53,7 @@ end
 # NOT executed on CI. only executed locally.
 # This involves dataset download etc.
 if parse(Bool, get(ENV, "CI", "false"))
-    info("CI detected: skipping dataset download")
+    @info "CI detected: skipping dataset download"
 else
     data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
         datadep"SVHN2"

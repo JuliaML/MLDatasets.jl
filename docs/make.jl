@@ -30,7 +30,7 @@ makedocs(
 deploydocs(
     repo = "github.com/JuliaML/MLDatasets.jl.git",
     target = "build",
-    julia = "0.6",
+    julia = "0.7",
     deps = nothing,
     make = nothing,
 )

@@ -27,8 +27,8 @@ module FashionMNIST
     using DataDeps
     using FixedPointNumbers
     using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-    import ..MNIST: convert2image, convert2features
-    import ..MNIST.Reader
+    using ..MNIST: convert2image, convert2features
+    using ..MNIST.Reader
 
     export
 
