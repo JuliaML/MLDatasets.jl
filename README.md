@@ -1,26 +1,24 @@
 # MLDatasets.jl
 
-[![Julia 0.6 Status](http://pkg.julialang.org/badges/MLDatasets_0.6.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.6)
-[![Julia 0.7 Status](http://pkg.julialang.org/badges/MLDatasets_0.7.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.7)
-[![Julia 1.0 Status](http://pkg.julialang.org/badges/MLDatasets_1.0.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=1.0)
-
-[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/stable)
-[![Build Status](https://travis-ci.org/JuliaML/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/JuliaML/MLDatasets.jl)
-
-This package represents a community effort to provide a common
+_This package represents a community effort to provide a common
 interface for accessing common Machine Learning (ML) datasets. In
 contrast to other data-related Julia packages, the focus of
 `MLDatasets.jl` is specifically on downloading, unpacking, and
 accessing benchmark dataset. Functionality for the purpose of
 data processing or visualization is only provided to a degree
-that is special to some dataset.
+that is special to some dataset._
+
+| **Package Status** | **Package Evaluator** | **Build Status**  |
+|:------------------:|:---------------------:|:-----------------:|
+| [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md) [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/stable) | [![Julia 0.6 Status](http://pkg.julialang.org/badges/MLDatasets_0.6.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.6) [![Julia 0.7 Status](http://pkg.julialang.org/badges/MLDatasets_0.7.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=0.7) [![Julia 1.0 Status](http://pkg.julialang.org/badges/MLDatasets_1.0.svg)](http://pkg.julialang.org/?pkg=MLDatasets&ver=1.0) | [![Build Status](https://travis-ci.org/JuliaML/MLDatasets.jl.svg?branch=master)](https://travis-ci.org/JuliaML/MLDatasets.jl) [![Coverage Status](https://coveralls.io/repos/github/JuliaML/MLDatasets.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaML/MLDatasets.jl?branch=master) |
+
 
 This package is a part of the
 [`JuliaML`](https://github.com/JuliaML) ecosystem. Its
 functionality is build on top of the package
 [`DataDeps.jl`](https://github.com/oxinabox/DataDeps.jl).
 
-## Basic Usage
+## Introduction
 
 The way `MLDatasets.jl` is organized is that each dataset has its
 own dedicated sub-module. Where possible, those sub-module share
@@ -122,6 +120,33 @@ testdata = UD_English.devdata()
 | **PTBLM** | 42068 | 42068 | 3761 | 3761 |
 | **UD_English** | 12543 | - | 2077 | - |
 
+## Documentation
+
+Check out the **[latest
+documentation](https://JuliaML.github.io/MLDatasets.jl/stable)**
+
+Additionally, you can make use of Julia's native docsystem.
+The following example shows how to get additional information
+on `MNIST.convert2image` within Julia's REPL:
+
+```julia
+?MNIST.convert2image
+```
+```
+  convert2image(array) -> Array{Gray}
+
+  Convert the given MNIST horizontal-major tensor (or feature matrix) to a vertical-major Colorant array. The values are also color corrected according to
+  the website's description, which means that the digits are black on a white background.
+
+  julia> MNIST.convert2image(MNIST.traintensor()) # full training dataset
+  28×28×60000 Array{Gray{N0f8},3}:
+  [...]
+
+  julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
+  28×28 Array{Gray{N0f8},2}:
+  [...]
+```
+
 ## Installation
 
 To install `MLDatasets.jl`, start up Julia and type the following
@@ -129,15 +154,8 @@ code snippet into the REPL. It makes use of the native Julia
 package manger.
 
 ```julia
+import Pkg
 Pkg.add("MLDatasets")
-```
-
-Additionally, for example if you encounter any sudden issues, or
-in the case you would like to contribute to the package, you can
-manually choose to be on the latest (untagged) version.
-
-```julia
-Pkg.checkout("MLDatasets")
 ```
 
 ## License
