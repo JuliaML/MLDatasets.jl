@@ -10,22 +10,19 @@ function with_accept(f, manual_overwrite)
     withenv(f, "DATADEPS_ALWAYS_ACCEPT" => string(auto_accept))
 end
 
-function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)
-    with_accept(i_accept_the_terms_of_use) do
-        if dir == nothing
-            # use DataDeps defaults
-            @datadep_str depname
+function datadir(depname, dir = nothing; kw...)
+    if dir === nothing
+        # use DataDeps defaults
+        return @datadep_str depname
+    else
+        # use user-provided dir
+        if isdir(dir)
+            return dir
         else
-            # use user-provided dir
-            if isdir(dir)
-                dir
-            else
-                DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") && error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
-                DataDeps.download(DataDeps.registry[depname], dir)
-                dir
-            end
+            download_dep(depname, dir; kw...)
+            return dir
         end
-    end::String
+    end
 end
 
 function datafile(depname, filename, dir = nothing; recurse = true, kw...)
@@ -49,8 +46,13 @@ function datafile(depname, filename, dir = nothing; recurse = true, kw...)
     end::String
 end
 
-function download_dep(depname, dir = DataDeps.determine_save_path(depname); kw...)
-    DataDeps.download(DataDeps.registry[depname], dir; kw...)
+function download_dep(depname, dir = DataDeps.determine_save_path(depname);
+                      i_accept_the_terms_of_use = nothing, kw...)
+    with_accept(i_accept_the_terms_of_use) do
+        DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") &&
+            error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
+        DataDeps.download(DataDeps.registry[depname], dir; kw...)
+    end
 end
 
 function download_docstring(modname, depname)
