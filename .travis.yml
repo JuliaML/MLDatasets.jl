@@ -3,8 +3,8 @@ os:
   - linux
   - osx
 julia:
-  - 0.7
-  - 1.0
+  - 1.1
+  - 1.2
   - nightly
 notifications:
   email: false
@@ -23,7 +23,7 @@ addons:
 jobs:
   include:
     - stage: deploy
-      julia: 0.7
+      julia: 1.2
       os: linux
       script:
         - julia -e 'import Pkg; Pkg.clone(pwd()); Pkg.build("MLDatasets")'
