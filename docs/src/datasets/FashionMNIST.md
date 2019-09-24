@@ -56,8 +56,8 @@ the Fashion-MNIST dataset in Julia more convenient.
 
 Function | Description
 ---------|-------------
-[`convert2features(array)`](@ref FashionMNIST.convert2features) | Convert the Fashion-MNIST tensor to a flat feature matrix
-[`convert2image(array)`](@ref FashionMNIST.convert2image) | Convert the Fashion-MNIST tensor/matrix to a colorant array
+[`convert2features(array)`](@ref MNIST.convert2features) | Convert the Fashion-MNIST tensor to a flat feature matrix
+[`convert2image(array)`](@ref MNIST.convert2image) | Convert the Fashion-MNIST tensor/matrix to a colorant array
 
 You can use the function
 [`convert2features`](@ref FashionMNIST.convert2features) to
@@ -109,13 +109,13 @@ FashionMNIST.testdata
 
 ### Utilities
 
-See [`MNIST.convert2features`](@ref) and
-[`MNIST.convert2image`](@ref)
-
 ```@docs
 FashionMNIST.download
 FashionMNIST.classnames
 ```
+
+Also, the `FashionMNIST` module is re-exporting [`convert2features`](@ref MNIST.convert2features)
+and [`convert2image`](@ref MNIST.convert2image) from the [`MNIST`](@ref) module.
 
 ## References
 
