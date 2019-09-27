@@ -26,7 +26,4 @@ makedocs(
     ]
 )
 
-
 deploydocs(repo = "github.com/JuliaML/MLDatasets.jl.git")
-
-deploydocs(repo = "github.com/FluxML/Flux.jl.git")
