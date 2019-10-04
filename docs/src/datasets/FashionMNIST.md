@@ -60,7 +60,7 @@ Function | Description
 [`convert2image(array)`](@ref MNIST.convert2image) | Convert the Fashion-MNIST tensor/matrix to a colorant array
 
 You can use the function
-[`convert2features`](@ref FashionMNIST.convert2features) to
+[`convert2features`](@ref MNIST.convert2features) to
 convert the given Fashion-MNIST tensor to a feature matrix (or
 feature vector in the case of a single image). The purpose of
 this function is to drop the spatial dimensions such that
@@ -73,7 +73,7 @@ julia> FashionMNIST.convert2features(FashionMNIST.traintensor()) # full training
 ```
 
 To visualize an image or a prediction we provide the function
-[`convert2image`](@ref FashionMNIST.convert2image) to convert the
+[`convert2image`](@ref MNIST.convert2image) to convert the
 given Fashion-MNIST horizontal-major tensor (or feature matrix)
 to a vertical-major `Colorant` array. The values are also color
 corrected according to the website's description, which means
