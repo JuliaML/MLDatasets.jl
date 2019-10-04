@@ -3,10 +3,10 @@ using Documenter, MLDatasets
 makedocs(
     modules = [MLDatasets],
     clean = false,
-    format = :html,
-    assets = [
-        joinpath("assets", "favicon.ico"),
-    ],
+    format = Documenter.HTML(
+                prettyurls = haskey(ENV, "CI"), 
+                assets = [joinpath("assets", "favicon.ico")]
+            ),
     sitename = "MLDatasets.jl",
     authors = "Hiroyuki Shindo, Christof Stocker",
     linkcheck = !("skiplinks" in ARGS),
@@ -23,14 +23,7 @@ makedocs(
         ],
         hide("Indices" => "indices.md"),
         "LICENSE.md",
-    ],
-    html_prettyurls = !("local" in ARGS),
+    ]
 )
 
-deploydocs(
-    repo = "github.com/JuliaML/MLDatasets.jl.git",
-    target = "build",
-    julia = "0.7",
-    deps = nothing,
-    make = nothing,
-)
+deploydocs(repo = "github.com/JuliaML/MLDatasets.jl.git")
