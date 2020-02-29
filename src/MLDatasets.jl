@@ -39,7 +39,7 @@ end
 
 include("download.jl")
 include("CoNLL.jl")
-
+include("Iris/Iris.jl")
 include("CIFAR10/CIFAR10.jl")
 include("CIFAR100/CIFAR100.jl")
 include("MNIST/MNIST.jl")

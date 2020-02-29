@@ -69,17 +69,64 @@ the purpose of image classification.
 
 Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
-[**MNIST**](@ref MNIST) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
-[**FashionMNIST**](@ref FashionMNIST) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
-[**CIFAR-10**](@ref CIFAR10) | 10 | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000
-[**CIFAR-100**](@ref CIFAR100) | 100 (20) | 32x32x3x50000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2)
-[**SVHN-2**](@ref SVHN2) (*) | 10 | 32x32x3x73257 | 73257 | 32x32x3x26032 | 26032
+[**MNIST**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/MNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
+[**FashionMNIST**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/FashionMNIST/) | 10 | 28x28x60000 | 60000 | 28x28x10000 | 10000
+[**CIFAR-10**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR10/) | 10 | 32x32x3x50000 | 50000 | 32x32x3x10000 | 10000
+[**CIFAR-100**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/) | 100 (20) | 32x32x3x50000 | 50000 (x2) | 32x32x3x10000 | 10000 (x2)
+[**SVHN-2**](https://juliaml.github.io/MLDatasets.jl/latest/datasets/SVHN2/) (*) | 10 | 32x32x3x73257 | 73257 | 32x32x3x26032 | 26032
 
 (*) Note that the SVHN-2 dataset provides an additional 531131 observations aside from the training- and testset
 
+
+### Misc. Datasets
+Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
+:------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
+[**Iris**](@ref Iris) | 3 | 4x150 | 150 | - | -
+
 ### Language Modeling
 
-Work in progress
+#### PTBLM
+
+The `PTBLM` dataset consists of Penn Treebank sentences for
+language modeling, available from
+[tomsercu/lstm](https://github.com/tomsercu/lstm). The unknown
+words are replaced with `<unk>` so that the total vocabulary size
+becomes 10000.
+
+This is the first sentence of the PTBLM dataset.
+
+```julia
+x, y = PTBLM.traindata()
+
+x[1]
+> ["no", "it", "was", "n't", "black", "monday"]
+y[1]
+> ["it", "was", "n't", "black", "monday", "<eos>"]
+```
+
+where `MLDataset` adds the special word: `<eos>` to the end of `y`.
+
+### Text Analysis (POS-Tagging, Parsing)
+
+#### UD English
+
+The [UD_English](https://github.com/UniversalDependencies/UD_English-EWT)
+Universal Dependencies English Web Treebank dataset is an annotated corpus of morphological features,
+POS-tags and syntactic trees. The dataset follows CoNLL-style
+format.
+
+```julia
+traindata = UD_English.traindata()
+devdata = UD_English.devdata()
+testdata = UD_English.devdata()
+```
+
+## Data Size
+|    | Train x | Train y | Test x | Test y |
+|:--:|:-------:|:-------:|:------:|:------:|
+| **PTBLM** | 42068 | 42068 | 3761 | 3761 |
+| **UD_English** | 12543 | - | 2077 | - |
+
 
 ## Index
 
