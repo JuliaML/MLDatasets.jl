@@ -75,6 +75,12 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 
 (*) Note that the SVHN-2 dataset provides an additional 531131 observations aside from the training- and testset
 
+
+### Misc. Datasets
+Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
+:------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
+**Iris** | 3 | 4x150 | 150 | - | -
+
 ### Language Modeling
 
 #### PTBLM

@@ -32,7 +32,7 @@ if parse(Bool, get(ENV, "CI", "false"))
     @info "CI detected: skipping dataset download"
 else
     data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-        datadep"CIFAR100"
+        datadep"Iris"
     end
 
     @testset "classnames" begin
