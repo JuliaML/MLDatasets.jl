@@ -81,7 +81,7 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 ### Misc. Datasets
 Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
-[**Iris**](@ref Iris) | 3 | 4x150 | 150 | - | -
+**Iris** | 3 | 4x150 | 150 | - | -
 
 ### Language Modeling
 

@@ -28,7 +28,7 @@ using DataDeps
 using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
 using DelimitedFiles
 
-export data, names, download
+export features, labels, download
 
 const DEPNAME = "Iris"
 const LINK = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/"
@@ -68,7 +68,7 @@ end
 Return a string vector of length 150 containing observations' labels.
 """
 
-function trainlabels(; dir = nothing)
+function labels(; dir = nothing)
     path = datafile(DEPNAME, DATA, dir)
     iris = readdlm(path, ',')
     Vector{String}(iris[:, end])
@@ -79,7 +79,7 @@ end
 
 Return a 4x150 matrix containing the 4-dimensional features of each observation.
 """
-function traintensor(; dir = nothing)
+function features(; dir = nothing)
     path = datafile(DEPNAME, DATA, dir)
     iris = readdlm(path, ',')
     Matrix{Float64}(iris[:, 1:4])' |> collect
