@@ -12,11 +12,14 @@ GZip = "92fee26a-97fe-5a0c-ad85-20a5f3185b63"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
-ColorTypes = "≥ 0.4.0"
-DataDeps = "≥ 0.3.0"
-FixedPointNumbers = "≥ 0.3.0"
-ImageCore = "≥ 0.1.2"
-julia = "≥ 1.0.0"
+ColorTypes = "0.4, 0.5, 0.6, 0.7, 0.8, 0.9"
+DataDeps = "0.3, 0.4, 0.5, 0.6, 0.7"
+FixedPointNumbers = "0.3, 0.4, 0.5, 0.6, 0.7, 0.8"
+ImageCore = "0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8"
+GZip = "0.5"
+Requires = "1"
+BinDeps = "1"
+julia = "1"
 
 [extras]
 ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
