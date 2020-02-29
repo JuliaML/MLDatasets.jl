@@ -2,7 +2,7 @@ using Test
 using MLDatasets
 
 tests = [
-    "tst_iris.jl"
+    "tst_iris.jl",
     "tst_cifar10.jl",
     "tst_cifar100.jl",
     "tst_mnist.jl",
