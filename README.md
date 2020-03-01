@@ -77,11 +77,17 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 
 
 ### Misc. Datasets
+
 Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
 **Iris** | 3 | 4x150 | 150 | - | -
 
 ### Language Modeling
+
+|    | Train x | Train y | Test x | Test y |
+|:--:|:-------:|:-------:|:------:|:------:|
+| **PTBLM** | 42068 | 42068 | 3761 | 3761 |
+| **UD_English** | 12543 | - | 2077 | - |
 
 #### PTBLM
 
@@ -118,12 +124,6 @@ traindata = UD_English.traindata()
 devdata = UD_English.devdata()
 testdata = UD_English.devdata()
 ```
-
-## Data Size
-|    | Train x | Train y | Test x | Test y |
-|:--:|:-------:|:-------:|:------:|:------:|
-| **PTBLM** | 42068 | 42068 | 3761 | 3761 |
-| **UD_English** | 12543 | - | 2077 | - |
 
 ## Documentation
 
