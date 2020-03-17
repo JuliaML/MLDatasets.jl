@@ -77,21 +77,7 @@ the SVHN (format 2) dataset in Julia more convenient.
 
 Function | Description
 ---------|-------------
-[`convert2features(array)`](@ref SVHN2.convert2features) | Convert the SVHN tensor to a flat feature matrix
 [`convert2image(array)`](@ref SVHN2.convert2image) | Convert the SVHN tensor/matrix to a colorant array
-
-You can use the function
-[`convert2features`](@ref SVHN2.convert2features) to convert
-the given SVHN tensor to a feature matrix (or feature vector
-in the case of a single image). The purpose of this function is
-to drop the spatial dimensions such that traditional ML
-algorithms can process the dataset.
-
-```julia
-julia> SVHN2.convert2features(SVHN2.traindata()[1]) # full training data
-3072×73257 Array{N0f8,2}:
-[...]
-```
 
 To visualize an image or a prediction we provide the function
 [`convert2image`](@ref SVHN2.convert2image) to convert the
@@ -139,7 +125,6 @@ SVHN2.extradata
 ```@docs
 SVHN2.download
 SVHN2.classnames
-SVHN2.convert2features
 SVHN2.convert2image
 ```
 

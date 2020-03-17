@@ -4,15 +4,15 @@
 Returns the MNIST **training** images corresponding to the given
 `indices` as a multi-dimensional array of eltype `T`.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
 images are returned as a 3D array (i.e. a `Array{T,3}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
+the first dimension corresponds to the pixel *columns* (x) of the
+image, the second dimension to the pixel *rows* (y) of the
 image, and the third dimension denotes the index of the image.
 
 ```julia-repl
@@ -26,9 +26,7 @@ julia> MNIST.traintensor(Float32, 1:3) # first three images as Float32
 ```
 
 If `indices` is an `Integer`, the single image is returned as
-`Matrix{T}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), and the second
-dimension denotes the pixel *columns* (y) of the image.
+`Matrix{T}`.
 
 ```julia-repl
 julia> MNIST.traintensor(1) # load first training image
@@ -36,9 +34,7 @@ julia> MNIST.traintensor(1) # load first training image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an MNIST array into a
 vertical-major Julia image with the corrected color values.
 
@@ -53,6 +49,8 @@ $(download_docstring("MNIST", DEPNAME))
 function traintensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TRAINIMAGES, dir)
     images = Reader.readimages(path, args...)
+    perm = ndims(images) == 3 ? (2, 1, 3) : (2, 1)
+    images = permutedims(images, perm)
     bytes_to_type(T, images)
 end
 
@@ -66,15 +64,15 @@ end
 Returns the MNIST **test** images corresponding to the given
 `indices` as a multi-dimensional array of eltype `T`.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
 images are returned as a 3D array (i.e. a `Array{T,3}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
+the first dimension corresponds to the pixel *columns* (x) of the
+image, the second dimension to the pixel *rows* (y) of the
 image, and the third dimension denotes the index of the image.
 
 ```julia-repl
@@ -88,9 +86,7 @@ julia> MNIST.testtensor(Float32, 1:3) # first three images as Float32
 ```
 
 If `indices` is an `Integer`, the single image is returned as
-`Matrix{T}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), and the second
-dimension denotes the pixel *columns* (y) of the image.
+`Matrix{T}`.
 
 ```julia-repl
 julia> MNIST.testtensor(1) # load first test image
@@ -98,9 +94,7 @@ julia> MNIST.testtensor(1) # load first test image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an MNIST array into a
 vertical-major Julia image with the corrected color values.
 
@@ -115,6 +109,8 @@ $(download_docstring("MNIST", DEPNAME))
 function testtensor(::Type{T}, args...; dir = nothing) where T
     path = datafile(DEPNAME, TESTIMAGES, dir)
     images = Reader.readimages(path, args...)
+    perm = ndims(images) == 3 ? (2, 1, 3) : (2, 1)
+    images = permutedims(images, perm)
     bytes_to_type(T, images)
 end
 
@@ -209,7 +205,7 @@ full trainingset is returned. The first element of three return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer
@@ -243,7 +239,7 @@ full testset is returned. The first element of three return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer

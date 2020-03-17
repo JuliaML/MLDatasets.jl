@@ -17,9 +17,6 @@ using DataDeps
     @test DataDeps.registry["FashionMNIST"] isa DataDeps.DataDep
 end
 
-@testset "convert2features" begin
-    @test FashionMNIST.convert2features === MNIST.convert2features
-end
 
 @testset "convert2images" begin
     @test FashionMNIST.convert2image === MNIST.convert2image

@@ -13,15 +13,15 @@ given `indices` as a multi-dimensional array of eltype `T`. If
 the corresponding labels are required as well, it is recommended
 to use [`CIFAR10.traindata`](@ref) instead.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
 images are returned as a 4D array (i.e. a `Array{T,4}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
+the first dimension corresponds to the pixel *columns* (x) of the
+image, the second dimension to the pixel *rows* (y) of the
 image, the third dimension the RGB color channels, and the fourth
 dimension denotes the index of the image.
 
@@ -35,11 +35,8 @@ julia> CIFAR10.traintensor(Float32, 1:3) # first three images as Float32
 [...]
 ```
 
-If `indices` is an `Integer`, the single image is returned as
-`Array{T,3}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), the second
-dimension denotes the pixel *columns* (y), and the third
-dimension the RGB color channels of the image.
+If `indices` is an `Integer`, a single image is returned as
+`Array{T,3}` array. 
 
 ```julia-repl
 julia> CIFAR10.traintensor(1) # load first training image
@@ -47,9 +44,7 @@ julia> CIFAR10.traintensor(1) # load first training image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
 vertical-major Julia image with the appropriate `RGB` eltype.
 
@@ -78,15 +73,15 @@ Return the CIFAR-10 **test** images corresponding to the given
 corresponding labels are required as well, it is recommended to
 use [`CIFAR10.testdata`](@ref) instead.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in vertical-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
 images are returned as a 4D array (i.e. a `Array{T,4}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
+the first dimension corresponds to the pixel *columns* (x) of the
+image, the second dimension to the pixel *rows* (y) of the
 image, the third dimension the RGB color channels, and the fourth
 dimension denotes the index of the image.
 
@@ -100,11 +95,8 @@ julia> CIFAR10.testtensor(Float32, 1:3) # first three images as Float32
 [...]
 ```
 
-If `indices` is an `Integer`, the single image is returned as
-`Array{T,3}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), the second
-dimension denotes the pixel *columns* (y), and the third
-dimension the RGB color channels of the image.
+If `indices` is an `Integer`, a single image is returned as
+`Array{T,3}`.
 
 ```julia-repl
 julia> CIFAR10.testtensor(1) # load first training image
@@ -112,9 +104,7 @@ julia> CIFAR10.testtensor(1) # load first training image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
 vertical-major Julia image with the appropriate `RGB` eltype.
 
@@ -217,7 +207,7 @@ full trainingset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in vertical-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer
@@ -257,6 +247,7 @@ function traindata(::Type{T}; dir = nothing) where T
     # and one label array. (good enough)
     images = cat(Xs..., dims=4)::Array{UInt8,4}
     labels = vcat(Ys...)::Vector{Int}
+    images = permutedims(images, (2, 1, 3, 4))
     # optionally transform the image array before returning
     bytes_to_type(T, images), labels
 end
@@ -273,6 +264,7 @@ function traindata(::Type{T}, index::Integer; dir = nothing) where T
     sub_index = ((index - 1) % Reader.CHUNK_SIZE) + 1
     image, label = Reader.readdata(file_path, sub_index)
     # optionally transform the image array before returning
+    image = permutedims(image, (2, 1, 3))
     bytes_to_type(T, image), label
 end
 
@@ -309,6 +301,7 @@ function traindata(::Type{T}, indices::AbstractVector; dir = nothing) where T
             end
         end
     end
+    images = permutedims(images, (2, 1, 3, 4))
     # optionally transform the image array before returning
     bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
 end
@@ -322,7 +315,7 @@ full testset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the vertical-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer
@@ -348,6 +341,7 @@ function testdata(::Type{T}; dir = nothing) where T
     file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
     # simply read the complete content of the testset file
     images, labels = Reader.readdata(file_path)
+    images = permutedims(images, (2, 1, 3, 4))
     # optionally transform the image array before returning
     bytes_to_type(T, images), labels
 end
@@ -357,6 +351,7 @@ function testdata(::Type{T}, index::Integer; dir = nothing) where T
     file_path = datafile(DEPNAME, TESTSET_FILENAME, dir)
     # read the single image+label corresponding to "index"
     image, label = Reader.readdata(file_path, index)
+    image = permutedims(image, (2, 1, 3))
     # optionally transform the image array before returning
     bytes_to_type(T, image), label
 end
@@ -387,5 +382,6 @@ function testdata(::Type{T}, indices::AbstractVector; dir = nothing) where T
         end
     end
     # optionally transform the image array before returning
+    images = permutedims(images, (2, 1, 3, 4))
     bytes_to_type(T, images::Array{UInt8,4}), labels::Vector{Int}
 end

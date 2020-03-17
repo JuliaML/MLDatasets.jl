@@ -21,7 +21,6 @@ module CIFAR10
         testdata,
 
         convert2image,
-        convert2features,
 
         download
 

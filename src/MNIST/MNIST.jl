@@ -20,7 +20,6 @@ the 10 possible digits (0-9).
 ## Utilities
 
 - [`MNIST.download`](@ref)
-- [`MNIST.convert2features`](@ref)
 - [`MNIST.convert2image`](@ref)
 """
 module MNIST
@@ -42,7 +41,6 @@ module MNIST
         testdata,
 
         convert2image,
-        convert2features,
 
         download
 

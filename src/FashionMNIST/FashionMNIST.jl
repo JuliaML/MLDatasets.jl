@@ -21,15 +21,14 @@ replacement for MNIST.
 
 - [`FashionMNIST.download`](@ref)
 
-Also, the `FashionMNIST` module is re-exporting [`convert2features`](@ref MNIST.convert2features)
-and [`convert2image`](@ref MNIST.convert2image) from the [`MNIST`](@ref) module.
+Also, the `FashionMNIST` module is re-exporting [`convert2image`](@ref MNIST.convert2image) from the [`MNIST`](@ref) module.
 """
 module FashionMNIST
     using DataDeps
     using FixedPointNumbers
     using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
     import ..MNIST
-    using ..MNIST: convert2image, convert2features
+    using ..MNIST: convert2image
     using ..MNIST.Reader
 
     export
@@ -46,7 +45,6 @@ module FashionMNIST
         testdata,
 
         convert2image,
-        convert2features,
 
         download
 

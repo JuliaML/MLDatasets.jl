@@ -25,7 +25,6 @@ additional to use as extra training data.
 
 - [`SVHN2.download`](@ref)
 - [`SVHN2.classnames`](@ref)
-- [`SVHN2.convert2features`](@ref)
 - [`SVHN2.convert2image`](@ref)
 """
 module SVHN2
@@ -50,7 +49,6 @@ module SVHN2
         extradata,
 
         convert2image,
-        convert2features,
 
         download
 

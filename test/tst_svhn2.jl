@@ -16,18 +16,6 @@ using MAT
     @test DataDeps.registry["SVHN2"] isa DataDeps.DataDep
 end
 
-@testset "convert2features" begin
-    data = rand(32,32,3)
-    ref = vec(data)
-    @test @inferred(SVHN2.convert2features(data)) == ref
-    @test @inferred(SVHN2.convert2features(SVHN2.convert2image(data))) == ref
-
-    data = rand(32,32,3,2)
-    ref = reshape(data, (32*32*3, 2))
-    @test @inferred(SVHN2.convert2features(data)) == ref
-    @test @inferred(SVHN2.convert2features(SVHN2.convert2image(data))) == ref
-end
-
 @testset "convert2images" begin
     @test_throws AssertionError SVHN2.convert2image(rand(100))
     @test_throws AssertionError SVHN2.convert2image(rand(228,1))
@@ -46,7 +34,6 @@ end
     @test size(A) == (32,32,2)
     @test eltype(A) == RGB{N0f8}
     @test SVHN2.convert2image(vec(data)) == A
-    @test SVHN2.convert2image(SVHN2.convert2features(data)) == A
     @test SVHN2.convert2image(reinterpret(UInt8, data)) == A
 end
 
