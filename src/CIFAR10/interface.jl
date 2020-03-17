@@ -13,17 +13,16 @@ given `indices` as a multi-dimensional array of eltype `T`. If
 the corresponding labels are required as well, it is recommended
 to use [`CIFAR10.traindata`](@ref) instead.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the horizontal-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
-images are returned as a 4D array (i.e. a `Array{T,4}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
-image, the third dimension the RGB color channels, and the fourth
-dimension denotes the index of the image.
+images are returned as a 4D array (i.e. a `Array{T,4}`) in
+WHCN format (width, height, #channels, #images). 
+For integer `indices` instead, a 3D array in WHC format is returned.
+
 
 ```julia-repl
 julia> CIFAR10.traintensor() # load all training images
@@ -35,11 +34,8 @@ julia> CIFAR10.traintensor(Float32, 1:3) # first three images as Float32
 [...]
 ```
 
-If `indices` is an `Integer`, the single image is returned as
-`Array{T,3}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), the second
-dimension denotes the pixel *columns* (y), and the third
-dimension the RGB color channels of the image.
+If `indices` is an `Integer`, a single image is returned as
+`Array{T,3}` array. 
 
 ```julia-repl
 julia> CIFAR10.traintensor(1) # load first training image
@@ -47,11 +43,9 @@ julia> CIFAR10.traintensor(1) # load first training image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
-vertical-major Julia image with the appropriate `RGB` eltype.
+horizontal-major Julia image with the appropriate `RGB` eltype.
 
 ```julia-repl
 julia> CIFAR10.convert2image(CIFAR10.traintensor(1)) # convert to column-major colorant array
@@ -78,17 +72,15 @@ Return the CIFAR-10 **test** images corresponding to the given
 corresponding labels are required as well, it is recommended to
 use [`CIFAR10.testdata`](@ref) instead.
 
-The image(s) is/are returned in the native horizontal-major
+Images are returned in horizontal-major
 memory layout as a single numeric array. If `T <: Integer`, then
 all values will be within `0` and `255`, otherwise the values are
 scaled to be between `0` and `1`.
 
 If the parameter `indices` is omitted or an `AbstractVector`, the
-images are returned as a 4D array (i.e. a `Array{T,4}`), in which
-the first dimension corresponds to the pixel *rows* (x) of the
-image, the second dimension to the pixel *columns* (y) of the
-image, the third dimension the RGB color channels, and the fourth
-dimension denotes the index of the image.
+images are returned as a 4D array (i.e. a `Array{T,4}`) in
+WHCN format (width, height, #channels, #images). 
+For integer `indices` instead, a 3D array in WHC format is returned.
 
 ```julia-repl
 julia> CIFAR10.testtensor() # load all training images
@@ -100,11 +92,8 @@ julia> CIFAR10.testtensor(Float32, 1:3) # first three images as Float32
 [...]
 ```
 
-If `indices` is an `Integer`, the single image is returned as
-`Array{T,3}` in horizontal-major layout, which means that the
-first dimension denotes the pixel *rows* (x), the second
-dimension denotes the pixel *columns* (y), and the third
-dimension the RGB color channels of the image.
+If `indices` is an `Integer`, a single image is returned as
+`Array{T,3}`.
 
 ```julia-repl
 julia> CIFAR10.testtensor(1) # load first training image
@@ -112,11 +101,9 @@ julia> CIFAR10.testtensor(1) # load first training image
 [...]
 ```
 
-As mentioned above, the images are returned in the native
-horizontal-major layout to preserve the original feature
-ordering. You can use the utility function
+You can use the utility function
 [`convert2image`](@ref) to convert an CIFAR-10 array into a
-vertical-major Julia image with the appropriate `RGB` eltype.
+horizontal-major HW Julia image with the appropriate `RGB` eltype.
 
 ```julia-repl
 julia> CIFAR10.convert2image(CIFAR10.testtensor(1)) # convert to column-major colorant array
@@ -217,7 +204,7 @@ full trainingset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in horizontal-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer
@@ -322,7 +309,7 @@ full testset is returned. The first element of the return
 values will be the images as a multi-dimensional array, and the
 second element the corresponding labels as integers.
 
-The image(s) is/are returned in the native horizontal-major
+The image(s) is/are returned in the horizontal-major
 memory layout as a single numeric array of eltype `T`. If `T <:
 Integer`, then all values will be within `0` and `255`, otherwise
 the values are scaled to be between `0` and `1`. The integer

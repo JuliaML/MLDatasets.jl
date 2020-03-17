@@ -21,9 +21,10 @@ module CIFAR10
         testdata,
 
         convert2image,
-        convert2features,
 
         download
+
+    @deprecate convert2features reshape
 
     const DEPNAME = "CIFAR10"
     const NCHUNKS = 5

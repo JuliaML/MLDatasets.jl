@@ -1,5 +1,6 @@
 using Test
 using MLDatasets
+using ImageCore
 
 tests = [
     "tst_iris.jl",
@@ -16,7 +17,7 @@ for t in tests
     end
 end
 
-# temporary to not stress CI
+#temporary to not stress CI
 if !parse(Bool, get(ENV, "CI", "false"))
     @testset "other tests" begin
         # PTBLM
