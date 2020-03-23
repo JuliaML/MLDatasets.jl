@@ -16,6 +16,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 BinDeps = "1"
 ColorTypes = "0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.10"
 DataDeps = "0.3, 0.4, 0.5, 0.6, 0.7"
+FixedPointNumbers = "0.3, 0.4, 0.5, 0.6, 0.7, 0.8"
 GZip = "0.5"
 MAT = "0.7"
 Requires = "1"
@@ -23,7 +24,6 @@ julia = "1"
 
 [extras]
 ImageCore = "a09fc81d-aa75-5fe9-8630-4744c3626534"
-MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
