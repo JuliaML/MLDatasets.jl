@@ -6,6 +6,11 @@ using FixedPointNumbers
 using MLDatasets
 using DataDeps
 
+function readimage(path, i)
+    CIFAR10.Reader.readdata(path, i)[1]
+end
+
+
 @testset "Constants" begin
     @test CIFAR10.Reader.NROW === 32
     @test CIFAR10.Reader.NCOL === 32
@@ -21,25 +26,14 @@ using DataDeps
     @test DataDeps.registry["CIFAR10"] isa DataDeps.DataDep
 end
 
-@testset "convert2features" begin
-    data = rand(32,32,3)
-    ref = vec(data)
-    @test @inferred(CIFAR10.convert2features(data)) == ref
-    @test @inferred(CIFAR10.convert2features(CIFAR10.convert2image(data))) == ref
-
-    data = rand(32,32,3,2)
-    ref = reshape(data, (32*32*3, 2))
-    @test @inferred(CIFAR10.convert2features(data)) == ref
-    @test @inferred(CIFAR10.convert2features(CIFAR10.convert2image(data))) == ref
-end
 
 @testset "convert2images" begin
-    @test_throws AssertionError CIFAR10.convert2image(rand(100))
-    @test_throws AssertionError CIFAR10.convert2image(rand(228,1))
-    @test_throws AssertionError CIFAR10.convert2image(rand(32,32,4))
+    @test_throws DimensionMismatch CIFAR10.convert2image(rand(100))
+    @test_throws DimensionMismatch CIFAR10.convert2image(rand(228,1))
+    @test_throws DimensionMismatch CIFAR10.convert2image(rand(32,32,4))
 
     data = rand(N0f8,32,32,3)
-    A = @inferred CIFAR10.convert2image(data)
+    A = CIFAR10.convert2image(data)
     @test size(A) == (32,32)
     @test eltype(A) == RGB{N0f8}
     @test CIFAR10.convert2image(vec(data)) == A
@@ -47,11 +41,10 @@ end
     @test CIFAR10.convert2image(reinterpret(UInt8, data)) == A
 
     data = rand(N0f8,32,32,3,2)
-    A = @inferred CIFAR10.convert2image(data)
+    A = CIFAR10.convert2image(data)
     @test size(A) == (32,32,2)
     @test eltype(A) == RGB{N0f8}
     @test CIFAR10.convert2image(vec(data)) == A
-    @test CIFAR10.convert2image(CIFAR10.convert2features(data)) == A
     @test CIFAR10.convert2image(reinterpret(UInt8, data)) == A
 end
 
@@ -72,50 +65,39 @@ else
 
         @testset "Test that traintensor are the train images" begin
             path = joinpath(data_dir, "cifar-10-batches-bin", "data_batch_1.bin")
-            @test CIFAR10.traintensor(1) == reinterpret(N0f8, CIFAR10.Reader.readdata(path, 1)[1])
-            @test CIFAR10.traintensor(Float64, 1) ≈ CIFAR10.Reader.readdata(path, 1)[1] ./ 255
-            @test CIFAR10.traintensor(Int, 1) == Int.(CIFAR10.Reader.readdata(path, 1)[1])
-            @test CIFAR10.traintensor(UInt8, 1) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.traintensor(UInt8, 2) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.traintensor(UInt8, 10_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.traintensor(1) == reinterpret(N0f8, readimage(path, 1))
+            @test CIFAR10.traintensor(Float64, 1) ≈ readimage(path, 1) ./ 255
+            @test CIFAR10.traintensor(Int, 1) == Int.(readimage(path, 1))
+            @test CIFAR10.traintensor(UInt8, 1) == readimage(path, 1)
+            @test CIFAR10.traintensor(UInt8, 2) == readimage(path, 2)
+            @test CIFAR10.traintensor(UInt8, 10_000) == readimage(path, 10_000)
             path = joinpath(data_dir, "cifar-10-batches-bin", "data_batch_2.bin")
-            @test CIFAR10.traintensor(UInt8, 10_001) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.traintensor(UInt8, 10_002) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.traintensor(UInt8, 20_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.traintensor(UInt8, 10_001) == readimage(path, 1)
+            @test CIFAR10.traintensor(UInt8, 10_002) == readimage(path, 2)
+            @test CIFAR10.traintensor(UInt8, 20_000) == readimage(path, 10_000)
             path = joinpath(data_dir, "cifar-10-batches-bin", "data_batch_3.bin")
-            @test CIFAR10.traintensor(UInt8, 20_001) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.traintensor(UInt8, 20_002) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.traintensor(UInt8, 30_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.traintensor(UInt8, 20_001) == readimage(path, 1)
+            @test CIFAR10.traintensor(UInt8, 20_002) == readimage(path, 2)
+            @test CIFAR10.traintensor(UInt8, 30_000) == readimage(path, 10_000)
             path = joinpath(data_dir, "cifar-10-batches-bin", "data_batch_4.bin")
-            @test CIFAR10.traintensor(UInt8, 30_001) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.traintensor(UInt8, 30_002) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.traintensor(UInt8, 40_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.traintensor(UInt8, 30_001) == readimage(path, 1)
+            @test CIFAR10.traintensor(UInt8, 30_002) == readimage(path, 2)
+            @test CIFAR10.traintensor(UInt8, 40_000) == readimage(path, 10_000)
             path = joinpath(data_dir, "cifar-10-batches-bin", "data_batch_5.bin")
-            @test CIFAR10.traintensor(UInt8, 40_001) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.traintensor(UInt8, 40_002) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.traintensor(UInt8, 50_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.traintensor(UInt8, 40_001) == readimage(path, 1)
+            @test CIFAR10.traintensor(UInt8, 40_002) == readimage(path, 2)
+            @test CIFAR10.traintensor(UInt8, 50_000) == readimage(path, 10_000)
         end
 
         @testset "Test that testtensor are the test images" begin
             path = joinpath(data_dir, "cifar-10-batches-bin", "test_batch.bin")
-            @test CIFAR10.testtensor(1) == reinterpret(N0f8, CIFAR10.Reader.readdata(path, 1)[1])
-            @test CIFAR10.testtensor(Float64, 1) ≈ CIFAR10.Reader.readdata(path, 1)[1] ./ 255
-            @test CIFAR10.testtensor(Int, 1) == Int.(CIFAR10.Reader.readdata(path, 1)[1])
-            @test CIFAR10.testtensor(UInt8, 1) == CIFAR10.Reader.readdata(path, 1)[1]
-            @test CIFAR10.testtensor(UInt8, 2) == CIFAR10.Reader.readdata(path, 2)[1]
-            @test CIFAR10.testtensor(UInt8, 10_000) == CIFAR10.Reader.readdata(path, 10_000)[1]
+            @test CIFAR10.testtensor(1) == reinterpret(N0f8, readimage(path, 1))
+            @test CIFAR10.testtensor(Float64, 1) ≈ readimage(path, 1) ./ 255
+            @test CIFAR10.testtensor(Int, 1) == Int.(readimage(path, 1))
+            @test CIFAR10.testtensor(UInt8, 1) == readimage(path, 1)
+            @test CIFAR10.testtensor(UInt8, 2) == readimage(path, 2)
+            @test CIFAR10.testtensor(UInt8, 10_000) == readimage(path, 10_000)
         end
-
-        @test CIFAR10.traintensor(UInt8, 1)[11:13, 12:14, 1] == [
-            0x6f  0x8a  0xa5;
-            0x92  0xd5  0xe5;
-            0x88  0xb2  0xb7;
-        ]
-        @test CIFAR10.testtensor(UInt8, 1)[11:13, 12:14, 1] == [
-            0xc7  0xa8  0x91;
-            0xaa  0x89  0xa7;
-            0xb9  0xba  0xbd;
-        ]
 
         # These tests check if the functions return internaly
         # consistent results for different parameters (e.g. index

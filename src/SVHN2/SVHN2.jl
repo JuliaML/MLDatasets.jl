@@ -25,15 +25,15 @@ additional to use as extra training data.
 
 - [`SVHN2.download`](@ref)
 - [`SVHN2.classnames`](@ref)
-- [`SVHN2.convert2features`](@ref)
 - [`SVHN2.convert2image`](@ref)
 """
 module SVHN2
     using DataDeps
     using ColorTypes
     using FixedPointNumbers
+    using MAT: matopen, matread
     using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
-                        _colorview, _channelview, _matopen, _matread
+                        _colorview, _channelview
 
     export
 
@@ -50,9 +50,11 @@ module SVHN2
         extradata,
 
         convert2image,
-        convert2features,
 
         download
+
+    @deprecate convert2features reshape
+
 
     const DEPNAME = "SVHN2"
     const TRAINDATA = "train_32x32.mat"

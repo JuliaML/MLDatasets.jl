@@ -56,21 +56,8 @@ the CIFAR-10 dataset in Julia more convenient.
 
 Function | Description
 ---------|-------------
-[`convert2features(array)`](@ref CIFAR10.convert2features) | Convert the CIFAR-10 tensor to a flat feature matrix
 [`convert2image(array)`](@ref CIFAR10.convert2image) | Convert the CIFAR-10 tensor/matrix to a colorant array
 
-You can use the function
-[`convert2features`](@ref CIFAR10.convert2features) to convert
-the given CIFAR-10 tensor to a feature matrix (or feature vector
-in the case of a single image). The purpose of this function is
-to drop the spatial dimensions such that traditional ML
-algorithms can process the dataset.
-
-```julia
-julia> CIFAR10.convert2features(CIFAR10.traintensor()) # full training data
-3072×50000 Array{N0f8,2}:
-[...]
-```
 
 To visualize an image or a prediction we provide the function
 [`convert2image`](@ref CIFAR10.convert2image) to convert the
@@ -106,7 +93,6 @@ CIFAR10.testdata
 ```@docs
 CIFAR10.download
 CIFAR10.classnames
-CIFAR10.convert2features
 CIFAR10.convert2image
 ```
 

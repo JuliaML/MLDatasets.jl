@@ -56,20 +56,7 @@ the MNIST dataset in Julia more convenient.
 
 Function | Description
 ---------|-------------
-[`convert2features(array)`](@ref MNIST.convert2features) | Convert the MNIST tensor to a flat feature matrix
 [`convert2image(array)`](@ref MNIST.convert2image) | Convert the MNIST tensor/matrix to a colorant array
-
-You can use the function [`convert2features`](@ref
-MNIST.convert2features) to convert the given MNIST tensor to a
-feature matrix (or feature vector in the case of a single image).
-The purpose of this function is to drop the spatial dimensions
-such that traditional ML algorithms can process the dataset.
-
-```julia
-julia> MNIST.convert2features(MNIST.traintensor()) # full training data
-784×60000 Array{N0f8,2}:
-[...]
-```
 
 To visualize an image or a prediction we provide the function
 [`convert2image`](@ref MNIST.convert2image) to convert the given
@@ -110,7 +97,6 @@ MNIST.testdata
 
 ```@docs
 MNIST.download
-MNIST.convert2features
 MNIST.convert2image
 ```
 

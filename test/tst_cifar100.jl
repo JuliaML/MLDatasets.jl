@@ -6,6 +6,10 @@ using FixedPointNumbers
 using MLDatasets
 using DataDeps
 
+function readimage(path, m, i)
+    CIFAR100.Reader.readdata(path, m, i)[1]
+end
+
 @testset "Constants" begin
     @test CIFAR100.Reader.NROW === 32
     @test CIFAR100.Reader.NCOL === 32
@@ -18,9 +22,6 @@ using DataDeps
     @test DataDeps.registry["CIFAR100"] isa DataDeps.DataDep
 end
 
-@testset "convert2features" begin
-    @test CIFAR100.convert2features === CIFAR10.convert2features
-end
 
 @testset "convert2images" begin
     @test CIFAR100.convert2image === CIFAR10.convert2image
@@ -32,7 +33,7 @@ if parse(Bool, get(ENV, "CI", "false"))
     @info "CI detected: skipping dataset download"
 else
     data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-        datadep"Iris"
+        datadep"CIFAR100"
     end
 
     @testset "classnames" begin
@@ -52,34 +53,23 @@ else
 
         @testset "Test that traintensor are the train images" begin
             path = joinpath(data_dir, "cifar-100-binary", "train.bin")
-            @test CIFAR100.traintensor(1) == reinterpret(N0f8, CIFAR100.Reader.readdata(path, 10_000, 1)[1])
-            @test CIFAR100.traintensor(Float64, 1) ≈ CIFAR100.Reader.readdata(path, 10_000, 1)[1] ./ 255
-            @test CIFAR100.traintensor(Int, 1) == Int.(CIFAR100.Reader.readdata(path, 10_000, 1)[1])
-            @test CIFAR100.traintensor(UInt8, 1) == CIFAR100.Reader.readdata(path, 10_000, 1)[1]
-            @test CIFAR100.traintensor(UInt8, 2) == CIFAR100.Reader.readdata(path, 10_000, 2)[1]
-            @test CIFAR100.traintensor(UInt8, 10_000) == CIFAR100.Reader.readdata(path, 10_000, 10_000)[1]
+            @test CIFAR100.traintensor(1) == reinterpret(N0f8, readimage(path, 10_000, 1))
+            @test CIFAR100.traintensor(Float64, 1) ≈ readimage(path, 10_000, 1) ./ 255
+            @test CIFAR100.traintensor(Int, 1) == Int.(readimage(path, 10_000, 1))
+            @test CIFAR100.traintensor(UInt8, 1) == readimage(path, 10_000, 1)
+            @test CIFAR100.traintensor(UInt8, 2) == readimage(path, 10_000, 2)
+            @test CIFAR100.traintensor(UInt8, 10_000) == readimage(path, 10_000, 10_000)
         end
 
         @testset "Test that testtensor are the test images" begin
             path = joinpath(data_dir, "cifar-100-binary", "test.bin")
-            @test CIFAR100.testtensor(1) == reinterpret(N0f8, CIFAR100.Reader.readdata(path, 10_000, 1)[1])
-            @test CIFAR100.testtensor(Float64, 1) ≈ CIFAR100.Reader.readdata(path, 10_000, 1)[1] ./ 255
-            @test CIFAR100.testtensor(Int, 1) == Int.(CIFAR100.Reader.readdata(path, 10_000, 1)[1])
-            @test CIFAR100.testtensor(UInt8, 1) == CIFAR100.Reader.readdata(path, 10_000, 1)[1]
-            @test CIFAR100.testtensor(UInt8, 2) == CIFAR100.Reader.readdata(path, 10_000, 2)[1]
-            @test CIFAR100.testtensor(UInt8, 10_000) == CIFAR100.Reader.readdata(path, 10_000, 10_000)[1]
+            @test CIFAR100.testtensor(1) == reinterpret(N0f8, readimage(path, 10_000, 1))
+            @test CIFAR100.testtensor(Float64, 1) ≈ readimage(path, 10_000, 1) ./ 255
+            @test CIFAR100.testtensor(Int, 1) == Int.(readimage(path, 10_000, 1))
+            @test CIFAR100.testtensor(UInt8, 1) == readimage(path, 10_000, 1)
+            @test CIFAR100.testtensor(UInt8, 2) == readimage(path, 10_000, 2)
+            @test CIFAR100.testtensor(UInt8, 10_000) == readimage(path, 10_000, 10_000)
         end
-
-        @test CIFAR100.traintensor(UInt8, 1)[11:13, 12:14, 1] == [
-            0x5b  0x49  0x49;
-            0x45  0x2a  0x6a;
-            0x93  0x9b  0xb1;
-        ]
-        @test CIFAR100.testtensor(UInt8, 1)[11:13, 12:14, 1] == [
-            0xef  0xe7  0xe5;
-            0xf1  0xe6  0xe0;
-            0xf3  0xe5  0xd6;
-        ]
 
         # These tests check if the functions return internaly
         # consistent results for different parameters (e.g. index

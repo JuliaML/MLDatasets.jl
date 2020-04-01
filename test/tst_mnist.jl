@@ -5,6 +5,10 @@ using FixedPointNumbers
 using MLDatasets
 using DataDeps
 
+function _readimages(IMAGES, i)
+    MNIST.Reader.readimages(IMAGES, i) 
+end
+
 @testset "Constants" begin
     @test MNIST.Reader.IMAGEOFFSET == 16
     @test MNIST.Reader.LABELOFFSET == 8
@@ -17,23 +21,15 @@ using DataDeps
     @test DataDeps.registry["MNIST"] isa DataDeps.DataDep
 end
 
-@testset "convert2features" begin
-    data = rand(28,28)
-    @test @inferred(MNIST.convert2features(data)) == vec(data)
-
-    data = rand(28,28,2)
-    @test @inferred(MNIST.convert2features(data)) == reshape(data, (28*28, 2))
-end
-
 @testset "convert2images" begin
-    @test_throws AssertionError MNIST.convert2image(rand(100))
-    @test_throws AssertionError MNIST.convert2image(rand(27,28,1))
-    @test_throws AssertionError MNIST.convert2image(rand(228,1))
+    @test_throws DimensionMismatch MNIST.convert2image(rand(100))
+    @test_throws DimensionMismatch MNIST.convert2image(rand(27,28,1))
+    @test_throws DimensionMismatch MNIST.convert2image(rand(228,1))
 
     data = rand(N0f8,28,28)
     data[1] = 0 # make sure 0 means "white"
     A = MNIST.convert2image(data)
-    @test A[1] == 1.0
+    @test A[1] == 0
     @test size(A) == (28,28)
     @test eltype(A) == Gray{N0f8}
     @test MNIST.convert2image(vec(data)) == A
@@ -41,11 +37,10 @@ end
     data = rand(N0f8,28,28,2)
     data[1] = 0
     A = MNIST.convert2image(data)
-    @test A[1] == 1.0
+    @test A[1] == 0
     @test size(A) == (28,28,2)
     @test eltype(A) == Gray{N0f8}
     @test MNIST.convert2image(vec(data)) == A
-    @test MNIST.convert2image(MNIST.convert2features(data)) == A
 end
 
 # NOT executed on CI. only executed locally.
@@ -77,29 +72,18 @@ else
 
         @testset "Test that traintensor are the train images" begin
             for i = rand(1:60_000, 10)
-                @test MNIST.traintensor(i) == reinterpret(N0f8, MNIST.Reader.readimages(_TRAINIMAGES, i))
-                @test MNIST.traintensor(Float64, i) == MNIST.Reader.readimages(_TRAINIMAGES, i) ./ 255.0
-                @test MNIST.traintensor(UInt8, i) == MNIST.Reader.readimages(_TRAINIMAGES, i)
+                @test MNIST.traintensor(i) == reinterpret(N0f8, _readimages(_TRAINIMAGES, i))
+                @test MNIST.traintensor(Float64, i) == _readimages(_TRAINIMAGES, i) ./ 255.0
+                @test MNIST.traintensor(UInt8, i) == _readimages(_TRAINIMAGES, i)
             end
         end
         @testset "Test that testtensor are the test images" begin
             for i = rand(1:10_000, 10)
-                @test MNIST.testtensor(i) == reinterpret(N0f8, MNIST.Reader.readimages(_TESTIMAGES, i))
-                @test MNIST.testtensor(Float64, i) == MNIST.Reader.readimages(_TESTIMAGES, i) ./ 255.0
-                @test MNIST.testtensor(UInt8, i) == MNIST.Reader.readimages(_TESTIMAGES, i)
+                @test MNIST.testtensor(i) == reinterpret(N0f8, _readimages(_TESTIMAGES, i))
+                @test MNIST.testtensor(Float64, i) == _readimages(_TESTIMAGES, i) ./ 255.0
+                @test MNIST.testtensor(UInt8, i) == _readimages(_TESTIMAGES, i)
             end
         end
-
-        # Test that `readtrainimage` is the horizontal-major layout
-        # by comparing to a hand checked result
-        @test MNIST.Reader.readimages(_TRAINIMAGES, 1)[11:13,12:14] ==
-                [0x00 0x00 0x00;
-                0x8b 0x0b 0x00;
-                0xfd 0xbe 0x23]
-        @test MNIST.traintensor(UInt8, 1)[11:13,12:14] ==
-                [0x00 0x00 0x00;
-                0x8b 0x0b 0x00;
-                0xfd 0xbe 0x23]
 
         # These tests check if the functions return internaly
         # consistent results for different parameters (e.g. index

@@ -75,7 +75,8 @@ for (FUN, PATH, COUNT, DESC) in (
 
         function ($FUN)(::Type{T}; dir = nothing) where T
             path = datafile(DEPNAME, $PATH, dir)
-            images = _matopen(io->read(io, "X"), path)::Array{UInt8,4}
+            images = matopen(io->read(io, "X"), path)::Array{UInt8,4}
+            images = permutedims(images, (2, 1, 3, 4))
             bytes_to_type(T, images)
         end
 
@@ -123,7 +124,7 @@ for (FUN, PATH, COUNT, DESC) in (
         """
         function ($FUN)(; dir = nothing)
             path = datafile(DEPNAME, $PATH, dir)
-            labels = _matopen(io->read(io, "y"), path)
+            labels = matopen(io->read(io, "y"), path)
             Vector{Int}(vec(labels))::Vector{Int}
         end
 
@@ -183,9 +184,10 @@ for (FUN, PATH, DESC) in (
 
         function ($FUN)(::Type{T}; dir = nothing) where T
             path = datafile(DEPNAME, $PATH, dir)
-            vars = _matread(path)
+            vars = matread(path)
             images = vars["X"]::Array{UInt8,4}
             labels = vars["y"]
+            images = permutedims(images, (2, 1, 3, 4))
             bytes_to_type(T, images), Vector{Int}(vec(labels))::Vector{Int}
         end
 

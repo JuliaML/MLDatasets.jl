@@ -60,21 +60,8 @@ the CIFAR-100 dataset in Julia more convenient.
 
 Function | Description
 ---------|-------------
-[`convert2features(array)`](@ref CIFAR10.convert2features) | Convert the CIFAR-100 tensor to a flat feature matrix
 [`convert2image(array)`](@ref CIFAR10.convert2image) | Convert the CIFAR-100 tensor/matrix to a colorant array
 
-You can use the function
-[`convert2features`](@ref CIFAR10.convert2features) to convert
-the given CIFAR-100 tensor to a feature matrix (or feature vector
-in the case of a single image). The purpose of this function is
-to drop the spatial dimensions such that traditional ML
-algorithms can process the dataset.
-
-```julia
-julia> CIFAR100.convert2features(CIFAR100.traintensor()) # full training data
-3072×50000 Array{N0f8,2}:
-[...]
-```
 
 To visualize an image or a prediction we provide the function
 [`convert2image`](@ref CIFAR10.convert2image) to convert the
@@ -107,14 +94,14 @@ CIFAR100.testdata
 
 ### Utilities
 
-See [`CIFAR10.convert2features`](@ref) and
-[`CIFAR10.convert2image`](@ref)
 
 ```@docs
 CIFAR100.download
 CIFAR100.classnames_coarse
 CIFAR100.classnames_fine
 ```
+
+See also [`CIFAR10.convert2image`](@ref).
 
 ## References
 
