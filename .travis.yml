@@ -15,10 +15,7 @@ notifications:
 
 git:
   depth: 99999999
-
-matrix:
-  allow_failures:
-    - julia: nightly
+  
 
 addons:
   apt: # apt-get for linux
@@ -35,6 +32,9 @@ jobs:
                                     Pkg.instantiate()'
         - julia --project=docs/ docs/make.jl
       after_success: skip
+  
+  allow_failures:
+    - julia: nightly
 
 after_success:
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(process_folder())'
