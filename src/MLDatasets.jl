@@ -26,6 +26,7 @@ end
 
 include("download.jl")
 include("CoNLL.jl")
+include("BostonHousing/BostonHousing.jl")
 include("Iris/Iris.jl")
 include("CIFAR10/CIFAR10.jl")
 include("CIFAR100/CIFAR100.jl")

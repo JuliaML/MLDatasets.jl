@@ -4,6 +4,7 @@ using ImageCore
 
 tests = [
     "tst_iris.jl",
+    "tst_boston_housing.jl",
     "tst_cifar10.jl",
     "tst_cifar100.jl",
     "tst_mnist.jl",
