@@ -81,6 +81,7 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:
 **Iris** | 3 | 4x150 | 150 | - | -
+**BostongHousing** | - | 13x506 | 1x506 | - | -
 
 ### Language Modeling
 
