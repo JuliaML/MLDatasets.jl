@@ -58,9 +58,9 @@ a data directory directly in `traindata(dir = <directory>)` and
 
 ## Available Datasets
 
-Each dataset has its own dedicated sub-module. As such, it makes
-sense to document their functionality similarly distributed. Find
-below a list of available datasets and their documentation.
+Each dataset has its own dedicated sub-module. 
+Their functionality is documented accordingly. 
+Find below a list of the available datasets and their documentation.
 
 ### Image Classification
 
