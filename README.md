@@ -84,7 +84,7 @@ trainlabels = EMNIST.Balanced.trainlabels()
 testlabels = EMNIST.Balanced.testlabels()
 ```
 
-Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels` | `balanced classes`
+Dataset | Classes | `traindata` | `trainlabels` | `testdata` | `testlabels` | `balanced classes`
 :------:|:-------:|:-------------:|:-------------:|:------------:|:------------:|:------------:
 **ByClass** | 62 | 697932x28x28 | 697932x1 | 116323x28x28 | 116323x1 | no
 **ByMerge** | 47 | 697932x28x28 | 697932x1 | 116323x28x28 | 116323x1 | no
