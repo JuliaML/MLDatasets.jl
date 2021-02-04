@@ -75,6 +75,8 @@ Dataset | Classes | `traintensor` | `trainlabels` | `testtensor` | `testlabels`
 
 (*) Note that the SVHN-2 dataset provides an additional 531131 observations aside from the training- and testset
 
+[**EMNIST**](https://www.nist.gov/itl/products-and-services/emnist-dataset) packages 6 different extensions of the MNIST dataset involving letters and digits and variety of test train split options. 
+
 
 ### Misc. Datasets
 
