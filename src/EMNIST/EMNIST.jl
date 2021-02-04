@@ -58,7 +58,7 @@ module EMNIST
             ))
         end
 
-        module balanced
+        module Balanced
             using DataDeps
             using BinDeps
             using FixedPointNumbers
@@ -94,7 +94,7 @@ module EMNIST
             end
         end
 
-        module byclass
+        module ByClass
             using DataDeps
             using BinDeps
             using FixedPointNumbers
@@ -130,7 +130,7 @@ module EMNIST
             end
         end
 
-        module bymerge
+        module ByMerge
             using DataDeps
             using BinDeps
             using FixedPointNumbers
@@ -166,7 +166,7 @@ module EMNIST
             end
         end
 
-        module digits
+        module Digits
             using DataDeps
             using BinDeps
             using FixedPointNumbers
@@ -202,7 +202,7 @@ module EMNIST
             end
         end
 
-        module letters
+        module Letters
             using DataDeps
             using BinDeps
             using FixedPointNumbers
@@ -238,7 +238,7 @@ module EMNIST
             end
         end
 
-        module mnist
+        module MNIST
             using DataDeps
             using BinDeps
             using FixedPointNumbers

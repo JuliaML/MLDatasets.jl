@@ -11,10 +11,10 @@ module EMNIST_Tests
         end
 
         @testset "EMNIST" begin
-            X_train = EMNIST.balanced.traindata()
-            X_test = EMNIST.balanced.testdata()
-            Y_train = EMNIST.balanced.trainlabels()
-            Y_test = EMNIST.balanced.testlabels()
+            X_train = EMNIST.Balanced.traindata()
+            X_test = EMNIST.Balanced.testdata()
+            Y_train = EMNIST.Balanced.trainlabels()
+            Y_test = EMNIST.Balanced.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
@@ -24,10 +24,10 @@ module EMNIST_Tests
             @test size(Y_train) == (112800, 1)
             @test size(Y_test) == (18800, 1)
 
-            X_train = EMNIST.byclass.traindata()
-            X_test = EMNIST.byclass.testdata()
-            Y_train = EMNIST.byclass.trainlabels()
-            Y_test = EMNIST.byclass.testlabels()
+            X_train = EMNIST.ByClass.traindata()
+            X_test = EMNIST.ByClass.testdata()
+            Y_train = EMNIST.ByClass.trainlabels()
+            Y_test = EMNIST.ByClass.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
@@ -37,10 +37,10 @@ module EMNIST_Tests
             @test size(Y_train) == (697932, 1)
             @test size(Y_test) == (116323, 1)
 
-            X_train = EMNIST.bymerge.traindata()
-            X_test = EMNIST.bymerge.testdata()
-            Y_train = EMNIST.bymerge.trainlabels()
-            Y_test = EMNIST.bymerge.testlabels()
+            X_train = EMNIST.ByMerge.traindata()
+            X_test = EMNIST.ByMerge.testdata()
+            Y_train = EMNIST.ByMerge.trainlabels()
+            Y_test = EMNIST.ByMerge.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
@@ -50,10 +50,10 @@ module EMNIST_Tests
             @test size(Y_train) == (697932, 1)
             @test size(Y_test) == (116323, 1)
 
-            X_train = EMNIST.digits.traindata()
-            X_test = EMNIST.digits.testdata()
-            Y_train = EMNIST.digits.trainlabels()
-            Y_test = EMNIST.digits.testlabels()
+            X_train = EMNIST.Digits.traindata()
+            X_test = EMNIST.Digits.testdata()
+            Y_train = EMNIST.Digits.trainlabels()
+            Y_test = EMNIST.Digits.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
@@ -63,10 +63,10 @@ module EMNIST_Tests
             @test size(Y_train) == (240000, 1)
             @test size(Y_test) == (40000, 1)
 
-            X_train = EMNIST.letters.traindata()
-            X_test = EMNIST.letters.testdata()
-            Y_train = EMNIST.letters.trainlabels()
-            Y_test = EMNIST.letters.testlabels()
+            X_train = EMNIST.Letters.traindata()
+            X_test = EMNIST.Letters.testdata()
+            Y_train = EMNIST.Letters.trainlabels()
+            Y_test = EMNIST.Letters.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
@@ -76,10 +76,10 @@ module EMNIST_Tests
             @test size(Y_train) == (124800, 1)
             @test size(Y_test) == (20800, 1)
 
-            X_train = EMNIST.mnist.traindata()
-            X_test = EMNIST.mnist.testdata()
-            Y_train = EMNIST.mnist.trainlabels()
-            Y_test = EMNIST.mnist.testlabels()
+            X_train = EMNIST.MNIST.traindata()
+            X_test = EMNIST.MNIST.testdata()
+            Y_train = EMNIST.MNIST.trainlabels()
+            Y_test = EMNIST.MNIST.testlabels()
             @test X_train isa Array{UInt8,3}
             @test X_test isa Array{UInt8,3}
             @test Y_train isa Array{Float64,2}
