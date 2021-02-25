@@ -11,6 +11,7 @@ tests = [
     "tst_fashion_mnist.jl",
     "tst_svhn2.jl",
     "tst_emnist.jl",
+    "tst_fastai_datasets.jl"
 ]
 
 for t in tests

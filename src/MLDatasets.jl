@@ -36,6 +36,7 @@ include("SVHN2/SVHN2.jl")
 include("PTBLM/PTBLM.jl")
 include("UD_English/UD_English.jl")
 include("EMNIST/EMNIST.jl")
+include("FastAI/FastAIDatasets.jl")
 
 function __init__()
     # initialize optional dependencies
