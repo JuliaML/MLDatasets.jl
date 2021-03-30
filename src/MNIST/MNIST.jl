@@ -92,7 +92,7 @@ module MNIST
             website to make sure you want to download the
             dataset.
             """,
-            "http://yann.lecun.com/exdb/mnist/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
+            "https://ossci-datasets.s3.amazonaws.com/mnist/" .* [TRAINIMAGES, TRAINLABELS, TESTIMAGES, TESTLABELS],
             "0bb1d5775d852fc5bb32c76ca15a7eb4e9a3b1514a2493f7edfcf49b639d7975",
         ))
     end
