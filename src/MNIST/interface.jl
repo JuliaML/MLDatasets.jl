@@ -1,5 +1,5 @@
 """
-    traintensor([T = N0f8], [indices]; [dir]) -> Array{T}
+    traintensor([T = N0f8], [indices]) -> Array{T}
 
 Returns the MNIST **training** images corresponding to the given
 `indices` as a multi-dimensional array of eltype `T`.
@@ -42,21 +42,19 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # convert to column-major color
 28×28 Array{Gray{N0f8},2}:
 [...]
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 """
-function traintensor(::Type{T}, args...; dir = nothing) where T
-    path = datafile(DEPNAME, TRAINIMAGES, dir)
+function traintensor(::Type{T}, args...) where T
+    path = joinpath(artifact"MNIST", TRAINIMAGES)
     images = Reader.readimages(path, args...)
     bytes_to_type(T, images)
 end
 
-function traintensor(args...; dir = nothing)
-    traintensor(N0f8, args...; dir = dir)
+function traintensor(args...)
+    traintensor(N0f8, args...)
 end
 
 """
-    testtensor([T = N0f8], [indices]; [dir]) -> Array{T}
+    testtensor([T = N0f8], [indices]) -> Array{T}
 
 Returns the MNIST **test** images corresponding to the given
 `indices` as a multi-dimensional array of eltype `T`.
@@ -99,21 +97,19 @@ julia> MNIST.convert2image(MNIST.testtensor(1)) # convert to column-major colora
 28×28 Array{Gray{N0f8},2}:
 [...]
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 """
-function testtensor(::Type{T}, args...; dir = nothing) where T
-    path = datafile(DEPNAME, TESTIMAGES, dir)
+function testtensor(::Type{T}, args...) where T
+    path = joinpath(artifact"MNIST", TESTIMAGES)
     images = Reader.readimages(path, args...)
     bytes_to_type(T, images)
 end
 
-function testtensor(args...; dir = nothing)
-    testtensor(N0f8, args...; dir = dir)
+function testtensor(args...)
+    testtensor(N0f8, args...)
 end
 
 """
-    trainlabels([indices]; [dir])
+    trainlabels([indices])
 
 Returns the MNIST **trainset** labels corresponding to the given
 `indices` as an `Int` or `Vector{Int}`. The values of the labels
@@ -138,21 +134,19 @@ julia> MNIST.trainlabels(1:3) # first three labels
 julia> MNIST.trainlabels(1) # first label
 5
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 """
-function trainlabels(args...; dir = nothing)
-    path = datafile(DEPNAME, TRAINLABELS, dir)
+function trainlabels(args...)
+    path = joinpath(artifact"MNIST", TRAINLABELS)
     Vector{Int}(Reader.readlabels(path, args...))
 end
 
-function trainlabels(index::Integer; dir = nothing)
-    path = datafile(DEPNAME, TRAINLABELS, dir)
+function trainlabels(index::Integer)
+    path = joinpath(artifact"MNIST", TRAINLABELS)
     Int(Reader.readlabels(path, index))
 end
 
 """
-    testlabels([indices]; [dir])
+    testlabels([indices])
 
 Returns the MNIST **testset** labels corresponding to the given
 `indices` as an `Int` or `Vector{Int}`. The values of the labels
@@ -177,21 +171,19 @@ julia> MNIST.testlabels(1:3) # first three labels
 julia> MNIST.testlabels(1) # first label
 7
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 """
-function testlabels(args...; dir = nothing)
-    path = datafile(DEPNAME, TESTLABELS, dir)
+function testlabels(args...)
+    path = joinpath(artifact"MNIST", TESTLABELS)
     Vector{Int}(Reader.readlabels(path, args...))
 end
 
-function testlabels(index::Integer; dir = nothing)
-    path = datafile(DEPNAME, TESTLABELS, dir)
+function testlabels(index::Integer)
+    path = joinpath(artifact"MNIST", TESTLABELS)
     Int(Reader.readlabels(path, index))
 end
 
 """
-    traindata([T = N0f8], [indices]; [dir]) -> Tuple
+    traindata([T = N0f8], [indices]) -> Tuple
 
 Returns the MNIST **trainingset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
@@ -209,23 +201,20 @@ represent.
 ```julia
 train_x, train_y = MNIST.traindata() # full datatset
 train_x, train_y = MNIST.traindata(2) # only second observation
-train_x, train_y = MNIST.traindata(dir="./MNIST") # custom folder
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 
 Take a look at [`MNIST.traintensor`](@ref) and
 [`MNIST.trainlabels`](@ref) for more information.
 """
-function traindata(::Type{T}, args...; dir = nothing) where T
-    (traintensor(T, args...; dir = dir),
-     trainlabels(args...; dir = dir))
+function traindata(::Type{T}, args...) where T
+    (traintensor(T, args...),
+     trainlabels(args...))
 end
 
-traindata(args...; dir = nothing) = traindata(N0f8, args...; dir = dir)
+traindata(args...) = traindata(N0f8, args...)
 
 """
-    testdata([T = N0f8], [indices]; [dir]) -> Tuple
+    testdata([T = N0f8], [indices]) -> Tuple
 
 Returns the MNIST **testset** corresponding to the given
 `indices` as a two-element tuple. If `indices` is omitted the
@@ -243,17 +232,14 @@ represent.
 ```julia
 test_x, test_y = MNIST.testdata() # full datatset
 test_x, test_y = MNIST.testdata(2) # only second observation
-test_x, test_y = MNIST.testdata(dir="./MNIST") # custom folder
 ```
-
-$(download_docstring("MNIST", DEPNAME))
 
 Take a look at [`MNIST.testtensor`](@ref) and
 [`MNIST.testlabels`](@ref) for more information.
 """
-function testdata(::Type{T}, args...; dir = nothing) where T
-    (testtensor(T, args...; dir = dir),
-     testlabels(args...; dir = dir))
+function testdata(::Type{T}, args...) where T
+    (testtensor(T, args...),
+     testlabels(args...))
 end
 
-testdata(args...; dir = nothing) = testdata(N0f8, args...; dir = dir)
+testdata(args...) = testdata(N0f8, args...)
