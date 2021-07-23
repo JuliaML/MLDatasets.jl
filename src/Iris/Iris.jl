@@ -67,7 +67,6 @@ end
 
 Return a string vector of length 150 containing observations' labels.
 """
-
 function labels(; dir = nothing)
     path = datafile(DEPNAME, DATA, dir)
     iris = readdlm(path, ',')
