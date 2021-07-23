@@ -3,6 +3,9 @@ using MLDatasets
 using ImageCore
 using DataDeps
 
+
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true
+
 tests = [
     "tst_iris.jl",
     "tst_boston_housing.jl",
