@@ -10,7 +10,7 @@ Nodes represent documents and edges represent citation links.
 
 ## Interface
 
-- [Cora.alldata](@ref)
+- [`Cora.alldata`](@ref)
 """
 module Cora
 
@@ -19,7 +19,6 @@ using DataDeps
 using ..MLDatasets: datafile
 using DelimitedFiles: readdlm
 
-export getdata
 
 const DEPNAME = "Cora"
 const LINK = "http://nrvis.com/download/data/labeled/cora.zip"

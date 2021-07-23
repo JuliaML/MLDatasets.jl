@@ -1,6 +1,7 @@
 using Documenter, MLDatasets
 
-DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
+## Commented out since gives warning
+# DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
 
 # Build documentation.
 # ====================
