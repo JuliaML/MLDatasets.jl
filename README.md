@@ -1,12 +1,8 @@
 # MLDatasets.jl
 
-| **Documentation** | **Build Status**  |
-|:------------------:|:-----------------:|
-| [![][docs-stable-img][docs-stable-url] ![][docs-latest-img][docs-latest-url]] |  [![](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)|
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-stable-url]: https://JuliaML.github.io/MLDatasets.jl/stable
-[docs-latest-url]: https://JuliaML.github.io/MLDatasets.jl/latest
+[![Docs Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/stable)
+[![Docs Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/latest)
+[![CI](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)
 
 This package represents a community effort to provide a common interface for accessing common Machine Learning (ML) datasets. 
 In contrast to other data-related Julia packages, the focus of `MLDatasets.jl` is specifically on downloading, unpacking, and accessing benchmark datasets. 
