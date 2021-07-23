@@ -14,8 +14,9 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      julia-version: 1.6
-      os: ubuntu-latest
+      matrix:
+        julia-version: [1]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: julia-actions/setup-julia@latest
