@@ -11,6 +11,7 @@ tests = [
     "tst_fashion_mnist.jl",
     "tst_svhn2.jl",
     "tst_emnist.jl",
+    "tst_cora.jl"
 ]
 
 for t in tests
