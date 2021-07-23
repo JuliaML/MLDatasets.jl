@@ -14,11 +14,9 @@ Nodes represent documents and edges represent citation links.
 """
 module Cora
 
-using Base: assert_havelock
 using DataDeps
 using ..MLDatasets: datafile
 using DelimitedFiles: readdlm
-
 
 const DEPNAME = "Cora"
 const LINK = "http://nrvis.com/download/data/labeled/cora.zip"
