@@ -1,7 +1,7 @@
 # MLDatasets.jl
 
 [![Docs Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/stable)
-[![Docs Latest](https://img.shields.io/badge/docs-latest-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/latest)
+[![Docs Latest](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/dev)
 [![CI](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)
 
 This package represents a community effort to provide a common interface for accessing common Machine Learning (ML) datasets. 
