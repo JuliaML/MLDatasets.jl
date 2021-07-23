@@ -13,7 +13,8 @@ makedocs(
     format = Documenter.HTML(
         canonical = "https://juliadata.github.io/MLDatasets.jl/stable/",
         assets = ["assets/favicon.ico"],
-        prettyurls = get(ENV, "CI", nothing) == "true"
+        prettyurls = get(ENV, "CI", nothing) == "true",
+        collapselevel=3,
     ),
 
     authors = "Hiroyuki Shindo, Christof Stocker",
@@ -27,7 +28,7 @@ makedocs(
                 "CIFAR-100" => "datasets/CIFAR100.md",
                 "SVHN format 2" => "datasets/SVHN2.md",
             ],
-            "Misc." => Any[
+            "Miscellaneous" => Any[
                 "Iris" => "datasets/Iris.md",
                 "Boston Housing" => "datasets/BostonHousing.md",
             ],
