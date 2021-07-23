@@ -1,4 +1,4 @@
-# Boston Housing
+# Cora
 
 ```@docs
 Cora
