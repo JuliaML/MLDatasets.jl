@@ -38,10 +38,8 @@ Find below a list of available datasets and links to their documentation.
   - [UD_English](https://juliaml.github.io/MLDatasets.jl/latest/datasets/UD_English/)
 
 #### Graphs
-  - To be added.
+  - [Cora](https://juliaml.github.io/MLDatasets.jl/latest/datasets/Cora/)
 
-#### Audio
-  - To be added.
 
 
 ## Installation
@@ -54,6 +52,11 @@ package manger.
 import Pkg
 Pkg.add("MLDatasets")
 ```
+
+## Contributing to MLDatasets
+
+New dataset contributions are warmly welcome. See `src/Cora/Cora.jl` for an example
+of a minimal implementation. 
 
 ## License
 

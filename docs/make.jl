@@ -38,9 +38,14 @@ makedocs(
                 "UD_English" => "datasets/UD_English.md",
             ],
 
+            "Graphs" => Any[
+                "Cora" => "datasets/Cora.md",
+            ],
+
         ],
         "LICENSE.md",
-    ]
+    ],
+    strict = true
 )
 
 

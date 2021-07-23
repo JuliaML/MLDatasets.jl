@@ -32,7 +32,7 @@ function datafile(depname, filename, dir = nothing; recurse = true, kw...)
     path = joinpath(datadir(depname, dir; kw...), filename)
     if !isfile(path)
         @warn "The file \"$path\" does not exist, even though the dataset-specific folder does. This is an unusual situation that may have been caused by a manual creation of an empty folder, or manual deletion of the given file \"$filename\"."
-        if dir == nothing
+        if dir === nothing
             @info "Retriggering DataDeps.jl for \"$depname\""
             download_dep(depname; kw...)
         else
