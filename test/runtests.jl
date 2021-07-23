@@ -1,6 +1,10 @@
 using Test
 using MLDatasets
 using ImageCore
+using DataDeps
+
+
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 tests = [
     "tst_iris.jl",
@@ -11,6 +15,7 @@ tests = [
     "tst_fashion_mnist.jl",
     "tst_svhn2.jl",
     "tst_emnist.jl",
+    "tst_cora.jl"
 ]
 
 for t in tests

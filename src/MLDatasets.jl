@@ -25,17 +25,27 @@ end
 
 
 include("download.jl")
-include("CoNLL.jl")
+
+
+# Misc.
 include("BostonHousing/BostonHousing.jl")
 include("Iris/Iris.jl")
+
+# Vision
 include("CIFAR10/CIFAR10.jl")
 include("CIFAR100/CIFAR100.jl")
 include("MNIST/MNIST.jl")
 include("FashionMNIST/FashionMNIST.jl")
 include("SVHN2/SVHN2.jl")
+include("EMNIST/EMNIST.jl")
+
+# Text
+include("CoNLL.jl")
 include("PTBLM/PTBLM.jl")
 include("UD_English/UD_English.jl")
-include("EMNIST/EMNIST.jl")
+
+# Graphs
+include("Cora/Cora.jl")
 
 function __init__()
     # initialize optional dependencies

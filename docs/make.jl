@@ -1,6 +1,7 @@
 using Documenter, MLDatasets
 
-DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
+## Commented out since gives warning
+# DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
 
 # Build documentation.
 # ====================
@@ -38,9 +39,14 @@ makedocs(
                 "UD_English" => "datasets/UD_English.md",
             ],
 
+            "Graphs" => Any[
+                "Cora" => "datasets/Cora.md",
+            ],
+
         ],
         "LICENSE.md",
-    ]
+    ],
+    strict = true
 )
 
 

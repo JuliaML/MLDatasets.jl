@@ -4,7 +4,7 @@ using DataDeps
 using MLDatasets
 
 
-@testset "Iris" begin
+@testset "Boston Housing" begin
     X  = BostonHousing.features()
     Y  = BostonHousing.targets()
     names = BostonHousing.feature_names()
