@@ -2,8 +2,7 @@
 
 | **Documentation** | **Build Status**  |
 |:------------------:|:-----------------:|
-| ![Docs][docs-stable-img](docs-stable-url) [![Docs][docs-latest-img](docs-latest-url) |  [![Build Status](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)|
-
+| [![][docs-stable-img][docs-stable-url] ![][docs-latest-img][docs-latest-url]] |  [![](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)|
 [docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
 [docs-stable-url]: https://JuliaML.github.io/MLDatasets.jl/stable
