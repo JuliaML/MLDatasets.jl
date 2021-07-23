@@ -1,6 +1,7 @@
 using Test
 using MLDatasets
 using ImageCore
+using DataDeps
 
 tests = [
     "tst_iris.jl",
