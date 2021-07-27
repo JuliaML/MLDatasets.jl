@@ -58,9 +58,10 @@ function __init__()
         global __images_supported__ = true
     end
 
+    # install scipy if not already there
+    pyimport_conda("scipy", "scipy")
 
     py"""
-    import numpy as np
     import pickle
 
     def pyread_planetoid_file(path, name):
