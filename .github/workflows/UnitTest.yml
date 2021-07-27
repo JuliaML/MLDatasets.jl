@@ -18,7 +18,8 @@ jobs:
       matrix:
         julia-version: ['1.0', '1', 'nightly']
         os: [ubuntu-latest, windows-latest, macOS-latest]
-
+    env:
+      PYTHON: ""
     steps:
       - uses: actions/checkout@v1.0.0
       - name: "Set up Julia"

@@ -1,11 +1,11 @@
-# Cora
+# CiteSeer
 
 ```@docs
-Cora
+CiteSeer
 ```
 
 ## API reference
 
 ```@docs
-Cora.dataset
+CiteSeer.dataset
 ```
