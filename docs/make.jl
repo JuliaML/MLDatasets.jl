@@ -19,6 +19,7 @@ makedocs(
     ),
 
     authors = "Hiroyuki Shindo, Christof Stocker",
+    # TODO: automatize `pages` creation
     pages = Any[
         "Home" => "index.md",
         "Available Datasets" => Any[
@@ -40,10 +41,13 @@ makedocs(
             ],
 
             "Graphs" => Any[
+                "CiteSeer" => "datasets/CiteSeer.md",
                 "Cora" => "datasets/Cora.md",
+                "PubMed" => "datasets/PubMed.md",
             ],
 
         ],
+        "Utis" -> "utils.md",
         "LICENSE.md",
     ],
     strict = true

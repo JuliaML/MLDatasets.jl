@@ -7,7 +7,7 @@ end
     
     @test data.num_nodes == 2708
     @test data.num_edges == 10556
-    @test data.directed == true
+    @test data.directed == false
     @test size(data.node_features) == (1433, data.num_nodes)
     @test size(data.node_labels) == (data.num_nodes,)
     @test size(data.train_indices) == (140,)
