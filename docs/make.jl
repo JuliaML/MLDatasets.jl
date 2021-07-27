@@ -47,7 +47,7 @@ makedocs(
             ],
 
         ],
-        "Utis" -> "utils.md",
+        "Utils" => "utils.md",
         "LICENSE.md",
     ],
     strict = true
