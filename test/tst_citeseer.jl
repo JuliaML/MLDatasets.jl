@@ -15,6 +15,8 @@ end
     @test size(data.test_indices) == (1015,)
     @test size(data.adjacency_list) == (data.num_nodes, )
     @test sum(length.(data.adjacency_list)) == (data.num_edges)
-    @test minimum(minimum.(data.adjacency_list; init=1000)) == 1
-    @test maximum(maximum.(data.adjacency_list; init=1000)) == data.num_nodes
+    if VERSION >= v"1.6.0"
+        @test minimum(minimum.(data.adjacency_list; init=1000)) == 1
+        @test maximum(maximum.(data.adjacency_list; init=1000)) == data.num_nodes
+    end
 end
