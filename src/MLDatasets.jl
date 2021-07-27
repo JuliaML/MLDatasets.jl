@@ -1,7 +1,9 @@
 module MLDatasets
 
 using Requires
+using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
+using PyCall
 
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
@@ -45,13 +47,29 @@ include("PTBLM/PTBLM.jl")
 include("UD_English/UD_English.jl")
 
 # Graphs
-include("Cora/Cora.jl")
+include("planetoid.jl")
+    include("Cora/Cora.jl")
+    include("PubMed/PubMed.jl")
+    include("CiteSeer/CiteSeer.jl")
 
 function __init__()
     # initialize optional dependencies
     @require ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534" begin
         global __images_supported__ = true
     end
+
+
+    py"""
+    import numpy as np
+    import pickle
+
+    def pyread_planetoid_file(path, name):
+        out = pickle.load(open(path, "rb"), encoding="latin1")
+        if name == 'graph':
+            return out
+        out = out.todense() if hasattr(out, 'todense') else out
+        return out
+    """
 end
 
 end

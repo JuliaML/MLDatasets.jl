@@ -1,11 +1,11 @@
-# Cora
+# PubMed
 
 ```@docs
-Cora
+PubMed
 ```
 
 ## API reference
 
 ```@docs
-Cora.dataset
+PubMed.dataset
 ```

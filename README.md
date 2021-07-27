@@ -20,7 +20,7 @@ Each dataset has its own dedicated sub-module.
 Find below a list of available datasets and links to their documentation.
 
 #### Vision
-  - [CIFAR10](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/)
+  - [CIFAR10](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR10/)
   - [CIFAR100](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/)
   - [EMNIST](https://juliaml.github.io/MLDatasets.jl/latest/datasets/EMNIST/)
   - [FashionMNIST](https://juliaml.github.io/MLDatasets.jl/latest/datasets/FashionMNIST/)
@@ -38,7 +38,9 @@ Find below a list of available datasets and links to their documentation.
   - [UD_English](https://juliaml.github.io/MLDatasets.jl/latest/datasets/UD_English/)
 
 #### Graphs
+  - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CiteSeer/)
   - [Cora](https://juliaml.github.io/MLDatasets.jl/latest/datasets/Cora/)
+  - [PubMed](https://juliaml.github.io/MLDatasets.jl/latest/datasets/PubMed/)
 
 
 

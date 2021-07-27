@@ -70,7 +70,7 @@ module UD_English
             detail on the Website.
             """,
             "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
-            "f2ccb6da7ec5fb0b617f0e7d7a13f3e292621eadbc324a1b3e7479d50a290177"
+            "e08d57e95264ac97ca861261e3119e093c054453c5dfc583e2402459504d93b7"
         ))
     end
 end
