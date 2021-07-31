@@ -7,8 +7,6 @@ on:
     branches:
       - master
   pull_request:
-  schedule:
-    - cron: '20 00 1 * *'
 
 jobs:
   test:
@@ -17,11 +15,16 @@ jobs:
       fail-fast: false
       matrix:
         julia-version: ['1.0', '1', 'nightly']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
+        include:
+          - os: windows-latest
+            julia-version: '1'
+          - os: macOS-latest
+            julia-version: '1'
     env:
       PYTHON: ""
     steps:
-      - uses: actions/checkout@v1.0.0
+      - uses: actions/checkout@v2
       - name: "Set up Julia"
         uses: julia-actions/setup-julia@v1
         with:
