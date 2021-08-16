@@ -20,27 +20,27 @@ Each dataset has its own dedicated sub-module.
 Find below a list of available datasets and links to their documentation.
 
 #### Vision
-  - [CIFAR10](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR10/)
-  - [CIFAR100](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CIFAR100/)
-  - [EMNIST](https://juliaml.github.io/MLDatasets.jl/latest/datasets/EMNIST/)
-  - [FashionMNIST](https://juliaml.github.io/MLDatasets.jl/latest/datasets/FashionMNIST/)
-  - [MNIST](https://juliaml.github.io/MLDatasets.jl/latest/datasets/MNIST/)
-  - [SVHN2](https://juliaml.github.io/MLDatasets.jl/latest/datasets/SVHN2/)
+  - [CIFAR10](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CIFAR10/)
+  - [CIFAR100](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CIFAR100/)
+  - [EMNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/EMNIST/)
+  - [FashionMNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/FashionMNIST/)
+  - [MNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/MNIST/)
+  - [SVHN2](https://juliaml.github.io/MLDatasets.jl/dev/datasets/SVHN2/)
 
 
 #### Miscellaneous
-  - [BostonHousing](https://juliaml.github.io/MLDatasets.jl/latest/datasets/BostonHousing/)
-  - [Iris](https://juliaml.github.io/MLDatasets.jl/latest/datasets/Iris/)
+  - [BostonHousing](https://juliaml.github.io/MLDatasets.jl/dev/datasets/BostonHousing/)
+  - [Iris](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Iris/)
 
 
 #### Text
-  - [PTBLM](https://juliaml.github.io/MLDatasets.jl/latest/datasets/PTBLM/)
-  - [UD_English](https://juliaml.github.io/MLDatasets.jl/latest/datasets/UD_English/)
+  - [PTBLM](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PTBLM/)
+  - [UD_English](https://juliaml.github.io/MLDatasets.jl/dev/datasets/UD_English/)
 
 #### Graphs
-  - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/latest/datasets/CiteSeer/)
-  - [Cora](https://juliaml.github.io/MLDatasets.jl/latest/datasets/Cora/)
-  - [PubMed](https://juliaml.github.io/MLDatasets.jl/latest/datasets/PubMed/)
+  - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CiteSeer/)
+  - [Cora](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Cora/)
+  - [PubMed](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PubMed/)
 
 
 
