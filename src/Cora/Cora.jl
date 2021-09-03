@@ -11,7 +11,7 @@ The dataset is designed for the node classification task.
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
 
-## Statistics 
+# Statistics 
 
 - Nodes: 2708
 - Edges: 10556
@@ -24,11 +24,11 @@ The dataset is retrieved from Ref. [2].
 The split is the one used in the original paper [1] and 
 doesn't consider all nodes.
 
-## Interface
+# Interface
 
 - [`Cora.dataset`](@ref)
 
-## References
+# References
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid
@@ -78,7 +78,7 @@ the reverse of each edge and the graph will be undirected.
 
 See also [`Cora`](@ref).
 
-## Usage Examples
+# Usage Examples
 
 ```juliarepl
 using MLDatasets: Cora

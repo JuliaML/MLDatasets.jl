@@ -128,7 +128,7 @@ SVHN2.classnames
 SVHN2.convert2image
 ```
 
-## References
+### References
 
 - **Authors**: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
 

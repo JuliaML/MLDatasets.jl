@@ -12,12 +12,12 @@ used in small-scale machine learning experiments. It contains
 pixel gray-scale image that depicts a handwritten version of 1 of
 the 10 possible digits (0-9).
 
-## Interface
+# Interface
 
 - [`MNIST.traintensor`](@ref), [`MNIST.trainlabels`](@ref), [`MNIST.traindata`](@ref)
 - [`MNIST.testtensor`](@ref), [`MNIST.testlabels`](@ref), [`MNIST.testdata`](@ref)
 
-## Utilities
+# Utilities
 
 - [`MNIST.download`](@ref)
 - [`MNIST.convert2image`](@ref)

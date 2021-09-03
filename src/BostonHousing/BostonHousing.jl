@@ -44,7 +44,7 @@ Harrison and Rubinfeld do not mention any censoring.
 The data file stored in this repo is a copy of the This is a copy of UCI ML housing dataset. 
 https://archive.ics.uci.edu/ml/machine-learning-databases/housing/
 
-## Interface
+# Interface
 
 - [`BostonHousing.features`](@ref)
 - [`BostonHousing.targets`](@ref)
