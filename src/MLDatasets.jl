@@ -72,6 +72,8 @@ function __init__()
         out = out.todense() if hasattr(out, 'todense') else out
         return out
     """
+
+    __init__tudataset()
 end
 
 end

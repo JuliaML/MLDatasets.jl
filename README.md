@@ -27,11 +27,9 @@ Find below a list of available datasets and links to their documentation.
   - [MNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/MNIST/)
   - [SVHN2](https://juliaml.github.io/MLDatasets.jl/dev/datasets/SVHN2/)
 
-
 #### Miscellaneous
   - [BostonHousing](https://juliaml.github.io/MLDatasets.jl/dev/datasets/BostonHousing/)
   - [Iris](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Iris/)
-
 
 #### Text
   - [PTBLM](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PTBLM/)
@@ -41,7 +39,7 @@ Find below a list of available datasets and links to their documentation.
   - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CiteSeer/)
   - [Cora](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Cora/)
   - [PubMed](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PubMed/)
-
+  - [TUDatasets](TODO)
 
 
 ## Installation
