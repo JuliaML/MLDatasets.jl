@@ -7,7 +7,7 @@ using DelimitedFiles: readdlm
 function __init__tudataset()
     DEPNAME = "TUDataset"
     LINK = "https://www.chrsmrrs.com/graphkerneldatasets"
-    DOCS = ""
+    DOCS = "https://chrsmrrs.github.io/datasets/docs/home/"
     DATA = "PROTEINS.zip"
 
     register(DataDep(
@@ -29,7 +29,7 @@ struct TUDataset
     source::Vector{Int}
     target::Vector{Int}
     graph_indicator
-    node_labels::Vector{Int}
+    node_labels::Union{Nothing, Vector{Int}}
     edge_labels::Union{Nothing, Vector{Int}}
     graph_labels
     node_attributes
@@ -38,22 +38,24 @@ struct TUDataset
 end
 
 """
-    TUDataset
+    TUDataset(name; dir=nothing)
 
-A variety of graph kernel benchmark datasets, *.e.g.* "IMDB-BINARY",
-"REDDIT-BINARY" or "PROTEINS", collected from the [TU Dortmund University](https://chrsmrrs.github.io/datasets).
+A variety of graph benchmark datasets, *.e.g.* "QM9", "IMDB-BINARY",
+"REDDIT-BINARY" or "PROTEINS", collected from the [TU Dortmund University](https://chrsmrrs.github.io/datasets/).
+Retrieve from TUDataset collection the dataset `name`, where `name`
+is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/). 
 
-    dataset(name; dir=nothing)
+A `TUDataset` object can be indexed to retrieve a specific graph or a subset of graphs.
 
-Retrieve the TUDataset dataset. The output is an object with fields
+# Internal fields
 
 ```
-num_nodes
-num_edges
-num_graphs
+num_nodes           # total number of nodes (considering all graphs)
+num_edges           # total number of edges (considering all graphs)       
+num_graphs          # total number of graphs
 source              # vector of edges' source vectors      
 target              # vector of edges' target vectors
-graph_indicator     # graph
+graph_indicator     # graph to which a node belongs too
 node_labels
 edge_labels
 graph_labels
@@ -62,50 +64,72 @@ edge_attributes
 graph_attributes
 ```
 
-See [this link](https://chrsmrrs.github.io/datasets/docs/datasets/)
-for a list of the available datasets.
+See [here](https://chrsmrrs.github.io/datasets/docs/format/) for an in-depth 
+description of the format. 
+
+# Usage Example
+
+```julia
+using MLDatasets: TUDataset
+using LightGraphs: SimpleGraph, add_edge!
+
+data = TUDataset("PROTEINS")
+
+# Access first graph
+d1 = data[1] 
+
+# Create a LightGraphs' graph
+g = SimpleGraph(d1.num_nodes)
+for (s, t) in zip(d1.source, d1.target)
+    add_edge!(g, s, t)
+end
+
+# Node features
+X = d1.node_attributes # (nfeatures x nnodes) matrix
+```
 """
 function TUDataset(name; dir=nothing)
-    d = datadir("TUDataset", dir)
-    # See here for the file format https://chrsmrrs.github.io/datasets/docs/format/
-    st = readdlm(joinpath(d, name, "$(name)_A.txt"), ',', Int)
-   
+    d = datadir_tudataset(name, dir)
+    # See here for the file format: https://chrsmrrs.github.io/datasets/docs/format/
+    
+    st = readdlm(joinpath(d, "$(name)_A.txt"), ',', Int)
     # Check that the first node is labeled 1.
     # TODO this will fail if the first node is isolated
     @assert minimum(st) == 1
+    source, target = st[:,1], st[:,2]
 
-    graph_indicator = readdlm(joinpath(d, name, "$(name)_graph_indicator.txt"), Int) |> vec      
+    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
     @assert all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
 
-    node_labels = readdlm(joinpath(d, name, "$(name)_node_labels.txt"), Int) |> vec
-    graph_labels = readdlm(joinpath(d, name, "$(name)_graph_labels.txt"), Int) |> vec
+    num_nodes = length(graph_indicator)
+    num_edges = length(source)
+    num_graphs = length(unique(graph_indicator))
 
     # LOAD OPTIONAL FILES IF EXIST
     
-    if isfile(joinpath(d, name, "$(name)_edge_labels.txt"))
-        edge_labels = readdlm(joinpath(d, name, "$(name)_edge_labels.txt")) |> vec
-    else
-        edge_labels = nothing
-    end
-    if isfile(joinpath(d, name, "$(name)_node_attributes.txt"))
-        node_attributes = readdlm(joinpath(d, name, "$(name)_node_attributes.txt"), Float32)' |> collect
-    else
-        node_attributes = nothing
-    end
-    if isfile(joinpath(d, name, "$(name)_edge_attributes.txt"))
-        edge_attributes = readdlm(joinpath(d, name, "$(name)_edge_attributes.txt"), Float32)' |> collect
-    else
-        edge_attributes = nothing
-    end
-    if isfile(joinpath(d, name, "$(name)_graph_attributes.txt"))
-        graph_attributes = readdlm(joinpath(d, name, "$(name)_graph_attributes.txt"), Float32)' |> collect
-    else
-        graph_attributes = nothing
-    end
+    node_labels = isfile(joinpath(d, "$(name)_node_labels.txt")) ?
+                    readdlm(joinpath(d, "$(name)_node_labels.txt"), Int) |> vec :
+                    nothing
+    edge_labels = isfile(joinpath(d, "$(name)_edge_labels.txt")) ?
+                    readdlm(joinpath(d, "$(name)_edge_labels.txt"), Int) |> vec :
+                    nothing
+    graph_labels = isfile(joinpath(d, "$(name)_graph_labels.txt")) ?
+                    readdlm(joinpath(d, "$(name)_graph_labels.txt"), Int) |> vec :
+                    nothing
 
+    node_attributes = isfile(joinpath(d, "$(name)_node_attributes.txt")) ?
+                        readdlm(joinpath(d, "$(name)_node_attributes.txt"), ',', Float32)' |> collect :
+                        nothing
+    edge_attributes = isfile(joinpath(d, "$(name)_edge_attributes.txt")) ?
+                        readdlm(joinpath(d, "$(name)_edge_attributes.txt"), ',', Float32)' |> collect :
+                        nothing
+    graph_attributes = isfile(joinpath(d, "$(name)_graph_attributes.txt")) ?
+                        readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',', Float32)' |> collect :
+                        nothing
+    
 
-    TUDataset( length(node_labels), size(st, 1), length(graph_labels),
-                st[:,1], st[:,2], 
+    TUDataset( num_nodes, num_edges, num_graphs,
+                source, target, 
                 graph_indicator,
                 node_labels,
                 edge_labels,            
@@ -115,13 +139,27 @@ function TUDataset(name; dir=nothing)
                 graph_attributes)
 end
 
+function datadir_tudataset(name, dir = nothing)
+    dir = isnothing(dir) ? datadep"TUDataset" : dir
+    LINK = "https://www.chrsmrrs.com/graphkerneldatasets/$name.zip"
+    d  = joinpath(dir, name)
+    if !isdir(d)
+        DataDeps.fetch_default(LINK, dir)
+        currdir = pwd()
+        cd(dir) # Needed since `unpack` extracts in working dir
+        DataDeps.unpack(joinpath(dir, "$name.zip"))
+        cd(currdir)
+    end
+    @assert isdir(d)
+    return d
+end
 
 function Base.getindex(data::TUDataset, i)
     node_mask = data.graph_indicator .∈ Ref(i)
     graph_indicator = data.graph_indicator[node_mask]
     
     nodes = (1:data.num_nodes)[node_mask]
-    node_labels = data.node_labels[node_mask]
+    node_labels = isnothing(data.node_labels) ? nothing : data.node_labels[node_mask]
     nodemap = Dict(v => i for (i, v) in enumerate(nodes))
 
     edge_mask = data.source .∈ Ref(nodes) 
@@ -129,17 +167,17 @@ function Base.getindex(data::TUDataset, i)
     target = [nodemap[i] for i in data.target[edge_mask]]
     edge_labels = isnothing(data.edge_labels) ? nothing : data.edge_labels[edge_mask]
 
-    graph_labels = data.graph_labels[i]
+    graph_labels = isnothing(data.graph_labels) ? nothing : data.graph_labels[i]
     
     node_attributes = isnothing(data.node_attributes) ? nothing : data.node_attributes[:,node_mask]
     edge_attributes = isnothing(data.edge_attributes) ? nothing : data.edge_attributes[:,edge_mask]
     graph_attributes = isnothing(data.graph_attributes) ? nothing : data.graph_attributes[:,i]
 
+    num_nodes = length(graph_indicator)
+    num_edges = length(source)
+    num_graphs = length(i)
 
-    @assert source isa Vector
-    @assert target isa Vector
-    @assert node_labels isa Vector
-    TUDataset(length(nodes), length(source), length(graph_labels),
+    TUDataset(num_nodes, num_edges, num_graphs,
             source, target, 
             graph_indicator,
             node_labels,
