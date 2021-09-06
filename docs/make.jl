@@ -44,6 +44,7 @@ makedocs(
                 "CiteSeer" => "datasets/CiteSeer.md",
                 "Cora" => "datasets/Cora.md",
                 "PubMed" => "datasets/PubMed.md",
+                "TUDataset" => "datasets/TUDataset.md",      
             ],
 
         ],

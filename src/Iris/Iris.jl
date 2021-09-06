@@ -13,12 +13,12 @@ The module retrieves the data from the [UCI Machine Learning Repository](https:/
 
 NOTE: no pre-defined train-test split for this dataset, `features` and `labels` return the whole dataset. 
 
-## Interface
+# Interface
 
 - [`Iris.features`](@ref)
 - [`Iris.labels`](@ref)
 
-## Utilities
+# Utilities
 
 - [`Iris.download`](@ref)
 """

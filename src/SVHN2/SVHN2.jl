@@ -15,13 +15,13 @@ RGB color channel. The dataset is split up into three subsets:
 73257 digits for training, 26032 digits for testing, and 531131
 additional to use as extra training data.
 
-## Interface
+# Interface
 
 - [`SVHN2.traintensor`](@ref), [`SVHN2.trainlabels`](@ref), [`SVHN2.traindata`](@ref)
 - [`SVHN2.testtensor`](@ref), [`SVHN2.testlabels`](@ref), [`SVHN2.testdata`](@ref)
 - [`SVHN2.extratensor`](@ref), [`SVHN2.extralabels`](@ref), [`SVHN2.extradata`](@ref)
 
-## Utilities
+# Utilities
 
 - [`SVHN2.download`](@ref)
 - [`SVHN2.classnames`](@ref)

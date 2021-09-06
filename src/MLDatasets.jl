@@ -1,9 +1,16 @@
 module MLDatasets
 
+using FixedPointNumbers: length
+using ColorTypes: length
 using Requires
 using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
 using PyCall
+
+# Julia 1.0 compatibility
+if !isdefined(Base, :isnothing)
+    isnothing(x) = x === nothing
+end
 
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
@@ -51,6 +58,7 @@ include("planetoid.jl")
     include("Cora/Cora.jl")
     include("PubMed/PubMed.jl")
     include("CiteSeer/CiteSeer.jl")
+include("TUDataset/TUDataset.jl")
 
 function __init__()
     # initialize optional dependencies
@@ -71,6 +79,8 @@ function __init__()
         out = out.todense() if hasattr(out, 'todense') else out
         return out
     """
+
+    __init__tudataset()
 end
 
 end

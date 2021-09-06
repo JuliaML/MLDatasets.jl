@@ -12,12 +12,12 @@ examples. Each example is a 28x28 grayscale image, associated
 with a label from 10 classes. It can serve as a drop-in
 replacement for MNIST.
 
-## Interface
+# Interface
 
 - [`FashionMNIST.traintensor`](@ref), [`FashionMNIST.trainlabels`](@ref), [`FashionMNIST.traindata`](@ref)
 - [`FashionMNIST.testtensor`](@ref), [`FashionMNIST.testlabels`](@ref), [`FashionMNIST.testdata`](@ref)
 
-## Utilities
+# Utilities
 
 - [`FashionMNIST.download`](@ref)
 
