@@ -156,7 +156,7 @@ end
 
 Base.getindex(data::TUDataset, i::Int) = getindex(data, [i])
 
-function Base.getindex(data::TUDataset, i::Vector{Int})
+function Base.getindex(data::TUDataset, i::AbstractVector{Int})
     node_mask = data.graph_indicator .∈ Ref(i)
     
     nodes = (1:data.num_nodes)[node_mask]
