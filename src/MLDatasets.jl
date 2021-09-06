@@ -1,5 +1,7 @@
 module MLDatasets
 
+using FixedPointNumbers: length
+using ColorTypes: length
 using Requires
 using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
@@ -52,6 +54,11 @@ include("planetoid.jl")
     include("PubMed/PubMed.jl")
     include("CiteSeer/CiteSeer.jl")
 include("TUDataset/TUDataset.jl")
+
+# Julia 1.0 compatibility
+if !isdefined(Base, :isnothing)
+    isnothing(x) = x === nothing
+end
 
 function __init__()
     # initialize optional dependencies
