@@ -39,7 +39,7 @@ Find below a list of available datasets and links to their documentation.
   - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CiteSeer/)
   - [Cora](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Cora/)
   - [PubMed](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PubMed/)
-  - [TUDatasets](TODO)
+  - [TUDatasets](https://juliaml.github.io/MLDatasets.jl/dev/datasets/TUDataset/)
 
 
 ## Installation
