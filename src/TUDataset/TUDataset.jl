@@ -154,14 +154,18 @@ function datadir_tudataset(name, dir = nothing)
     return d
 end
 
-function Base.getindex(data::TUDataset, i)
+Base.getindex(data::TUDataset, i::Int) = getindex(data, [i])
+
+function Base.getindex(data::TUDataset, i::AbstractVector{Int})
     node_mask = data.graph_indicator .∈ Ref(i)
-    graph_indicator = data.graph_indicator[node_mask]
     
     nodes = (1:data.num_nodes)[node_mask]
     node_labels = isnothing(data.node_labels) ? nothing : data.node_labels[node_mask]
-    nodemap = Dict(v => i for (i, v) in enumerate(nodes))
+    nodemap = Dict(v => vnew for (vnew, v) in enumerate(nodes))
 
+    graphmap = Dict(i => inew for (inew, i) in enumerate(i))
+    graph_indicator = [graphmap[i] for i in data.graph_indicator[node_mask]]
+    
     edge_mask = data.source .∈ Ref(nodes) 
     source = [nodemap[i] for i in data.source[edge_mask]]
     target = [nodemap[i] for i in data.target[edge_mask]]
