@@ -4,12 +4,13 @@ module Mutagenesis
     using DataDeps, JSON
     using ..MLDatasets: datafile
 
+    const DEPNAME = "Mutagenesis"
+    const DATA = "data.json"
+    const METADATA = "meta.json"
+
     function __init__()
-        DEPNAME = "Mutagenesis"
         ORIGINAL_LINK = "https://relational.fit.cvut.cz/dataset/Mutagenesis"
         DATA_LINK = "https://raw.githubusercontent.com/CTUAvastLab/datasets/main/mutagenesis"
-        DATA = "data.json"
-        METADATA = "meta.json"
 
         register(DataDep(
             DEPNAME,
