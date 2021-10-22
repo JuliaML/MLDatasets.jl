@@ -15,9 +15,7 @@ The `withenv("DATADEPS_ALWAYS_ACCEPT"=>"true")` disables the accept download pro
 ```jldoctest
 julia> using MLDatasets: Mutagenesis
 
-julia> train_x, train_y = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
-    Mutagenesis.traindata();
-end
+julia> train_x, train_y = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do Mutagenesis.traindata() end
 
 julia> test_x, test_y = Mutagenesis.testdata();
 
