@@ -58,6 +58,7 @@ function __init__()
         License: CC0
         """,
         "$DATA_LINK/" .* [DATA, METADATA],
+        "80ec1716217135e1f2e0b5a61876c65184e2014e64551103c41e174775ca207c"
     ))
 end
 
