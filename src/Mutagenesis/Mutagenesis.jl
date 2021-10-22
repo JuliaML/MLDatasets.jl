@@ -10,7 +10,8 @@ The `Mutagenesis` dataset comprises 188 molecules trialed for mutagenicity on Sa
  [relational.fit.cvut.cz](https://relational.fit.cvut.cz/dataset/Mutagenesis) and
  [CTUAvastLab/datasets](https://github.com/CTUAvastLab/datasets/tree/main/mutagenesis).
 
-Train, test and validation data can be loaded using:
+Train, test and validation data can be loaded using following code.
+The `withenv("DATADEPS_ALWAYS_ACCEPT"=>"true")` disables the accept download prompt.
 ```jldoctest
 julia> using MLDatasets: Mutagenesis
 
