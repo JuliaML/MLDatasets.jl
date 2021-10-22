@@ -11,10 +11,26 @@ The `Mutagenesis` dataset comprises 188 molecules trialed for mutagenicity on Sa
  [CTUAvastLab/datasets](https://github.com/CTUAvastLab/datasets/tree/main/mutagenesis).
 
 Train, test and validation data can be loaded using:
-```julia
-train_x, train_y = Mutagenesis.traindata()
-test_x, test_y = Mutagenesis.testdata()
-val_x, val_y = Mutagenesis.valdata()
+```jldoctest
+julia> using Mutagenesis
+
+julia> train_x, train_y = Mutagenesis.traindata();
+
+julia> test_x, test_y = Mutagenesis.testdata();
+
+julia> val_x, val_y = Mutagenesis.valdata();
+
+julia> train_x[1:2]
+JSON3.Object{Base.CodeUnits{UInt8,String},SubArray{UInt64,1,Array{UInt64,1},Tuple{UnitRange{Int64}},true}} with 6 entries:   
+  :ind1      => 1
+  :inda      => 0
+  :logp      => 4.23
+  :lumo      => -1.246
+  :mutagenic => 1
+  :atoms     => JSON3.Object[{…
+
+julia> train_y[1]
+1
 ```
 """
 module Mutagenesis
