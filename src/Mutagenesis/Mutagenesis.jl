@@ -14,7 +14,9 @@ Train, test and validation data can be loaded using:
 ```jldoctest
 julia> using MLDatasets: Mutagenesis
 
-julia> train_x, train_y = Mutagenesis.traindata();
+julia> train_x, train_y = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do
+    Mutagenesis.traindata();
+end
 
 julia> test_x, test_y = Mutagenesis.testdata();
 
