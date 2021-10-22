@@ -16,6 +16,9 @@ The `withenv("DATADEPS_ALWAYS_ACCEPT"=>"true")` disables the accept download pro
 julia> using MLDatasets: Mutagenesis
 
 julia> train_x, train_y = withenv("DATADEPS_ALWAYS_ACCEPT"=>"true") do; Mutagenesis.traindata(); end;
+┌ Warning: Checksum not provided, add to the Datadep Registration the following hash line
+│   hash = "80ec1716217135e1f2e0b5a61876c65184e2014e64551103c41e174775ca207c"
+└ @ DataDeps ~/.julia/packages/DataDeps/ooWXe/src/verification.jl:44
 
 julia> test_x, test_y = Mutagenesis.testdata();
 
