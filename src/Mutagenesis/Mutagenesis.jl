@@ -12,7 +12,7 @@ The `Mutagenesis` dataset comprises 188 molecules trialed for mutagenicity on Sa
 
 Train, test and validation data can be loaded using:
 ```jldoctest
-julia> using Mutagenesis
+julia> using MLDatasets: Mutagenesis
 
 julia> train_x, train_y = Mutagenesis.traindata();
 
@@ -20,7 +20,7 @@ julia> test_x, test_y = Mutagenesis.testdata();
 
 julia> val_x, val_y = Mutagenesis.valdata();
 
-julia> train_x[1:2]
+julia> train_x[1]
 JSON3.Object{Base.CodeUnits{UInt8,String},SubArray{UInt64,1,Array{UInt64,1},Tuple{UnitRange{Int64}},true}} with 6 entries:   
   :ind1      => 1
   :inda      => 0
