@@ -10,6 +10,7 @@ tests = [
     # misc
     "tst_iris.jl",
     "tst_boston_housing.jl",
+    "tst_mutagenesis.jl",
     # vision
     "tst_cifar10.jl",
     "tst_cifar100.jl",

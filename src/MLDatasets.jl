@@ -39,6 +39,7 @@ include("download.jl")
 # Misc.
 include("BostonHousing/BostonHousing.jl")
 include("Iris/Iris.jl")
+include("Mutagenesis/Mutagenesis.jl")
 
 # Vision
 include("CIFAR10/CIFAR10.jl")
