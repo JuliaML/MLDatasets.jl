@@ -25,8 +25,6 @@ using DataDeps
 using ..MLDatasets: datafile, read_planetoid_data
 using DelimitedFiles: readdlm
 
-using PyCall
-
 const DEPNAME = "PubMed"
 const LINK = "https://github.com/kimiyoung/planetoid/raw/master/data"
 const DOCS = "https://github.com/kimiyoung/planetoid"

@@ -39,8 +39,6 @@ using DataDeps
 using ..MLDatasets: datafile, read_planetoid_data
 using DelimitedFiles: readdlm
 
-using PyCall
-
 const DEPNAME = "Cora"
 # LINK = "https://github.com/shchur/gnn-benchmark/raw/master/data/npz"
 # LINK = "https://github.com/abojchevski/graph2gauss/raw/master/data/"

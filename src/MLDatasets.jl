@@ -5,7 +5,8 @@ using ColorTypes: length
 using Requires
 using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
-using PyCall
+using Pickle
+using SparseArrays
 
 # Julia 1.0 compatibility
 if !isdefined(Base, :isnothing)
@@ -66,20 +67,6 @@ function __init__()
     @require ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534" begin
         global __images_supported__ = true
     end
-
-    # install scipy if not already there
-    pyimport_conda("scipy", "scipy")
-
-    py"""
-    import pickle
-
-    def pyread_planetoid_file(path, name):
-        out = pickle.load(open(path, "rb"), encoding="latin1")
-        if name == 'graph':
-            return out
-        out = out.todense() if hasattr(out, 'todense') else out
-        return out
-    """
 
     __init__tudataset()
 end
