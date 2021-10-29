@@ -63,12 +63,10 @@ of images.
 
 ```@example
 using MLDatasets
-# Alternatively, you can also just call `using Images`
-using ImageCore, ImageShow
+using ImageCore
 
-# The original dataset is stored in row-major order,
-# to display it normally in Julia, we need to permute the
-# first two dimensions.
+# The original dataset is stored in row-major order, to display it
+# normally in Julia, we need to permute the first two dimensions.
 test_x = Gray.(PermutedDimsArray(MNIST.testtensor(), (2, 1, 3)));
 test_x_sample = @view test_x[:, :, 1:64];
 
