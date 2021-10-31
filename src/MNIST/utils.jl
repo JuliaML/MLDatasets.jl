@@ -28,5 +28,5 @@ function convert2image(array::AbstractArray{T}) where {T<:Number}
     else
         img = _colorview(Gray, array)
     end
-    img
+    return one(eltype(img)) .- img
 end
