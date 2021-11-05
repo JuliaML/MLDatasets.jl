@@ -14,4 +14,8 @@ end
     @test !any(haskey.(train_x, :mutagenic))
     @test !any(haskey.(test_x, :mutagenic))
     @test !any(haskey.(val_x, :mutagenic))
+    # test data is materialized
+    @test train_x isa AbstractVector{<:AbstractDict}
+    @test test_x isa AbstractVector{<:AbstractDict}
+    @test val_x isa AbstractVector{<:AbstractDict}
 end
