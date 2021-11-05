@@ -1,8 +1,8 @@
 """
-    convert2image(array) -> Array{Gray}
+    convert2image(array; black_digits=false) -> Array{Gray}
 
 Convert the given MNIST horizontal-major tensor (or feature matrix)
-to a vertical-major `Colorant` array. The values are also color
+to a vertical-major `Colorant` array. If `black_digits` is `true`, the values are also color
 corrected according to the website's description, which means that
 the digits are black on a white background.
 
@@ -16,7 +16,7 @@ julia> MNIST.convert2image(MNIST.traintensor(1)) # first training image
 [...]
 ```
 """
-function convert2image(array::AbstractArray{T}) where {T<:Number}
+function convert2image(array::AbstractArray{T}; black_digits::Bool=false) where {T<:Number}
     nlast = size(array)[end] 
     array = reshape(array, 28, 28, :)
     array = permutedims(array, (2, 1, 3))
@@ -24,9 +24,15 @@ function convert2image(array::AbstractArray{T}) where {T<:Number}
         array = dropdims(array, dims=3)
     end    
     if any(x -> x > 1, array) # simple check if x in [0,1]
-        img = _colorview(Gray, array ./ T(255))
+        array = array ./ T(255) # avoid changing the input array 
+        if black_digits
+            array .= one(eltype(array)) .- array
+        end
     else
-        img = _colorview(Gray, array)
+        if black_digits
+            array = one(eltype(array)) .- array
+        end
     end
-    return one(eltype(img)) .- img
+
+    return _colorview(Gray, array)
 end
