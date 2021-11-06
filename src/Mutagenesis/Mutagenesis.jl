@@ -22,13 +22,12 @@ julia> test_x, test_y = Mutagenesis.testdata();
 julia> val_x, val_y = Mutagenesis.valdata();
 
 julia> train_x[1]
-JSON3.Object{Base.CodeUnits{UInt8, String}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}} with 6 entries:
+Dict{Symbol, Any} with 5 entries:
   :ind1      => 1
   :inda      => 0
   :logp      => 4.23
   :lumo      => -1.246
-  :mutagenic => 1
-  :atoms     => JSON3.Object[{…
+  :atoms     => Dict{Symbol, Any}[{…
 
 julia> train_y[1]
 1
