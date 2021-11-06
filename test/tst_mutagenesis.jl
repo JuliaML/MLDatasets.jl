@@ -10,4 +10,12 @@ end
     @test length(train_x) == length(train_y) == 100
     @test length(test_x) == length(test_y) == 44
     @test length(val_x) == length(val_y) == 44
+    # test that label is not contained in features
+    @test !any(haskey.(train_x, :mutagenic))
+    @test !any(haskey.(test_x, :mutagenic))
+    @test !any(haskey.(val_x, :mutagenic))
+    # test data is materialized
+    @test train_x isa Vector{<:Dict}
+    @test test_x isa Vector{<:Dict}
+    @test val_x isa Vector{<:Dict}
 end

@@ -22,13 +22,12 @@ julia> test_x, test_y = Mutagenesis.testdata();
 julia> val_x, val_y = Mutagenesis.valdata();
 
 julia> train_x[1]
-JSON3.Object{Base.CodeUnits{UInt8, String}, SubArray{UInt64, 1, Vector{UInt64}, Tuple{UnitRange{Int64}}, true}} with 6 entries:
-  :ind1      => 1
-  :inda      => 0
-  :logp      => 4.23
-  :lumo      => -1.246
-  :mutagenic => 1
-  :atoms     => JSON3.Object[{…
+Dict{Symbol, Any} with 5 entries:
+  :lumo  => -1.246
+  :inda  => 0
+  :logp  => 4.23
+  :ind1  => 1
+  :atoms => Dict{Symbol, Any}[Dict(:element=>"c", :bonds=>Dict{Symbol, Any}[Dic…
 
 julia> train_y[1]
 1
@@ -85,12 +84,13 @@ function load_data(dir)
     metadata = read_data(metadata_path)
     labelkey = metadata["label"]
     targets = map(i -> i[labelkey], samples)
+    samples_without_label = map(x->delete!(copy(x), Symbol(labelkey)), samples)
     val_num = metadata["val_samples"]
     test_num = metadata["test_samples"]
     train_idxs = 1:length(samples)-val_num-test_num
     val_idxs = length(samples)-val_num-test_num+1:length(samples)-test_num
     test_idxs = length(samples)-test_num+1:length(samples)
-    samples, targets, train_idxs, val_idxs, test_idxs
+    samples_without_label, targets, train_idxs, val_idxs, test_idxs
 end
 
 read_data(path) = open(JSON3.read, path)
