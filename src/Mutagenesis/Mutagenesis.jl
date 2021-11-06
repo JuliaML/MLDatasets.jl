@@ -23,11 +23,11 @@ julia> val_x, val_y = Mutagenesis.valdata();
 
 julia> train_x[1]
 Dict{Symbol, Any} with 5 entries:
-  :ind1      => 1
-  :inda      => 0
-  :logp      => 4.23
-  :lumo      => -1.246
-  :atoms     => Dict{Symbol, Any}[{…
+  :lumo  => -1.246
+  :inda  => 0
+  :logp  => 4.23
+  :ind1  => 1
+  :atoms => Dict{Symbol, Any}[Dict(:element=>"c", :bonds=>Dict{Symbol, Any}[Dic…
 
 julia> train_y[1]
 1
