@@ -41,6 +41,17 @@ end
     @test size(A) == (28,28,2)
     @test eltype(A) == Gray{N0f8}
     @test MNIST.convert2image(vec(data)) == A
+
+    # test black digits and white background
+    data = rand(N0f8,28,28,2)
+    data[1] = 0
+    data[3, 3, 2] = 0.4
+    A = MNIST.convert2image(data; black_digits=true)
+    @test A[1] == 1
+    @test A[3, 3, 2] == 0.6
+    @test size(A) == (28,28,2)
+    @test eltype(A) == Gray{N0f8}
+    @test MNIST.convert2image(vec(data); black_digits=true) == A 
 end
 
 # NOT executed on CI. only executed locally.
