@@ -69,12 +69,23 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
               directed = reverse_edges != true)
 end
 
+function read_pickle_file(filename, name)
+    out = Pickle.npyload(filename)
+    if name == "graph"
+        return out
+    end
+    if out isa SparseMatrixCSC
+        return Matrix(out)
+    end
+    return out
+end
+
 function read_planetoid_file(DEPNAME, name, dir)
     filename = datafile(DEPNAME, name, dir)
     if endswith(name, "test.index")
         out = 1 .+ vec(readdlm(filename, Int))
     else
-        out = py"pyread_planetoid_file"(filename, name)
+        out = read_pickle_file(filename, name)
         if out isa Matrix
             out = collect(out')
         end
