@@ -25,6 +25,7 @@ makedocs(
         "Available Datasets" => Any[
             "Vision" => Any[
                 "MNIST" => "datasets/MNIST.md",
+                "EMNIST" => "datasets/EMNIST.md",
                 "FashionMNIST" => "datasets/FashionMNIST.md",
                 "CIFAR-10" => "datasets/CIFAR10.md",
                 "CIFAR-100" => "datasets/CIFAR100.md",
