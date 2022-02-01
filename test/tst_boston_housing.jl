@@ -5,8 +5,8 @@ using MLDatasets
 
 
 @testset "Boston Housing" begin
-    X = BostonHousing.features()
-    Y = BostonHousing.targets()
+    X  = BostonHousing.features()
+    Y  = BostonHousing.targets()
     names = BostonHousing.feature_names()
     @test X isa Matrix{Float64}
     @test Y isa Matrix{Float64}
