@@ -4,7 +4,7 @@ using DataDeps
 using MLDatasets
 
 
-@testset "Titanic" begin
+@testset "Titanic Dataset" begin
     X = Titanic.features()
     Y = Titanic.targets()
     names = Titanic.feature_names()
