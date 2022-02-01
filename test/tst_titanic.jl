@@ -10,9 +10,9 @@ using MLDatasets
     names = Titanic.feature_names()
     @test X isa Matrix{Float64}
     @test Y isa Matrix{Float64}
-    @test names == ["Pclass", "Name", "Sex", "Age", "Siblings/Spouses Aboard", "Parents/Children Aboard", "Fare"]
-    @test size(X) == (7, 887)
-    @test size(Y) == (1, 887)
+    @test names == ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    @test size(X) == (11, 891)
+    @test size(Y) == (1, 891)
 end
 
 end #module
