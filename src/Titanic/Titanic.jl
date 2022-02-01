@@ -133,7 +133,7 @@ Return the  the names of the features provided in the dataset.
 """
 
 function feature_names()
-    ["PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
 end
 
 """
