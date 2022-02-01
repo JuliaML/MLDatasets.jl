@@ -95,7 +95,6 @@ plsmo	(age, survived, group=sex, datadensity=T)
 # or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
 
 """
-
 module Titanic
 
 using DataDeps
