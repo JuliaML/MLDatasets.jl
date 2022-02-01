@@ -133,7 +133,7 @@ Return the  the names of the features provided in the dataset.
 """
 
 function feature_names()
-    ["x1", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    ["PassengerId", "Survived", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
 end
 
 """
@@ -155,7 +155,7 @@ julia> summary(features)
 
 function features()
     titanic_data = readdlm(DATA, ',')
-    Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12]))' |> collect
+    Matrix(hcat(titanic_data[2:end, 1:2], titanic_data[2:end, 3:12]))' |> collect
 
 end
 
