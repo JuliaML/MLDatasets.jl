@@ -155,7 +155,7 @@ julia> summary(features)
 
 function features()
     titanic_data = readdlm(DATA, ',')
-    Matrix(hcat(titanic_data[2:end, 1:2], titanic_data[2:end, 3:12]))' |> collect
+    Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12]))
 
 end
 
