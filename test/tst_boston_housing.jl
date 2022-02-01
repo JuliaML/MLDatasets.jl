@@ -4,10 +4,10 @@ using DataDeps
 using MLDatasets
 
 
-@testset "Titanic" begin
-    X  = Titanic.features()
-    Y  = Titanic.targets()
-    names = Titanic.feature_names()
+@testset "Boston Housing" begin
+    X  = BostonHousing.features()
+    Y  = BostonHousing.targets()
+    names = BostonHousing.feature_names()
     @test X isa Matrix{Float64}
     @test Y isa Matrix{Float64}
     @test names == ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
