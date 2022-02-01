@@ -30,6 +30,70 @@ Some duplicate passengers have been dropped, many errors corrected, many missing
 - [`Titanic.targets`](@ref)
 - [`Titanic.feature_names`](@ref)
 
+DATASET specs
+
+NAME:	titanic3
+TYPE:	Census
+SIZE:	1309 Passengers, 14 Variables
+
+DESCRIPTIVE ABSTRACT:
+
+The titanic3 data frame describes the survival status of individual passengers on the Titanic.
+The titanic3 data frame does not contain information for the crew, but it does contain actual and estimated ages for almost 80% of the passengers.
+
+SOURCES:
+
+Hind, Philip. Encyclopedia Titanica. Online-only resource. Retrieved 01Feb2012 from http://www.encyclopedia-titanica.org/
+
+VARIABLE DESCRIPTIONS
+
+Pclass	Passenger Class (1 = 1st; 2 = 2nd; 3 = 3rd)
+survival	Survival (0 = No; 1 = Yes)
+name	Name
+sex	Sex
+age	Age
+sibsp	Number of Siblings/Spouses Aboard
+parch	Number of Parents/Children Aboard
+ticket	Ticket Number
+fare	Passenger Fare (British pound)
+cabin	Cabin
+embarked	Port of Embarkation (C = Cherbourg; Q = Queenstown; S = Southampton)
+boat	Lifeboat
+body	Body Identification Number
+home.dest	Home/Destination
+
+
+
+
+SPECIAL NOTES
+
+Pclass is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower
+
+Age is in Years; Fractional if Age less than One (1) If the Age is estimated, it is in the form xx.5
+
+Fare is in Pre-1970 British Pounds ()
+Conversion Factors: 1 = 12s = 240d and 1s = 20d
+
+
+With respect to the family relation variables (i.e. sibsp and parch) some relations were ignored. 
+The following are the definitions used for sibsp and parch.
+
+Sibling:	Brother, Sister, Stepbrother, or Stepsister of Passenger Aboard Titanic
+Spouse:	Husband or Wife of Passenger Aboard Titanic (Mistresses and Fiances Ignored)
+Parent:	Mother or Father of Passenger Aboard Titanic
+Child:	Son, Daughter, Stepson, or Stepdaughter of Passenger Aboard Titanic
+
+Other family relatives excluded from this study include cousins, nephews/nieces, aunts/uncles, and in-laws. 
+Some children travelled only with a nanny, therefore parch=0 for them. 
+    As well, some travelled with very close friends or neighbors in a village, however, the definitions do not support such relations.
+
+
+An interesting result may be obtained using functions from the Hmisc library.
+
+attach	(titanic3)
+plsmo	(age, survived, group=sex, datadensity=T) 
+# or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
+
 """
 
 module Titanic
