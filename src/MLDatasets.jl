@@ -41,6 +41,7 @@ include("download.jl")
 include("BostonHousing/BostonHousing.jl")
 include("Iris/Iris.jl")
 include("Mutagenesis/Mutagenesis.jl")
+include("Titanic/Titanic.jl")
 
 # Vision
 include("CIFAR10/CIFAR10.jl")
