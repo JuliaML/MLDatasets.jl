@@ -11,6 +11,7 @@ tests = [
     "tst_iris.jl",
     "tst_boston_housing.jl",
     "tst_mutagenesis.jl",
+    "tst_titanic.jl",
     # vision
     "tst_cifar10.jl",
     "tst_cifar100.jl",
