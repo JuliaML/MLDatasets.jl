@@ -123,7 +123,7 @@ julia> summary(target)
 
 function targets(; dir = nothing)
     titanic_data = readdlm(DATA, ',')
-    reshape(Vector{Float64}(titanic_data[2:end,2]), (1, 891))
+    reshape(Vector(titanic_data[2:end,2]), (1, 891))
 end
 
 """
@@ -155,8 +155,8 @@ julia> summary(features)
 
 function features()
     titanic_data = readdlm(DATA, ',')
-    features_data = hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])
-    return features_data
+    Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12]))' |> collect
+
 end
 
 end # module
