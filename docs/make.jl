@@ -1,4 +1,5 @@
 using Documenter, MLDatasets
+using ImageShow # for better image display
 
 ## Commented out since gives warning
 # DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
@@ -36,7 +37,7 @@ makedocs(
                 "Boston Housing" => "datasets/BostonHousing.md",
                 "Mutagenesis" => "datasets/Mutagenesis.md",
             ],
-            
+
             "Text" => Any[
                 "PTBLM" => "datasets/PTBLM.md",
                 "UD_English" => "datasets/UD_English.md",

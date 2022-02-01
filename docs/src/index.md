@@ -55,3 +55,20 @@ will trigger a download dialog to `~/.julia/datadeps/MNIST`. To
 overwrite this on a case by case basis, it is possible to specify
 a data directory directly in `traindata(dir = <directory>)` and
 `testdata(dir = <directory>)`.
+
+## Preview
+
+For image dataset, [`MosaicViews`](https://github.com/JuliaArrays/MosaicViews.jl) provides a very simple interface to display a list
+of images.
+
+```@example
+using MLDatasets
+using ImageCore
+
+# The original dataset is stored in row-major order, to display it
+# normally in Julia, we need to permute the first two dimensions.
+test_x = Gray.(PermutedDimsArray(MNIST.testtensor(), (2, 1, 3)));
+test_x_sample = @view test_x[:, :, 1:64];
+
+mosaic(test_x_sample, nrow=8)
+```
