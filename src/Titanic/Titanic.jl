@@ -121,7 +121,6 @@ julia> target[1]
 0
 ```
 """
-
 function targets(; dir = nothing)
     titanic_data = readdlm(DATA, ',')
     reshape(Vector(titanic_data[2:end, 2]), (1, 891))
