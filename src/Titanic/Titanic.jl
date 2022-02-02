@@ -131,7 +131,6 @@ end
 
 Return the  the names of the features provided in the dataset.
 """
-
 function feature_names()
     ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
 end
@@ -152,7 +151,6 @@ julia> summary(features)
 "11×891 Matrix{Any}"
 ```
 """
-
 function features()
     titanic_data = readdlm(DATA, ',')
     reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (11, 891))
