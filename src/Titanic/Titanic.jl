@@ -24,12 +24,6 @@ using the Encyclopedia Titanica and created a new dataset called titanic3.
 These datasets reflects the state of data available as of 2 August 1999. 
 Some duplicate passengers have been dropped, many errors corrected, many missing ages filled in, and new variables created.
 
-# Interface
-
-- [`Titanic.features`](@ref)
-- [`Titanic.targets`](@ref)
-- [`Titanic.feature_names`](@ref)
-
 DATASET specs
 
 NAME:	titanic3
@@ -63,8 +57,6 @@ body	Body Identification Number
 home.dest	Home/Destination
 
 
-
-
 SPECIAL NOTES
 
 Pclass is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower
@@ -94,6 +86,12 @@ attach	(titanic3)
 plsmo	(age, survived, group=sex, datadensity=T) 
 # or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
 
+
+# Interface
+
+- [`Titanic.features`](@ref)
+- [`Titanic.targets`](@ref)
+- [`Titanic.feature_names`](@ref)
 """
 module Titanic
 
@@ -122,7 +120,7 @@ julia> summary(target)
 
 function targets(; dir = nothing)
     titanic_data = readdlm(DATA, ',')
-    reshape(Vector(titanic_data[2:end,2]), (1, 891))
+    reshape(Vector(titanic_data[2:end, 2]), (1, 891))
 end
 
 """
@@ -154,7 +152,7 @@ julia> summary(features)
 
 function features()
     titanic_data = readdlm(DATA, ',')
-    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])),(11,891))
+    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (11, 891))
 end
 
 end # module

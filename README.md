@@ -31,6 +31,7 @@ Find below a list of available datasets and links to their documentation.
   - [BostonHousing](https://juliaml.github.io/MLDatasets.jl/dev/datasets/BostonHousing/)
   - [Iris](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Iris/)
   - [Mutagenesis](https://relational.fit.cvut.cz/dataset/Mutagenesis)
+  - [Titanic](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Titanic/)
 
 #### Text
   - [PTBLM](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PTBLM/)
