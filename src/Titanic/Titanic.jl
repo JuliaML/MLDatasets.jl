@@ -116,6 +116,9 @@ julia> target = Titanic.targets();
 
 julia> summary(target)
 "1×891 Matrix{}"
+
+julia> target[1]
+0
 ```
 """
 
