@@ -115,7 +115,7 @@ julia> using MLDatasets: Titanic
 julia> target = Titanic.targets();
 
 julia> summary(target)
-"1×891 Matrix{}"
+"1×891 Matrix{Any}"
 
 julia> target[1]
 0
@@ -149,7 +149,7 @@ julia> using MLDatasets: Titanic
 julia> features = Titanic.features();
 
 julia> summary(features)
-"11×891 Matrix{}"
+"11×891 Matrix{Any}"
 ```
 """
 
