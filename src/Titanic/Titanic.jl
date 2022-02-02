@@ -114,7 +114,8 @@ julia> using MLDatasets: Titanic
 julia> target = Titanic.targets();
 
 julia> summary(target)
-"1×891 Matrix{Float64}"
+"1×891 Matrix{}"
+```
      
 """
 
@@ -136,17 +137,17 @@ end
 """
     features()
 
-Return the features of the Boston Housing dataset. This is a 13x506 Matrix of Float64 datatypes.
-The values are in the order ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"].
+Return the features of the Titanic dataset. This is a 11x891 Matrix of containing both String and Float datatypes.
+The values are in the order ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"].
 It has 506 examples.
 
 ```jldoctest
-julia> using MLDatasets: BostonHousing
+julia> using MLDatasets: Titanic
 
-julia> features = BostonHousing.features();
+julia> features = Titanic.features();
 
 julia> summary(features)
-"13×506 Matrix{Float64}"
+"11×891 Matrix{}"
 ```
 """
 
