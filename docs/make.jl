@@ -35,6 +35,7 @@ makedocs(
                 "Iris" => "datasets/Iris.md",
                 "Boston Housing" => "datasets/BostonHousing.md",
                 "Mutagenesis" => "datasets/Mutagenesis.md",
+                "Titanic" => "datasets/Titanic.md",
             ],
             
             "Text" => Any[
