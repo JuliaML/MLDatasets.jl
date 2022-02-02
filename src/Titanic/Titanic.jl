@@ -139,7 +139,7 @@ end
 
 Return the features of the Titanic dataset. This is a 11x891 Matrix of containing both String and Float datatypes.
 The values are in the order ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"].
-It has 506 examples.
+It has 891 examples.
 
 ```jldoctest
 julia> using MLDatasets: Titanic
