@@ -1,6 +1,7 @@
 export Titanic
+
 """
-Titanic Dataset
+Titanic Dataset.
 
 The titanic and titanic2 data frames describe the survival status of individual passengers on the Titanic. 
 
@@ -23,12 +24,6 @@ J Statistics Education, Vol. 5 No. 1. Thomas Cason of UVa has greatly updated an
 using the Encyclopedia Titanica and created a new dataset called titanic3. 
 These datasets reflects the state of data available as of 2 August 1999. 
 Some duplicate passengers have been dropped, many errors corrected, many missing ages filled in, and new variables created.
-
-# Interface
-
-- [`Titanic.features`](@ref)
-- [`Titanic.targets`](@ref)
-- [`Titanic.feature_names`](@ref)
 
 DATASET specs
 
@@ -63,8 +58,6 @@ body	Body Identification Number
 home.dest	Home/Destination
 
 
-
-
 SPECIAL NOTES
 
 Pclass is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower
@@ -94,6 +87,12 @@ attach	(titanic3)
 plsmo	(age, survived, group=sex, datadensity=T) 
 # or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
 
+
+# Interface
+
+- [`Titanic.features`](@ref)
+- [`Titanic.targets`](@ref)
+- [`Titanic.feature_names`](@ref)
 """
 module Titanic
 
@@ -116,13 +115,15 @@ julia> using MLDatasets: Titanic
 julia> target = Titanic.targets();
 
 julia> summary(target)
-"1×891 Matrix{Float64}"
-     
-"""
+"1×891 Matrix{Any}"
 
+julia> target[1]
+0
+```
+"""
 function targets(; dir = nothing)
     titanic_data = readdlm(DATA, ',')
-    reshape(Vector(titanic_data[2:end,2]), (1, 891))
+    reshape(Vector(titanic_data[2:end, 2]), (1, 891))
 end
 
 """
@@ -130,7 +131,6 @@ end
 
 Return the  the names of the features provided in the dataset.
 """
-
 function feature_names()
     ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
 end
@@ -138,23 +138,22 @@ end
 """
     features()
 
-Return the features of the Boston Housing dataset. This is a 13x506 Matrix of Float64 datatypes.
-The values are in the order ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"].
-It has 506 examples.
+Return the features of the Titanic dataset. This is a 11x891 Matrix of containing both String and Float datatypes.
+The values are in the order ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"].
+It has 891 examples.
 
 ```jldoctest
-julia> using MLDatasets: BostonHousing
+julia> using MLDatasets: Titanic
 
-julia> features = BostonHousing.features();
+julia> features = Titanic.features();
 
 julia> summary(features)
-"13×506 Matrix{Float64}"
+"11×891 Matrix{Any}"
 ```
 """
-
 function features()
     titanic_data = readdlm(DATA, ',')
-    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])),(11,891))
+    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (11, 891))
 end
 
 end # module
