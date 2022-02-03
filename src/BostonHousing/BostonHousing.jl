@@ -15,7 +15,7 @@ Number of Instances: 506
 
 Number of Attributes: 13 continuous attributes (including target
                             attribute "MEDV"), 1 binary-valued attribute.
-                            
+              
 Features:
 
     1. CRIM      per capita crime rate by town
