@@ -27,9 +27,9 @@ Some duplicate passengers have been dropped, many errors corrected, many missing
 
 DATASET specs
 
-NAME:	titanic3
-TYPE:	Census
-SIZE:	1309 Passengers, 14 Variables
+    NAME:	titanic3
+    TYPE:	Census
+    SIZE:	1309 Passengers, 14 Variables
 
 DESCRIPTIVE ABSTRACT:
 
