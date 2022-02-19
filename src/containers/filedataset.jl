@@ -1,4 +1,7 @@
-# FileDataset
+matches(re::Regex) = f -> matches(re, f)
+matches(re::Regex, f) = !isnothing(match(re, f))
+const RE_IMAGEFILE = r".*\.(gif|jpe?g|tiff?|png|webp|bmp)$"i
+isimagefile(f) = matches(RE_IMAGEFILE, f)
 
 """
     rglob(filepattern, dir = pwd(), depth = 4)
@@ -28,11 +31,19 @@ function loadfile(file::String)
 end
 loadfile(file::AbstractPath) = loadfile(string(file))
 
+"""
+    FileDataset(paths)
+    FileDataset(dir, pattern = "*", depth = 4)
+
+Wrap a set of file `paths` as a dataset (traversed in the same order as `paths`).
+Alternatively, specify a `dir` and collect all paths that match a glob `pattern`
+(recursively globbing by `depth`). The glob order determines the traversal order.
+"""
 struct FileDataset{T} <: AbstractDataContainer
     paths::T
 end
 
-FileDataset(dir, pattern = "*", depth = 4) = rglob(pattern, string(dir), depth)
+FileDataset(dir, pattern = "*", depth = 4) = FileDataset(rglob(pattern, string(dir), depth))
 
 MLUtils.getobs(dataset::FileDataset, i) = loadfile(dataset.paths[i])
 MLUtils.numobs(dataset::FileDataset) = length(dataset.paths)

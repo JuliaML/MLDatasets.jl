@@ -28,6 +28,7 @@ dataset_tests = [
 ]
 
 container_tests = [
+    "containers/filedataset.jl",
     "containers/tabledataset.jl",
 ]
 
@@ -37,8 +38,10 @@ container_tests = [
     end
 end
 
-@testset "Containers" for t in container_tests
-    include(t)
+@testset "Containers" begin
+    for t in container_tests
+        include(t)
+    end
 end
 
 #temporary to not stress CI

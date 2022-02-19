@@ -1,3 +1,11 @@
+"""
+    TableDataset(table)
+    TableDataset(path::Union{AbstractPath, AbstractString})
+
+Wrap a Tables.jl-compatible `table` as a dataset container.
+Alternatively, specify the `path` to a CSV file directly
+to load it with CSV.jl + DataFrames.jl.
+"""
 struct TableDataset{T} <: AbstractDataContainer
     table::T
 
