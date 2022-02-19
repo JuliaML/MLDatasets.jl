@@ -7,6 +7,15 @@ using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
 using Pickle
 using SparseArrays
+using DataFrames, CSV, Tables
+using FilePathsBase
+using FilePathsBase: AbstractPath
+
+import MLUtils
+using MLUtils: getobs, numobs, AbstractDataContainer
+
+export FileDataset, TableDataset
+export getobs, numobs
 
 # Julia 1.0 compatibility
 if !isdefined(Base, :isnothing)
@@ -36,6 +45,8 @@ end
 
 include("download.jl")
 
+include("containers/filedataset.jl")
+include("containers/tabledataset.jl")
 
 # Misc.
 include("BostonHousing/BostonHousing.jl")

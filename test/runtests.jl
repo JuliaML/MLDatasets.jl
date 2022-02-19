@@ -2,11 +2,12 @@ using Test
 using MLDatasets
 using ImageCore
 using DataDeps
-
+using MLUtils: getobs, numobs
+using DataFrames, CSV, Tables
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
-tests = [
+dataset_tests = [
     # misc
     "tst_iris.jl",
     "tst_boston_housing.jl",
@@ -26,10 +27,18 @@ tests = [
     "tst_tudataset.jl",
 ]
 
-for t in tests
+container_tests = [
+    "containers/tabledataset.jl",
+]
+
+@testset "Datasets" for t in dataset_tests
     @testset "$t" begin
         include(t)
     end
+end
+
+@testset "Containers" for t in container_tests
+    include(t)
 end
 
 #temporary to not stress CI
