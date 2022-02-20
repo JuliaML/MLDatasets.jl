@@ -12,6 +12,8 @@ end
 
 Wrap several HDF5 datasets (`paths`) as a single dataset container.
 Each dataset `p` in `paths` should be accessible as `fid[p]`.
+Calling `getobs` on a `HDF5Dataset` returns a tuple with each element corresponding
+to the observation from each dataset in `paths`.
 See [`close(::HDF5Dataset)`](@ref) for closing the underlying HDF5 file pointer.
 
 For array datasets, the last dimension is assumed to be the observation dimension.
@@ -47,4 +49,9 @@ MLUtils.getobs(dataset::HDF5Dataset, i) = Tuple(map(dataset.paths, dataset.shape
 end)
 MLUtils.numobs(dataset::HDF5Dataset) = last(first(filter(!isempty, dataset.shapes)))
 
+"""
+    close(dataset::HDF5Dataset)
+
+Close the underlying HDF5 file pointer for `dataset`.
+"""
 Base.close(dataset::HDF5Dataset) = close(dataset.fid)
