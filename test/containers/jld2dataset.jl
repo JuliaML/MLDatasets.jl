@@ -1,0 +1,27 @@
+function setup_jld2dataset_test()
+    datasets = [
+        ("d1", rand(2, 10)),
+        ("g1/d1", rand(10)),
+        ("g1/d2", string.('a':'j')),
+        ("g2/g1/d1", rand(Bool, 3, 3, 10))
+    ]
+
+    fid = jldopen("test.jld2", "w")
+    for (path, data) in datasets
+        fid[path] = data
+    end
+    close(fid)
+
+    return first.(datasets), Tuple(last.(datasets))
+end
+
+@testset "JLD2Dataset" begin
+    paths, datas = setup_jld2dataset_test()
+    dataset = JLD2Dataset("test.jld2", paths)
+    for i in 1:10
+        @test getobs(dataset, i) == getobs(datas, i)
+    end
+    @test numobs(dataset) == 10
+    close(dataset)
+    rm("test.jld2")
+end

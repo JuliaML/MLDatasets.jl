@@ -19,14 +19,14 @@ See [`close(::HDF5Dataset)`](@ref) for closing the underlying HDF5 file pointer.
 For array datasets, the last dimension is assumed to be the observation dimension.
 For scalar datasets, the stored value is returned by `getobs` for any index.
 """
-struct HDF5Dataset
+struct HDF5Dataset <: AbstractDataContainer
     fid::HDF5.File
     paths::Vector{HDF5.Dataset}
     shapes::Vector{Tuple}
 
     function HDF5Dataset(fid::HDF5.File, paths::Vector{HDF5.Dataset}, shapes::Vector)
         _check_hdf5_shapes(shapes) ||
-            throw(ArgumentError("Cannot create HDF5Dataset for datasets with mismatch number of observations."))
+            throw(ArgumentError("Cannot create HDF5Dataset for datasets with mismatched number of observations."))
 
         new(fid, paths, shapes)
     end

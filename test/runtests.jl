@@ -5,6 +5,7 @@ using DataDeps
 using MLUtils: getobs, numobs
 using DataFrames, CSV, Tables
 using HDF5
+using JLD2
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
@@ -32,6 +33,7 @@ container_tests = [
     "containers/filedataset.jl",
     "containers/tabledataset.jl",
     "containers/hdf5dataset.jl",
+    "containers/jld2dataset.jl",
 ]
 
 @testset "Datasets" for t in dataset_tests

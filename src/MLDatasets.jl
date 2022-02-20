@@ -12,11 +12,12 @@ using FilePathsBase
 using FilePathsBase: AbstractPath
 using Glob
 using HDF5
+using JLD2
 
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
 
-export FileDataset, TableDataset, HDF5Dataset
+export FileDataset, TableDataset, HDF5Dataset, JLD2Dataset
 export getobs, numobs
 
 # Julia 1.0 compatibility
@@ -50,6 +51,7 @@ include("download.jl")
 include("containers/filedataset.jl")
 include("containers/tabledataset.jl")
 include("containers/hdf5dataset.jl")
+include("containers/jld2dataset.jl")
 
 # Misc.
 include("BostonHousing/BostonHousing.jl")
