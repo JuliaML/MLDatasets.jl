@@ -24,5 +24,6 @@ end
         @test getobs(dataset, i) == data
     end
     @test numobs(dataset) == 10
+    close(dataset)
     rm("test.h5")
 end
