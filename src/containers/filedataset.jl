@@ -39,8 +39,8 @@ Wrap a set of file `paths` as a dataset (traversed in the same order as `paths`)
 Alternatively, specify a `dir` and collect all paths that match a glob `pattern`
 (recursively globbing by `depth`). The glob order determines the traversal order.
 """
-struct FileDataset{T} <: AbstractDataContainer
-    paths::T
+struct FileDataset{T<:Union{AbstractPath, AbstractString}} <: AbstractDataContainer
+    paths::Vector{T}
 end
 
 FileDataset(dir, pattern = "*", depth = 4) = FileDataset(rglob(pattern, string(dir), depth))

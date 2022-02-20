@@ -4,6 +4,7 @@ using ImageCore
 using DataDeps
 using MLUtils: getobs, numobs
 using DataFrames, CSV, Tables
+using HDF5
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
@@ -30,6 +31,7 @@ dataset_tests = [
 container_tests = [
     "containers/filedataset.jl",
     "containers/tabledataset.jl",
+    "containers/hdf5dataset.jl",
 ]
 
 @testset "Datasets" for t in dataset_tests
