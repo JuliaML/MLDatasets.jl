@@ -32,18 +32,25 @@ end
 loadfile(file::AbstractPath) = loadfile(string(file))
 
 """
-    FileDataset(paths)
-    FileDataset(dir, pattern = "*", depth = 4)
+    FileDataset([loadfn = loadfile,] paths)
+    FileDataset([loadfn = loadfile,] dir, pattern = "*", depth = 4)
 
 Wrap a set of file `paths` as a dataset (traversed in the same order as `paths`).
 Alternatively, specify a `dir` and collect all paths that match a glob `pattern`
 (recursively globbing by `depth`). The glob order determines the traversal order.
 """
-struct FileDataset{T<:Union{AbstractPath, AbstractString}} <: AbstractDataContainer
+struct FileDataset{F, T<:Union{AbstractPath, AbstractString}} <: AbstractDataContainer
+    loadfn::F
     paths::Vector{T}
 end
 
-FileDataset(dir, pattern = "*", depth = 4) = FileDataset(rglob(pattern, string(dir), depth))
+FileDataset(paths) = FileDataset(loadfile, paths)
+FileDataset(loadfn,
+            dir::Union{AbstractPath, AbstractString},
+            pattern::AbstractString = "*",
+            depth = 4) = FileDataset(loadfn, rglob(pattern, string(dir), depth))
+FileDataset(dir::Union{AbstractPath, AbstractString}, pattern::AbstractString = "*", depth = 4) =
+    FileDataset(loadfile, dir, pattern, depth)
 
 MLUtils.getobs(dataset::FileDataset, i) = loadfile(dataset.paths[i])
 MLUtils.numobs(dataset::FileDataset) = length(dataset.paths)
