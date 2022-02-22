@@ -16,8 +16,6 @@ using JLD2
 
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
-
-export FileDataset, TableDataset, HDF5Dataset, JLD2Dataset
 export getobs, numobs
 
 # Julia 1.0 compatibility
@@ -49,9 +47,15 @@ end
 include("download.jl")
 
 include("containers/filedataset.jl")
+export FileDataset
 include("containers/tabledataset.jl")
+export TableDataset
 include("containers/hdf5dataset.jl")
+export HDF5Dataset
 include("containers/jld2dataset.jl")
+export JLD2Dataset
+include("containers/cacheddataset.jl")
+export CachedDataset
 
 # Misc.
 include("BostonHousing/BostonHousing.jl")

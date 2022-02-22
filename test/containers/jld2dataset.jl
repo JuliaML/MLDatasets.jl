@@ -14,6 +14,7 @@ function setup_jld2dataset_test()
 
     return first.(datasets), Tuple(last.(datasets))
 end
+cleanup_jld2dataset_test() = rm("test.jld2")
 
 @testset "JLD2Dataset" begin
     paths, datas = setup_jld2dataset_test()
@@ -23,5 +24,5 @@ end
     end
     @test numobs(dataset) == 10
     close(dataset)
-    rm("test.jld2")
+    cleanup_jld2dataset_test()
 end

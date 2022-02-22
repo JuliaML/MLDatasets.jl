@@ -2,7 +2,6 @@ using Test
 using MLDatasets
 using ImageCore
 using DataDeps
-using MLUtils: getobs, numobs
 using DataFrames, CSV, Tables
 using HDF5
 using JLD2
@@ -34,6 +33,7 @@ container_tests = [
     "containers/tabledataset.jl",
     "containers/hdf5dataset.jl",
     "containers/jld2dataset.jl",
+    "containers/cacheddataset.jl",
 ]
 
 @testset "Datasets" for t in dataset_tests

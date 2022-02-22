@@ -14,6 +14,7 @@ function setup_hdf5dataset_test()
 
     return first.(datasets), last.(datasets)
 end
+cleanup_hdf5dataset_test() = rm("test.h5")
 
 @testset "HDF5Dataset" begin
     paths, datas = setup_hdf5dataset_test()
@@ -24,5 +25,5 @@ end
     end
     @test numobs(dataset) == 10
     close(dataset)
-    rm("test.h5")
+    cleanup_hdf5dataset_test()
 end

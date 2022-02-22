@@ -52,5 +52,6 @@ FileDataset(loadfn,
 FileDataset(dir::Union{AbstractPath, AbstractString}, pattern::AbstractString = "*", depth = 4) =
     FileDataset(loadfile, dir, pattern, depth)
 
-MLUtils.getobs(dataset::FileDataset, i) = loadfile(dataset.paths[i])
+MLUtils.getobs(dataset::FileDataset, i::Integer) = loadfile(dataset.paths[i])
+MLUtils.getobs(dataset::FileDataset, is::AbstractVector) = map(Base.Fix1(getobs, dataset), is)
 MLUtils.numobs(dataset::FileDataset) = length(dataset.paths)

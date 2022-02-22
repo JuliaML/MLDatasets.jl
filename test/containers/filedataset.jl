@@ -23,6 +23,7 @@ function setup_filedataset_test()
 
     return files
 end
+cleanup_filedataset_test() = rm("root"; recursive = true)
 
 @testset "FileDataset" begin
     files = setup_filedataset_test()
@@ -32,5 +33,5 @@ end
         true_obs = MLDatasets.loadfile(file)
         @test getobs(dataset, i) == true_obs
     end
-    rm("root"; recursive = true)
+    cleanup_filedataset_test()
 end
