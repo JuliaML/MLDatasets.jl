@@ -6,7 +6,7 @@
         testtable = Tables.table([1 4.0 "7"; 2 5.0 "8"; 3 6.0 "9"])
         td = TableDataset(testtable)
 
-        @test all(getobs(td, 1) .== [1, 4.0, "7"])
+        @test collect(@inferred(getobs(td, 1))) == [1, 4.0, "7"]
         @test numobs(td) == 3
     end
 
@@ -17,7 +17,7 @@
         testtable = Tables.table([1 4.0 "7"; 2 5.0 "8"; 3 6.0 "9"])
         td = TableDataset(testtable)
 
-        @test [data for data in getobs(td, 2)] == [2, 5.0, "8"]
+        @test collect(@inferred(NamedTuple, getobs(td, 2))) == [2, 5.0, "8"]
         @test numobs(td) == 3
 
         @test getobs(td, 1) isa NamedTuple
@@ -35,7 +35,7 @@
         td = TableDataset(testtable)
         @test td isa TableDataset{<:DataFrame}
 
-        @test [data for data in getobs(td, 1)] == [1, "a", 10, "A", 100.0, "train"]
+        @test collect(@inferred(getobs(td, 1))) == [1, "a", 10, "A", 100.0, "train"]
         @test numobs(td) == 5
     end
 
@@ -46,7 +46,7 @@
         testtable = CSV.File("test.csv")
         td = TableDataset(testtable)
         @test td isa TableDataset{<:CSV.File}
-        @test [data for data in getobs(td, 1)] == [1, "a", 10, "A", 100.0, "train"]
+        @test collect(@inferred(getobs(td, 1))) == [1, "a", 10, "A", 100.0, "train"]
         @test numobs(td) == 1
         rm("test.csv")
     end

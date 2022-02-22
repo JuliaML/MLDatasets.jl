@@ -23,14 +23,18 @@ TableDataset(path::Union{AbstractPath, AbstractString}) =
     TableDataset(DataFrame(CSV.File(path)))
 
 # slow accesses based on Tables.jl
+_getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
+function _getobs_column(x, i)
+    colnames = Tuple(Tables.columnnames(x))
+    rowvals = ntuple(j -> Tables.getcolumn(x, j)[i], length(colnames))
+
+    return NamedTuple{colnames}(rowvals)
+end
 function MLUtils.getobs(dataset::TableDataset, i)
     if Tables.rowaccess(dataset.table)
-        row, _ = Iterators.peel(Iterators.drop(Tables.rows(dataset.table), i - 1))
-        return row
+        return _getobs_row(Tables.rows(dataset.table), i)
     elseif Tables.columnaccess(dataset.table)
-        colnames = Tables.columnnames(dataset.table)
-        rowvals = [Tables.getcolumn(dataset.table, j)[i] for j in 1:length(colnames)]
-        return (; zip(colnames, rowvals)...)
+        return _getobs_column(dataset.table, i)
     else
         error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
     end
