@@ -5,7 +5,7 @@ function _check_hdf5_shapes(shapes)
 end
 
 """
-    HDF5Dataset(file::Union{AbstractString, AbstractPath}, paths)
+    HDF5Dataset(file::AbstractString, paths)
     HDF5Dataset(fid::HDF5.File, paths::Union{HDF5.Dataset, Vector{HDF5.Dataset}})
     HDF5Dataset(fid::HDF5.File, paths::Union{AbstractString, Vector{<:AbstractString}})
     HDF5Dataset(fid::HDF5.File, paths::Union{HDF5.Dataset, Vector{HDF5.Dataset}}, shapes)
@@ -38,8 +38,7 @@ HDF5Dataset(fid::HDF5.File, paths::Vector{HDF5.Dataset}) =
 HDF5Dataset(fid::HDF5.File, path::AbstractString) = HDF5Dataset(fid, fid[path])
 HDF5Dataset(fid::HDF5.File, paths::Vector{<:AbstractString}) =
     HDF5Dataset(fid, map(p -> fid[p], paths))
-HDF5Dataset(file::Union{AbstractString, AbstractPath}, paths) =
-    HDF5Dataset(h5open(file, "r"), paths)
+HDF5Dataset(file::AbstractString, paths) = HDF5Dataset(h5open(file, "r"), paths)
 
 _getobs_hdf5(dataset::HDF5.Dataset, ::Tuple{}, i) = read(dataset)
 function _getobs_hdf5(dataset::HDF5.Dataset, shape, i)

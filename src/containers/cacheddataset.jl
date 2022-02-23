@@ -8,6 +8,7 @@ make_cache(source, cacheidx) = getobs(source, cacheidx)
 
 """
     CachedDataset(source, cachesize = numbobs(source))
+    CachedDataset(source, cacheidx = 1:numbobs(source))
     CachedDataset(source, cacheidx, cache)
 
 Wrap a `source` data container and cache `cachesize` samples in memory.
@@ -15,7 +16,7 @@ This can be useful for improving read speeds when `source` is a lazy data contai
 but your system memory is large enough to store a sizeable chunk of it.
 
 By default the observation indices `1:cachesize` are cached.
-You can manually pass in a `cache` and set of `cacheidx` as well.
+You can manually pass in a set of `cacheidx` as well.
 
 See also [`make_cache`](@ref) for customizing the default cache creation for `source`.
 """
@@ -25,11 +26,9 @@ struct CachedDataset{T, S}
     cache::S
 end
 
-function CachedDataset(source, cachesize::Int = numobs(source))
-    cacheidx = 1:cachesize
-
+CachedDataset(source, cacheidx::AbstractVector{<:Integer} = 1:numobs(source)) =
     CachedDataset(source, collect(cacheidx), make_cache(source, cacheidx))
-end
+CachedDataset(source, cachesize::Int = numobs(source)) = CachedDataset(source, 1:cachesize)
 
 function Base.getindex(dataset::CachedDataset, i::Integer)
     _i = findfirst(==(i), dataset.cacheidx)

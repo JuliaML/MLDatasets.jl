@@ -1,7 +1,7 @@
 _check_jld2_nobs(nobs) = all(==(first(nobs)), nobs[2:end])
 
 """
-    JLD2Dataset(file::Union{AbstractString, AbstractPath}, paths)
+    JLD2Dataset(file::AbstractString, paths)
     JLD2Dataset(fid::JLD2.JLDFile, paths::Union{String, Vector{String}})
 
 Wrap several JLD2 datasets (`paths`) as a single dataset container.
@@ -25,8 +25,7 @@ struct JLD2Dataset{T<:JLD2.JLDFile, S<:Tuple} <: AbstractDataContainer
 end
 
 JLD2Dataset(file::JLD2.JLDFile, path::String) = JLD2Dataset(file, (path,))
-JLD2Dataset(file::Union{AbstractString, AbstractPath}, paths) =
-    JLD2Dataset(jldopen(file, "r"), paths)
+JLD2Dataset(file::AbstractString, paths) = JLD2Dataset(jldopen(file, "r"), paths)
 
 Base.getindex(dataset::JLD2Dataset{<:JLD2.JLDFile, <:NTuple{1}}, i) = getobs(only(dataset.paths), i)
 Base.getindex(dataset::JLD2Dataset, i) = map(Base.Fix2(getobs, i), dataset.paths)

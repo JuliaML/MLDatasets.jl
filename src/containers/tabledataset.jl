@@ -1,6 +1,6 @@
 """
     TableDataset(table)
-    TableDataset(path::Union{AbstractPath, AbstractString})
+    TableDataset(path::AbstractString)
 
 Wrap a Tables.jl-compatible `table` as a dataset container.
 Alternatively, specify the `path` to a CSV file directly
@@ -19,8 +19,7 @@ struct TableDataset{T} <: AbstractDataContainer
 end
 
 TableDataset(table::T) where {T} = TableDataset{T}(table)
-TableDataset(path::Union{AbstractPath, AbstractString}) =
-    TableDataset(DataFrame(CSV.File(path)))
+TableDataset(path::AbstractPath) = TableDataset(DataFrame(CSV.File(path)))
 
 # slow accesses based on Tables.jl
 _getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
