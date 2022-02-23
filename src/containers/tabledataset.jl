@@ -30,7 +30,7 @@ function _getobs_column(x, i)
 
     return NamedTuple{colnames}(rowvals)
 end
-function MLUtils.getobs(dataset::TableDataset, i)
+function Base.getindex(dataset::TableDataset, i)
     if Tables.rowaccess(dataset.table)
         return _getobs_row(Tables.rows(dataset.table), i)
     elseif Tables.columnaccess(dataset.table)
@@ -39,7 +39,7 @@ function MLUtils.getobs(dataset::TableDataset, i)
         error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
     end
 end
-function MLUtils.numobs(dataset::TableDataset)
+function Base.length(dataset::TableDataset)
     if Tables.columnaccess(dataset.table)
         return length(Tables.getcolumn(dataset.table, 1))
     elseif Tables.rowaccess(dataset.table)
@@ -51,9 +51,9 @@ function MLUtils.numobs(dataset::TableDataset)
 end
 
 # fast access for DataFrame
-MLUtils.getobs(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]
-MLUtils.numobs(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
+Base.getindex(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]
+Base.length(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
 
 # fast access for CSV.File
-MLUtils.getobs(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]
-MLUtils.numobs(dataset::TableDataset{<:CSV.File}) = length(dataset.table)
+Base.getindex(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]
+Base.length(dataset::TableDataset{<:CSV.File}) = length(dataset.table)

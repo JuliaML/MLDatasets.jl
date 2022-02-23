@@ -28,9 +28,9 @@ JLD2Dataset(file::JLD2.JLDFile, path::String) = JLD2Dataset(file, (path,))
 JLD2Dataset(file::Union{AbstractString, AbstractPath}, paths) =
     JLD2Dataset(jldopen(file, "r"), paths)
 
-MLUtils.getobs(dataset::JLD2Dataset{<:JLD2.JLDFile, <:NTuple{1}}, i) = getobs(only(dataset.paths), i)
-MLUtils.getobs(dataset::JLD2Dataset, i) = map(Base.Fix2(getobs, i), dataset.paths)
-MLUtils.numobs(dataset::JLD2Dataset) = numobs(dataset.paths[1])
+Base.getindex(dataset::JLD2Dataset{<:JLD2.JLDFile, <:NTuple{1}}, i) = getobs(only(dataset.paths), i)
+Base.getindex(dataset::JLD2Dataset, i) = map(Base.Fix2(getobs, i), dataset.paths)
+Base.length(dataset::JLD2Dataset) = numobs(dataset.paths[1])
 
 """
     close(dataset::JLD2Dataset)

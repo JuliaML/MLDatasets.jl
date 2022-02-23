@@ -31,9 +31,9 @@ function CachedDataset(source, cachesize::Int = numobs(source))
     CachedDataset(source, collect(cacheidx), make_cache(source, cacheidx))
 end
 
-function MLUtils.getobs(dataset::CachedDataset, i::Integer)
+function Base.getindex(dataset::CachedDataset, i::Integer)
     _i = findfirst(==(i), dataset.cacheidx)
 
     return isnothing(_i) ? getobs(dataset.source, i) : getobs(dataset.cache, _i)
 end
-MLUtils.numobs(dataset::CachedDataset) = numobs(dataset.source)
+Base.length(dataset::CachedDataset) = numobs(dataset.source)

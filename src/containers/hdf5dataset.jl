@@ -47,11 +47,11 @@ function _getobs_hdf5(dataset::HDF5.Dataset, shape, i)
 
     return dataset[I..., i]
 end
-MLUtils.getobs(dataset::HDF5Dataset{HDF5.Dataset}, i) =
+Base.getindex(dataset::HDF5Dataset{HDF5.Dataset}, i) =
     _getobs_hdf5(dataset.paths, only(dataset.shapes), i)
-MLUtils.getobs(dataset::HDF5Dataset{<:Vector}, i) =
+Base.getindex(dataset::HDF5Dataset{<:Vector}, i) =
     Tuple(map((p, s) -> _getobs_hdf5(p, s, i), dataset.paths, dataset.shapes))
-MLUtils.numobs(dataset::HDF5Dataset) = last(first(filter(!isempty, dataset.shapes)))
+Base.length(dataset::HDF5Dataset) = last(first(filter(!isempty, dataset.shapes)))
 
 """
     close(dataset::HDF5Dataset)
