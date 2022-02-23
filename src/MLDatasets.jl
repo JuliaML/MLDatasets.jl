@@ -8,8 +8,6 @@ using FixedPointNumbers, ColorTypes
 using Pickle
 using SparseArrays
 using DataFrames, CSV, Tables
-using FilePathsBase
-using FilePathsBase: AbstractPath
 using Glob
 using HDF5
 using JLD2
