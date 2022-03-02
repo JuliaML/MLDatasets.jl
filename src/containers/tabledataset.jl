@@ -19,7 +19,7 @@ struct TableDataset{T} <: AbstractDataContainer
 end
 
 TableDataset(table::T) where {T} = TableDataset{T}(table)
-TableDataset(path::AbstractPath) = TableDataset(DataFrame(CSV.File(path)))
+TableDataset(path::AbstractString) = TableDataset(DataFrame(CSV.File(path)))
 
 # slow accesses based on Tables.jl
 _getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
