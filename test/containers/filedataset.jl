@@ -27,10 +27,10 @@ cleanup_filedataset_test() = rm("root"; recursive = true)
 
 @testset "FileDataset" begin
     files = setup_filedataset_test()
-    dataset = FileDataset("root", "*.csv")
+    dataset = FileDataset(f -> CSV.read(f, DataFrame), "root", "*.csv")
     @test numobs(dataset) == length(files)
     for (i, file) in enumerate(files)
-        true_obs = MLDatasets.loadfile(file)
+        true_obs = CSV.read(file, DataFrame)
         @test getobs(dataset, i) == true_obs
     end
     cleanup_filedataset_test()

@@ -1,5 +1,6 @@
 using Test
 using MLDatasets
+using FileIO
 using ImageCore
 using DataDeps
 using DataFrames, CSV, Tables

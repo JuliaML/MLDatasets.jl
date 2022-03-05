@@ -56,3 +56,10 @@ Base.length(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
 # fast access for CSV.File
 Base.getindex(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]
 Base.length(dataset::TableDataset{<:CSV.File}) = length(dataset.table)
+
+## Tables.jl interface
+
+Tables.istable(::TableDataset) = true
+for fn in (:rowaccess, :rows, :columnaccess, :columns, :schema, :materializer)
+    @eval Tables.$fn(dataset::TableDataset) = Tables.$fn(dataset.table)
+end

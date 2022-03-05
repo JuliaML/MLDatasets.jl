@@ -1,7 +1,7 @@
 @testset "CachedDataset" begin
     @testset "CachedDataset(::FileDataset)" begin
         files = setup_filedataset_test()
-        fdataset = FileDataset("root", "*.csv")
+        fdataset = FileDataset(f -> CSV.read(f, DataFrame), "root", "*.csv")
         cdataset = CachedDataset(fdataset)
 
         @test numobs(cdataset) == numobs(fdataset)
