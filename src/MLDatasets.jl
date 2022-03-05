@@ -7,6 +7,15 @@ using DelimitedFiles: readdlm
 using FixedPointNumbers, ColorTypes
 using Pickle
 using SparseArrays
+using FileIO
+using DataFrames, CSV, Tables
+using Glob
+using HDF5
+using JLD2
+
+import MLUtils
+using MLUtils: getobs, numobs, AbstractDataContainer
+export getobs, numobs
 
 # Julia 1.0 compatibility
 if !isdefined(Base, :isnothing)
@@ -36,6 +45,16 @@ end
 
 include("download.jl")
 
+include("containers/filedataset.jl")
+export FileDataset
+include("containers/tabledataset.jl")
+export TableDataset
+include("containers/hdf5dataset.jl")
+export HDF5Dataset
+include("containers/jld2dataset.jl")
+export JLD2Dataset
+include("containers/cacheddataset.jl")
+export CachedDataset
 
 # Misc.
 include("BostonHousing/BostonHousing.jl")

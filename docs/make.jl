@@ -37,7 +37,6 @@ makedocs(
                 "Mutagenesis" => "datasets/Mutagenesis.md",
                 "Titanic" => "datasets/Titanic.md",
             ],
-            
             "Text" => Any[
                 "PTBLM" => "datasets/PTBLM.md",
                 "UD_English" => "datasets/UD_English.md",
@@ -52,9 +51,11 @@ makedocs(
 
         ],
         "Utils" => "utils.md",
+        "Data Containers" => "containers/overview.md",
         "LICENSE.md",
     ],
-    strict = true
+    strict = true,
+    checkdocs = :exports
 )
 
 

@@ -1,12 +1,15 @@
 using Test
 using MLDatasets
+using FileIO
 using ImageCore
 using DataDeps
-
+using DataFrames, CSV, Tables
+using HDF5
+using JLD2
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
-tests = [
+dataset_tests = [
     # misc
     "tst_iris.jl",
     "tst_boston_housing.jl",
@@ -26,8 +29,22 @@ tests = [
     "tst_tudataset.jl",
 ]
 
-for t in tests
+container_tests = [
+    "containers/filedataset.jl",
+    "containers/tabledataset.jl",
+    "containers/hdf5dataset.jl",
+    "containers/jld2dataset.jl",
+    "containers/cacheddataset.jl",
+]
+
+@testset "Datasets" for t in dataset_tests
     @testset "$t" begin
+        include(t)
+    end
+end
+
+@testset "Containers" begin
+    for t in container_tests
         include(t)
     end
 end
