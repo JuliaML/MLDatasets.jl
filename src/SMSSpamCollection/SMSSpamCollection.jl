@@ -93,7 +93,7 @@ export features, targets
 const DATA = joinpath(@__DIR__, "spam.csv")
 
 """
-    targets(; dir = nothing)
+    targets()
 
 Get the targets for the SMS Spam Collection dataset,
 a 5574 element array listing the targets for each sample.
@@ -110,7 +110,7 @@ julia> targets[1]
 "ham"
 ```
 """
-function targets(; dir = nothing)
+function targets()
     spam_data = readdlm(DATA, '\t')
     reshape(Vector(spam_data[:, 1]), (1, :))
 end
