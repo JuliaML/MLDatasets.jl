@@ -82,7 +82,6 @@ The SMS Spam Collection v.1 is provided for free and with no limitations excepti
 - [`SMSSpamCollection.targets`](@ref)
 
 """
-
 module SMSSpamCollection
 
 using DataDeps
