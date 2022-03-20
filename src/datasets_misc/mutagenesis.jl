@@ -53,6 +53,8 @@ Dict{Symbol, Any} with 5 entries:
 julia> dataset[1].targets
 1
 
+julia> xtrain, ytrain = dataset[];
+
 julia> dataset = Mutagenesis(split=:all)
 Mutagenesis dataset:
   split : all

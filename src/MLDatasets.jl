@@ -62,11 +62,12 @@ include("PTBLM/PTBLM.jl")
 include("UD_English/UD_English.jl")
 
 # Graphs
-include("planetoid.jl")
-    include("Cora/Cora.jl")
-    include("PubMed/PubMed.jl")
-    include("CiteSeer/CiteSeer.jl")
-include("TUDataset/TUDataset.jl")
+# include("planetoid.jl")
+#     include("Cora/Cora.jl")
+#     include("PubMed/PubMed.jl")
+#     include("CiteSeer/CiteSeer.jl")
+include("datasets_graph/tudataset.jl")
+export TUDataset
 
 function __init__()
     # initialize optional dependencies
