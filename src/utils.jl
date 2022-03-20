@@ -60,4 +60,3 @@ function _colorview(::Type{T}, array::AbstractArray{<:Number}) where T <: Color
     ImageCore.colorview(T, array)
 end
 
-

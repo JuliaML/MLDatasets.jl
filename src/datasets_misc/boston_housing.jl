@@ -1,6 +1,8 @@
-export BostonHousing
+using DelimitedFiles
 
 """
+    BostonHousing()
+
 Boston Housing Dataset.
 
 Sources:
@@ -41,77 +43,71 @@ Censoring is suggested by the fact that the highest median price of exactly \\\$
 while 15 cases have prices between \\\$40,000 and \\\$50,000, with prices rounded to the nearest hundred. 
 Harrison and Rubinfeld do not mention any censoring.
 
-The data file stored in this repo is a copy of the This is a copy of UCI ML housing dataset. 
+The data file stored in this repo is a copy of the UCI ML housing dataset. 
 https://archive.ics.uci.edu/ml/machine-learning-databases/housing/
 
-# Interface
 
-- [`BostonHousing.features`](@ref)
-- [`BostonHousing.targets`](@ref)
-- [`BostonHousing.feature_names`](@ref)
-"""
-module BostonHousing
-
-using DataDeps
-using DelimitedFiles
-
-export features, targets, feature_names
-
-const DATA = joinpath(@__DIR__, "boston_housing.csv")
-
-"""
-    targets(; dir = nothing)
-
-Get the targets for the Boston housing dataset, 
-a 506 element array listing the targets for each example.
-
+# Examples
+    
 ```jldoctest
 julia> using MLDatasets: BostonHousing
 
-julia> target = BostonHousing.targets();
+julia> dataset = BostonHousing()
+BostonHousing dataset:
+  feature_names : 13-element Vector{String}
+  features : 13×506 Matrix{Float64}
+  targets : 1×506 Matrix{Float64}
 
-julia> summary(target)
-"1×506 Matrix{Float64}"
+julia> dataset.feature_names
+13-element Vector{String}:
+ "crim"
+ "zn"
+ "indus"
+ "chas"
+ "nox"
+ "rm"
+ "age"
+ "dis"
+ "rad"
+ "tax"
+ "ptratio"
+ "b"
+ "lstat"
+  
+julia> dataset[1:2]
+(features = [0.00632 0.02731; 18.0 0.0; … ; 396.9 396.9; 4.98 9.14], targets = [24.0 21.6])
 
-julia> target[1]
-24.0
-```     
-"""
-function targets(; dir = nothing)
-    housing = readdlm(DATA, ',')
-    reshape(Vector{Float64}(housing[2:end,end]), (1, 506))
-end
-
-"""
-    feature_names()
-
-Return the  the names of the features provided in the dataset.
-"""
-function feature_names()
-    ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
-end
-
-
-"""
-    features()
-
-Return the features of the Boston Housing dataset. This is a 13x506 Matrix of Float64 datatypes.
-The values are in the order ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"].
-It has 506 examples.
-
-```jldoctest
-julia> using MLDatasets: BostonHousing
-
-julia> features = BostonHousing.features();
-
-julia> summary(features)
-"13×506 Matrix{Float64}"
+julia> X, y = dataset[];
 ```
 """
-function features()
-    housing = readdlm(DATA, ',')
-    Matrix{Float64}(housing[2:end,1:13])' |> collect
+struct BostonHousing <: AbstractDataset
+    _path::String
+    feature_names::Vector{String}
+    features::Matrix{Float64}
+    targets::Matrix{Float64}
 end
 
-end # module
+function BostonHousing()
+    path = joinpath(@__DIR__, "..", "..", "data", "boston_housing.csv")
+    feature_names = ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
+    data = readdlm(path, ',')
+    features = Matrix{Float64}(data[2:end,1:13])' |> collect
+    targets = reshape(Vector{Float64}(data[2:end,end]), (1, 506))
+    return BostonHousing(path, feature_names, features, targets)
+end
 
+# deprecated in v0.6
+function Base.getproperty(::Type{BostonHousing}, s::Symbol)
+    if s == :features
+        @warn "BostonHousing.features() is deprecated, use `BostonHousing().features` instead."
+        return () -> BostonHousing().features
+    elseif s == :targets
+        @warn "BostonHousing.targets() is deprecated, use `BostonHousing().targets` instead."
+        return () -> BostonHousing().targets
+    elseif s == :feature_names
+        @warn "BostonHousing.feature_names() is deprecated, use `BostonHousing().feature_names` instead."
+        return () -> BostonHousing().feature_names
+    else 
+        return getfield(BostonHousing, s)
+    end
+end

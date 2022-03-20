@@ -12,6 +12,7 @@ using DataFrames, CSV, Tables
 using Glob
 using HDF5
 using JLD2
+import JSON3
 
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
@@ -20,6 +21,11 @@ export getobs, numobs
 include("utils.jl")
 include("download.jl")
 
+include("abstract_dataset.jl")
+export AbstractDataset
+
+include("containers/arraydataset.jl")
+export ArrayDataset
 include("containers/filedataset.jl")
 export FileDataset
 include("containers/tabledataset.jl")
@@ -34,10 +40,15 @@ export CachedDataset
 include("abstract_dataset.jl")
 
 # Misc.
-include("BostonHousing/BostonHousing.jl")
-include("Iris/Iris.jl")
-include("Mutagenesis/Mutagenesis.jl")
-include("Titanic/Titanic.jl")
+include("datasets_misc/boston_housing.jl")
+export BostonHousing
+include("datasets_misc/iris.jl")
+export Iris
+include("datasets_misc/mutagenesis.jl")
+export Mutagenesis
+include("datasets_misc/titanic.jl")
+export Titanic
+
 
 # Vision
 include("CIFAR10/CIFAR10.jl")
@@ -68,6 +79,8 @@ function __init__()
         global __images_supported__ = true
     end
 
+    __init__iris()
+    __init__mutagenesis()
     __init__tudataset()
     __init__ogbdataset()
 end
