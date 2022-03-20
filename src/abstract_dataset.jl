@@ -12,3 +12,8 @@ end
 _summary(x) = x
 _summary(x::AbstractArray) = summary(x)
 
+
+# TODO check if hasfield(D, :targets) to handle both supervised and unsupervised
+Base.getindex(d::AbstractDataset) = getobs((; d.features, d.targets))
+Base.getindex(d::AbstractDataset, i) = getobs((; d.features, d.targets), i)
+Base.length(d::AbstractDataset) = numobs(d.features)

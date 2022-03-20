@@ -31,9 +31,7 @@ makedocs(
                 "CIFAR-100" => "datasets/CIFAR100.md",
                 "SVHN format 2" => "datasets/SVHN2.md",
             ],
-            "Miscellaneous" => Any[
-                "misc.md"
-            ],
+            "Miscellaneous" => "datasets/misc.md",
             "Text" => Any[
                 "PTBLM" => "datasets/PTBLM.md",
                 "UD_English" => "datasets/UD_English.md",

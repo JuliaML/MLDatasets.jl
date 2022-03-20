@@ -96,10 +96,7 @@ function BostonHousing()
     return BostonHousing(path, feature_names, features, targets)
 end
 
-Base.getindex(d::BostonHousing) = getobs((; d.features, d.targets))
-Base.getindex(d::BostonHousing, i) = getobs((; d.features, d.targets), i)
-Base.length(d::BostonHousing) = numobs(d.features)
-
+# deprecated in v0.6
 function Base.getproperty(::Type{BostonHousing}, s::Symbol)
     if s == :features
         @warn "BostonHousing.features() is deprecated, use `BostonHousing().features` instead."

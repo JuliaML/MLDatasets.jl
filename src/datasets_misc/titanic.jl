@@ -1,7 +1,7 @@
 export Titanic
 
 """
-Titanic Dataset.
+    Titanic()
 
 The titanic and titanic2 data frames describe the survival status of individual passengers on the Titanic. 
 
@@ -88,72 +88,66 @@ plsmo	(age, survived, group=sex, datadensity=T)
 # or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
 
 
-# Interface
-
-- [`Titanic.features`](@ref)
-- [`Titanic.targets`](@ref)
-- [`Titanic.feature_names`](@ref)
-"""
-module Titanic
-
-using DataDeps
-using DelimitedFiles
-
-export features, targets, feature_names
-
-const DATA = joinpath(@__DIR__, "titanic.csv")
-
-"""
-    targets(; dir = nothing)
-
-Get the targets for the Titanic dataset, 
-a 891 element array listing the targets for each example.
-
-```jldoctest
+# Examples
+    
+```julia-repl
 julia> using MLDatasets: Titanic
 
-julia> target = Titanic.targets();
+julia> dataset = Titanic()
+Titanic dataset:
+  feature_names : 13-element Vector{String}
+  features : 13×506 Matrix{Float64}
+  targets : 1×506 Matrix{Float64}
 
-julia> summary(target)
-"1×891 Matrix{Any}"
+julia> dataset.feature_names
+13-element Vector{String}:
+ "crim"
+ "zn"
+ "indus"
+ "chas"
+ "nox"
+ "rm"
+ "age"
+ "dis"
+ "rad"
+ "tax"
+ "ptratio"
+ "b"
+ "lstat"
+  
+julia> dataset[1:2]
+(features = [0.00632 0.02731; 18.0 0.0; … ; 396.9 396.9; 4.98 9.14], targets = [24.0 21.6])
 
-julia> target[1]
-0
+julia> X, y = dataset[];
 ```
 """
-function targets(; dir = nothing)
-    titanic_data = readdlm(DATA, ',')
-    reshape(Vector(titanic_data[2:end, 2]), (1, 891))
+struct Titanic <: AbstractDataset
+    _path::String
+    feature_names::Vector{String}
+    features::Matrix
+    targets::Matrix{Int}
 end
 
-"""
-    feature_names()
-
-Return the  the names of the features provided in the dataset.
-"""
-function feature_names()
-    ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+function Titanic()
+    path = joinpath(@__DIR__, "..", "..", "data", "titanic.csv")
+    data = readdlm(path, ',')
+    targets = reshape(Vector{Int}(data[2:end, 2]), (1, 891))
+    feature_names = ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    features = reshape(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (11, 891))
+    Titanic(path, feature_names, features, targets)
 end
 
-"""
-    features()
-
-Return the features of the Titanic dataset. This is a 11x891 Matrix of containing both String and Float datatypes.
-The values are in the order ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"].
-It has 891 examples.
-
-```jldoctest
-julia> using MLDatasets: Titanic
-
-julia> features = Titanic.features();
-
-julia> summary(features)
-"11×891 Matrix{Any}"
-```
-"""
-function features()
-    titanic_data = readdlm(DATA, ',')
-    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (11, 891))
+function Base.getproperty(::Type{Titanic}, s::Symbol)
+    if s == :features
+        @warn "Titanic.features() is deprecated, use `Titanic().features` instead."
+        return () -> Titanic().features
+    elseif s == :targets
+        @warn "Titanic.targets() is deprecated, use `Titanic().targets` instead."
+        return () -> Titanic().targets
+    elseif s == :feature_names
+        @warn "Titanic.feature_names() is deprecated, use `Titanic().feature_names` instead."
+        return () -> Titanic().feature_names
+    else 
+        return getfield(Titanic, s)
+    end
 end
-
-end # module

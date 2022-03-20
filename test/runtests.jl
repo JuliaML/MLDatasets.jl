@@ -10,11 +10,11 @@ using JLD2
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 dataset_tests = [
-    # misc
+    ## misc
     "datasets_misc/boston_housing.jl",
-    "tst_iris.jl",
-    "tst_mutagenesis.jl",
-    "tst_titanic.jl",
+    "datasets_misc/iris.jl",
+    "datasets_misc/mutagenesis.jl",
+    "datasets_misc/titanic.jl",
     # vision
     "tst_cifar10.jl",
     "tst_cifar100.jl",
