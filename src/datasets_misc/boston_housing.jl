@@ -100,19 +100,18 @@ Base.getindex(d::BostonHousing) = getobs((; d.features, d.targets))
 Base.getindex(d::BostonHousing, i) = getobs((; d.features, d.targets), i)
 Base.length(d::BostonHousing) = numobs(d.features)
 
-# function Base.getproperty(::Type{BostonHousing}, s::Symbol)
-#     @show s
-#     d = BostonHousing()
-#     if s == :features
-#         Base.depwarn("BostonHousing.features() is deprecated, please use `BostonHousing().features` instead", :features)
-#         return d.features
-#     elseif s == :targets
-#         Base.depwarn("BostonHousing.targets() is deprecated, please use `BostonHousing().targets` instead", :targets)
-#         return d.targets
-#     elseif s == :feature_names
-#         Base.depwarn("BostonHousing.targets() is deprecated, please use `BostonHousing().feature_names` instead", :feature_names)
-#         return d.feature_names
-#     else 
-#         return getfield(d, s)
-#     end
-# end
+function Base.getproperty(::Type{BostonHousing}, s::Symbol)
+    d = BostonHousing()
+    if s == :features
+        Base.depwarn("BostonHousing.features() is deprecated, use `BostonHousing().features` instead.", :features)
+        return () -> d.features
+    elseif s == :targets
+        Base.depwarn("BostonHousing.targets() is deprecated, use `BostonHousing().targets` instead.", :targets)
+        return () -> d.targets
+    elseif s == :feature_names
+        Base.depwarn("BostonHousing.feature_names() is deprecated, use `BostonHousing().feature_names` instead.", :feature_names)
+        return () -> d.feature_names
+    else 
+        return getfield(BostonHousing, s)
+    end
+end
