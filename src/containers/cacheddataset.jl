@@ -20,7 +20,7 @@ You can manually pass in a set of `cacheidx` as well.
 
 See also [`make_cache`](@ref) for customizing the default cache creation for `source`.
 """
-struct CachedDataset{T, S}
+struct CachedDataset{T, S} <: AbstractDataContainer
     source::T
     cacheidx::Vector{Int}
     cache::S

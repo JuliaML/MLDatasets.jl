@@ -45,6 +45,9 @@ end
 
 include("download.jl")
 
+
+include("containers/arraydataset.jl")
+export ArrayDataset
 include("containers/filedataset.jl")
 export FileDataset
 include("containers/tabledataset.jl")
