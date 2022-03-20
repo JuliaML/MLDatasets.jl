@@ -101,16 +101,15 @@ Base.getindex(d::BostonHousing, i) = getobs((; d.features, d.targets), i)
 Base.length(d::BostonHousing) = numobs(d.features)
 
 function Base.getproperty(::Type{BostonHousing}, s::Symbol)
-    d = BostonHousing()
     if s == :features
         @warn "BostonHousing.features() is deprecated, use `BostonHousing().features` instead."
-        return () -> d.features
+        return () -> BostonHousing().features
     elseif s == :targets
         @warn "BostonHousing.targets() is deprecated, use `BostonHousing().targets` instead."
-        return () -> d.targets
+        return () -> BostonHousing().targets
     elseif s == :feature_names
         @warn "BostonHousing.feature_names() is deprecated, use `BostonHousing().feature_names` instead."
-        return () -> d.feature_names
+        return () -> BostonHousing().feature_names
     else 
         return getfield(BostonHousing, s)
     end
