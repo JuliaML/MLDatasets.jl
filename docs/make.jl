@@ -32,10 +32,7 @@ makedocs(
                 "SVHN format 2" => "datasets/SVHN2.md",
             ],
             "Miscellaneous" => Any[
-                "Iris" => "datasets/Iris.md",
-                "Boston Housing" => "datasets/BostonHousing.md",
-                "Mutagenesis" => "datasets/Mutagenesis.md",
-                "Titanic" => "datasets/Titanic.md",
+                "misc.md"
             ],
             "Text" => Any[
                 "PTBLM" => "datasets/PTBLM.md",
