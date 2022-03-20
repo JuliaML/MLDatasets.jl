@@ -11,8 +11,8 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 dataset_tests = [
     # misc
+    "datasets_misc/boston_housing.jl",
     "tst_iris.jl",
-    "tst_boston_housing.jl",
     "tst_mutagenesis.jl",
     "tst_titanic.jl",
     # vision

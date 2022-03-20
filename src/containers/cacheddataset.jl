@@ -26,9 +26,11 @@ struct CachedDataset{T, S} <: AbstractDataContainer
     cache::S
 end
 
+CachedDataset(source, cachesize::Int) = CachedDataset(source, 1:cachesize)
+
 CachedDataset(source, cacheidx::AbstractVector{<:Integer} = 1:numobs(source)) =
     CachedDataset(source, collect(cacheidx), make_cache(source, cacheidx))
-CachedDataset(source, cachesize::Int = numobs(source)) = CachedDataset(source, 1:cachesize)
+
 
 function Base.getindex(dataset::CachedDataset, i::Integer)
     _i = findfirst(==(i), dataset.cacheidx)
