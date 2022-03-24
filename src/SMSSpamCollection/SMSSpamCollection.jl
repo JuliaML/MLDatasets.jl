@@ -86,11 +86,34 @@ The SMS Spam Collection v.1 is provided for free and with no limitations excepti
 module SMSSpamCollection
 
 using DataDeps
+using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
 using DelimitedFiles
 
 export features, targets
 
-const DATA = joinpath(@__DIR__, "spam.csv")
+const DEPNAME = "SMSSpamCollection"
+# const LINK = "https://raw.githubusercontent.com/mohitgupta-omg/Kaggle-SMS-Spam-Collection-Dataset-/master/"
+const LINK = "https://archive.ics.uci.edu/ml/machine-learning-databases/00228/"
+const DOCS = "https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection#"
+const DATA = "smsspamcollection.zip"
+
+"""
+    download()
+"""
+download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
+
+function __init__()
+    register(DataDep(
+        DEPNAME,
+        """
+        Dataset: The SMS Spam Collection v.1
+        Website: $DOCS
+        """,
+        LINK .* [DATA],
+        "1587ea43e58e82b14ff1f5425c88e17f8496bfcdb67a583dbff9eefaf9963ce3",
+        post_fetch_method = unpack
+    ))
+end
 
 """
     targets()
@@ -110,9 +133,16 @@ julia> targets[1]
 "ham"
 ```
 """
-function targets()
-    spam_data = readdlm(DATA, '\t')
-    reshape(Vector(spam_data[:, 1]), (1, :))
+function targets(; dir = nothing)
+    path = datafile(DEPNAME, "SMSSpamCollection", dir)
+    f = open(path)
+    spam_data = readlines(f)
+    spam_data = [split(str, "\t") for str in spam_data]
+    targets = []
+    for index in 1:length(spam_data)
+        push!(targets, spam_data[index][1])
+    end
+    targets
 end
     
 """
@@ -130,9 +160,16 @@ julia> summary(features)
 "1×5574 Matrix{Any}"
 ```
 """
-function features()
-    spam_data = readdlm(DATA, '\t')
-    reshape(Vector(spam_data[:, 2]), (1, :))
+function features(; dir = nothing)
+    path = datafile(DEPNAME, "SMSSpamCollection", dir)
+    f = open(path)
+    spam_data = readlines(f)
+    spam_data = [split(str, "\t") for str in spam_data]
+    features = []
+    for index in 1:length(spam_data)
+        push!(features, spam_data[index][2])
+    end
+    features
 end
     
 end # module
