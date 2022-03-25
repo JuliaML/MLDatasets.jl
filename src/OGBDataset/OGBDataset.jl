@@ -63,24 +63,23 @@ struct OGBDataset
 end
 
 function OGBDataset(fullname; dir=nothing)
-    path = datadir_ogbdataset(fullname, dir)
-    
-    
+    metadata = read_ogb_metadata(dir, fullname)
+    path = datadir_ogbdataset(fullname, metadata["url"], dir)
     g = read_ogb_graph(path)
-    metadata = read_ogb_metadata(path, fullname)
     return OGBDataset(fullname, path, metadata, [g])
 end
 
-function read_ogb_metadata(path, fullname)
+function read_ogb_metadata(dir, fullname)
+    path = isnothing(dir) ? datadep"OGBDataset" : dir
     prefix, name = split(fullname, "-")
     if prefix == "ogbn"
-        path_metadata = joinpath(path, "..", "nodeproppred_metadata.csv")
+        path_metadata = joinpath(path, "nodeproppred_metadata.csv")
     elseif prefix == "ogbl"
-        path_metadata = joinpath(path, "..", "linkproppred_metadata.csv")
+        path_metadata = joinpath(path, "linkproppred_metadata.csv")
     elseif prefix == "ogbg"
-        path_metadata = joinpath(path, "..", "graphproppred_metadata.csv")
+        path_metadata = joinpath(path, "graphproppred_metadata.csv")
     else 
-        return nothing
+        @assert "The full name should be provided, e.g. ogbn-arxiv"
     end
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
@@ -88,20 +87,16 @@ function read_ogb_metadata(path, fullname)
     return metadata
 end
 
-function datadir_ogbdataset(fullname, dir = nothing)
+function datadir_ogbdataset(fullname, url, dir = nothing)
     dir = isnothing(dir) ? datadep"OGBDataset" : dir
     @assert contains(fullname, "-") "The full name should be provided, e.g. ogbn-arxiv"
     prefix, name = split(fullname, "-")
-    prefix = prefix == "ogbn" ? "nodeproppred" :
-             prefix == "ogbl" ? "linkproppred" :
-             prefix == "ogbg" ? "graphproppred" : error("wrong prefix")
-    LINK = "http://snap.stanford.edu/ogb/data/$prefix/$name.zip"
     d  = joinpath(dir, name)
     if !isdir(d)
-        DataDeps.fetch_default(LINK, dir)
+        DataDeps.fetch_default(url, dir)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
-        DataDeps.unpack(joinpath(dir, "$name.zip"))
+        DataDeps.unpack(joinpath(dir, basename(url)))
         for (root, dirs, files) in walkdir(dir)
             for file in files
                 if endswith(file, r"zip|gz")
