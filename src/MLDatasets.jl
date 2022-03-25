@@ -44,6 +44,7 @@ end
 
 
 include("download.jl")
+include("utils.jl")
 
 include("containers/filedataset.jl")
 export FileDataset
@@ -81,6 +82,8 @@ include("planetoid.jl")
     include("PubMed/PubMed.jl")
     include("CiteSeer/CiteSeer.jl")
 include("TUDataset/TUDataset.jl")
+include("OGBDataset/OGBDataset.jl")
+
 
 function __init__()
     # initialize optional dependencies
@@ -89,6 +92,7 @@ function __init__()
     end
 
     __init__tudataset()
+    __init__ogbdataset()
 end
 
 end
