@@ -81,6 +81,7 @@ include("planetoid.jl")
     include("PubMed/PubMed.jl")
     include("CiteSeer/CiteSeer.jl")
 include("TUDataset/TUDataset.jl")
+include("PolBlogs/PolBlogs.jl")
 
 function __init__()
     # initialize optional dependencies
