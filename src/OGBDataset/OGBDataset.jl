@@ -44,6 +44,16 @@ end
 """
     OGBDataset(name; dir=nothing)
 
+The collection of datasets from the [Open Graph Benchmark: Datasets for Machine Learning on Graphs](https://arxiv.org/abs/2005.00687)
+paper. 
+
+`name` is the name  of one of the dasets (listed [here](https://ogb.stanford.edu/docs/dataset_overview/))
+available for node prediction, edge prediction, or graph prediction tasks.
+
+The `OGBDataset` type stores the graphs internally as dictionary objects. 
+The key "edge_index" contains `2 x num_edges`, where the first and second
+column contain the source and target nodes of each edge respectively.
+
 # Examples
 
 ## Node prediction tasks
@@ -90,12 +100,14 @@ julia> graph, labels = data[1];
 
 julia> graph
 Dict{String, Any} with 6 entries:
-  "edge_index" => [-156251, -122059, -100181, -32902, -61976, -10882, -79218, -47602, -46915, -8319  …  -24817, -119843, -139885, -24677, -33928, -90218, -21348, -6869, -6805, -96625]
-  "node_feat"  => Float32[-0.057943 -0.1245 … -0.138236 -0.029875; -0.05253 -0.070665 … 0.040885 0.268417; … ; -0.172796 -0.372111 … -0.041253 0.077647; -0.140059 -0.301036 … -0.376132 -0.091018]
+  "edge_index" => [104448 13092; 15859 47284; … ; 45119 162538; 45119 72718]
   "edge_feat"  => nothing
+  "node_feat"  => Float32[-0.057943 -0.1245 … -0.138236 -0.029875; -0.05253 -0.070665 … 0.040885 0.268417; … ; -0.172796 -0.372111 … -0.041253 0.077647; -0.140059 -0.301036 … -0.376132 -0.091018]
   "num_nodes"  => 169343
   "node_year"  => [2013 2015 … 2020 2020]
   "num_edges"  => 1166243
+
+julia> source, target = graph["edge_index][:,1], graph["edge_index][:,2];
 ```
 
 ## Edge prediction task
@@ -112,9 +124,9 @@ OGBDataset{Nothing}:
 
 julia> graph = data[1]  # no labels for this dataset
 Dict{String, Any} with 7 entries:
-  "edge_index"  => [-84878 -10986; -84878 -10986; … ; -14126 -100109; -28635 -95253]
-  "node_feat"   => Float32[-0.177486 -0.237488 … 0.004236 -0.035025; -0.10298 0.022193 … 0.031942 -0.118059; … ; 0.003879 0.062124 … 0.05208 -0.176961; -0.276317 -0.081464 … -0.201557 -0.258715]
+  "edge_index"  => [150990 224882; 150990 224882; … ; 221742 135759; 207233 140615]
   "edge_feat"   => nothing
+  "node_feat"   => Float32[-0.177486 -0.237488 … 0.004236 -0.035025; -0.10298 0.022193 … 0.031942 -0.118059; … ; 0.003879 0.062124 … 0.05208 -0.176961; -0.276317 -0.081464 … -0.201557 -0.258715]
   "num_nodes"   => 235868
   "edge_year"   => [2004 2002 … 2006 1984; 2004 2002 … 2006 1984]
   "edge_weight" => [2 1 … 1 1; 2 1 … 1 1]
@@ -125,24 +137,34 @@ Dict{String, Any} with 7 entries:
 
 ```julia-repl
 julia> data = OGBDataset("ogbg-molhiv")
-OGBDataset:
+OGBDataset{Matrix{Int64}}:
   name => ogbg-molhiv
   path => /home/carlo/.julia/datadeps/OGBDataset/molhiv
   metadata => Dict{String, Any} with 15 entries
   graphs => 41127-element Vector{Dict}
+  labels => 1×41127 Matrix{Int64}
   split => Dict{String, Any} with 3 entries
-
 
 julia> length(data)
 41127
 
 julia> graph, labels = data[10]
+(Dict{String, Any}("edge_index" => [-202 -201; -201 -200; … ; -198 -184; -201 -202], "node_feat" => Float32[7.0 6.0 … 7.0 7.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], "edge_feat" => Float32[0.0 0.0 … 0.0 1.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 1.0], "num_nodes" => 20, "num_edges" => 42), [0])
+
+julia> graph, labels = data[10];
+
+julia> graph
 Dict{String, Any} with 5 entries:
-  "edge_index" => [-202 -201; -201 -200; … ; -198 -184; -201 -202]
-  "node_feat"  => Float32[7.0 6.0 … 7.0 7.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0]
+  "edge_index" => [1 2; 2 3; … ; 5 19; 2 1]
   "edge_feat"  => Float32[0.0 0.0 … 0.0 1.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 1.0]
+  "node_feat"  => Float32[7.0 6.0 … 7.0 7.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0]
   "num_nodes"  => 20
   "num_edges"  => 42
+
+julia> labels
+1-element Vector{Int64}:
+ 0
+```
 """
 struct OGBDataset{L} <: AbstractDataset
     name::String
@@ -246,21 +268,11 @@ function read_ogb_graph(path, metadata)
         graph["num_nodes"] = n
         graph["num_edges"] = metadata["add_inverse_edge"] ? 2*m : m
 
-        for k in node_keys
-            v = dict[k]
-            if v === nothing
-                graph[k] = nothing
-            else 
-                graph[k] = v[:, num_node_accum+1:num_node_accum+n]
-            end
-        end
-        num_node_accum += n
-
         if metadata["add_inverse_edge"]
             ei = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
             s, t = ei[:,1], ei[:,2]
             graph["edge_index"] = [s t; t s]
-            graph["edge_index"] = graph["edge_index"] .- num_node_accum 
+            # graph["edge_index"] = graph["edge_index"] .- num_node_accum 
             for k in edge_keys
                 v = dict[k]
                 if v === nothing
@@ -271,8 +283,8 @@ function read_ogb_graph(path, metadata)
                 end
             end
         else
-            graph["edge_index"] = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, 2]
-            graph["edge_index"] = graph["edge_index"] .- num_node_accum 
+            graph["edge_index"] = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
+            # graph["edge_index"] = graph["edge_index"] .- num_node_accum 
 
             for k in edge_keys
                 v = dict[k]
@@ -284,6 +296,16 @@ function read_ogb_graph(path, metadata)
             end
             num_edge_accum += m
         end
+
+        for k in node_keys
+            v = dict[k]
+            if v === nothing
+                graph[k] = nothing
+            else 
+                graph[k] = v[:, num_node_accum+1:num_node_accum+n]
+            end
+        end
+        num_node_accum += n
 
         push!(graphs, graph)
     end
