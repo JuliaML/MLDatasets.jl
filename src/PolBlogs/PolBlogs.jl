@@ -41,4 +41,5 @@ function lables(;dir=nothing)
     path = datafile(DEPNAME,DATA[1],dir)
     lables = readdlm(path,',')
     Matrix{Int64}(lables)
+end
 end #module
