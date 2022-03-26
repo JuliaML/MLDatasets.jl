@@ -42,9 +42,9 @@ Find below a list of available datasets and links to their documentation.
 Documentation [link](https://juliaml.github.io/MLDatasets.jl/dev/datasets/graphs). Available datasets:
   - CiteSeer
   - Cora
+  - OGBDataset
   - PubMed
   - TUDataset
-  - OGBDataset
 
 ## Installation
 

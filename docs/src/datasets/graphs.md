@@ -9,5 +9,5 @@ CiteSeer
 Cora
 OGBDataset
 PubMed
-TUDaset
+TUDataset
 ```
