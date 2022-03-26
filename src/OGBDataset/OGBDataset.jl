@@ -229,6 +229,7 @@ function makedir_ogb(fullname, url, dir = nothing)
     return data_dir
 end
 
+## See https://github.com/snap-stanford/ogb/blob/master/ogb/io/read_graph_raw.py
 function read_ogb_graph(path, metadata)
     dict = Dict{String, Any}()
     
@@ -255,6 +256,7 @@ function read_ogb_graph(path, metadata)
 
     node_keys = [k for k in keys(dict) if startswith(k, "node_")]
     edge_keys = [k for k in keys(dict) if startswith(k, "edge_") && k != "edge_index"]
+    # graph_keys = [k for k in keys(dict) if startswith(k, "graph_")] # no graph-level features in official implementation
     
     num_graphs = length(dict["num_nodes"])
     @assert num_graphs == length(dict["num_edges"])
@@ -268,11 +270,12 @@ function read_ogb_graph(path, metadata)
         graph["num_nodes"] = n
         graph["num_edges"] = metadata["add_inverse_edge"] ? 2*m : m
 
+        # EDGE FEATURES
         if metadata["add_inverse_edge"]
             ei = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
             s, t = ei[:,1], ei[:,2]
             graph["edge_index"] = [s t; t s]
-            # graph["edge_index"] = graph["edge_index"] .- num_node_accum 
+            
             for k in edge_keys
                 v = dict[k]
                 if v === nothing
@@ -284,8 +287,7 @@ function read_ogb_graph(path, metadata)
             end
         else
             graph["edge_index"] = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
-            # graph["edge_index"] = graph["edge_index"] .- num_node_accum 
-
+            
             for k in edge_keys
                 v = dict[k]
                 if v === nothing
@@ -297,6 +299,7 @@ function read_ogb_graph(path, metadata)
             num_edge_accum += m
         end
 
+        # NODE FEATURES
         for k in node_keys
             v = dict[k]
             if v === nothing

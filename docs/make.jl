@@ -42,12 +42,7 @@ makedocs(
                 "UD_English" => "datasets/UD_English.md",
             ],
 
-            "Graphs" => Any[
-                "CiteSeer" => "datasets/CiteSeer.md",
-                "Cora" => "datasets/Cora.md",
-                "PubMed" => "datasets/PubMed.md",
-                "TUDataset" => "datasets/TUDataset.md",      
-            ],
+            "Graphs" => "graphs.md",
 
         ],
         "Utils" => "utils.md",

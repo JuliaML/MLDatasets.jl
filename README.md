@@ -38,11 +38,13 @@ Find below a list of available datasets and links to their documentation.
   - [UD_English](https://juliaml.github.io/MLDatasets.jl/dev/datasets/UD_English/)
 
 #### Graphs
-  - [CiteSeer](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CiteSeer/)
-  - [Cora](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Cora/)
-  - [PubMed](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PubMed/)
-  - [TUDatasets](https://juliaml.github.io/MLDatasets.jl/dev/datasets/TUDataset/)
 
+Documentation [link](https://juliaml.github.io/MLDatasets.jl/dev/datasets/graphs). Available datasets:
+  - CiteSeer
+  - Cora
+  - PubMed
+  - TUDataset
+  - OGBDataset
 
 ## Installation
 
