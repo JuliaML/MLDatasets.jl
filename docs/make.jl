@@ -42,7 +42,7 @@ makedocs(
                 "UD_English" => "datasets/UD_English.md",
             ],
 
-            "Graphs" => "graphs.md",
+            "Graphs" => "datasets/graphs.md",
 
         ],
         "Utils" => "utils.md",
