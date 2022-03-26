@@ -1,5 +1,0 @@
-# TUDataset
-
-```@docs
-TUDataset
-```
