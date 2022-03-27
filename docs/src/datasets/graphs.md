@@ -11,9 +11,8 @@ Cora
 Cora.dataset
 OGBDataset
 PolBlogs
-PolBlogs.adjacency
+PolBlogs.edge_index
 PolBlogs.labels
-PolBlogs.download
 PubMed
 PubMed.dataset
 TUDataset

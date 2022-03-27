@@ -3,7 +3,7 @@ data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
 end
 
 @testset "PolBlogs" begin
-    adj = PolBlogs.adjacency()
+    adj = PolBlogs.edge_index()
     labels = PolBlogs.labels()
     @test adj isa Matrix{Int64}
     @test labels isa Matrix{Int64}

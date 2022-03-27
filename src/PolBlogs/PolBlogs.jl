@@ -42,18 +42,18 @@ function __init__()
 end
 
 """
-    adjacency(; dir = nothing)
+    edge_index(; dir = nothing)
 
 Returns a 19025 x 2 matrix containing edge indices
 
 ```julia-repl
 using MLDatasets : PolBlogs
 
-adj = PolBlogs.adjacency()
+adj = PolBlogs.edge_index()
 ```
 """
 
-function adjacency(; dir = nothing)
+function edge_index(; dir = nothing)
     path = datafile(DEPNAME, DATA[1], dir)
     adj = readdlm(path, ',')
     return Matrix{Int64}(adj)
