@@ -26,7 +26,7 @@ export download,adjacency,lables
 
 const LINK = "https://netset.telecom-paris.fr/datasets/polblogs.tar.gz"
 const DEPNAME = "PolBlogs"
-const DATA = ["adjaceny.csv","lables.csv"]
+const DATA = ["adjacency.csv","labels.csv"]
 
 """
 download([dir]; [i_accept_the_terms_of_use])
