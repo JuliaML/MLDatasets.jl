@@ -22,7 +22,7 @@ module PolBlogs
 
 using DataDeps
 using DelimitedFiles
-using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+using ..MLDatasets: datafile
 
 export edge_index, labels
 
@@ -64,7 +64,7 @@ Returns a matrix of labels of size 1490 x 1
 
 ```juliarepl
 using MLDatasets : PolBlogs
-labels = Polblogs.labels()
+labels = PolBlogs.labels()
 ```
 """
 function labels(; dir=nothing)
