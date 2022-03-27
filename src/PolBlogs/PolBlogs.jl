@@ -24,7 +24,7 @@ using DataDeps
 using DelimitedFiles
 using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
 
-export adjacency, labels
+export edge_index, labels
 
 const LINK = "https://netset.telecom-paris.fr/datasets/polblogs.tar.gz"
 const DEPNAME = "PolBlogs"
