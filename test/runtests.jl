@@ -27,6 +27,7 @@ dataset_tests = [
     "tst_cora.jl",
     "tst_pubmed.jl",
     "tst_tudataset.jl",
+    "tst_polblogs.jl",
 ]
 
 container_tests = [

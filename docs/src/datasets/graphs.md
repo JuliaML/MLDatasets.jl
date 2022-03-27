@@ -10,6 +10,10 @@ CiteSeer.dataset
 Cora
 Cora.dataset
 OGBDataset
+PolBlogs
+PolBlogs.adjacency
+PolBlogs.labels
+PolBlogs.download
 PubMed
 PubMed.dataset
 TUDataset
