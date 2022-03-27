@@ -60,7 +60,7 @@ end
 """
     labels(; dir = nothing)
 
-Returns a matrix of labels of size 1490 x 1
+Returns a vector containing the 1490 labels.
 
 ```julia-repl
 using MLDatasets: PolBlogs
@@ -70,7 +70,7 @@ labels = PolBlogs.labels()
 function labels(; dir=nothing)
     path = datafile(DEPNAME, DATA[2], dir)
     labels = readdlm(path, ',')
-    Matrix{Int64}(labels)
+    Matrix{Int64}(labels) |> vec
 end
 
 end #module
