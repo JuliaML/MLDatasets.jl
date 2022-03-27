@@ -44,26 +44,26 @@ end
 """
     edge_index(; dir = nothing)
 
-Returns a 19025 x 2 matrix containing edge indices
+Returns a 19025 x 2 matrix containing edge indices where first column as source node and second column as target node together they represent an edge
 
-```juliarepl
-using MLDatasets : PolBlogs
+```julia-repl
+using MLDatasets: PolBlogs
 adj = PolBlogs.edge_index()
 ```
 """
-
 function edge_index(; dir = nothing)
     path = datafile(DEPNAME, DATA[1], dir)
     adj = readdlm(path, ',')
     return Matrix{Int64}(adj)
 end
+
 """
     labels(; dir = nothing)
 
 Returns a matrix of labels of size 1490 x 1
 
-```juliarepl
-using MLDatasets : PolBlogs
+```julia-repl
+using MLDatasets: PolBlogs
 labels = PolBlogs.labels()
 ```
 """
