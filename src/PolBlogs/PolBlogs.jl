@@ -46,7 +46,7 @@ end
 
 Returns a 19025 x 2 matrix containing edge indices
 
-```julia-repl
+```juliarepl
 using MLDatasets : PolBlogs
 
 adj = PolBlogs.edge_index()
