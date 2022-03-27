@@ -15,7 +15,7 @@ Each vertex receives a label indicating the political leaning of the blog: liber
 
 # Interface
 
-- [`PolBlogs.adjacency`](@ref)
+- [`PolBlogs.edge_index`](@ref)
 - [`PolBlogs.labels`](@ref)
 """
 module PolBlogs
