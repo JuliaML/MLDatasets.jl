@@ -22,7 +22,7 @@ using DataDeps
 using DelimitedFiles
 using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
 
-export download,adjacency,lables
+export download,adjacency,labels
 
 const LINK = "https://netset.telecom-paris.fr/datasets/polblogs.tar.gz"
 const DEPNAME = "PolBlogs"
@@ -54,7 +54,7 @@ end
 """
     adjacency(; dir = nothing)
 
-Returns a 19025x2 matrix containing edge indices
+Returns a 19025 x 2 matrix containing edge indices
 
 ```juliarepl
 using MLDatasets : PolBlogs
@@ -67,17 +67,17 @@ function adjacency(;dir=nothing)
     Matrix{Int64}(adj)
 end
 """
-    lables(; dir = nothing)
+    labels(; dir = nothing)
 
-Returns a vector of lables of size 1490
+Returns a matrix of labels of size 1490 x 1
 ```juliarepl
 using MLDatasets : PolBlogs
-lables = Polblogs.lables()
+labels = Polblogs.labels()
 ```
 """
-function lables(;dir=nothing)
+function labels(;dir=nothing)
     path = datafile(DEPNAME,DATA[2],dir)
-    lables = readdlm(path,',')
-    Matrix{Int64}(lables)
+    labels = readdlm(path,',')
+    Matrix{Int64}(labels)
 end
 end #module

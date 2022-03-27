@@ -12,7 +12,7 @@ Cora.dataset
 OGBDataset
 PolBlogs
 PolBlogs.adjacency
-PolBlogs.lables
+PolBlogs.labels
 PolBlogs.download
 PubMed
 PubMed.dataset

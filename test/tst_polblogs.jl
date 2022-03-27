@@ -4,9 +4,9 @@ end
 
 @testset "PolBlogs" begin
     adj = PolBlogs.adjacency()
-    lables = PolBlogs.lables()
+    labels = PolBlogs.labels()
     @test adj isa Matrix{Int64}
-    @test lables isa Matrix{Int64}
+    @test labels isa Matrix{Int64}
     @test size(adj) == (19025,2)
-    @test size(lables) == (1490,1)
+    @test size(labels) == (1490,1)
 end
