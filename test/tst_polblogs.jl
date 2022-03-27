@@ -8,5 +8,5 @@ end
     @test adj isa Matrix{Int64}
     @test lables isa Vector{Int64}
     @test size(adj) == (19025,2)
-    @test size(lables) == (1490,)
+    @test size(lables) == (1490,1)
 end

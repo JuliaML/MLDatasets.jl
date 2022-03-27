@@ -78,6 +78,6 @@ lables = Polblogs.lables()
 function lables(;dir=nothing)
     path = datafile(DEPNAME,DATA[2],dir)
     lables = readdlm(path,',')
-    Vector{Int64}(lables)
+    Matrix{Int64}(lables)
 end
 end #module
