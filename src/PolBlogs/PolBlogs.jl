@@ -62,7 +62,7 @@ adj = PolBlogs.adjacency()
 ```
 """
 function adjacency(;dir=nothing)
-    path = datafile(DEPNAME,DATA[0],dir)
+    path = datafile(DEPNAME,DATA[1],dir)
     adj = readdlm(path,',')
     Matrix{Int64}(adj)
 end
@@ -76,7 +76,7 @@ lables = Polblogs.lables()
 ```
 """
 function lables(;dir=nothing)
-    path = datafile(DEPNAME,DATA[1],dir)
+    path = datafile(DEPNAME,DATA[2],dir)
     lables = readdlm(path,',')
     Vector{Int64}(lables)
 end
