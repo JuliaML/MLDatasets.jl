@@ -48,7 +48,6 @@ Returns a 19025 x 2 matrix containing edge indices
 
 ```juliarepl
 using MLDatasets : PolBlogs
-
 adj = PolBlogs.edge_index()
 ```
 """
@@ -62,6 +61,7 @@ end
     labels(; dir = nothing)
 
 Returns a matrix of labels of size 1490 x 1
+
 ```juliarepl
 using MLDatasets : PolBlogs
 labels = Polblogs.labels()
