@@ -153,7 +153,7 @@ julia> summary(features)
 """
 function features()
     titanic_data = readdlm(DATA, ',')
-    reshape(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (11, 891))
+    permutedims(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (2, 1))
 end
 
 end # module
