@@ -1,6 +1,6 @@
 name = "MLDatasets"
 uuid = "eb30cadb-4394-5ae3-aed4-317e484a6458"
-version = "0.5.15"
+version = "0.5.16"
 
 [deps]
 BinDeps = "9e28174c-4ba2-5203-b857-d8d62c4213ee"
