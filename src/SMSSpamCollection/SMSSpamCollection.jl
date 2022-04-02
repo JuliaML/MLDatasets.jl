@@ -7,7 +7,7 @@ SMS Spam Collection v.1
 1. DESCRIPTION
 --------------
 
-The SMS Spam Collection v.1 (hereafter the corpus) is a set of SMS tagged messages that have been collected for SMS Spam research. It contains one set of SMS messages in English of 5,574 messages, tagged acording being ham (legitimate) or spam. 
+The SMS Spam Collection v.1 (hereafter the corpus) is a set of SMS tagged messages that have been collected for SMS Spam research. It contains one set of SMS messages in English of 5,574 messages, tagged acording being ham (legitimate) or spam.
 
 1.1. Compilation
 ----------------
@@ -121,7 +121,7 @@ end
 Get the targets for the SMS Spam Collection dataset,
 a 5574 element array listing the targets for each sample.
 
-```jldoctest
+```julia
 julia> using MLDatasets: SMSSpamCollection
 
 julia> targets = SMSSpamCollection.targets();
@@ -144,14 +144,14 @@ function targets(; dir = nothing)
     end
     targets
 end
-    
+
 """
     features()
 
 Return the features for the SMS Spam Collection dataset.
 It has 5574 rows, each containing a text message to be classified as spam or ham.
 
-```jldoctest
+```julia
 julia> using MLDatasets: SMSSpamCollection
 
 julia> features = SMSSpamCollection.features();
@@ -171,5 +171,5 @@ function features(; dir = nothing)
     end
     features
 end
-    
+
 end # module
