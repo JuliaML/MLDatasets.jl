@@ -152,9 +152,8 @@ julia> summary(features)
 ```
 """
 function features()
-    data = readdlm(DATA, ',')
-    data = hcat(data[2:end, 1], data[2:end, 3:end])
-    return permutedims(data, (2, 1))
+    titanic_data = readdlm(DATA, ',')
+    permutedims(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (2, 1))
 end
 
 end # module
