@@ -124,10 +124,10 @@ a 5574 element array listing the targets for each sample.
 ```jldoctest
 julia> using MLDatasets: SMSSpamCollection
 
-julia> targets = SMSSpamCollection.targets()
+julia> targets = SMSSpamCollection.targets();
 
 julia> summary(targets)
-"1×5574 Matrix{Any}"
+"5574-element Vector{Any}"
 
 julia> targets[1]
 "ham"
@@ -154,10 +154,10 @@ It has 5574 rows, each containing a text message to be classified as spam or ham
 ```jldoctest
 julia> using MLDatasets: SMSSpamCollection
 
-julia> features = SMSSpamCollection.features()
+julia> features = SMSSpamCollection.features();
 
 julia> summary(features)
-"1×5574 Matrix{Any}"
+"5574-element Vector{Any}"
 ```
 """
 function features(; dir = nothing)

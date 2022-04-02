@@ -3,6 +3,11 @@ using Documenter, MLDatasets
 ## Commented out since gives warning
 # DocMeta.setdocmeta!(MLDatasets, :DocTestSetup, :(using MLDatasets); recursive=true)
 
+
+# ensure datasets are fetched before running doctest
+ENV["DATADEPS_ALWAYS_ACCEPT"] = "true"
+SMSSpamCollection.features()
+
 # Build documentation.
 # ====================
 
