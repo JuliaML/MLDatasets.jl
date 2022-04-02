@@ -28,6 +28,8 @@ dataset_tests = [
     "tst_pubmed.jl",
     "tst_tudataset.jl",
     "tst_polblogs.jl",
+    # text
+    "tst_smsspamcollection.jl",
 ]
 
 container_tests = [

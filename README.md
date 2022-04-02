@@ -36,6 +36,7 @@ Find below a list of available datasets and links to their documentation.
 #### Text
   - [PTBLM](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PTBLM/)
   - [UD_English](https://juliaml.github.io/MLDatasets.jl/dev/datasets/UD_English/)
+  - [SMSSpamClassification](https://juliaml.github.io/MLDatasets.jl/dev/datasets/SMSSpamClassification/)
 
 #### Graphs
 

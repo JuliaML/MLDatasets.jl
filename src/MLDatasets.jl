@@ -51,6 +51,7 @@ include("EMNIST/EMNIST.jl")
 include("CoNLL.jl")
 include("PTBLM/PTBLM.jl")
 include("UD_English/UD_English.jl")
+include("SMSSpamCollection/SMSSpamCollection.jl")
 
 # Graphs
 include("planetoid.jl")
