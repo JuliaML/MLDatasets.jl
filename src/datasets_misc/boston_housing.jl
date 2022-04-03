@@ -1,9 +1,11 @@
 using DelimitedFiles
 
 """
-    BostonHousing(; as_df = true)
+    BostonHousing(; as_df = false)
 
-Boston Housing Dataset.
+The Boston Housing Dataset.
+
+If `as_df = true`, load the data as dataframes instead of plain arrays.
 
 Sources:
    (a) Origin:  This dataset was taken from the StatLib library which is

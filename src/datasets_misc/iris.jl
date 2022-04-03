@@ -16,9 +16,10 @@ function __init__iris()
 end
 
 """
-    Iris(; dir = nothing)
+    Iris(; dir = nothing, as_df = false)
 
-Fisher's classic iris dataset.
+Fisher's classic iris dataset. 
+If `as_df = true`, load the data as dataframes instead of plain arrays.
 
 Measurements from 3 different species of iris: setosa, versicolor and
 virginica. There are 50 examples of each species.
@@ -29,6 +30,7 @@ length and petal width.  The measurements are in centimeters.
 The module retrieves the data from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/iris).
 
 NOTE: no pre-defined train-test split for this dataset. 
+
 
 # Examples
 
@@ -46,28 +48,42 @@ julia> dataset[1:2]
 julia> X, y = dataset[];
 ```
 """
-struct Iris <: AbstractDataset
-    _path::String
-    features::Matrix{Float64}
-    targets::Vector{String}
+struct Iris{F,T,DF} <: AbstractDataset
+    metadata::Dict{String, Any}
+    features::F
+    targets::T
+    dataframe::DF
 end
 
-function Iris(; dir = nothing)
+function Iris(; dir = nothing, as_df=false)
     path = datafile("Iris", "iris.data", dir)
-    iris = readdlm(path, ',')
-    targets = Vector{String}(iris[:, end])
-    features = Matrix{Float64}(iris[:, 1:4])' |> collect
-    return Iris(path, features, targets)
+    df = read_csv(path, header=0)
+    features = df[!, 1:end-1]
+    targets = df[!, [end]]
+
+    metadata = Dict{String, Any}()
+    metadata["path"] = path
+    metadata["n_observations"] = size(df, 1)
+    if !as_df
+        features = df_to_matrix(features)
+        targets = df_to_matrix(targets)
+        df = nothing
+    end
+    return Iris(metadata, features, targets, df)
 end
+
+Base.length(d::Iris) = numobs(d.features)
+Base.getindex(d::Iris) = getobs((d.features, d.targets))
+Base.getindex(d::Iris, i) = getobs((d.features, d.targets), i)
 
 # deprecated in v0.6
 function Base.getproperty(::Type{Iris}, s::Symbol)
     if s == :features
         @warn "Iris.features() is deprecated, use `Iris().features` instead."
-        return () -> Iris().features
+        return () -> Iris(as_df=false).features
     elseif s == :labels
         @warn "Iris.labels() is deprecated, use `Iris().targets` instead."
-        return () -> Iris().targets
+        return () -> Iris(as_df=false).targets |> vec
     else 
         return getfield(Iris, s)
     end

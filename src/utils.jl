@@ -35,8 +35,14 @@ function restrict_array_type(res::AbstractArray)
     end
 end
 
-df_to_matrix(df::AbstractDataFrame) = Array(df) |> transpose |> collect
-
+function df_to_matrix(df::AbstractDataFrame)
+    x = Matrix(df)
+    if size(x, 2) == 1
+        return reshape(x, 1, size(x, 1))
+    else
+        return x |> transpose |> collect
+    end
+end
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)

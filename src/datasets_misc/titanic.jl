@@ -1,7 +1,7 @@
 export Titanic
 
 """
-    Titanic()
+    Titanic(; as_df = false)
 
 The titanic and titanic2 data frames describe the survival status of individual passengers on the Titanic. 
 
@@ -121,20 +121,25 @@ julia> dataset[1:2]
 julia> X, y = dataset[];
 ```
 """
-struct Titanic <: AbstractDataset
-    _path::String
-    feature_names::Vector{String}
-    features::Matrix
-    targets::Matrix{Int}
+struct Titanic{F,T,DF} <: AbstractDataset
+    metadata::Dict{String, Any}
+    features::F
+    targets::T
+    dataframe::DF
 end
 
-function Titanic()
+function Titanic(; as_df = false)
     path = joinpath(@__DIR__, "..", "..", "data", "titanic.csv")
-    data = readdlm(path, ',')
-    targets = reshape(Vector{Int}(data[2:end, 2]), (1, 891))
-    feature_names = ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
-    features = permutedims(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (2, 1))
-    Titanic(path, feature_names, features, targets)
+    df = read_csv(path)
+    metadata = Dict{String, Any}()
+    metadata["path"] = path
+    metadata["n_observations"] = size(df, 1)
+    
+    # data = readdlm(path, ',')
+    # targets = reshape(Vector{Int}(data[2:end, 2]), (1, 891))
+    # feature_names = ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    # features = permutedims(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (2, 1))
+    Titanic(metadata, df, df, df)
 end
 
 function Base.getproperty(::Type{Titanic}, s::Symbol)

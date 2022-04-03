@@ -47,7 +47,7 @@ end
     dataset(; dir=nothing, reverse_edges=true)
 
 Retrieve the CiteSeer dataset. The output is a named tuple with fields
-```juliarepl
+```julia-repl
 julia> keys(CiteSeer.dataset())
 (:node_features, :node_labels, :adjacency_list, :train_indices, :val_indices, :test_indices, :num_classes, :num_nodes, :num_edges, :directed)
 ```

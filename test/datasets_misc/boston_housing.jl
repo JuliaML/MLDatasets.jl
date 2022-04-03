@@ -1,4 +1,4 @@
-d = BostonHousing(as_df=false)
+d = BostonHousing()
 X, Y = d.features, d.targets
 @test X isa Matrix{Float64}
 @test Y isa Matrix{Float64}
@@ -8,6 +8,7 @@ X, Y = d.features, d.targets
 @test d[1:2] == (X[:,1:2], Y[:,1:2])
 @test d[] === (X, Y)
 @test length(d) == 506
+@test d.dataframe === nothing
 
 d = BostonHousing(as_df=true)
 X, Y = d.features, d.targets
@@ -17,9 +18,11 @@ X, Y = d.features, d.targets
 @test DataFrame.names(Y) == ["MEDV"]
 @test size(X) == (506, 13)
 @test size(Y) == (506, 1)
-@test d[1:2] == (X[:,1:2], Y[:,1:2])
+@test d[1:2] == (X[1:2,:], Y[1:2,:])
 @test d[] === (X, Y)
 @test length(d) == 506
+@test d.dataframe isa DataFrame
+@test size(d.dataframe) == (506, 14)
 
 @testset "deprecated interface" begin
     X  = BostonHousing.features()
@@ -29,5 +32,5 @@ X, Y = d.features, d.targets
     @test Y isa Matrix{Float64}
     @test names == ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
     @test size(X) == (13, 506)
-    @test size(Y) == (1, 506)
+    @test size(Y) == (506,)
 end
