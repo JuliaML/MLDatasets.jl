@@ -81,7 +81,7 @@ julia> X, y = dataset[];
 ```
 """
 struct BostonHousing{F,T,DF} <: AbstractDataset
-    metadata::Dict
+    metadata::Dict{String, Any}
     features::F
     targets::T
     dataframe::DF
@@ -92,17 +92,17 @@ function BostonHousing(; as_df = true)
     df = read_csv(path)
     features = df[!, Not(:MEDV)]
     targets = df[!, [:MEDV]]
-    metadata = Dict()
+    metadata = Dict{String, Any}()
     metadata["path"] = path
     metadata["feature_names"] = names(features)
     metadata["target_names"] = names(targets)
-    metadata["n_observations"] = length(targets)
+    metadata["n_observations"] = size(targets, 1)
     if !as_df 
-        features = features |> Array
-        targets = targets |> Array
+        features = df_to_matrix(features) 
+        targets = df_to_matrix(targets)
         df = nothing
     end
-    return BostonHousing(path, metadata, features, targets, df)
+    return BostonHousing(metadata, features, targets, df)
 end
 
 Base.length(d::BostonHousing) = numobs(d.features)
