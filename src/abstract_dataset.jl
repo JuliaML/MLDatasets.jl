@@ -16,4 +16,4 @@ function Base.show(io::IO, d::D) where D <: AbstractDataset
 end
 
 _summary(x) = x
-_summary(x::Union{Dict, AbstractArray}) = summary(x)
+_summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)

@@ -1,7 +1,7 @@
 using DelimitedFiles
 
 """
-    BostonHousing()
+    BostonHousing(; as_df = true)
 
 Boston Housing Dataset.
 
@@ -80,34 +80,48 @@ julia> dataset[1:2]
 julia> X, y = dataset[];
 ```
 """
-struct BostonHousing <: AbstractDataset
-    _path::String
-    feature_names::Vector{String}
-    features::Matrix{Float64}
-    targets::Matrix{Float64}
+struct BostonHousing{F,T,DF} <: AbstractDataset
+    metadata::Dict
+    features::F
+    targets::T
+    dataframe::DF
 end
 
-function BostonHousing()
+function BostonHousing(; as_df = true)
     path = joinpath(@__DIR__, "..", "..", "data", "boston_housing.csv")
-    feature_names = ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
-    data = readdlm(path, ',')
-    features = Matrix{Float64}(data[2:end,1:13])' |> collect
-    targets = reshape(Vector{Float64}(data[2:end,end]), (1, 506))
-    return BostonHousing(path, feature_names, features, targets)
+    df = read_csv(path)
+    features = df[!, Not(:MEDV)]
+    targets = df[!, [:MEDV]]
+    metadata = Dict()
+    metadata["path"] = path
+    metadata["feature_names"] = names(features)
+    metadata["target_names"] = names(targets)
+    metadata["n_observations"] = length(targets)
+    if !as_df 
+        features = features |> Array
+        targets = targets |> Array
+        df = nothing
+    end
+    return BostonHousing(path, metadata, features, targets, df)
 end
 
-# deprecated in v0.6
+Base.length(d::BostonHousing) = numobs(d.features)
+Base.getindex(d::BostonHousing) = getobs((d.features, d.targets))
+Base.getindex(d::BostonHousing, i) = getobs((d.features, d.targets), i)
+
+
+# Deprecated in v0.6,
 function Base.getproperty(::Type{BostonHousing}, s::Symbol)
     if s == :features
         @warn "BostonHousing.features() is deprecated, use `BostonHousing().features` instead."
-        return () -> BostonHousing().features
+        return () -> BostonHousing(as_df=false).features
     elseif s == :targets
         @warn "BostonHousing.targets() is deprecated, use `BostonHousing().targets` instead."
-        return () -> BostonHousing().targets
+        return () -> BostonHousing(as_df=false).targets
     elseif s == :feature_names
         @warn "BostonHousing.feature_names() is deprecated, use `BostonHousing().feature_names` instead."
-        return () -> BostonHousing().feature_names
-    else 
+        return () -> lowercase.(BostonHousing().metadata["feature_names"])
+    else
         return getfield(BostonHousing, s)
     end
 end
