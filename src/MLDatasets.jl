@@ -35,8 +35,6 @@ export JLD2Dataset
 include("containers/cacheddataset.jl")
 export CachedDataset
 
-include("abstract_dataset.jl")
-
 # Misc.
 include("datasets_misc/boston_housing.jl")
 export BostonHousing
