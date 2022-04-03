@@ -133,31 +133,10 @@ function Titanic()
     data = readdlm(path, ',')
     targets = reshape(Vector{Int}(data[2:end, 2]), (1, 891))
     feature_names = ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
-    features = reshape(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (11, 891))
+    features = permutedims(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (2, 1))
     Titanic(path, feature_names, features, targets)
 end
 
-<<<<<<< HEAD:src/Titanic/Titanic.jl
-"""
-    features()
-
-Return the features of the Titanic dataset. This is a 11x891 Matrix of containing both String and Float datatypes.
-The values are in the order ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"].
-It has 891 examples.
-
-```jldoctest
-julia> using MLDatasets: Titanic
-
-julia> features = Titanic.features();
-
-julia> summary(features)
-"11×891 Matrix{Any}"
-```
-"""
-function features()
-    titanic_data = readdlm(DATA, ',')
-    permutedims(Matrix(hcat(titanic_data[2:end, 1], titanic_data[2:end, 3:12])), (2, 1))
-=======
 function Base.getproperty(::Type{Titanic}, s::Symbol)
     if s == :features
         @warn "Titanic.features() is deprecated, use `Titanic().features` instead."
@@ -171,5 +150,4 @@ function Base.getproperty(::Type{Titanic}, s::Symbol)
     else 
         return getfield(Titanic, s)
     end
->>>>>>> 66e6378 (add ArrayDataset):src/datasets_misc/titanic.jl
 end
