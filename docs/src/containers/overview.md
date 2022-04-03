@@ -3,7 +3,6 @@
 MLDatasets.jl contains several reusable data containers for accessing datasets in common storage formats. This feature is a work-in-progress and subject to change.
 
 ```@docs
-ArrayDataset
 FileDataset
 TableDataset
 HDF5Dataset
