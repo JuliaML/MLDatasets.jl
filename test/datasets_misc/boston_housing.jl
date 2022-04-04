@@ -5,7 +5,7 @@ X, Y = d.features, d.targets
 @test d.metadata["feature_names"] == uppercase.(["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"])
 @test size(X) == (13, 506)
 @test size(Y) == (1, 506)
-@test d[2] == (X[:,2], Y[:,2])
+@test d[1:2] == (X[:,1:2], Y[:,1:2])
 @test d[] === (X, Y)
 @test length(d) == 506
 @test d.dataframe === nothing
@@ -18,7 +18,7 @@ X, Y = d.features, d.targets
 @test DataFrames.names(Y) == ["MEDV"]
 @test size(X) == (506, 13)
 @test size(Y) == (506, 1)
-@test d[2] == (X[2,:], Y[2,:])
+@test d[1:2] == (X[1:2,:], Y[1:2,:])
 @test d[] === (X, Y)
 @test length(d) == 506
 @test d.dataframe isa DataFrame

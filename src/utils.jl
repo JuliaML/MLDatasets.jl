@@ -40,7 +40,7 @@ function df_to_matrix(df::AbstractDataFrame)
     if size(x, 2) == 1
         return reshape(x, 1, size(x, 1))
     else
-        return x |> transpose |> collect
+        return permutedims(x, (2, 1))
     end
 end
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A

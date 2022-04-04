@@ -170,13 +170,13 @@ plsmo	(age, survived, group=sex, datadensity=T)
 function Base.getproperty(::Type{Titanic}, s::Symbol)
     if s == :features
         @warn "Titanic.features() is deprecated, use `Titanic().features` instead."
-        return () -> Titanic().features
+        return () -> Titanic(as_df=false).features
     elseif s == :targets
         @warn "Titanic.targets() is deprecated, use `Titanic().targets` instead."
-        return () -> Titanic().targets
+        return () -> Titanic(as_df=false).targets
     elseif s == :feature_names
         @warn "Titanic.feature_names() is deprecated, use `Titanic().feature_names` instead."
-        return () -> Titanic().feature_names
+        return () -> Titanic().metadata["feature_names"]
     else 
         return getfield(Titanic, s)
     end
