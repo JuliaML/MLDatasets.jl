@@ -30,7 +30,7 @@ $METHODS_SUPERVISED_TABLE
 
 # Examples
     
-```jldoctest
+```julia-repl
 julia> using MLDatasets: BostonHousing
 
 julia> dataset = BostonHousing()

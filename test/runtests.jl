@@ -13,7 +13,7 @@ dataset_tests = [
     ## misc
     "datasets_misc/boston_housing.jl",
     "datasets_misc/iris.jl",
-    # "datasets_misc/mutagenesis.jl",
+    "datasets_misc/mutagenesis.jl",
     "datasets_misc/titanic.jl",
     # vision
     # "tst_cifar10.jl",
@@ -40,8 +40,8 @@ container_tests = [
     # "containers/cacheddataset.jl",
 ]
 
-@testset "Datasets" for t in dataset_tests
-    @testset "$t" begin
+@testset "Datasets" begin
+    @testset "$t" for t in dataset_tests
         include(t)
     end
 end

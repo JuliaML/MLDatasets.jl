@@ -61,9 +61,8 @@ Mutagenesis dataset:
   targets : 188-element Vector{Int64}
 ```
 """
-struct Mutagenesis <: AbstractDataset
-    _data_path::String
-    _metadata_path::String
+struct Mutagenesis <: SupervisedDataset
+    metadata::Dict{Symbol, Any}
     split::Symbol
     indexes::Vector{Int}    # indexes of the split in the full dataset
     features::Vector{Dict{Symbol, Any}}
@@ -92,8 +91,11 @@ function Mutagenesis(; split::Symbol, dir=nothing)
     indexes = split == :train ? train_idxs :
               split == :val ? val_idxs : 
               split == :test ? test_idxs : 1:length(samples) 
-              
-    Mutagenesis(data_path, metadata_path, split, indexes, features[indexes], targets[indexes])
+    metadata = Dict(metadata)
+    metadata[:data_path] = data_path
+    metadata[:metadata_path] = metadata_path
+
+    Mutagenesis(metadata, split, indexes, features[indexes], targets[indexes])
 end
 
 # deprecated in v0.6

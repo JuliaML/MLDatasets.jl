@@ -27,8 +27,8 @@ julia> using DataFrames
 julia> dataset = Titanic()
 Titanic:
   metadata => Dict{String, Any} with 5 entries
-  features => 891×12 DataFrame
-  targets => 891×12 DataFrame
+  features => 891×11 DataFrame
+  targets => 891×1 DataFrame
   dataframe => 891×12 DataFrame
 
 
