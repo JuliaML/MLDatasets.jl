@@ -41,7 +41,7 @@ container_tests = [
 ]
 
 @testset "Datasets" begin
-    @testset "$t" for t in dataset_tests
+    @testset "$(split(t,"/")[end])" for t in dataset_tests
         include(t)
     end
 end
