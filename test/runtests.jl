@@ -13,31 +13,31 @@ dataset_tests = [
     ## misc
     "datasets_misc/boston_housing.jl",
     "datasets_misc/iris.jl",
-    "datasets_misc/mutagenesis.jl",
+    # "datasets_misc/mutagenesis.jl",
     "datasets_misc/titanic.jl",
     # vision
-    "tst_cifar10.jl",
-    "tst_cifar100.jl",
-    "tst_mnist.jl",
-    "tst_fashion_mnist.jl",
-    "tst_svhn2.jl",
-    "tst_emnist.jl",
-    # graphs    
-    "tst_citeseer.jl",
-    "tst_cora.jl",
-    "tst_pubmed.jl",
-    "tst_tudataset.jl",
-    "tst_polblogs.jl",
-    # text
-    "tst_smsspamcollection.jl",
+    # "tst_cifar10.jl",
+    # "tst_cifar100.jl",
+    # "tst_mnist.jl",
+    # "tst_fashion_mnist.jl",
+    # "tst_svhn2.jl",
+    # "tst_emnist.jl",
+    # # graphs    
+    # "tst_citeseer.jl",
+    # "tst_cora.jl",
+    # "tst_pubmed.jl",
+    # "tst_tudataset.jl",
+    # "tst_polblogs.jl",
+    # # text
+    # "tst_smsspamcollection.jl",
 ]
 
 container_tests = [
-    "containers/filedataset.jl",
-    "containers/tabledataset.jl",
-    "containers/hdf5dataset.jl",
-    "containers/jld2dataset.jl",
-    "containers/cacheddataset.jl",
+    # "containers/filedataset.jl",
+    # "containers/tabledataset.jl",
+    # "containers/hdf5dataset.jl",
+    # "containers/jld2dataset.jl",
+    # "containers/cacheddataset.jl",
 ]
 
 @testset "Datasets" for t in dataset_tests

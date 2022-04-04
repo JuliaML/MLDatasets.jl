@@ -1,8 +1,87 @@
 export Titanic
 
 """
-    Titanic(; as_df = false)
+    Titanic(; as_df = true, dir = nothing)
 
+The Titanic dataset, describing the survival of passengers on the Titanic ship.
+
+# Arguments
+
+$ARGUMENTS_SUPERVISED_TABLE
+
+# Fields
+
+$FIELDS_SUPERVISED_TABLE
+
+# Methods
+
+$METHODS_SUPERVISED_TABLE
+
+# Examples
+
+```julia-repl
+julia> using MLDatasets: Titanic
+
+julia> using DataFrames
+
+julia> dataset = Titanic()
+Titanic:
+  metadata => Dict{String, Any} with 5 entries
+  features => 891×12 DataFrame
+  targets => 891×12 DataFrame
+  dataframe => 891×12 DataFrame
+
+
+julia> describe(dataset.dataframe)
+12×7 DataFrame
+ Row │ variable     mean      min                  median   max                          nmissing  eltype                   
+     │ Symbol       Union…    Any                  Union…   Any                          Int64     Type                     
+─────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ PassengerId  446.0     1                    446.0    891                                 0  Int64
+   2 │ Survived     0.383838  0                    0.0      1                                   0  Int64
+   3 │ Pclass       2.30864   1                    3.0      3                                   0  Int64
+   4 │ Name                   Abbing, Mr. Anthony           van Melkebeke, Mr. Philemon         0  String
+   5 │ Sex                    female                        male                                0  String7
+   6 │ Age          29.6991   0.42                 28.0     80.0                              177  Union{Missing, Float64}
+   7 │ SibSp        0.523008  0                    0.0      8                                   0  Int64
+   8 │ Parch        0.381594  0                    0.0      6                                   0  Int64
+   9 │ Ticket                 110152                        WE/P 5735                           0  String31
+  10 │ Fare         32.2042   0.0                  14.4542  512.329                             0  Float64
+  11 │ Cabin                  A10                           T                                 687  Union{Missing, String15}
+  12 │ Embarked               C                             S                                   2  Union{Missing, String1}
+```
+"""
+struct Titanic <: SupervisedDataset
+    metadata::Dict{String, Any}
+    features
+    targets
+    dataframe
+end
+
+function Titanic(; as_df = true, dir = nothing)
+    @assert dir === nothing "custom `dir` is not supported at the moment."
+    path = joinpath(@__DIR__, "..", "..", "data", "titanic.csv")
+    df = read_csv(path)
+    features = df[!, Not(:Survived)]
+    targets = df[!, [:Survived]]
+    
+    metadata = Dict{String, Any}()
+    metadata["path"] = path
+    metadata["feature_names"] = names(features)
+    metadata["target_names"] = names(targets)
+    metadata["n_observations"] = size(df, 1)
+    metadata["description"] = TITANIC_DESCR
+
+    if !as_df
+        features = df_to_matrix(features)
+        targets = df_to_matrix(targets)
+        df = nothing
+    end
+
+    return Titanic(metadata, features, targets, df)
+end
+
+const TITANIC_DESCR = """
 The titanic and titanic2 data frames describe the survival status of individual passengers on the Titanic. 
 
 The titanic data frame does not contain information from the crew, but it does contain actual ages of half of the passengers. 
@@ -86,61 +165,7 @@ An interesting result may be obtained using functions from the Hmisc library.
 attach	(titanic3)
 plsmo	(age, survived, group=sex, datadensity=T) 
 # or group=pclass plot	(naclus	(titanic3)) # study patterns of missing values summary	(survived ~ age + sex + pclass + sibsp + parch, data=titanic3)
-
-
-# Examples
-    
-```julia-repl
-julia> using MLDatasets: Titanic
-
-julia> dataset = Titanic()
-Titanic dataset:
-  feature_names : 13-element Vector{String}
-  features : 13×506 Matrix{Float64}
-  targets : 1×506 Matrix{Float64}
-
-julia> dataset.feature_names
-13-element Vector{String}:
- "crim"
- "zn"
- "indus"
- "chas"
- "nox"
- "rm"
- "age"
- "dis"
- "rad"
- "tax"
- "ptratio"
- "b"
- "lstat"
-  
-julia> dataset[1:2]
-(features = [0.00632 0.02731; 18.0 0.0; … ; 396.9 396.9; 4.98 9.14], targets = [24.0 21.6])
-
-julia> X, y = dataset[];
-```
 """
-struct Titanic{F,T,DF} <: AbstractDataset
-    metadata::Dict{String, Any}
-    features::F
-    targets::T
-    dataframe::DF
-end
-
-function Titanic(; as_df = false)
-    path = joinpath(@__DIR__, "..", "..", "data", "titanic.csv")
-    df = read_csv(path)
-    metadata = Dict{String, Any}()
-    metadata["path"] = path
-    metadata["n_observations"] = size(df, 1)
-    
-    # data = readdlm(path, ',')
-    # targets = reshape(Vector{Int}(data[2:end, 2]), (1, 891))
-    # feature_names = ["PassengerId", "Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
-    # features = permutedims(Matrix(hcat(data[2:end, 1], data[2:end, 3:12])), (2, 1))
-    Titanic(metadata, df, df, df)
-end
 
 function Base.getproperty(::Type{Titanic}, s::Symbol)
     if s == :features
