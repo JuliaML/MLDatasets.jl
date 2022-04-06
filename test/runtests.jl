@@ -15,10 +15,7 @@ include("test_utils.jl")
 
 dataset_tests = [
     ## misc
-    "datasets_misc/boston_housing.jl",
-    "datasets_misc/iris.jl",
-    "datasets_misc/mutagenesis.jl",
-    "datasets_misc/titanic.jl",
+    "datasets_misc.jl",
     ## vision
     "tst_cifar10.jl",
     "tst_cifar100.jl",
