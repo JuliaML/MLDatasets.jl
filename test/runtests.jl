@@ -2,11 +2,16 @@ using Test
 using MLDatasets
 using MLDatasets: SupervisedDataset, AbstractDataset
 using FileIO
-using ImageCore
 using DataDeps
 using DataFrames, CSV, Tables
 using HDF5
 using JLD2
+using ColorTypes
+using FixedPointNumbers
+using MLDatasets
+using DataDeps
+
+
 
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true

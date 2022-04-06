@@ -4,8 +4,8 @@ module CIFAR10
     using BinDeps
     using ColorTypes
     using FixedPointNumbers
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
-                        _colorview, _channelview
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+                        
 
     export
 

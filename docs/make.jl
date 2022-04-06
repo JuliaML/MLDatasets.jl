@@ -23,21 +23,22 @@ makedocs(
     pages = Any[
         "Home" => "index.md",
         "Available Datasets" => Any[
-            "Vision" => Any[
-                "MNIST" => "datasets/MNIST.md",
-                "EMNIST" => "datasets/EMNIST.md",
-                "FashionMNIST" => "datasets/FashionMNIST.md",
-                "CIFAR-10" => "datasets/CIFAR10.md",
-                "CIFAR-100" => "datasets/CIFAR100.md",
-                "SVHN format 2" => "datasets/SVHN2.md",
-            ],
+            "Graphs" => "datasets/graphs.md",
             "Miscellaneous" => "datasets/misc.md",
+            "Vision" => "datasets/vision.md",
+            # "Vision" => Any[
+            #     "MNIST" => "datasets/MNIST.md",
+            #     "EMNIST" => "datasets/EMNIST.md",
+            #     "FashionMNIST" => "datasets/FashionMNIST.md",
+            #     "CIFAR-10" => "datasets/CIFAR10.md",
+            #     "CIFAR-100" => "datasets/CIFAR100.md",
+            #     "SVHN format 2" => "datasets/SVHN2.md",
+            # ],
             "Text" => Any[
                 "PTBLM" => "datasets/PTBLM.md",
                 "UD_English" => "datasets/UD_English.md",
             ],
 
-            "Graphs" => "datasets/graphs.md",
 
         ],
         "Utils" => "utils.md",

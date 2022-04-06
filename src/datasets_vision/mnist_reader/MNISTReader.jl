@@ -1,4 +1,4 @@
-module Reader
+module MNISTReader
     using GZip
     using BinDeps
 

@@ -5,7 +5,6 @@ using BinDeps
 using FixedPointNumbers
 using MAT: matopen, matread
 using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-using ..MNIST: convert2image
 
     const DEPNAME = "EMNIST"
 
@@ -51,7 +50,6 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
 
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-balanced.mat"
@@ -87,8 +85,7 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
-
+        
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-byclass.mat"
 
@@ -123,8 +120,7 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
-
+        
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-bymerge.mat"
 
@@ -159,8 +155,7 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
-
+        
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-digits.mat"
 
@@ -195,8 +190,7 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
-
+        
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-letters.mat"
 
@@ -231,8 +225,7 @@ using ..MNIST: convert2image
         using FixedPointNumbers
         using MAT: matopen, matread
         using ...MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
-        using ...MNIST: convert2image
-
+        
         const DEPNAME = "EMNIST"
         const FILENAME = "matlab/emnist-mnist.mat"
 

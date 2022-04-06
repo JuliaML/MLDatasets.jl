@@ -32,9 +32,8 @@ module SVHN2
     using ColorTypes
     using FixedPointNumbers
     using MAT: matopen, matread
-    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring,
-                        _colorview, _channelview
-
+    using ..MLDatasets: bytes_to_type, datafile, download_dep, download_docstring
+                        
     export
 
         traintensor,
