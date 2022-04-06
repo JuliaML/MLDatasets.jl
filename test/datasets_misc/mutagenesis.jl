@@ -1,7 +1,3 @@
-data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-    datadep"Mutagenesis"
-end
-
 dtrain = Mutagenesis(split=:train)
 dtest = Mutagenesis(split=:test)
 dval = Mutagenesis(split=:val)
@@ -26,6 +22,11 @@ all_x, all_y = dall[]
 @test test_x isa Vector{<:Dict}
 @test val_x isa Vector{<:Dict}
 
+x, y = dtrain[1:2]
+@test x isa Vector{Dict{Symbol, Any}}
+@test length(x) == 2
+@test y isa Vector{Int}
+@test length(y) == 2
 
 @testset "deprecated interface" begin
     train_x, train_y = Mutagenesis.traindata()
