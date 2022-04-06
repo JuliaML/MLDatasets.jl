@@ -1,28 +1,19 @@
-d = BostonHousing(as_df=false)
-X, Y = d.features, d.targets
-@test X isa Matrix{Float64}
-@test Y isa Matrix{Float64}
-@test d.metadata["feature_names"] == uppercase.(["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"])
-@test size(X) == (13, 506)
-@test size(Y) == (1, 506)
-@test d[1:2] == (X[:,1:2], Y[:,1:2])
-@test d[] === (X, Y)
-@test length(d) == 506
-@test d.dataframe === nothing
+n_obs = 506
+n_features = 13
+n_targets = 1
+feature_names = ["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]
+target_names = ["MEDV"]
 
 d = BostonHousing()
-X, Y = d.features, d.targets
-@test X isa DataFrame
-@test Y isa DataFrame
-@test DataFrames.names(X) == uppercase.(["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"])
-@test DataFrames.names(Y) == ["MEDV"]
-@test size(X) == (506, 13)
-@test size(Y) == (506, 1)
-@test d[1:2] == (X[1:2,:], Y[1:2,:])
-@test d[] === (X, Y)
-@test length(d) == 506
-@test d.dataframe isa DataFrame
-@test size(d.dataframe) == (506, 14)
+test_inmemory_supervised_table_dataset(d;
+    n_obs, n_features, n_targets, 
+    feature_names, target_names)
+
+d = BostonHousing(as_df=false)
+test_inmemory_supervised_table_dataset(d;
+    n_obs, n_features, n_targets,
+    feature_names, target_names, 
+    Tx=Float64, Ty=Float64)
 
 @testset "deprecated interface" begin
     X  = BostonHousing.features()
@@ -30,7 +21,7 @@ X, Y = d.features, d.targets
     names = BostonHousing.feature_names()
     @test X isa Matrix{Float64}
     @test Y isa Matrix{Float64}
-    @test names == ["crim","zn","indus","chas","nox","rm","age","dis","rad","tax","ptratio","b","lstat"]
+    @test names == lowercase.(feature_names)
     @test size(X) == (13, 506)
     @test size(Y) == (1, 506)
 end

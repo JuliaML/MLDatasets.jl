@@ -9,6 +9,8 @@ using JLD2
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
+include("test_utils.jl")
+
 dataset_tests = [
     ## misc
     "datasets_misc/boston_housing.jl",

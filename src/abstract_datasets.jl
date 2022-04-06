@@ -27,7 +27,7 @@ a `features` and a `targets` fields.
 """
 abstract type SupervisedDataset <: AbstractDataset end
 
-Base.length(d::SupervisedDataset) = numobs(d.features)
+Base.length(d::SupervisedDataset) = numobs((d.features, d.targets))
 Base.getindex(d::SupervisedDataset) = getobs((d.features, d.targets))
 Base.getindex(d::SupervisedDataset, i) = getobs((d.features, d.targets), i)
 

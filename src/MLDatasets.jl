@@ -21,8 +21,9 @@ export getobs, numobs
 include("utils.jl")
 include("download.jl")
 
-include("abstract_dataset.jl")
-export AbstractDataset
+include("abstract_datasets.jl")
+export AbstractDataset, 
+       SupervisedDataset
 
 include("containers/filedataset.jl")
 export FileDataset
