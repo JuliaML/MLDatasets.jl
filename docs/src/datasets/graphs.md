@@ -1,8 +1,12 @@
 # Graph Datasets
 
+## Index
+
 ```@index
 Pages = ["graphs.md"]
 ```
+
+## Documentation
 
 ```@docs
 CiteSeer

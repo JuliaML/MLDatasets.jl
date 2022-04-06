@@ -5,6 +5,7 @@ function test_inmemory_supervised_table_dataset(d::D;
         n_obs, n_features, n_targets,
         feature_names=nothing, target_names=nothing, 
         Tx=Any, Ty=Any) where {D<:SupervisedDataset}
+        
     @test hasfield(D, :metadata)
     @test hasfield(D, :features)
     @test hasfield(D, :targets)

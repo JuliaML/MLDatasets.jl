@@ -22,8 +22,8 @@ include("utils.jl")
 include("download.jl")
 
 include("abstract_datasets.jl")
-export AbstractDataset, 
-       SupervisedDataset
+# export AbstractDataset, 
+#        SupervisedDataset
 
 include("containers/filedataset.jl")
 export FileDataset

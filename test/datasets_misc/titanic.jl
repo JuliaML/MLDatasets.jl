@@ -1,25 +1,19 @@
+n_obs = 891
+n_features = 11
+n_targets = 1
+feature_names = ["PassengerId","Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+target_names = ["Survived"]
+
 d = Titanic()
-X, Y = d.features, d.targets
-@test X isa DataFrame
-@test Y isa DataFrame
-@test size(X) == (891, 11)
-@test size(Y) == (891, 1)
-@test DataFrames.names(X) == ["PassengerId","Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
-@test d[2] == (X[2,:], Y[2,:])
-@test d[] === (X, Y)
-@test length(d) == 891
+test_inmemory_supervised_table_dataset(d;
+    n_obs, n_features, n_targets,
+    feature_names, target_names)
 
 d = Titanic(as_df=false)
-X, Y = d.features, d.targets
-@test X isa Matrix
-@test Y isa Matrix{Int}
-@test size(X) == (11, 891)
-@test size(Y) == (1, 891)
-@test d.metadata["feature_names"] == ["PassengerId","Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
-@test d[2] == (X[:,2], Y[:,2])
-@test d[] === (X, Y)
-@test length(d) == 891
-
+test_inmemory_supervised_table_dataset(d;
+    n_obs, n_features, n_targets,
+    feature_names, target_names, 
+    Tx=Any, Ty=Int)
 
 @testset "deprecated interface" begin
     X = Titanic.features()
