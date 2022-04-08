@@ -43,11 +43,7 @@ function df_to_matrix(df::AbstractDataFrame)
         return permutedims(x, (2, 1))
     end
 end
-bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
-bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
+
 
 # PIRACY
 MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)

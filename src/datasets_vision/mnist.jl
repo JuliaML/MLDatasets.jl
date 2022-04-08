@@ -133,10 +133,10 @@ function MNIST(split::Symbol; dir=nothing)
         IMAGESPATH  = "t10k-images-idx3-ubyte.gz"
         LABELSPATH  = "t10k-labels-idx1-ubyte.gz"
     end
+    
     path = datafile("MNIST", IMAGESPATH, dir)
-    images = MNISTReader.readimages(path)
-    features = bytes_to_type(Float32, images)
-   
+    features = MNISTReader.readimages(path) / 255f0
+
     path = datafile("MNIST", LABELSPATH, dir)
     targets = Vector{Int}(MNISTReader.readlabels(path))
     targets = reshape(targets, 1, :) 
