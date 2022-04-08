@@ -33,7 +33,7 @@ end
 
 
 """
-    MNIST(; split, dir=nothing)
+    MNIST(; split=:train, Tx=Float32, dir=nothing)
 
 The MNIST database of handwritten digits
 
@@ -115,16 +115,16 @@ julia> MNIST.trainlabels(1) # first label
 5
 ```
 """
-struct MNIST #<: SupervisedDataset
+struct MNIST{Tx} <: SupervisedDataset
     metadata::Dict
     split::Symbol
-    features::Array{Float32, 3}
+    features::Array{Tx, 3}
     targets::Matrix{Int}
 end
 
-MNIST(; split, dir=nothing) = MNIST(split; dir)
+MNIST(; split=:train, Tx=Float32, dir=nothing) = MNIST(Tx, split; dir)
 
-function MNIST(split::Symbol; dir=nothing)
+function MNIST(Tx, split::Symbol; dir=nothing)
     @assert split in [:train, :test]
     if split == :train 
         IMAGESPATH = "train-images-idx3-ubyte.gz"
@@ -134,15 +134,75 @@ function MNIST(split::Symbol; dir=nothing)
         LABELSPATH  = "t10k-labels-idx1-ubyte.gz"
     end
     
-    path = datafile("MNIST", IMAGESPATH, dir)
-    features = MNISTReader.readimages(path) / 255f0
+    features_path = datafile("MNIST", IMAGESPATH, dir)
+    features = bytes_to_type(Tx, MNISTReader.readimages(features_path))
 
-    path = datafile("MNIST", LABELSPATH, dir)
-    targets = Vector{Int}(MNISTReader.readlabels(path))
+    targets_path = datafile("MNIST", LABELSPATH, dir)
+    targets = Vector{Int}(MNISTReader.readlabels(targets_path))
     targets = reshape(targets, 1, :) 
 
     metadata = Dict{String,Any}()
     metadata["n_observations"] = size(features, 2)
+    metadata["features_path"] = features_path
+    metadata["targets_path"] = targets_path
 
-    return MNIST(metadata, split, features, targets)
+    return MNIST{Tx}(metadata, split, features, targets)
+end
+
+
+
+
+# deprecated in v0.6
+function Base.getproperty(::Type{<:MNIST}, s::Symbol)
+    if s == :traintensor
+        @warn "MNIST.traintensor() is deprecated, use `MNIST(split=:train).features` instead." maxlog=2
+        traintensor(; kws...) = traintensor(:; kws...)
+        traintensor(i; kws...) = traintensor(N0f8, i; kws...)
+        function traintensor(T::Type, i; dir=nothing)
+            MNIST(split=:train, Tx=T)[i][1]
+        end
+        return traintensor
+    elseif s == :testtensor
+        @warn "MNIST.testtensor() is deprecated, use `MNIST(split=:test).features` instead."  maxlog=2
+        testtensor(; kws...) = testtensor(:; kws...)
+        testtensor(i; kws...) = testtensor(N0f8, i; kws...)
+        function testtensor(T::Type, i; dir=nothing)
+            MNIST(; split=:test, Tx=T, dir)[i][1]
+        end
+        return testtensor        
+    elseif s == :trainlabels
+        @warn "MNIST.trainlabels() is deprecated, use `MNIST(split=:train).targets` instead."  maxlog=2
+        trainlabels(; kws...) = trainlabels(:; kws...)
+        function trainlabels(i; dir=nothing)
+            MNIST(; split=:train, dir)[i][2]
+        end
+        return trainlabels
+    elseif s == :testlabels
+        @warn "MNIST.testlabels() is deprecated, use `MNIST(split=:test).targets` instead." maxlog=2
+        testlabels(; kws...) = testlabels(:; kws...)
+        function testlabels(i; dir=nothing)
+            MNIST(; split=:test, dir)[i][2]
+        end
+        return trainlabels
+    elseif s == :traindata
+        @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[]` instead." maxlog=2
+        traindata(; kws...) = traindata(:; kws...)
+        traindata(i; kws...) = traindata(N0f8, i; kws...)
+        function traindata(T::Type, i; dir=nothing)
+            MNIST(split=:train, Tx=T)[i]
+        end
+        return traindata
+    elseif s == :testdata
+        @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[]` instead."  maxlog=2
+        testdata(; kws...) = testdata(:; kws...)
+        testdata(i; kws...) = testdata(N0f8, i; kws...)
+        function testdata(T::Type, i; dir=nothing)
+            MNIST(split=:test, Tx=T)[i]
+        end
+        return testdata
+    elseif s == :convert2image
+        @error "MNIST.convert2image(x) is deprecated, use `ImageCore.colorview(Gray, x)` instead"
+    else
+        return getfield(MNIST, s)
+    end
 end

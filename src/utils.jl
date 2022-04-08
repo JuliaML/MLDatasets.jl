@@ -44,7 +44,12 @@ function df_to_matrix(df::AbstractDataFrame)
     end
 end
 
+bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
+bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
+bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)
+bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
+bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
 
-# PIRACY
+# PIRACY # see https://github.com/JuliaML/MLUtils.jl/issues/67
 MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
 MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]

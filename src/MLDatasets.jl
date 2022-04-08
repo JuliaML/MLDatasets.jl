@@ -51,26 +51,26 @@ include("datasets_vision/mnist_reader/MNISTReader.jl")
 include("datasets_vision/mnist.jl")
 export MNIST
 
-include("CIFAR10/CIFAR10.jl")
-include("CIFAR100/CIFAR100.jl")
-include("FashionMNIST/FashionMNIST.jl")
-include("SVHN2/SVHN2.jl")
-include("EMNIST/EMNIST.jl")
+include("datasets_vision/CIFAR10/CIFAR10.jl")
+include("datasets_vision/CIFAR100/CIFAR100.jl")
+include("datasets_vision/FashionMNIST/FashionMNIST.jl")
+include("datasets_vision/SVHN2/SVHN2.jl")
+include("datasets_vision/EMNIST/EMNIST.jl")
 
 # Text
-include("CoNLL.jl")
-include("PTBLM/PTBLM.jl")
-include("UD_English/UD_English.jl")
-include("SMSSpamCollection/SMSSpamCollection.jl")
+include("datasets_text/CoNLL.jl")
+include("datasets_text/PTBLM/PTBLM.jl")
+include("datasets_text/UD_English/UD_English.jl")
+include("datasets_text/SMSSpamCollection/SMSSpamCollection.jl")
 
 # Graphs
-include("planetoid.jl")
-    include("Cora/Cora.jl")
-    include("PubMed/PubMed.jl")
-    include("CiteSeer/CiteSeer.jl")
-include("TUDataset/TUDataset.jl")
-include("OGBDataset/OGBDataset.jl")
-include("PolBlogs/PolBlogs.jl")
+include("datasets_graph/planetoid.jl")
+    include("datasets_graph/Cora/Cora.jl")
+    include("datasets_graph/PubMed/PubMed.jl")
+    include("datasets_graph/CiteSeer/CiteSeer.jl")
+include("datasets_graph/TUDataset/TUDataset.jl")
+include("datasets_graph/OGBDataset/OGBDataset.jl")
+include("datasets_graph/PolBlogs/PolBlogs.jl")
 
 function __init__()
 

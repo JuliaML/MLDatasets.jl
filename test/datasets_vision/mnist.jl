@@ -4,20 +4,8 @@
     # Make sure other integer types work as indicies
     @test MNIST.traintensor(0xBAE) == MNIST.traintensor(2990)
 
-    @testset "Test that traintensor are the train images" begin
-        for i = rand(1:60_000, 10)
-            @test MNIST.traintensor(i) == reinterpret(N0f8, _readimages(_TRAINIMAGES, i))
-            @test MNIST.traintensor(Float64, i) == _readimages(_TRAINIMAGES, i) ./ 255.0
-            @test MNIST.traintensor(UInt8, i) == _readimages(_TRAINIMAGES, i)
-        end
-    end
-    @testset "Test that testtensor are the test images" begin
-        for i = rand(1:10_000, 10)
-            @test MNIST.testtensor(i) == reinterpret(N0f8, _readimages(_TESTIMAGES, i))
-            @test MNIST.testtensor(Float64, i) == _readimages(_TESTIMAGES, i) ./ 255.0
-            @test MNIST.testtensor(UInt8, i) == _readimages(_TESTIMAGES, i)
-        end
-    end
+    @test size(MNIST.traintensor()) == (28,28,60000)
+    @test size(MNIST.testtensor()) == (28,28,10000)
 
     # These tests check if the functions return internaly
     # consistent results for different parameters (e.g. index
