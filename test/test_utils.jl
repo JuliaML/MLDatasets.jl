@@ -60,3 +60,31 @@ function test_inmemory_supervised_table_dataset(d::D;
     idxs = rand(1:n_obs, 2)
     @test isequal(d[idxs], getobs((d.features, d.targets), idxs))
 end
+
+
+function test_supervised_array_dataset(d::D;
+        n_obs, n_features, n_targets,
+        Tx=Any, Ty=Any) where {D<:SupervisedDataset}
+        
+    Nx = length(n_features) + 1
+    Ny = n_targets == 1 ? 1 : 2
+
+    @test d.features isa Array{Tx, Nx}
+    @test d.targets isa Array{Ty, Ny}
+    @test size(d.features) == (n_features..., n_obs)
+    if Ny == 1
+        @test size(d.targets) == (n_obs,)
+    else 
+        @test size(d.targets) == (n_targets, n_obs)
+    end
+
+    @test length(d) == n_obs
+    X, y = d[]
+    @test X === d.features
+    @test y === d.targets 
+
+    idx = rand(1:n_obs)
+    @test isequal(d[idx], getobs((d.features, d.targets), idx))
+    idxs = rand(1:n_obs, 2)
+    @test isequal(d[idxs], getobs((d.features, d.targets), idxs))
+end

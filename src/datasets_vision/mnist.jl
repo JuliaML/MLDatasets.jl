@@ -115,11 +115,11 @@ julia> MNIST.trainlabels(1) # first label
 5
 ```
 """
-struct MNIST{Tx} <: SupervisedDataset
-    metadata::Dict
+struct MNIST{Tx, Ax<:AbstractArray{Tx, 3}} <: SupervisedDataset
+    metadata::Dict{String, Any}
     split::Symbol
-    features::Array{Tx, 3}
-    targets::Matrix{Int}
+    features::Ax
+    targets::Vector{Int}
 end
 
 MNIST(; split=:train, Tx=Float32, dir=nothing) = MNIST(Tx, split; dir)
@@ -139,32 +139,31 @@ function MNIST(Tx, split::Symbol; dir=nothing)
 
     targets_path = datafile("MNIST", LABELSPATH, dir)
     targets = Vector{Int}(MNISTReader.readlabels(targets_path))
-    targets = reshape(targets, 1, :) 
+    # targets = reshape(targets, 1, :) 
 
     metadata = Dict{String,Any}()
     metadata["n_observations"] = size(features, 2)
     metadata["features_path"] = features_path
     metadata["targets_path"] = targets_path
 
-    return MNIST{Tx}(metadata, split, features, targets)
+    return MNIST(metadata, split, features, targets)
 end
 
 
 
-
-# deprecated in v0.6
-function Base.getproperty(::Type{<:MNIST}, s::Symbol)
+# DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
+function Base.getproperty(::Type{MNIST}, s::Symbol)
     if s == :traintensor
         @warn "MNIST.traintensor() is deprecated, use `MNIST(split=:train).features` instead." maxlog=2
-        traintensor(; kws...) = traintensor(:; kws...)
+        traintensor(T::Type=N0f8; kws...) = traintensor(T, :; kws...)
         traintensor(i; kws...) = traintensor(N0f8, i; kws...)
         function traintensor(T::Type, i; dir=nothing)
-            MNIST(split=:train, Tx=T)[i][1]
+            MNIST(; split=:train, Tx=T, dir)[i][1]
         end
         return traintensor
     elseif s == :testtensor
         @warn "MNIST.testtensor() is deprecated, use `MNIST(split=:test).features` instead."  maxlog=2
-        testtensor(; kws...) = testtensor(:; kws...)
+        testtensor(T::Type=N0f8; kws...) = testtensor(T, :; kws...)
         testtensor(i; kws...) = testtensor(N0f8, i; kws...)
         function testtensor(T::Type, i; dir=nothing)
             MNIST(; split=:test, Tx=T, dir)[i][1]
@@ -183,21 +182,21 @@ function Base.getproperty(::Type{<:MNIST}, s::Symbol)
         function testlabels(i; dir=nothing)
             MNIST(; split=:test, dir)[i][2]
         end
-        return trainlabels
+        return testlabels
     elseif s == :traindata
         @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[]` instead." maxlog=2
-        traindata(; kws...) = traindata(:; kws...)
+        traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
-            MNIST(split=:train, Tx=T)[i]
+            MNIST(; split=:train, Tx=T, dir)[i]
         end
         return traindata
     elseif s == :testdata
         @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[]` instead."  maxlog=2
-        testdata(; kws...) = testdata(:; kws...)
+        testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)
-            MNIST(split=:test, Tx=T)[i]
+            MNIST(; split=:test, Tx=T, dir)[i]
         end
         return testdata
     elseif s == :convert2image

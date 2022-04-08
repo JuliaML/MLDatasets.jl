@@ -3,11 +3,12 @@ abstract type AbstractDataset <: AbstractDataContainer end
 function Base.show(io::IO, d::D) where D <: AbstractDataset
     recur_io = IOContext(io, :compact => false)
     
-    print(io, "$D:")
+    print(io, "$(D.name.name):")  # if the type is parameterized don't print the parameters
     
     for f in fieldnames(D)
         if !startswith(string(f), "_")
-            print(recur_io, "\n  $f => ")
+            fstring = leftalign(string(f), 10)
+            print(recur_io, "\n  $fstring  =>    ")
             # show(recur_io, MIME"text/plain"(), getfield(d, f))
             # println(recur_io)
             print(recur_io, "$(_summary(getfield(d, f)))")
@@ -15,7 +16,17 @@ function Base.show(io::IO, d::D) where D <: AbstractDataset
     end
 end
 
+function leftalign(s::AbstractString, n::Int)
+    m = length(s) 
+    if m > n
+        return s[1:n]
+    else
+        return s * repeat(" ", n-m)
+    end
+end
+
 _summary(x) = x
+_summary(x::Symbol) = ":$x"
 _summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)
 
 """
