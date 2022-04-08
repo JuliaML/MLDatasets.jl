@@ -56,9 +56,11 @@ include("datasets_vision/mnist.jl")
 export MNIST
 include("datasets_vision/fashion_mnist.jl")
 export FashionMNIST
+include("datasets_vision/cifar10_reader/CIFAR10Reader.jl")
+include("datasets_vision/cifar10.jl")
+export CIFAR10
 
-include("datasets_vision/CIFAR10/CIFAR10.jl")
-include("datasets_vision/CIFAR100/CIFAR100.jl")
+# include("datasets_vision/CIFAR100/CIFAR100.jl")
 include("datasets_vision/SVHN2/SVHN2.jl")
 include("datasets_vision/EMNIST/EMNIST.jl")
 
@@ -86,6 +88,7 @@ function __init__()
     __init__tudataset()
 
     # vision
+    __init__cifar10()
     __init__fashionmnist()
     __init__mnist()
 end
