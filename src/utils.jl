@@ -35,11 +35,14 @@ function restrict_array_type(res::AbstractArray)
     end
 end
 
-# Julia 1.0 compatibility
-if !isdefined(Base, :isnothing)
-    isnothing(x) = x === nothing
+function df_to_matrix(df::AbstractDataFrame)
+    x = Matrix(df)
+    if size(x, 2) == 1
+        return reshape(x, 1, size(x, 1))
+    else
+        return permutedims(x, (2, 1))
+    end
 end
-
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)
@@ -60,4 +63,6 @@ function _colorview(::Type{T}, array::AbstractArray{<:Number}) where T <: Color
     ImageCore.colorview(T, array)
 end
 
-
+# PIRACY
+MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
+MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]

@@ -1,5 +1,6 @@
 using Test
 using MLDatasets
+using MLDatasets: SupervisedDataset, AbstractDataset
 using FileIO
 using ImageCore
 using DataDeps
@@ -7,28 +8,28 @@ using DataFrames, CSV, Tables
 using HDF5
 using JLD2
 
+
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
+include("test_utils.jl")
+
 dataset_tests = [
-    # misc
-    "tst_iris.jl",
-    "tst_boston_housing.jl",
-    "tst_mutagenesis.jl",
-    "tst_titanic.jl",
-    # vision
+    ## misc
+    "datasets_misc.jl",
+    ## vision
     "tst_cifar10.jl",
     "tst_cifar100.jl",
     "tst_mnist.jl",
     "tst_fashion_mnist.jl",
     "tst_svhn2.jl",
     "tst_emnist.jl",
-    # graphs    
+    ## graphs    
     "tst_citeseer.jl",
     "tst_cora.jl",
     "tst_pubmed.jl",
     "tst_tudataset.jl",
     "tst_polblogs.jl",
-    # text
+    ## text
     "tst_smsspamcollection.jl",
 ]
 
@@ -40,8 +41,8 @@ container_tests = [
     "containers/cacheddataset.jl",
 ]
 
-@testset "Datasets" for t in dataset_tests
-    @testset "$t" begin
+@testset "Datasets" begin
+    @testset "$(split(t,"/")[end])" for t in dataset_tests
         include(t)
     end
 end
