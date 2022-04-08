@@ -53,3 +53,11 @@ bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, r
 # PIRACY # see https://github.com/JuliaML/MLUtils.jl/issues/67
 MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
 MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]
+
+
+"""
+    convert2image(d, i)
+
+Convert the observation(s) `i` from dataset `d` to images.
+"""
+function convert2image end

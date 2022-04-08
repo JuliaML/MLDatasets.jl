@@ -149,6 +149,8 @@ function MNIST(Tx, split::Symbol; dir=nothing)
     return MNIST(metadata, split, features, targets)
 end
 
+convert2image(d::MNIST, i::Int) = permutedims(ImageCore.colorview(Gray, d[i].features), (2, 1))
+convert2image(d::MNIST, i::AbstractVector{Int}) = permutedims(ImageCore.colorview(Gray, d[i].features), (2, 1, 3))
 
 
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
@@ -200,7 +202,8 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return testdata
     elseif s == :convert2image
-        @error "MNIST.convert2image(x) is deprecated, use `ImageCore.colorview(Gray, x)` instead"
+        @warn "MNIST.convert2image(x) is deprecated, use `d=MNIST(); convert2image(d, i)` instead"
+        return x -> ImageCore.colorview(Gray, x)
     else
         return getfield(MNIST, s)
     end

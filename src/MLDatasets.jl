@@ -12,10 +12,14 @@ using Glob
 using HDF5
 using JLD2
 import JSON3
+import ImageCore
 
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
+
 export getobs, numobs
+export convert2image
+
 
 include("utils.jl")
 include("download.jl")
@@ -50,10 +54,11 @@ export Titanic
 include("datasets_vision/mnist_reader/MNISTReader.jl")
 include("datasets_vision/mnist.jl")
 export MNIST
+include("datasets_vision/fashion_mnist.jl")
+export FashionMNIST
 
 include("datasets_vision/CIFAR10/CIFAR10.jl")
 include("datasets_vision/CIFAR100/CIFAR100.jl")
-include("datasets_vision/FashionMNIST/FashionMNIST.jl")
 include("datasets_vision/SVHN2/SVHN2.jl")
 include("datasets_vision/EMNIST/EMNIST.jl")
 
@@ -77,10 +82,11 @@ function __init__()
     # misc
     __init__iris()
     __init__mutagenesis()
-    __init__tudataset()
     __init__ogbdataset()
+    __init__tudataset()
 
     # vision
+    __init__fashionmnist()
     __init__mnist()
 end
 

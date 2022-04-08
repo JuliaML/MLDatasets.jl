@@ -53,12 +53,12 @@ function test_inmemory_supervised_table_dataset(d::D;
         end
     end
 
-    @test d[] === (d.features, d.targets)
+    @test d[] === (; d.features, d.targets)
     @test length(d) == n_obs
     idx = rand(1:n_obs)
-    @test isequal(d[idx], getobs((d.features, d.targets), idx))
+    @test isequal(d[idx], getobs((; d.features, d.targets), idx))
     idxs = rand(1:n_obs, 2)
-    @test isequal(d[idxs], getobs((d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
 end
 
 
@@ -84,7 +84,7 @@ function test_supervised_array_dataset(d::D;
     @test y === d.targets 
 
     idx = rand(1:n_obs)
-    @test isequal(d[idx], getobs((d.features, d.targets), idx))
+    @test isequal(d[idx], getobs((; d.features, d.targets), idx))
     idxs = rand(1:n_obs, 2)
-    @test isequal(d[idxs], getobs((d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
 end
