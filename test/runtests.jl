@@ -22,8 +22,8 @@ dataset_tests = [
     ## misc
     "datasets_misc.jl",
     ## vision
-    "mnist.jl",
-    "deprecated_mnist.jl",
+    "datasets_vision/mnist.jl",
+    "datasets_vision/deprecated_mnist.jl",
     "tst_cifar10.jl",
     "tst_cifar100.jl",
     "tst_fashion_mnist.jl",
