@@ -33,7 +33,7 @@ end
 
 
 """
-    MNIST(; Tx=Float32, split=:train,  dir=nothing)
+    MNIST(; Tx=Float32, split=:train, dir=nothing)
     MNIST([Tx, split])
 
 The MNIST database of handwritten digits.
@@ -50,10 +50,12 @@ the 10 possible digits (0-9).
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
+- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
 
 # Fields
 
 $FIELDS_SUPERVISED_ARRAY
+- `split`.
 
 # Methods
 
@@ -87,10 +89,9 @@ julia> dataset[1:5].targets
 0
 4
 
-julia> dataset[] |> summary
 julia> X, y = dataset[];
 
-julia> dataset = MNIST(Uint8, :test)
+julia> dataset = MNIST(UInt8, :test)
 MNIST:
   metadata    =>    Dict{String, Any} with 3 entries
   split       =>    :test
@@ -132,12 +133,12 @@ function MNIST(Tx::Type, split::Symbol=:train; dir=nothing)
     return MNIST(metadata, split, features, targets)
 end
 
+convert2image(::Type{<:MNIST}, x::AbstractArray{<:Integer}) =
+    convert2image(MNIST, reinterpret(N0f8, convert(Array{UInt8}, x)))
+
 function convert2image(::Type{<:MNIST}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 2 || N == 3
     x = permutedims(x, (2, 1, 3:N...))
-    if T <: Integer
-        x = reinterpret(N0f8, convert(Array{UInt8}, x))
-    end
     return ImageCore.colorview(Gray, x)
 end
 

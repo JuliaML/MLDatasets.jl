@@ -35,6 +35,61 @@ function __init__cifar10()
     ))
 end
 
+
+"""
+    MNIST(; Tx=Float32, split=:train, dir=nothing)
+    MNIST([Tx, split])
+
+The CIFAR-10 dataset is a labeled subsets of the 80
+million tiny images dataset. It consists of 60000
+32x32 colour images in 10 classes, with 6000 images
+per class.
+
+# Arguments
+
+$ARGUMENTS_SUPERVISED_ARRAY
+- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+
+# Fields
+
+$FIELDS_SUPERVISED_ARRAY
+- `split`.
+
+# Methods
+
+$METHODS_SUPERVISED_ARRAY
+- [`convert2image`](@ref) converts features to `RGB` images.
+
+# Examples
+
+```julia-repl
+julia> using MLDatasets: CIFAR10
+
+julia> dataset = CIFAR10()
+MNIST:
+  metadata    =>    Dict{String, Any} with 3 entries
+  split       =>    :train
+  features    =>    28×28×60000 Array{Float32, 3}
+  targets     =>    60000-element Vector{Int64}
+
+julia> dataset[1:5].targets
+5-element Vector{Int64}:
+7
+2
+1
+0
+4
+
+julia> X, y = dataset[];
+
+julia> dataset = CIFAR10(Tx=Float64, split=:test)
+MNIST:
+  metadata    =>    Dict{String, Any} with 3 entries
+  split       =>    :test
+  features    =>    28×28×10000 Array{Float64, 3}
+  targets     =>    10000-element Vector{Int64}
+```
+"""
 struct CIFAR10 <: SupervisedDataset
     metadata::Dict{String, Any}
     split::Symbol
@@ -42,8 +97,9 @@ struct CIFAR10 <: SupervisedDataset
     targets::Vector{Int}
 end
 
+CIFAR10(; split=:train, Tx=Float32, dir=nothing) = CIFAR10(Tx, split; dir)
 
-function CIFAR10(; split=:train, Tx=Float32, dir=nothing)
+function CIFAR10(Tx::Type, split::Symbol=:train; dir=nothing)
     DEPNAME = "CIFAR10"
     NCHUNKS = 5
     TESTSET_FILENAME = joinpath("cifar-10-batches-bin", "test_batch.bin")
@@ -96,15 +152,13 @@ function CIFAR10(; split=:train, Tx=Float32, dir=nothing)
     return CIFAR10(metadata, split, features, targets)
 end
 
+convert2image(::Type{<:CIFAR10}, x::AbstractArray{<:Integer}) =
+    convert2image(CIFAR10, reinterpret(N0f8, convert(Array{UInt8}, x)))
+
 function convert2image(::Type{<:CIFAR10}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 3 || N == 4
-    perm = (3, 2, 1, 4:N...)
-    x = permutedims(x, perm)
-    if T <: Integer
-        x = reinterpret(N0f8, convert(Array{UInt8}, x))
-    end
-    img = ImageCore.colorview(RGB, x)
-    return img
+    x = permutedims(x, (3, 2, 1, 4:N...))
+    return  ImageCore.colorview(RGB, x)
 end
 
 

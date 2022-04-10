@@ -30,16 +30,17 @@ end
 
 
 """
-    FashionMNIST(; split=:train, Tx=Float32, dir=nothing)
+    FashionMNIST(; Tx=Float32, split=:train, dir=nothing)
+    FashionMNIST([Tx, split])
 
-- Authors: Han Xiao, Kashif Rasul, Roland Vollgraf
-- Website: https://github.com/zalandoresearch/fashion-mnist
-
-FashionMNIST is a dataset of Zalando's article images—consisting
+FashionMNIST is a dataset of Zalando's article images consisting
 of a training set of 60_000 examples and a test set of 10_000
 examples. Each example is a 28x28 grayscale image, associated
 with a label from 10 classes. It can serve as a drop-in
 replacement for MNIST.
+
+- Authors: Han Xiao, Kashif Rasul, Roland Vollgraf
+- Website: https://github.com/zalandoresearch/fashion-mnist
 
 See [`MNIST`](@ref) for details of the interface.
 """
@@ -129,8 +130,11 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return testdata
     elseif s == :convert2image
-        @warn "FashionMNIST.convert2image(x) is deprecated, use `convert2image(FashionMNIST, x)` instead"
+        @warn "FashionMNIST.convert2image(x) is deprecated, use `convert2image(FashionMNIST, x)` instead." maxlog=2
         return x -> convert2image(FashionMNIST, x)
+    elseif s == :classnames
+        @warn "FashionMNIST.classnames() is deprecated, use `FashionMNIST().metadata[\"class_names\"]` instead." maxlog=2
+        return () -> ["T-Shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]
     else
         return getfield(FashionMNIST, s)
     end
