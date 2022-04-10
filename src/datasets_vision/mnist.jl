@@ -126,7 +126,7 @@ function MNIST(Tx::Type, split::Symbol=:train; dir=nothing)
     # targets = reshape(targets, 1, :) 
 
     metadata = Dict{String,Any}()
-    metadata["n_observations"] = size(features, 2)
+    metadata["n_observations"] = size(features)[end]
     metadata["features_path"] = features_path
     metadata["targets_path"] = targets_path
 

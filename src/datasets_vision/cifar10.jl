@@ -66,28 +66,33 @@ $METHODS_SUPERVISED_ARRAY
 julia> using MLDatasets: CIFAR10
 
 julia> dataset = CIFAR10()
-MNIST:
-  metadata    =>    Dict{String, Any} with 3 entries
+CIFAR10:
+  metadata    =>    Dict{String, Any} with 2 entries
   split       =>    :train
-  features    =>    28×28×60000 Array{Float32, 3}
-  targets     =>    60000-element Vector{Int64}
+  features    =>    32×32×3×50000 Array{Float32, 4}
+  targets     =>    50000-element Vector{Int64}
 
 julia> dataset[1:5].targets
 5-element Vector{Int64}:
-7
-2
-1
-0
-4
+ 6
+ 9
+ 9
+ 4
+ 1
 
 julia> X, y = dataset[];
 
 julia> dataset = CIFAR10(Tx=Float64, split=:test)
-MNIST:
-  metadata    =>    Dict{String, Any} with 3 entries
+CIFAR10:
+  metadata    =>    Dict{String, Any} with 2 entries
   split       =>    :test
-  features    =>    28×28×10000 Array{Float64, 3}
+  features    =>    32×32×3×10000 Array{Float64, 4}
   targets     =>    10000-element Vector{Int64}
+
+julia> dataset.metadata
+Dict{String, Any} with 2 entries:
+  "n_observations" => 10000
+  "class_names"    => ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
 ```
 """
 struct CIFAR10 <: SupervisedDataset

@@ -71,7 +71,7 @@ function FashionMNIST(Tx, split::Symbol; dir=nothing)
     # targets = reshape(targets, 1, :) 
 
     metadata = Dict{String,Any}()
-    metadata["n_observations"] = size(features, 2)
+    metadata["n_observations"] = size(features)[end]
     metadata["features_path"] = features_path
     metadata["targets_path"] = targets_path
     metadata["class_names"] = ["T-Shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]

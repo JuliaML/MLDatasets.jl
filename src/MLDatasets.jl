@@ -12,6 +12,7 @@ using JLD2
 import JSON3
 import ImageCore
 using ColorTypes
+using MAT: matopen, matread
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
 
@@ -49,6 +50,9 @@ export Titanic
 
 
 # Vision
+
+include("datasets_vision/emnist.jl")
+export EMNIST
 include("datasets_vision/mnist_reader/MNISTReader.jl")
 include("datasets_vision/mnist.jl")
 export MNIST
@@ -60,7 +64,6 @@ export CIFAR10
 
 # include("datasets_vision/CIFAR100/CIFAR100.jl")
 include("datasets_vision/SVHN2/SVHN2.jl")
-include("datasets_vision/EMNIST/EMNIST.jl")
 
 # Text
 include("datasets_text/CoNLL.jl")
@@ -87,6 +90,7 @@ function __init__()
 
     # vision
     __init__cifar10()
+    __init__emnist()
     __init__fashionmnist()
     __init__mnist()
 end
