@@ -7,34 +7,16 @@ using MLDatasets
 using DataDeps
 
 function readimage(path, m, i)
-    CIFAR100.Reader.readdata(path, m, i)[1]
+    MLDatasets.CIFAR100Reader.readdata(path, m, i)[1]
 end
 
-@testset "Constants" begin
-    @test CIFAR100.Reader.NROW === 32
-    @test CIFAR100.Reader.NCOL === 32
-    @test CIFAR100.Reader.NCHAN === 3
-    @test CIFAR100.Reader.NBYTE === 3074
-
-    @test CIFAR100.TRAINSET_SIZE === 50_000
-    @test CIFAR100.TESTSET_SIZE  === 10_000
-
-    @test DataDeps.registry["CIFAR100"] isa DataDeps.DataDep
-end
-
-
-@testset "convert2images" begin
-    @test CIFAR100.convert2image === CIFAR10.convert2image
-end
 
 # NOT executed on CI. only executed locally.
 # This involves dataset download etc.
 if parse(Bool, get(ENV, "CI", "false"))
     @info "CI detected: skipping dataset download"
 else
-    data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-        datadep"CIFAR100"
-    end
+    data_dir = datadep"CIFAR100"
 
     @testset "classnames" begin
         @test CIFAR100.classnames_coarse() isa Vector{String}
@@ -90,18 +72,14 @@ else
             )
             @testset "$image_fun with T=$T" begin
                 # whole image set
-                A = @inferred image_fun(T)
+                A = image_fun(T)
                 @test typeof(A) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                 @test size(A) == (32,32,3,nimages)
-
-                @test_throws AssertionError image_fun(T,-1)
-                @test_throws AssertionError image_fun(T,0)
-                @test_throws AssertionError image_fun(T,nimages+1)
 
                 @testset "load single images" begin
                     # Sample a few random images to compare
                     for i = rand(1:nimages, 10)
-                        A_i = @inferred image_fun(T,i)
+                        A_i = image_fun(T,i)
                         @test typeof(A_i) <: Union{Array{T,3},Base.ReinterpretArray{T,3}}
                         @test size(A_i) == (32,32,3)
                         @test A_i == A[:,:,:,i]
@@ -109,7 +87,7 @@ else
                 end
 
                 @testset "load multiple images" begin
-                    A_5_10 = @inferred image_fun(T,5:10)
+                    A_5_10 = image_fun(T,5:10)
                     @test typeof(A_5_10) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_5_10) == (32,32,3,6)
                     for i = 1:6
@@ -163,7 +141,7 @@ else
                      (CIFAR100.testlabels,  10_000))
             @testset "$label_fun" begin
                 # whole label set
-                A, B = @inferred label_fun()
+                A, B = label_fun()
                 @test typeof(A) <: Vector{Int64}
                 @test size(A) == (nlabels,)
                 @test typeof(B) <: Vector{Int64}
@@ -172,7 +150,7 @@ else
                 @testset "load single label" begin
                     # Sample a few random labels to compare
                     for i = rand(1:nlabels, 10)
-                        A_i, B_i = @inferred label_fun(i)
+                        A_i, B_i = label_fun(i)
                         @test typeof(A_i) <: Int64
                         @test A_i == A[i]
                         @test typeof(B_i) <: Int64
@@ -181,7 +159,7 @@ else
                 end
 
                 @testset "load multiple labels" begin
-                    A_5_10, B_5_10 = @inferred label_fun(5:10)
+                    A_5_10, B_5_10 = label_fun(5:10)
                     @test typeof(A_5_10) <: Vector{Int64}
                     @test size(A_5_10) == (6,)
                     @test typeof(B_5_10) <: Vector{Int64}
@@ -193,8 +171,8 @@ else
 
                     # also test edge cases `1`, `nlabels`
                     indices = [10,3,9,1,nlabels]
-                    A_vec, B_vec     = @inferred label_fun(indices)
-                    A_vec_f, B_vec_f = @inferred label_fun(Vector{Int32}(indices))
+                    A_vec, B_vec     = label_fun(indices)
+                    A_vec_f, B_vec_f = label_fun(Vector{Int32}(indices))
                     @test typeof(A_vec)   <: Vector{Int64}
                     @test typeof(A_vec_f) <: Vector{Int64}
                     @test size(A_vec)   == (5,)
@@ -220,28 +198,28 @@ else
                 ((CIFAR100.traindata, CIFAR100.traintensor, CIFAR100.trainlabels, 50_000),
                  (CIFAR100.testdata,  CIFAR100.testtensor,  CIFAR100.testlabels,  10_000))
             @testset "check $data_fun against $feature_fun and $label_fun" begin
-                data, l1, l2 = @inferred data_fun()
-                @test data == @inferred feature_fun()
-                @test (l1, l2) == @inferred label_fun()
+                data, l1, l2 = data_fun()
+                @test data == feature_fun()
+                @test (l1, l2) == label_fun()
 
                 for i = rand(1:nobs, 10)
-                    d_i, l1_i, l2_i = @inferred data_fun(i)
-                    @test d_i == @inferred feature_fun(i)
-                    @test (l1_i, l2_i) == @inferred label_fun(i)
+                    d_i, l1_i, l2_i = data_fun(i)
+                    @test d_i == feature_fun(i)
+                    @test (l1_i, l2_i) == label_fun(i)
                 end
 
-                data, l1, l2 = @inferred data_fun(5:10)
-                @test data == @inferred feature_fun(5:10)
-                @test (l1, l2) == @inferred label_fun(5:10)
+                data, l1, l2 = data_fun(5:10)
+                @test data == feature_fun(5:10)
+                @test (l1, l2) == label_fun(5:10)
 
-                data, l1, l2 = @inferred data_fun(Int, 5:10)
-                @test data == @inferred feature_fun(Int, 5:10)
-                @test (l1, l2) == @inferred label_fun(5:10)
+                data, l1, l2 = data_fun(Int, 5:10)
+                @test data == feature_fun(Int, 5:10)
+                @test (l1, l2) == label_fun(5:10)
 
                 indices = [10,3,9,1,nobs]
-                data, l1, l2 = @inferred data_fun(indices)
-                @test data == @inferred feature_fun(indices)
-                @test (l1, l2) == @inferred label_fun(indices)
+                data, l1, l2 = data_fun(indices)
+                @test data == feature_fun(indices)
+                @test (l1, l2) == label_fun(indices)
             end
         end
     end

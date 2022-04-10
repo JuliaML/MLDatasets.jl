@@ -37,10 +37,10 @@ end
 
 
 """
-    MNIST(; Tx=Float32, split=:train, dir=nothing)
-    MNIST([Tx, split])
+    CIFAR10(; Tx=Float32, split=:train, dir=nothing)
+    CIFAR10([Tx, split])
 
-The CIFAR-10 dataset is a labeled subsets of the 80
+The CIFAR10 dataset is a labeled subsets of the 80
 million tiny images dataset. It consists of 60000
 32x32 colour images in 10 classes, with 6000 images
 per class.

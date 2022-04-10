@@ -61,8 +61,10 @@ export FashionMNIST
 include("datasets_vision/cifar10_reader/CIFAR10Reader.jl")
 include("datasets_vision/cifar10.jl")
 export CIFAR10
+include("datasets_vision/cifar100_reader/CIFAR100Reader.jl")
+include("datasets_vision/cifar100.jl")
+export CIFAR100
 
-# include("datasets_vision/CIFAR100/CIFAR100.jl")
 include("datasets_vision/SVHN2/SVHN2.jl")
 
 # Text
@@ -90,6 +92,7 @@ function __init__()
 
     # vision
     __init__cifar10()
+    __init__cifar100()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()

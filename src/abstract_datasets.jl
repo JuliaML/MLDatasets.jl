@@ -28,6 +28,7 @@ end
 _summary(x) = x
 _summary(x::Symbol) = ":$x"
 _summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)
+_summary(x::Union{Tuple, NamedTuple}) = map(summary, x)
 
 """
     abstract type SupervisedDataset <: AbstractDataset end

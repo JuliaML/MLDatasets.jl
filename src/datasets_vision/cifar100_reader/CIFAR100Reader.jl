@@ -1,4 +1,4 @@
-module Reader
+module CIFAR100Reader
 
 export
 

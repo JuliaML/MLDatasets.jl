@@ -22,20 +22,27 @@ dataset_tests = [
     # "datasets_misc/deprecated_misc.jl",
     ## vision
     # "datasets_vision/cifar10.jl",
+    # "datasets_vision/cifar100.jl",
+    # "datasets_vision/emnist.jl",
     # "datasets_vision/fashion_mnist.jl",
     # "datasets_vision/mnist.jl",
-    # "datasets_vision/deprecated_mnist.jl",
-    "datasets_vision/deprecated_fashion_mnist.jl",
-    # "datasets_vision/deprecated_cifar10.jl",
-    # "tst_cifar100.jl",
-    # "tst_svhn2.jl",
-    # "tst_emnist.jl",
+    # "datasets_vision/svhn2.jl",
+    # "datasets_vision/deprecated_cifar10.jl", #ok
+    "datasets_vision/deprecated_cifar100.jl",
+    # "datasets_vision/deprecated_fashion_mnist.jl", #ok
+    # "datasets_vision/deprecated_mnist.jl", #ok
+    # "datasets_vision/deprecated_svhn2.jl",
     # ## graphs    
-    # "tst_citeseer.jl",
-    # "tst_cora.jl",
-    # "tst_pubmed.jl",
-    # "tst_tudataset.jl",
-    # "tst_polblogs.jl",
+    # "datasets_vision/citeseer.jl",
+    # "datasets_vision/cora.jl",
+    # "datasets_vision/pubmed.jl",
+    # "datasets_vision/tudataset.jl",
+    # "datasets_vision/polblogs.jl",
+    # "datasets_vision/deprecated_citeseer.jl",
+    # "datasets_vision/deprecated_cora.jl",
+    # "datasets_vision/deprecated_pubmed.jl",
+    # "datasets_vision/deprecated_tudataset.jl",
+    # "datasets_vision/deprecated_polblogs.jl",
     # ## text
     # "datasets_text/datasets_text.jl",
     # "datasets_text/smsspamcollection.jl",
