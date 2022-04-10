@@ -14,8 +14,9 @@ else
                           (:letters,  (124800, 20800)),
                           (:mnist,  (60000, 10000))]
         
-        d = EMNIST()
+        d = EMNIST(name)
 
+        @test d.name == name
         @test d.split == :train
         @test extrema(d.features) == (0, 1)
         @test convert2image(d, 1) isa AbstractMatrix{<:Gray}
@@ -27,9 +28,10 @@ else
             conv2img=true)
         
         
-        d = EMNIST(split=name, Tx=UInt8)
+        d = EMNIST(name, split=:test, Tx=UInt8)
 
-        @test d.split == name
+        @test d.name == name
+        @test d.split == :test
         @test extrema(d.features) == (0, 255)
         @test convert2image(d, 1) isa AbstractMatrix{<:Gray}
     

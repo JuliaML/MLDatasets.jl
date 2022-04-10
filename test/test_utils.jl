@@ -68,15 +68,28 @@ function test_supervised_array_dataset(d::D;
         conv2img=false) where {D<:SupervisedDataset}
         
     Nx = length(n_features) + 1
-    Ny = n_targets == 1 ? 1 : 2
+    Ny = map(x -> x == 1 ? 1 : 2, n_targets)
 
     @test d.features isa Array{Tx, Nx}
-    @test d.targets isa Array{Ty, Ny}
     @test size(d.features) == (n_features..., n_obs)
-    if Ny == 1
-        @test size(d.targets) == (n_obs,)
+    
+    if Ny isa NamedTuple
+        for k in keys(Ny)
+            ny = Ny[k]
+            @test d.targets[k] isa Array{Ty, ny}
+            if ny == 1
+                @test size(d.targets[k]) == (n_obs,)
+            else 
+                @test size(d.targets[k]) == (ny, n_obs)
+            end
+        end
     else 
-        @test size(d.targets) == (n_targets, n_obs)
+        @assert Ny isa Int
+        if Ny == 1
+            @test size(d.targets) == (n_obs,)
+        else 
+            @test size(d.targets) == (Ny, n_obs)
+        end
     end
 
     @test length(d) == n_obs

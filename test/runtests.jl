@@ -21,14 +21,14 @@ dataset_tests = [
     # "datasets_misc/datasets_misc.jl",
     # "datasets_misc/deprecated_misc.jl",
     ## vision
-    # "datasets_vision/cifar10.jl",
-    # "datasets_vision/cifar100.jl",
-    # "datasets_vision/emnist.jl",
-    # "datasets_vision/fashion_mnist.jl",
-    # "datasets_vision/mnist.jl",
+    # "datasets_vision/cifar10.jl", #ok
+    # "datasets_vision/cifar100.jl", #ok
+    # "datasets_vision/emnist.jl", #ok
+    # "datasets_vision/fashion_mnist.jl", #ok
+    # "datasets_vision/mnist.jl", #ok
     # "datasets_vision/svhn2.jl",
     # "datasets_vision/deprecated_cifar10.jl", #ok
-    "datasets_vision/deprecated_cifar100.jl",
+    # "datasets_vision/deprecated_cifar100.jl", #ok
     # "datasets_vision/deprecated_fashion_mnist.jl", #ok
     # "datasets_vision/deprecated_mnist.jl", #ok
     # "datasets_vision/deprecated_svhn2.jl",

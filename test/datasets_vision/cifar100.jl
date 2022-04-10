@@ -1,5 +1,5 @@
 n_features = (32, 32, 3)
-n_targets = 1
+n_targets = (coarse=1, fine=1)
 
 @testset "trainset" begin
     d = CIFAR100()
