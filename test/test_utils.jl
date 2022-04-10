@@ -53,10 +53,60 @@ function test_inmemory_supervised_table_dataset(d::D;
         end
     end
 
-    @test d[] === (d.features, d.targets)
+    @test d[] === (; d.features, d.targets)
     @test length(d) == n_obs
     idx = rand(1:n_obs)
-    @test isequal(d[idx], getobs((d.features, d.targets), idx))
+    @test isequal(d[idx], getobs((; d.features, d.targets), idx))
     idxs = rand(1:n_obs, 2)
-    @test isequal(d[idxs], getobs((d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+end
+
+
+function test_supervised_array_dataset(d::D;
+        n_obs, n_features, n_targets,
+        Tx=Any, Ty=Any,
+        conv2img=false) where {D<:SupervisedDataset}
+        
+    Nx = length(n_features) + 1
+    Ny = map(x -> x == 1 ? 1 : 2, n_targets)
+
+    @test d.features isa Array{Tx, Nx}
+    @test size(d.features) == (n_features..., n_obs)
+    
+    if Ny isa NamedTuple
+        for k in keys(Ny)
+            ny = Ny[k]
+            @test d.targets[k] isa Array{Ty, ny}
+            if ny == 1
+                @test size(d.targets[k]) == (n_obs,)
+            else 
+                @test size(d.targets[k]) == (ny, n_obs)
+            end
+        end
+    else 
+        @assert Ny isa Int
+        if Ny == 1
+            @test size(d.targets) == (n_obs,)
+        else 
+            @test size(d.targets) == (Ny, n_obs)
+        end
+    end
+
+    @test length(d) == n_obs
+    X, y = d[]
+    @test X === d.features
+    @test y === d.targets 
+
+    idx = rand(1:n_obs)
+    @test isequal(d[idx], getobs((; d.features, d.targets), idx))
+    idxs = rand(1:n_obs, 2)
+    @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+
+    if conv2img
+        img = convert2image(d, 1)
+        @test img isa AbstractArray{<:Color}
+        x = d[1].features
+        @test convert2image(D, x) == img
+        @test convert2image(d, x) == img
+    end 
 end

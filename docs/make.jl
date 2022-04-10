@@ -18,27 +18,15 @@ makedocs(
         collapselevel=3,
     ),
 
-    authors = "Hiroyuki Shindo, Christof Stocker",
-    # TODO: automatize `pages` creation
+    authors = "Hiroyuki Shindo, Christof Stocker, Carlo Lucibello",
+    
     pages = Any[
         "Home" => "index.md",
-        "Available Datasets" => Any[
-            "Vision" => Any[
-                "MNIST" => "datasets/MNIST.md",
-                "EMNIST" => "datasets/EMNIST.md",
-                "FashionMNIST" => "datasets/FashionMNIST.md",
-                "CIFAR-10" => "datasets/CIFAR10.md",
-                "CIFAR-100" => "datasets/CIFAR100.md",
-                "SVHN format 2" => "datasets/SVHN2.md",
-            ],
-            "Miscellaneous" => "datasets/misc.md",
-            "Text" => Any[
-                "PTBLM" => "datasets/PTBLM.md",
-                "UD_English" => "datasets/UD_English.md",
-            ],
-
+        "Datasets" => Any[
             "Graphs" => "datasets/graphs.md",
-
+            "Miscellaneous" => "datasets/misc.md",
+            "Text" => "datasets/text.md",
+            "Vision" => "datasets/vision.md",
         ],
         "Utils" => "utils.md",
         "Data Containers" => "containers/overview.md",
@@ -47,6 +35,5 @@ makedocs(
     strict = true,
     checkdocs = :exports
 )
-
 
 deploydocs(repo = "github.com/JuliaML/MLDatasets.jl.git")

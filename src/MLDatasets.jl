@@ -1,10 +1,7 @@
 module MLDatasets
 
-using FixedPointNumbers: length
-using ColorTypes: length
-using Requires
 using DelimitedFiles: readdlm
-using FixedPointNumbers, ColorTypes
+using FixedPointNumbers
 using Pickle
 using SparseArrays
 using FileIO
@@ -13,17 +10,22 @@ using Glob
 using HDF5
 using JLD2
 import JSON3
-
+import ImageCore
+using ColorTypes
+using MAT: matopen, matread
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
-export getobs, numobs
 
-include("utils.jl")
-include("download.jl")
+export getobs, numobs
+export convert2image
+
 
 include("abstract_datasets.jl")
 # export AbstractDataset, 
 #        SupervisedDataset
+
+include("utils.jl")
+include("download.jl")
 
 include("containers/filedataset.jl")
 export FileDataset
@@ -48,38 +50,54 @@ export Titanic
 
 
 # Vision
-include("CIFAR10/CIFAR10.jl")
-include("CIFAR100/CIFAR100.jl")
-include("MNIST/MNIST.jl")
-include("FashionMNIST/FashionMNIST.jl")
-include("SVHN2/SVHN2.jl")
-include("EMNIST/EMNIST.jl")
+
+include("datasets_vision/emnist.jl")
+export EMNIST
+include("datasets_vision/mnist_reader/MNISTReader.jl")
+include("datasets_vision/mnist.jl")
+export MNIST
+include("datasets_vision/fashion_mnist.jl")
+export FashionMNIST
+include("datasets_vision/cifar10_reader/CIFAR10Reader.jl")
+include("datasets_vision/cifar10.jl")
+export CIFAR10
+include("datasets_vision/cifar100_reader/CIFAR100Reader.jl")
+include("datasets_vision/cifar100.jl")
+export CIFAR100
+
+include("datasets_vision/svhn2.jl")
+export SVHN2
 
 # Text
-include("CoNLL.jl")
-include("PTBLM/PTBLM.jl")
-include("UD_English/UD_English.jl")
-include("SMSSpamCollection/SMSSpamCollection.jl")
+include("datasets_text/CoNLL.jl")
+include("datasets_text/PTBLM/PTBLM.jl")
+include("datasets_text/UD_English/UD_English.jl")
+include("datasets_text/SMSSpamCollection/SMSSpamCollection.jl")
 
 # Graphs
-include("planetoid.jl")
-    include("Cora/Cora.jl")
-    include("PubMed/PubMed.jl")
-    include("CiteSeer/CiteSeer.jl")
-include("TUDataset/TUDataset.jl")
-include("OGBDataset/OGBDataset.jl")
-include("PolBlogs/PolBlogs.jl")
+include("datasets_graph/planetoid.jl")
+    include("datasets_graph/Cora/Cora.jl")
+    include("datasets_graph/PubMed/PubMed.jl")
+    include("datasets_graph/CiteSeer/CiteSeer.jl")
+include("datasets_graph/TUDataset/TUDataset.jl")
+include("datasets_graph/OGBDataset/OGBDataset.jl")
+include("datasets_graph/PolBlogs/PolBlogs.jl")
 
 function __init__()
-    # initialize optional dependencies
-    @require ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534" begin
-        global __images_supported__ = true
-    end
 
+    # misc
     __init__iris()
     __init__mutagenesis()
-    __init__tudataset()
     __init__ogbdataset()
+    __init__tudataset()
+
+    # vision
+    __init__cifar10()
+    __init__cifar100()
+    __init__emnist()
+    __init__fashionmnist()
+    __init__mnist()
+    __init__svhn2()
 end
 
 end

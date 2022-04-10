@@ -43,26 +43,48 @@ function df_to_matrix(df::AbstractDataFrame)
         return permutedims(x, (2, 1))
     end
 end
+
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
 
-global __images_supported__ = false
-
-function _channelview(image::AbstractArray{<:Colorant})
-    __images_supported__ ||
-        error("Converting to/from image requires `using ImageCore`")
-    ImageCore.channelview(image)
-end
-
-function _colorview(::Type{T}, array::AbstractArray{<:Number}) where T <: Color
-    __images_supported__ ||
-        error("Converting to image requires `using ImageCore`")
-    ImageCore.colorview(T, array)
-end
-
-# PIRACY
+# PIRACY # see https://github.com/JuliaML/MLUtils.jl/issues/67
 MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
 MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]
+
+
+"""
+    convert2image(d, i)
+    convert2image(d, x)
+    convert2image(DatasetType, x)
+
+Convert the observation(s) `i` from dataset `d` to image(s).
+It can also convert a numerical array `x` once provided with
+a dataset object or a dataset type.
+
+# Examples
+
+```julia-repl
+julia> using MLDatasets, ImageInTerminal
+
+julia> d = MNIST()
+
+julia> i = 1:2;
+
+julia> convert2image(d, i)
+
+julia> x = d[1].features;
+
+julia> convert2image(MNIST, x)
+"""
+function convert2image end
+
+
+convert2image(d::SupervisedDataset, i::Integer) =
+    convert2image(typeof(d), d[i].features)
+convert2image(d::SupervisedDataset, i::AbstractVector) =
+    convert2image(typeof(d), d[i].features)
+convert2image(d::SupervisedDataset, x::AbstractArray) =
+    convert2image(typeof(d), x)
