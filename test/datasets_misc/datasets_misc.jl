@@ -15,18 +15,6 @@
         n_obs, n_features, n_targets,
         feature_names, target_names, 
         Tx=Float64, Ty=Float64)
-
-    # TODO remove
-    @testset "deprecated interface" begin
-        X  = BostonHousing.features()
-        Y  = BostonHousing.targets()
-        names = BostonHousing.feature_names()
-        @test X isa Matrix{Float64}
-        @test Y isa Matrix{Float64}
-        @test names == lowercase.(feature_names)
-        @test size(X) == (13, 506)
-        @test size(Y) == (1, 506)
-    end
 end
 
 @testset "Iris" begin
@@ -47,16 +35,6 @@ end
         n_obs, n_features, n_targets,
         feature_names, target_names,
         Tx=Float64, Ty=AbstractString)
-
-    # TODO remove
-    @testset "deprecated interface" begin
-        X  = Iris.features()
-        Y  = Iris.labels()
-        @test X isa Matrix{Float64}
-        @test Y isa Vector{<:AbstractString}
-        @test size(X) == (4, 150)
-        @test size(Y) == (150,)
-    end
 end
 
 @testset "Mutagenesis" begin
@@ -89,24 +67,6 @@ end
     @test length(x) == 2
     @test y isa Vector{Int}
     @test length(y) == 2
-
-    @testset "deprecated interface" begin
-        train_x, train_y = Mutagenesis.traindata()
-        test_x, test_y = Mutagenesis.testdata()
-        val_x, val_y = Mutagenesis.valdata()
-
-        @test length(train_x) == length(train_y) == 100
-        @test length(test_x) == length(test_y) == 44
-        @test length(val_x) == length(val_y) == 44
-        # test that label is not contained in features
-        @test !any(haskey.(train_x, :mutagenic))
-        @test !any(haskey.(test_x, :mutagenic))
-        @test !any(haskey.(val_x, :mutagenic))
-        # test data is materialized
-        @test train_x isa Vector{<:Dict}
-        @test test_x isa Vector{<:Dict}
-        @test val_x isa Vector{<:Dict}
-    end
 end
 
 @testset "Titanic" begin
@@ -121,21 +81,12 @@ end
         n_obs, n_features, n_targets,
         feature_names, target_names)
 
+    
     d = Titanic(as_df=false)
     test_inmemory_supervised_table_dataset(d;
         n_obs, n_features, n_targets,
         feature_names, target_names, 
         Tx=Any, Ty=Int)
 
-    # TODO remove
-    @testset "deprecated interface" begin
-        X = Titanic.features()
-        Y = Titanic.targets()
-        names = Titanic.feature_names()
-        @test X isa Matrix
-        @test Y isa Matrix
-        @test names == feature_names
-        @test size(X) == (11, 891)
-        @test size(Y) == (1, 891)
-    end
+    @test d[1].features = [1, 3, "Braund, Mr. Owen Harris", "male", 22, 1, 0, "A/5 21171", 7.25, "", "S"]
 end

@@ -36,25 +36,19 @@ end
 - Website: https://github.com/zalandoresearch/fashion-mnist
 
 FashionMNIST is a dataset of Zalando's article images—consisting
-of a training set of 60,000 examples and a test set of 10,000
+of a training set of 60_000 examples and a test set of 10_000
 examples. Each example is a 28x28 grayscale image, associated
 with a label from 10 classes. It can serve as a drop-in
 replacement for MNIST.
 
-# Interface
-
-- [`FashionMNIST.traintensor`](@ref), [`FashionMNIST.trainlabels`](@ref), [`FashionMNIST.traindata`](@ref)
-- [`FashionMNIST.testtensor`](@ref), [`FashionMNIST.testlabels`](@ref), [`FashionMNIST.testdata`](@ref)
-
+See [`MNIST`](@ref) for details of the interface.
 """
-struct FashionMNIST{Tx, Ax<:AbstractArray{Tx, 3}} <: SupervisedDataset
+struct FashionMNIST <: SupervisedDataset
     metadata::Dict{String, Any}
     split::Symbol
-    features::Ax
+    features::Array{<:Any,3}
     targets::Vector{Int}
 end
-
-
 
 FashionMNIST(; split=:train, Tx=Float32, dir=nothing) = FashionMNIST(Tx, split; dir)
 
@@ -84,9 +78,7 @@ function FashionMNIST(Tx, split::Symbol; dir=nothing)
     return FashionMNIST(metadata, split, features, targets)
 end
 
-convert2image(d::FashionMNIST, i::Int) = permutedims(ImageCore.colorview(Gray, d[i].features), (2, 1))
-convert2image(d::FashionMNIST, i::AbstractVector{Int}) = permutedims(ImageCore.colorview(Gray, d[i].features), (2, 1, 3))
-
+convert2image(::Type{<:FashionMNIST}, x::AbstractArray) = convert2image(MNIST, x)
 
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
@@ -137,8 +129,8 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return testdata
     elseif s == :convert2image
-        @warn "FashionMNIST.convert2image(x) is deprecated, use `ImageCore.colorview(Gray, x)` instead"
-        return x -> ImageCore.colorview(Gray, x)
+        @warn "FashionMNIST.convert2image(x) is deprecated, use `convert2image(FashionMNIST, x)` instead"
+        return x -> convert2image(FashionMNIST, x)
     else
         return getfield(FashionMNIST, s)
     end

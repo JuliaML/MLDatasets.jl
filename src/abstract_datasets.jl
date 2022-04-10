@@ -49,10 +49,11 @@ Base.getindex(d::SupervisedDataset, i) = getobs((; d.features, d.targets), i)
 
 ### DOCSTRING TEMPLATES ######################
 
+# SUPERVISED TABLE
 const ARGUMENTS_SUPERVISED_TABLE = """
-If `as_df = true`, load the data as dataframes instead of plain arrays.
+- If `as_df = true`, load the data as dataframes instead of plain arrays.
 
-You can pass a specific `dir` where to download the dataset, otherwise uses
+- You can pass a specific `dir` where to load or download the dataset, otherwise uses
 the default one.
 """
 
@@ -64,7 +65,27 @@ const FIELDS_SUPERVISED_TABLE = """
 """
 
 const METHODS_SUPERVISED_TABLE = """
-- `dataset[i]`: Return observation(s) `i` as a tuple of features and targets . 
-- `dataset[]`: Return all observations as a tuple of features and targets.
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets . 
+- `dataset[]`: Return all observations as a named tuple of features and targets.
+- `length(dataset)`: Number of observations.
+"""
+
+
+# SUPERVISED ARRAY DATASET
+
+const ARGUMENTS_SUPERVISED_ARRAY = """
+- You can pass a specific `dir` where to load or download the dataset, otherwise uses
+the default one.
+"""
+
+const FIELDS_SUPERVISED_ARRAY = """
+- `metadata`: A dictionary containing additional information on the dataset.
+- `features`: An array storing the data features. 
+- `targets`: An array storing the targets for supervised learning.
+"""
+
+const METHODS_SUPERVISED_ARRAY = """
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets . 
+- `dataset[]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """

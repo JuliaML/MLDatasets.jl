@@ -1,9 +1,7 @@
 module MLDatasets
 
-using FixedPointNumbers: length
-using ColorTypes: length
 using DelimitedFiles: readdlm
-using FixedPointNumbers, ColorTypes
+using FixedPointNumbers
 using Pickle
 using SparseArrays
 using FileIO
@@ -13,7 +11,7 @@ using HDF5
 using JLD2
 import JSON3
 import ImageCore
-
+using ColorTypes
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
 
@@ -21,12 +19,12 @@ export getobs, numobs
 export convert2image
 
 
-include("utils.jl")
-include("download.jl")
-
 include("abstract_datasets.jl")
 # export AbstractDataset, 
 #        SupervisedDataset
+
+include("utils.jl")
+include("download.jl")
 
 include("containers/filedataset.jl")
 export FileDataset

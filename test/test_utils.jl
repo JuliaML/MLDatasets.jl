@@ -64,7 +64,8 @@ end
 
 function test_supervised_array_dataset(d::D;
         n_obs, n_features, n_targets,
-        Tx=Any, Ty=Any) where {D<:SupervisedDataset}
+        Tx=Any, Ty=Any,
+        conv2img=false) where {D<:SupervisedDataset}
         
     Nx = length(n_features) + 1
     Ny = n_targets == 1 ? 1 : 2
@@ -87,4 +88,12 @@ function test_supervised_array_dataset(d::D;
     @test isequal(d[idx], getobs((; d.features, d.targets), idx))
     idxs = rand(1:n_obs, 2)
     @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+
+    if conv2img
+        img = convert2image(d, 1)
+        @test img isa AbstractArray{<:Color}
+        x = d[1].features
+        @test convert2image(D, x) == img
+        @test convert2image(d, x) == img
+    end 
 end

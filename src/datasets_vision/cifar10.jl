@@ -35,10 +35,10 @@ function __init__cifar10()
     ))
 end
 
-struct CIFAR10{Tx, Ax<:AbstractArray{Tx, 4}} <: SupervisedDataset
+struct CIFAR10 <: SupervisedDataset
     metadata::Dict{String, Any}
     split::Symbol
-    features::Ax
+    features::Array{<:Any, 4}
     targets::Vector{Int}
 end
 
@@ -92,21 +92,18 @@ function CIFAR10(; split=:train, Tx=Float32, dir=nothing)
 
     metadata = Dict{String, Any}()
     metadata["class_names"] = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+    metadata["n_observations"] = size(features)[end]
     return CIFAR10(metadata, split, features, targets)
 end
 
-function convert2image(d::CIFAR10, i)
-    array = d[i].features
-    d = ndims(array)  
-    array = reshape(array, 32, 32, 3, :)
-    array = permutedims(array, (3, 2, 1, 4))
-    if d < ndims(array)
-        array = dropdims(array, dims=4)
+function convert2image(::Type{<:CIFAR10}, x::AbstractArray{T,N}) where {T,N}
+    @assert N == 3 || N == 4
+    perm = (3, 2, 1, 4:N...)
+    x = permutedims(x, perm)
+    if T <: Integer
+        x = reinterpret(N0f8, convert(Array{UInt8}, x))
     end
-    if eltype(array) <: Integer
-        array = reinterpret(N0f8, convert(Array{UInt8}, array))
-    end
-    img = ImageCore.colorview(RGB, array)
+    img = ImageCore.colorview(RGB, x)
     return img
 end
 
@@ -160,7 +157,8 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return testdata
     elseif s == :convert2image
-        @error "CIFAR10.convert2image(x) is deprecated, use `d=CIFAR10(); convert2image(d, i)` instead"
+        @warn "CIFAR10.convert2image(x) is deprecated, use `convert2image(CIFAR10, x)` instead"
+        return x -> convert2image(CIFAR10, x)
     else
         return getfield(CIFAR10, s)
     end

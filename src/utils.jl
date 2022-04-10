@@ -57,7 +57,34 @@ MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]
 
 """
     convert2image(d, i)
+    convert2image(d, x)
+    convert2image(DatasetType, x)
 
-Convert the observation(s) `i` from dataset `d` to images.
+Convert the observation(s) `i` from dataset `d` to image(s).
+It can also convert a numerical array `x` once provided with
+a dataset object or a dataset type.
+
+# Examples
+
+```julia-repl
+julia> using MLDatasets, ImageInTerminal
+
+julia> d = MNIST()
+
+julia> i = 1:2;
+
+julia> convert2image(d, i)
+
+julia> x = d[1].features;
+
+julia> convert2image(MNIST, x)
 """
 function convert2image end
+
+
+convert2image(d::SupervisedDataset, i::Integer) =
+    convert2image(typeof(d), d[i].features)
+convert2image(d::SupervisedDataset, i::AbstractVector) =
+    convert2image(typeof(d), d[i].features)
+convert2image(d::SupervisedDataset, x::AbstractArray) =
+    convert2image(typeof(d), x)
