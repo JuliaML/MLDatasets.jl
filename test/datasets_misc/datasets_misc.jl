@@ -88,5 +88,5 @@ end
         feature_names, target_names, 
         Tx=Any, Ty=Int)
 
-    @test d[1].features = [1, 3, "Braund, Mr. Owen Harris", "male", 22, 1, 0, "A/5 21171", 7.25, "", "S"]
+    @test isequal(d[1].features, [1, 3, "Braund, Mr. Owen Harris", "male", 22, 1, 0, "A/5 21171", 7.25, missing, "S"])
 end

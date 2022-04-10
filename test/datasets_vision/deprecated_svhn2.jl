@@ -12,14 +12,9 @@ using MAT
     @test SVHN2.classnames() == [1,2,3,4,5,6,7,8,9,0]
     @test length(SVHN2.classnames()) == 10
     @test length(unique(SVHN2.classnames())) == 10
-
-    @test DataDeps.registry["SVHN2"] isa DataDeps.DataDep
 end
 
 @testset "convert2images" begin
-    @test_throws DimensionMismatch SVHN2.convert2image(rand(100))
-    @test_throws DimensionMismatch SVHN2.convert2image(rand(228,1))
-    @test_throws DimensionMismatch SVHN2.convert2image(rand(32,32,4))
 
     data = rand(N0f8,32,32,3)
     A = SVHN2.convert2image(data)
@@ -42,14 +37,12 @@ end
 if parse(Bool, get(ENV, "CI", "false"))
     @info "CI detected: skipping dataset download"
 else
-    data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-        datadep"SVHN2"
-    end
+    data_dir = datadep"SVHN2"
 
     @testset "Images" begin
-        X_train = @inferred SVHN2.traintensor()
-        X_test  = @inferred SVHN2.testtensor()
-        X_extra = @inferred SVHN2.extratensor()
+        X_train = SVHN2.traintensor()
+        X_test  = SVHN2.testtensor()
+        X_extra = SVHN2.extratensor()
         @test size(X_train, 4) == 73_257
         @test size(X_test,  4) == 26_032
         @test size(X_extra, 4) == 531_131
@@ -76,18 +69,14 @@ else
             )
             @testset "$image_fun with T=$T" begin
                 # whole image set
-                A = @inferred image_fun(T)
+                A = image_fun(T)
                 @test typeof(A) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                 @test size(A) == (32,32,3,nimages)
-
-                @test_throws BoundsError image_fun(T,-1)
-                @test_throws BoundsError image_fun(T,0)
-                @test_throws BoundsError image_fun(T,nimages+1)
 
                 @testset "load single images" begin
                     # Sample a few random images to compare
                     for i = rand(1:nimages, 3)
-                        A_i = @inferred image_fun(T,i)
+                        A_i = image_fun(T,i)
                         @test typeof(A_i) <: Union{Array{T,3},Base.ReinterpretArray{T,3}}
                         @test size(A_i) == (32,32,3)
                         @test A_i == A[:,:,:,i]
@@ -95,7 +84,7 @@ else
                 end
 
                 @testset "load multiple images" begin
-                    A_5_10 = @inferred image_fun(T,5:10)
+                    A_5_10 = image_fun(T,5:10)
                     @test typeof(A_5_10) <: Union{Array{T,4},Base.ReinterpretArray{T,4}}
                     @test size(A_5_10) == (32,32,3,6)
                     for i = 1:6
@@ -155,21 +144,21 @@ else
                      (SVHN2.extralabels, 531_131))
             @testset "$label_fun" begin
                 # whole label set
-                A = @inferred label_fun()
+                A = label_fun()
                 @test typeof(A) <: Vector{Int64}
                 @test size(A) == (nlabels,)
 
                 @testset "load single label" begin
                     # Sample a few random labels to compare
                     for i = rand(1:nlabels, 10)
-                        A_i = @inferred label_fun(i)
+                        A_i = label_fun(i)
                         @test typeof(A_i) <: Int64
                         @test A_i == A[i]
                     end
                 end
 
                 @testset "load multiple labels" begin
-                    A_5_10 = @inferred label_fun(5:10)
+                    A_5_10 = label_fun(5:10)
                     @test typeof(A_5_10) <: Vector{Int64}
                     @test size(A_5_10) == (6,)
                     for i = 1:6
@@ -178,8 +167,8 @@ else
 
                     # also test edge cases `1`, `nlabels`
                     indices = [10,3,9,1,nlabels]
-                    A_vec   = @inferred label_fun(indices)
-                    A_vec_f = @inferred label_fun(Vector{Int32}(indices))
+                    A_vec   = label_fun(indices)
+                    A_vec_f = label_fun(Vector{Int32}(indices))
                     @test typeof(A_vec)   <: Vector{Int64}
                     @test typeof(A_vec_f) <: Vector{Int64}
                     @test size(A_vec)   == (5,)
@@ -198,28 +187,28 @@ else
         for (data_fun, feature_fun, label_fun, nobs) in
                  ((SVHN2.testdata,  SVHN2.testtensor,  SVHN2.testlabels,  26_032),)
             @testset "check $data_fun against $feature_fun and $label_fun" begin
-                data, labels = @inferred data_fun()
-                @test data == @inferred feature_fun()
-                @test labels == @inferred label_fun()
+                data, labels = data_fun()
+                @test data == feature_fun()
+                @test labels == label_fun()
 
                 for i = rand(1:nobs, 10)
-                    d_i, l_i = @inferred data_fun(i)
-                    @test d_i == @inferred feature_fun(i)
-                    @test l_i == @inferred label_fun(i)
+                    d_i, l_i = data_fun(i)
+                    @test d_i == feature_fun(i)
+                    @test l_i == label_fun(i)
                 end
 
-                data, labels = @inferred data_fun(5:10)
-                @test data == @inferred feature_fun(5:10)
-                @test labels == @inferred label_fun(5:10)
+                data, labels = data_fun(5:10)
+                @test data == feature_fun(5:10)
+                @test labels == label_fun(5:10)
 
-                data, labels = @inferred data_fun(Int, 5:10)
-                @test data == @inferred feature_fun(Int, 5:10)
-                @test labels == @inferred label_fun(5:10)
+                data, labels = data_fun(Int, 5:10)
+                @test data == feature_fun(Int, 5:10)
+                @test labels == label_fun(5:10)
 
                 indices = [10,3,9,1,nobs]
-                data, labels = @inferred data_fun(indices)
-                @test data == @inferred feature_fun(indices)
-                @test labels == @inferred label_fun(indices)
+                data, labels = data_fun(indices)
+                @test data == feature_fun(indices)
+                @test labels == label_fun(indices)
             end
         end
     end

@@ -65,7 +65,8 @@ include("datasets_vision/cifar100_reader/CIFAR100Reader.jl")
 include("datasets_vision/cifar100.jl")
 export CIFAR100
 
-include("datasets_vision/SVHN2/SVHN2.jl")
+include("datasets_vision/svhn2.jl")
+export SVHN2
 
 # Text
 include("datasets_text/CoNLL.jl")
@@ -96,6 +97,7 @@ function __init__()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()
+    __init__svhn2()
 end
 
 end
