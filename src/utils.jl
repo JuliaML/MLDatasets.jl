@@ -66,7 +66,9 @@ It can also convert a numerical array `x`.
 # Examples
 
 ```julia-repl
-julia> using MLDatasets, ImageInTerminal
+julia> using MLDatasets: MNIST
+        
+julia> using ImageInTerminal
 
 julia> d = MNIST()
 
@@ -77,6 +79,7 @@ julia> convert2image(d, i)
 julia> x = d[1].features;
 
 julia> convert2image(MNIST, x) # or convert2image(d, x)
+```
 """
 function convert2image end
 
