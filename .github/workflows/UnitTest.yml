@@ -16,8 +16,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        julia-version: ['1.6', '1', 'nightly']
-        os: [ubuntu-latest, windows-latest, macOS-latest, macos-11]
+        version:
+          - '1.6' # Replace this with the minimum Julia version that your package supports. E.g. if your package requires Julia 1.5 or higher, change this to '1.5'.
+          - '1' # Leave this line unchanged. '1' will automatically expand to the latest stable 1.x release of Julia.
+          - 'nightly'
+        os:
+          - ubuntu-latest
+        arch:
+          - x64
+        include:
+          - os: windows-latest
+            version: '1'
+            arch: x64
+          - os: macOS-latest
+            version: '1'
+            arch: x64
     env:
       PYTHON: ""
     steps:
