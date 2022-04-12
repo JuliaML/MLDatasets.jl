@@ -1,4 +1,20 @@
 export UD_English
+
+"""
+    UD_English
+
+Dataset: Universal Dependencies - English Dependency Treebank Universal Dependencies English Web Treebank
+Authors: Natalia Silveira and Timothy Dozat and
+            Marie-Catherine de Marneffe and Samuel
+            Bowman and Miriam Connor and John Bauer and
+            Christopher D. Manning
+Website: https://github.com/UniversalDependencies/UD_English-EWT
+
+A Gold Standard Universal Dependencies Corpus for
+English, built over the source material of the
+English Web Treebank LDC2012T13
+(https://catalog.ldc.upenn.edu/LDC2012T13).
+"""
 module UD_English
 
     using DataDeps
@@ -29,8 +45,32 @@ module UD_English
 
     function readdata(dir, filename)
         path = datafile(DEPNAME, filename, dir)
-        CoNLL.read(path)
+        conll_read(path)
     end
+
+    function conll_read(f, path::String)
+        doc = []
+        sent = []
+        lines = open(readlines, path)
+        for line in lines
+            line = chomp(line)
+            if length(line) == 0
+                length(sent) > 0 && push!(doc, sent)
+                sent = []
+            elseif line[1] == '#' # comment line
+                continue
+            else
+                items = Vector{String}(split(line,'\t'))
+                push!(sent, f(items))
+            end
+        end
+        length(sent) > 0 && push!(doc, sent)
+        T = typeof(doc[1][1])
+        Vector{Vector{T}}(doc)
+    end
+    
+    conll_read(path::String) = read(identity, path)
+    
 
     function __init__()
         register(DataDep(

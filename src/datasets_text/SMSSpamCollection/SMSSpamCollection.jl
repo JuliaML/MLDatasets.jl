@@ -1,8 +1,7 @@
 export SMSSpamCollection
 
 """
-SMS Spam Collection v.1
--------------------------
+    SMSSpamCollection
 
 1. DESCRIPTION
 --------------
@@ -79,9 +78,22 @@ The SMS Spam Collection v.1 is provided for free and with no limitations excepti
 
 # Interface
 
-- [`SMSSpamCollection.features`](@ref)
-- [`SMSSpamCollection.targets`](@ref)
+- SMSSpamCollection.features`
+- SMSSpamCollection.targets
 
+```julia-repl
+julia> using MLDatasets: SMSSpamCollection
+
+julia> targets = SMSSpamCollection.targets();
+
+julia> summary(targets)
+"5574-element Vector{Any}"
+
+julia> targets[1]
+"ham"
+
+julia> summary(features)
+"5574-element Vector{Any}"
 """
 module SMSSpamCollection
 
@@ -115,24 +127,6 @@ function __init__()
     ))
 end
 
-"""
-    targets()
-
-Get the targets for the SMS Spam Collection dataset,
-a 5574 element array listing the targets for each sample.
-
-```julia
-julia> using MLDatasets: SMSSpamCollection
-
-julia> targets = SMSSpamCollection.targets();
-
-julia> summary(targets)
-"5574-element Vector{Any}"
-
-julia> targets[1]
-"ham"
-```
-"""
 function targets(; dir = nothing)
     path = datafile(DEPNAME, "SMSSpamCollection", dir)
     f = open(path)
@@ -145,21 +139,6 @@ function targets(; dir = nothing)
     targets
 end
 
-"""
-    features()
-
-Return the features for the SMS Spam Collection dataset.
-It has 5574 rows, each containing a text message to be classified as spam or ham.
-
-```julia
-julia> using MLDatasets: SMSSpamCollection
-
-julia> features = SMSSpamCollection.features();
-
-julia> summary(features)
-"5574-element Vector{Any}"
-```
-"""
 function features(; dir = nothing)
     path = datafile(DEPNAME, "SMSSpamCollection", dir)
     f = open(path)
