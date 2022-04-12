@@ -1,4 +1,13 @@
 export PTBLM
+
+"""
+    PTBLM
+
+The PTBLM dataset consists of Penn Treebank sentences
+for language modeling, available from tomsercu/lstm.
+The unknown words are replaced with <unk> so that the
+total vocaburary size becomes 10000.
+"""
 module PTBLM
 
     using DataDeps

@@ -3,26 +3,26 @@ function readimages!(buffer::Matrix{UInt8}, io::IO, index::Integer, nrows::Integ
     read!(io, buffer)
 end
 
-"""
-    readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
+# """
+#     readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
 
-Jumps to the position of `io` where the bytes for the `index`'th
-image are located and reads the next `nrows` * `ncols` bytes. The
-read bytes are returned as a `Matrix{UInt8}` of size `(nrows, ncols)`.
-"""
+# Jumps to the position of `io` where the bytes for the `index`'th
+# image are located and reads the next `nrows` * `ncols` bytes. The
+# read bytes are returned as a `Matrix{UInt8}` of size `(nrows, ncols)`.
+# """
 function readimages(io::IO, index::Integer, nrows::Integer, ncols::Integer)
     buffer = Array{UInt8}(undef, nrows, ncols)
     readimages!(buffer, io, index, nrows, ncols)
 end
 
-"""
-    readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
+# """
+#     readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
 
-Reads the first `nrows` * `ncols` bytes for each image index in
-`indices` and stores them in a `Array{UInt8,3}` of size `(nrows,
-ncols, length(indices))` in the same order as denoted by
-`indices`.
-"""
+# Reads the first `nrows` * `ncols` bytes for each image index in
+# `indices` and stores them in a `Array{UInt8,3}` of size `(nrows,
+# ncols, length(indices))` in the same order as denoted by
+# `indices`.
+# """
 function readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Integer)
     images = Array{UInt8}(undef, nrows, ncols, length(indices))
     buffer = Array{UInt8}(undef, nrows, ncols)
@@ -35,29 +35,29 @@ function readimages(io::IO, indices::AbstractVector, nrows::Integer, ncols::Inte
     images
 end
 
-"""
-    readimages(file, [indices])
+# """
+#     readimages(file, [indices])
 
-Reads the images denoted by `indices` from `file`. The given
-`file` can either be specified using an IO-stream or a string
-that denotes the fully qualified path. The conent of `file` is
-assumed to be in the MNIST image-file format, as it is described
-on the official homepage at http://yann.lecun.com/exdb/mnist/
+# Reads the images denoted by `indices` from `file`. The given
+# `file` can either be specified using an IO-stream or a string
+# that denotes the fully qualified path. The conent of `file` is
+# assumed to be in the MNIST image-file format, as it is described
+# on the official homepage at http://yann.lecun.com/exdb/mnist/
 
-- if `indices` is an `Integer`, the single image is returned as
-  `Matrix{UInt8}` in horizontal major layout, which means that
-  the first dimension denotes the pixel *rows* (x), and the
-  second dimension denotes the pixel *columns* (y) of the image.
+# - if `indices` is an `Integer`, the single image is returned as
+#   `Matrix{UInt8}` in horizontal major layout, which means that
+#   the first dimension denotes the pixel *rows* (x), and the
+#   second dimension denotes the pixel *columns* (y) of the image.
 
-- if `indices` is a `AbstractVector`, the images are returned as
-  a 3D array (i.e. a `Array{UInt8,3}`), in which the first
-  dimension corresponds to the pixel *rows* (x) of the image, the
-  second dimension to the pixel *columns* (y) of the image, and
-  the third dimension denotes the index of the image.
+# - if `indices` is a `AbstractVector`, the images are returned as
+#   a 3D array (i.e. a `Array{UInt8,3}`), in which the first
+#   dimension corresponds to the pixel *rows* (x) of the image, the
+#   second dimension to the pixel *columns* (y) of the image, and
+#   the third dimension denotes the index of the image.
 
-- if `indices` is ommited all images are returned
-  (as 3D array described above)
-"""
+# - if `indices` is ommited all images are returned
+#   (as 3D array described above)
+# """
 function readimages(io::IO, indices)
     _, nimages, nrows, ncols = readimageheader(io)
     @assert minimum(indices) >= 1 && maximum(indices) <= nimages

@@ -43,8 +43,8 @@ no_ci_dataset_tests = [
     "datasets_vision/cifar10.jl",
     "datasets_vision/cifar100.jl",
     "datasets_vision/svhn2.jl",
-    # "datasets_vision/deprecated_cifar10.jl", #ok
-    # "datasets_vision/deprecated_cifar100.jl", #ok
+    # "datasets_vision/deprecated_cifar10.jl",
+    # "datasets_vision/deprecated_cifar100.jl",
     # "datasets_vision/deprecated_svhn2.jl", # NOT OK
     ]
 

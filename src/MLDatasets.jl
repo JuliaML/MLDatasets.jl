@@ -25,6 +25,8 @@ include("abstract_datasets.jl")
 #        SupervisedDataset
 
 include("utils.jl")
+export convert2image
+
 include("download.jl")
 
 include("containers/filedataset.jl")
@@ -69,7 +71,6 @@ include("datasets_vision/svhn2.jl")
 export SVHN2
 
 # Text
-include("datasets_text/CoNLL.jl")
 include("datasets_text/PTBLM/PTBLM.jl")
 include("datasets_text/UD_English/UD_English.jl")
 include("datasets_text/SMSSpamCollection/SMSSpamCollection.jl")
