@@ -26,10 +26,10 @@ jobs:
           - x64
         include:
           - os: windows-latest
-            version: '1'
+            julia-version: '1'
             arch: x64
           - os: macOS-latest
-            version: '1'
+            julia-version: '1'
             arch: x64
     env:
       PYTHON: ""
