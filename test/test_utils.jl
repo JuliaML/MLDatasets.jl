@@ -67,7 +67,12 @@ function test_supervised_array_dataset(d::D;
         Tx=Any, Ty=Any,
         conv2img=false) where {D<:SupervisedDataset}
         
-    Nx = length(n_features) + 1
+    if n_features isa Int
+        @assert n_features != 0 "use n_features=() if you don't want features dimensions"
+        Nx == 2
+    else # tuple
+        Nx = length(n_features) + 1
+    end
     Ny = map(x -> x == 1 ? 1 : 2, n_targets)
 
     @test d.features isa Array{Tx, Nx}

@@ -71,9 +71,12 @@ include("datasets_vision/svhn2.jl")
 export SVHN2
 
 # Text
-include("datasets_text/PTBLM/PTBLM.jl")
-include("datasets_text/UD_English/UD_English.jl")
-include("datasets_text/SMSSpamCollection/SMSSpamCollection.jl")
+# include("datasets_text/ptblm.jl")
+# export PTBLM
+# include("datasets_text/udenglish.jl")
+# export UDEnglish
+include("datasets_text/smsspamcollection.jl")
+export SMSSpamCollection
 
 # Graphs
 include("datasets_graph/planetoid.jl")
@@ -100,6 +103,7 @@ function __init__()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()
+    __init__smsspam()
     __init__svhn2()
 end
 
