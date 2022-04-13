@@ -20,4 +20,7 @@ PolBlogs.labels
 PubMed
 PubMed.dataset
 TUDataset
+KarateClub
+KarateClub.edge_index
+KarateClub.labels
 ```
