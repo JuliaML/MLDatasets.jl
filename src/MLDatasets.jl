@@ -83,6 +83,8 @@ include("datasets_graph/planetoid.jl")
 include("datasets_graph/TUDataset/TUDataset.jl")
 include("datasets_graph/OGBDataset/OGBDataset.jl")
 include("datasets_graph/PolBlogs/PolBlogs.jl")
+include("datasets_graph/KarateClub/KarateClub.jl")
+export KarateClub
 
 function __init__()
 
