@@ -16,42 +16,17 @@ Its functionality is built on top of the package
 
 ## Available Datasets
 
-Each dataset has its own dedicated sub-module. 
-Find below a list of available datasets and links to their documentation.
+Datasets are grouped into different categories. Click on the links below for a full list of datasets available in each category.
 
-#### Vision
-  - [CIFAR10](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CIFAR10/)
-  - [CIFAR100](https://juliaml.github.io/MLDatasets.jl/dev/datasets/CIFAR100/)
-  - [EMNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/EMNIST/)
-  - [FashionMNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/FashionMNIST/)
-  - [MNIST](https://juliaml.github.io/MLDatasets.jl/dev/datasets/MNIST/)
-  - [SVHN2](https://juliaml.github.io/MLDatasets.jl/dev/datasets/SVHN2/)
+- [Graphs](https://juliaml.github.io/MLDatasets.jl/dev/datasets/graphs). Datasets with an undelying graph stucture: Cora, PubMed, CiteSeer ...
+- [Misc](https://juliaml.github.io/MLDatasets.jl/dev/datasets/misc/). Datasets that do not fall into any of the other categories: Iris, BostonHousing, ...
+- [Text](https://juliaml.github.io/MLDatasets.jl/dev/datasets/test/). Datasets for language models. 
+- [Vision](https://juliaml.github.io/MLDatasets.jl/dev/datasets/vision/). Vision related datasets such as MNIST, CIFAR10, CIFAR100, ... 
 
-#### Miscellaneous
-  - [BostonHousing](https://juliaml.github.io/MLDatasets.jl/dev/datasets/BostonHousing/)
-  - [Iris](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Iris/)
-  - [Mutagenesis](https://relational.fit.cvut.cz/dataset/Mutagenesis)
-  - [Titanic](https://juliaml.github.io/MLDatasets.jl/dev/datasets/Titanic/)
-
-#### Text
-  - [PTBLM](https://juliaml.github.io/MLDatasets.jl/dev/datasets/PTBLM/)
-  - [UD_English](https://juliaml.github.io/MLDatasets.jl/dev/datasets/UD_English/)
-  - [SMSSpamClassification](https://juliaml.github.io/MLDatasets.jl/dev/datasets/SMSSpamClassification/)
-
-#### Graphs
-
-Documentation [link](https://juliaml.github.io/MLDatasets.jl/dev/datasets/graphs). Available datasets:
-  - CiteSeer
-  - Cora
-  - OGBDataset
-  - PubMed
-  - TUDataset
 
 ## Installation
 
-To install `MLDatasets.jl`, start up Julia and type the following code snippet into the REPL. 
-It makes use of the native Julia
-package manger.
+To install `MLDatasets.jl`, start up Julia and type the following code snippet into the REPL. It makes use of the native Julia package manger.
 
 ```julia
 import Pkg
@@ -60,8 +35,7 @@ Pkg.add("MLDatasets")
 
 ## Contributing to MLDatasets
 
-New dataset contributions are warmly welcome. See `src/Cora/Cora.jl` for an example
-of a minimal implementation. 
+Pull requests contributing new datasets are warmly welcome. See the source code of any of the currently implemented datasets, e.g. `src/datasets_misc/iris.jl`, for examples.
 
 ## License
 
