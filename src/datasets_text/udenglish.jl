@@ -113,10 +113,10 @@ function Base.getproperty(::Type{UD_English}, s::Symbol)
         return testdata
     elseif s === :devdata
         @warn "UD_English.devdata() is deprecated, use `UD_English(split=:dev)[]` instead."  maxlog=2
-        function testdata(; dir=nothing)
+        function devdata(; dir=nothing)
             UD_English(; split=:dev, dir)[]
         end
-        return testdata
+        return devdata
     else
         return getfield(UD_English, s)
     end

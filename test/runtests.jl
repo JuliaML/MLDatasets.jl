@@ -1,6 +1,6 @@
 using Test
 using MLDatasets
-using MLDatasets: SupervisedDataset, AbstractDataset
+using MLDatasets: SupervisedDataset, UnsupervisedDataset, AbstractDataset
 using FileIO
 using DataDeps
 using DataFrames, CSV, Tables
@@ -18,24 +18,25 @@ include("test_utils.jl")
 
 # we comment out deprecated test
 dataset_tests = [
-    #### misc
-    # "datasets_misc/datasets_misc.jl",
-    # # "datasets_misc/deprecated_misc.jl",
-    # #### vision
-    # "datasets_vision/emnist.jl",
-    # "datasets_vision/fashion_mnist.jl",
-    # "datasets_vision/mnist.jl",
-    # # "datasets_vision/deprecated_fashion_mnist.jl",
-    # # "datasets_vision/deprecated_mnist.jl",
-    # #### graphs    
-    # "datasets_graph/deprecated_citeseer.jl",
-    # "datasets_graph/deprecated_cora.jl",
-    # "datasets_graph/deprecated_pubmed.jl",
-    # "datasets_graph/deprecated_tudataset.jl",
-    # "datasets_graph/deprecated_polblogs.jl",
-    # #### text
+    ### misc
+    "datasets_misc/misc.jl",
+    # "datasets_misc/deprecated_misc.jl",
+    #### vision
+    "datasets_vision/emnist.jl",
+    "datasets_vision/fashion_mnist.jl",
+    "datasets_vision/mnist.jl",
+    # "datasets_vision/deprecated_fashion_mnist.jl",
+    # "datasets_vision/deprecated_mnist.jl",
+    #### graphs    
+    "datasets_graph/deprecated_citeseer.jl",
+    "datasets_graph/deprecated_cora.jl",
+    "datasets_graph/deprecated_pubmed.jl",
+    "datasets_graph/deprecated_tudataset.jl",
+    "datasets_graph/deprecated_polblogs.jl",
+    "datasets_graph/deprecated_karateclub.jl",
+    #### text
     "datasets_text/text.jl",
-    "datasets_text/deprecated_text.jl",
+    # "datasets_text/deprecated_text.jl",
 ]
 
 no_ci_dataset_tests = [

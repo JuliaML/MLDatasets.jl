@@ -5,11 +5,11 @@
 
 end
 
-# @testset "UD_English" begin
-#     x = UD_English.traindata()
-#     x = UD_English.devdata()
-#     x = UD_English.testdata()
-# end
+@testset "UD_English" begin
+    x = UD_English.traindata()
+    x = UD_English.devdata()
+    x = UD_English.testdata()
+end
 
 @testset "SMS Spam Collection" begin
     X = SMSSpamCollection.features()

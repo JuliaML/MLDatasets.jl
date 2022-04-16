@@ -125,9 +125,10 @@ end
 
 function test_unsupervised_array_dataset(d::D;
         n_obs, n_features,
-        Tx=Any, Ty=Any,
+        Tx=Any,
         conv2img=false) where {D<:UnsupervisedDataset}
         
+    n_features = n_features === nothing ? () : n_features
     if n_features isa Int
         @assert n_features != 0 "use n_features = () if you don't want features dimensions"
         Nx == 2
@@ -147,7 +148,7 @@ function test_unsupervised_array_dataset(d::D;
     @test isequal(d[idx], getobs(d.features, idx))
     @test isequal(d[idx], getobs(d, idx))
     idxs = rand(1:n_obs, 2)
-    @test isequal(d[idxs], getobs(d.features, idxs)
+    @test isequal(d[idxs], getobs(d.features, idxs))
     @test isequal(d[idxs], getobs(d, idxs))
     
     if conv2img
