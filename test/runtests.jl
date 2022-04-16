@@ -1,6 +1,6 @@
 using Test
 using MLDatasets
-using MLDatasets: SupervisedDataset, AbstractDataset
+using MLDatasets: SupervisedDataset, UnsupervisedDataset, AbstractDataset
 using FileIO
 using DataDeps
 using DataFrames, CSV, Tables
@@ -18,8 +18,8 @@ include("test_utils.jl")
 
 # we comment out deprecated test
 dataset_tests = [
-    #### misc
-    "datasets_misc/datasets_misc.jl",
+    ### misc
+    "datasets_misc/misc.jl",
     # "datasets_misc/deprecated_misc.jl",
     #### vision
     "datasets_vision/emnist.jl",
@@ -33,10 +33,10 @@ dataset_tests = [
     "datasets_graph/deprecated_pubmed.jl",
     "datasets_graph/deprecated_tudataset.jl",
     "datasets_graph/deprecated_polblogs.jl",
-    "datasets_graph/karateclub.jl",
+    "datasets_graph/deprecated_karateclub.jl",
     #### text
-    "datasets_text/deprecated_text.jl",
-    "datasets_text/deprecated_smsspamcollection.jl",
+    "datasets_text/text.jl",
+    # "datasets_text/deprecated_text.jl",
 ]
 
 no_ci_dataset_tests = [
