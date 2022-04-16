@@ -47,6 +47,21 @@ Base.length(d::SupervisedDataset) = numobs((d.features, d.targets))
 Base.getindex(d::SupervisedDataset) = getobs((; d.features, d.targets)) 
 Base.getindex(d::SupervisedDataset, i) = getobs((; d.features, d.targets), i)
 
+"""
+    abstract type UnsupervisedDataset <: AbstractDataset end
+
+An abstract dataset type for unsupervised or self-supervised learning tasks. 
+Concrete dataset types inheriting from it must provide
+a `features` field.
+"""
+abstract type UnsupervisedDataset <: AbstractDataset end
+
+
+Base.length(d::UnsupervisedDataset) = numobs(d.features)
+
+Base.getindex(d::UnsupervisedDataset) = getobs(d.features) 
+Base.getindex(d::UnsupervisedDataset, i) = getobs(d.features, i)
+
 
 ### DOCSTRING TEMPLATES ######################
 

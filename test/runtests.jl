@@ -34,9 +34,8 @@ dataset_tests = [
     # "datasets_graph/deprecated_tudataset.jl",
     # "datasets_graph/deprecated_polblogs.jl",
     # #### text
-    "datasets_text/smsspamcollection.jl",
-    # "datasets_text/deprecated_text.jl",
-    "datasets_text/deprecated_smsspamcollection.jl",
+    "datasets_text/text.jl",
+    "datasets_text/deprecated_text.jl",
 ]
 
 no_ci_dataset_tests = [

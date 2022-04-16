@@ -1,116 +1,123 @@
-export UD_English
+function __init__udenglish()
+    DEPNAME = "UD_English"
+    TRAINFILE = "en_ewt-ud-train.conllu"
+    DEVFILE   = "en_ewt-ud-dev.conllu"
+    TESTFILE  = "en_ewt-ud-test.conllu"
+
+    register(DataDep(
+        DEPNAME,
+        """
+        Dataset: Universal Dependencies - English Dependency Treebank Universal Dependencies English Web Treebank
+        Authors: Natalia Silveira and Timothy Dozat and
+                 Marie-Catherine de Marneffe and Samuel
+                 Bowman and Miriam Connor and John Bauer and
+                 Christopher D. Manning
+        Website: https://github.com/UniversalDependencies/UD_English-EWT
+
+
+        The files are available for download at the github
+        repository linked above. Note that using the data
+        responsibly and respecting copyright remains your
+        responsibility. Copyright and License is discussed in
+        detail on the Website.
+        """,
+        "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
+        "e08d57e95264ac97ca861261e3119e093c054453c5dfc583e2402459504d93b7"
+    ))
+end
 
 """
-    UD_English
-
-Dataset: Universal Dependencies - English Dependency Treebank Universal Dependencies English Web Treebank
-Authors: Natalia Silveira and Timothy Dozat and
-            Marie-Catherine de Marneffe and Samuel
-            Bowman and Miriam Connor and John Bauer and
-            Christopher D. Manning
-Website: https://github.com/UniversalDependencies/UD_English-EWT
+    UD_English(; split=:train, dir=nothing)
+    UD_English(split=; [dir])
 
 A Gold Standard Universal Dependencies Corpus for
 English, built over the source material of the
 English Web Treebank LDC2012T13
 (https://catalog.ldc.upenn.edu/LDC2012T13).
+
+The corpus comprises 254,825 words and 16,621 sentences, 
+taken from five genres of web media: weblogs, newsgroups, emails, reviews, and Yahoo! answers. 
+See the LDC2012T13 documentation for more details on the sources of the sentences. 
+The trees were automatically converted into Stanford Dependencies and then hand-corrected to Universal Dependencies. 
+All the basic dependency annotations have been single-annotated, a limited portion of them have been double-annotated, 
+and subsequent correction has been done to improve consistency. Other aspects of the treebank, such as Universal POS, 
+features and enhanced dependencies, has mainly been done automatically, with very limited hand-correction.
+
+
+Authors: Natalia Silveira and Timothy Dozat and
+            Marie-Catherine de Marneffe and Samuel
+            Bowman and Miriam Connor and John Bauer and
+            Christopher D. Manning
+Website: https://github.com/UniversalDependencies/UD_English-EWT
 """
-module UD_English
+struct UD_English <: UnsupervisedDataset
+    metadata::Dict{String,Any}
+    split::Symbol
+    features::Vector{Vector{Vector{String}}}
+end
 
-    using DataDeps
-    using ..MLDatasets
-    using ..MLDatasets: datafile, download_dep
+UD_English(; split=:train, dir=nothing) = UD_English(split; dir)
 
-    export
+function UD_English(split::Symbol; dir=nothing)
+    DEPNAME = "UD_English"
+    TRAINFILE = "en_ewt-ud-train.conllu"
+    DEVFILE   = "en_ewt-ud-dev.conllu"
+    TESTFILE  = "en_ewt-ud-test.conllu"
 
-        traindata,
-        testdata,
+    @assert split ∈ [:train, :test, :dev]
+    
+    
+    FILE = split == :train ? TRAINFILE : 
+           split == :test ? TESTFILE :
+           split === :dev ? DEVFILE : error()
 
-        download
+    path = datafile(DEPNAME, FILE, dir)
 
-    const DEPNAME = "UD_English"
-    const TRAINFILE = "en_ewt-ud-train.conllu"
-    const DEVFILE   = "en_ewt-ud-dev.conllu"
-    const TESTFILE  = "en_ewt-ud-test.conllu"
-
-    download(args...; kw...) = download_dep(DEPNAME, args...; kw...)
-
-    traindata(; dir = nothing) = traindata(dir)
-    devdata(; dir = nothing)   = devdata(dir)
-    testdata(; dir = nothing)  = testdata(dir)
-
-    traindata(dir) = readdata(dir, TRAINFILE)
-    devdata(dir)   = readdata(dir, DEVFILE)
-    testdata(dir)  = readdata(dir, TESTFILE)
-
-    function readdata(dir, filename)
-        path = datafile(DEPNAME, filename, dir)
-        conll_read(path)
-    end
-
-    function conll_read(f, path::String)
-        doc = []
-        sent = []
-        lines = open(readlines, path)
-        for line in lines
-            line = chomp(line)
-            if length(line) == 0
-                length(sent) > 0 && push!(doc, sent)
-                sent = []
-            elseif line[1] == '#' # comment line
-                continue
-            else
-                items = Vector{String}(split(line,'\t'))
-                push!(sent, f(items))
-            end
+    doc = []
+    sent = []
+    lines = open(readlines, path)
+    for line in lines
+        line = chomp(line)
+        if length(line) == 0
+            length(sent) > 0 && push!(doc, sent)
+            sent = []
+        elseif line[1] == '#' # comment line
+            continue
+        else
+            items = Vector{String}(Base.split(line,'\t'))
+            push!(sent, items)
         end
-        length(sent) > 0 && push!(doc, sent)
-        T = typeof(doc[1][1])
-        Vector{Vector{T}}(doc)
     end
-    
-    conll_read(path::String) = read(identity, path)
-    
+    length(sent) > 0 && push!(doc, sent)
+    T = typeof(doc[1][1])
+    features = Vector{Vector{T}}(doc)
 
-    function __init__()
-        register(DataDep(
-            DEPNAME,
-            """
-            Dataset: Universal Dependencies - English Dependency Treebank Universal Dependencies English Web Treebank
-            Authors: Natalia Silveira and Timothy Dozat and
-                     Marie-Catherine de Marneffe and Samuel
-                     Bowman and Miriam Connor and John Bauer and
-                     Christopher D. Manning
-            Website: https://github.com/UniversalDependencies/UD_English-EWT
+    metadata = Dict{String,Any}("n_observations" => length(features))
+    return UD_English(metadata, split, features)
+end
 
-            A Gold Standard Universal Dependencies Corpus for
-            English, built over the source material of the
-            English Web Treebank LDC2012T13
-            (https://catalog.ldc.upenn.edu/LDC2012T13).
 
-            You are encouraged to cite this paper if you use the
-            Universal Dependencies English Web Treebank:
-
-                @inproceedings{silveira14gold,
-                    year = {2014},
-                    author = {Natalia Silveira and Timothy Dozat
-                        and Marie-Catherine de Marneffe and Samuel
-                        Bowman and Miriam Connor and John Bauer and
-                        Christopher D. Manning},
-                    title = {A Gold Standard Dependency Corpus for {E}nglish},
-                    booktitle = {Proceedings of the Ninth
-                        International Conference on Language Resources
-                        and Evaluation (LREC-2014)}
-                }
-
-            The files are available for download at the github
-            repository linked above. Note that using the data
-            responsibly and respecting copyright remains your
-            responsibility. Copyright and License is discussed in
-            detail on the Website.
-            """,
-            "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
-            "e08d57e95264ac97ca861261e3119e093c054453c5dfc583e2402459504d93b7"
-        ))
+# DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
+function Base.getproperty(::Type{UD_English}, s::Symbol)
+    if s === :traindata
+        @warn "UD_English.traindata() is deprecated, use `UD_English(split=:train)[]` instead." maxlog=2
+        function traindata(; dir=nothing)
+            UD_English(; split=:train, dir)[]
+        end
+        return traindata
+    elseif s === :testdata
+        @warn "UD_English.testdata() is deprecated, use `UD_English(split=:test)[]` instead."  maxlog=2
+        function testdata(; dir=nothing)
+            UD_English(; split=:test, dir)[]
+        end
+        return testdata
+    elseif s === :devdata
+        @warn "UD_English.devdata() is deprecated, use `UD_English(split=:dev)[]` instead."  maxlog=2
+        function testdata(; dir=nothing)
+            UD_English(; split=:dev, dir)[]
+        end
+        return testdata
+    else
+        return getfield(UD_English, s)
     end
 end
