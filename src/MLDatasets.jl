@@ -79,8 +79,11 @@ include("datasets_text/smsspamcollection.jl")
 export SMSSpamCollection
 
 # Graphs
+include("datasets_graph/graph.jl")
+
 include("datasets_graph/planetoid.jl")
-    include("datasets_graph/Cora/Cora.jl")
+    include("datasets_graph/cora.jl")
+    export Cora
     include("datasets_graph/PubMed/PubMed.jl")
     include("datasets_graph/CiteSeer/CiteSeer.jl")
 include("datasets_graph/TUDataset/TUDataset.jl")
@@ -95,6 +98,7 @@ function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__cora()
     __init__ogbdataset()
     __init__tudataset()
 
