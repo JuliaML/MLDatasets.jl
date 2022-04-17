@@ -168,19 +168,19 @@ julia> labels
 """
 struct OGBDataset{L} <: AbstractDataset
     name::String
-    path::String
-    metadata::Dict
-    graphs::Vector{Dict}
+    split::Symbol
+    metadata::Dict{String, Any}
+    graphs::Vector{Graph}
     labels::L
-    split::Dict
 end
 
-function OGBDataset(fullname; dir = nothing)
+function OGBDataset(fullname; split=:train, dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
-    # return metadata
     path = makedir_ogb(fullname, metadata["url"], dir)
-    graphs, labels, split = read_ogb_graph(path, metadata)
-    return OGBDataset(fullname, path, metadata, graphs, labels, split)
+    metadata["path"] = path
+    
+    graphs, labels, split_idx = read_ogb_graph(path, metadata)
+    return OGBDataset(fullname, split, metadata, graphs, labels)
 end
 
 function read_ogb_metadata(fullname, dir = nothing)
@@ -198,7 +198,7 @@ function read_ogb_metadata(fullname, dir = nothing)
     end
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
-    metadata = Dict(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
+    metadata = Dict{String, Any}(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
     return metadata
 end
 
@@ -233,8 +233,8 @@ end
 function read_ogb_graph(path, metadata)
     dict = Dict{String, Any}()
     
-    dict["edge_index"] = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int, transp=false)
-    dict["edge_index"] = dict["edge_index"] .+ 1 # from 0-indexing to 1-indexing
+    edge_index = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int, transp=false)
+    edge_index = dict["edge_index"] .+ 1 # from 0-indexing to 1-indexing
         
     dict["node_feat"] = read_ogb_file(joinpath(path, "raw", "node-feat.csv"), Float32)
     dict["edge_feat"] = read_ogb_file(joinpath(path, "raw", "edge-feat.csv"), Float32)
