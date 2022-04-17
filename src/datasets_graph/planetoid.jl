@@ -16,33 +16,41 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     tx  = read_planetoid_file(DEPNAME, "ind.$(name).tx", dir)
     ty  = read_planetoid_file(DEPNAME, "ind.$(name).ty", dir) 
     graph = read_planetoid_file(DEPNAME, "ind.$(name).graph", dir)
-    test_index = read_planetoid_file(DEPNAME, "ind.$(name).test.index", dir)
+    test_indices = read_planetoid_file(DEPNAME, "ind.$(name).test.index", dir)
 
     ntrain = size(x, 2)
-    train_index = 1:ntrain
-    val_index = ntrain+1:ntrain+500
-    sorted_test_index = sort(test_index)
+    train_indices = 1:ntrain
+    val_indices = ntrain+1:ntrain+500
+    sorted_test_index = sort(test_indices)
 
     if name == "citeseer"
         # There are some isolated nodes in the Citeseer graph, resulting in
         # none consecutive test indices. We need to identify them and add them
         # as zero vectors to `tx` and `ty`.
-        len_test_indices = (maximum(test_index) - minimum(test_index)) + 1
+        len_test_indices = (maximum(test_indices) - minimum(test_indices)) + 1
 
         tx_ext = zeros(size(tx,1), len_test_indices)
-        tx_ext[:, sorted_test_index .- minimum(test_index) .+ 1] .= tx
+        tx_ext[:, sorted_test_index .- minimum(test_indices) .+ 1] .= tx
         ty_ext = zeros(len_test_indices)
-        ty_ext[sorted_test_index .- minimum(test_index) .+ 1] = ty
+        ty_ext[sorted_test_index .- minimum(test_indices) .+ 1] = ty
 
         tx, ty = tx_ext, ty_ext
     end
     x = hcat(allx, tx)
     y = vcat(ally, ty)
-    x[:, test_index] = x[:, sorted_test_index]
-    y[test_index] = y[sorted_test_index]
-    test_index = size(allx,2)+1:size(x,2)
-
+    x[:, test_indices] = x[:, sorted_test_index]
+    y[test_indices] = y[sorted_test_index]
+    test_indices = size(allx,2)+1:size(x,2)
     num_nodes = size(x, 2)
+
+    ## Use masks instead of indices?
+    # train_mask = falses(num_nodes)
+    # train_mask[train_indices] .= 1
+    # val_mask = falses(num_nodes)
+    # val_mask[val_indices] .= 1
+    # test_mask = falses(num_nodes)
+    # test_mask[test_indices] .= 1
+
     adj_list = [Int[] for i=1:num_nodes]
     for (i, neigs) in pairs(graph) # graph is dictionay representing the adjacency list
         neigs = unique(neigs) # remove duplicated edges
@@ -57,16 +65,23 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
         end
     end
 
-    return (; node_features = x,
-              node_labels = y,
-              adjacency_list = adj_list,
-              train_indices = train_index,
-              val_indices = val_index, 
-              test_indices = test_index,
-              num_classes = length(unique(y)),
-              num_nodes = num_nodes, 
-              num_edges = sum(length.(adj_list)),
-              directed = reverse_edges != true)
+    node_data = (features=x, targets=y, 
+                train_indices, val_indices, test_indices)
+
+    metadata = Dict{String,Any}(
+        "num_classes" => length(unique(y)),
+        "classes" => sort(unique(y))
+    )
+
+    edge_index = adjlist2edgeindex(adj_list)
+    
+    g = Graph(; num_nodes, 
+                num_edges = length(edge_index[1]), 
+                edge_index, 
+                directed = reverse_edges != true, 
+                node_data)
+
+    return metadata, g
 end
 
 function read_pickle_file(filename, name)

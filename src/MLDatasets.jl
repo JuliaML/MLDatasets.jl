@@ -80,16 +80,21 @@ export SMSSpamCollection
 
 # Graphs
 include("datasets_graph/graph.jl")
+# export Graph
 
 include("datasets_graph/planetoid.jl")
-    include("datasets_graph/cora.jl")
-    export Cora
-    include("datasets_graph/PubMed/PubMed.jl")
-    include("datasets_graph/CiteSeer/CiteSeer.jl")
+
+include("datasets_graph/cora.jl")
+export Cora
+include("datasets_graph/pubmed.jl")
+export PubMed
+include("datasets_graph/citeseer.jl")
+export CiteSeer
 include("datasets_graph/TUDataset/TUDataset.jl")
 include("datasets_graph/OGBDataset/OGBDataset.jl")
-include("datasets_graph/PolBlogs/PolBlogs.jl")
-include("datasets_graph/KarateClub/KarateClub.jl")
+include("datasets_graph/polblogs.jl")
+export PolBlogs
+include("datasets_graph/karateclub.jl")
 export KarateClub
 include("datasets_graph/Reddit/Reddit.jl")
 export Reddit
@@ -98,8 +103,11 @@ function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__citeseer()
     __init__cora()
     __init__ogbdataset()
+    __init__polblogs()
+    __init__pubmed()
     __init__tudataset()
 
     # misc

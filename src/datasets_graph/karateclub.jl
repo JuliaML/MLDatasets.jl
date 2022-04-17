@@ -27,20 +27,12 @@ One node per unique label is used as training data.
 [3]: [PyTorch Geometric Karate Club Dataset](https://pytorch-geometric.readthedocs.io/en/latest/_modules/torch_geometric/datasets/karate.html#KarateClub)
 [4]: [NetworkX Zachary's Karate Club Dataset](https://networkx.org/documentation/stable/_modules/networkx/generators/social.html#karate_club_graph)
 """
-module KarateClub
+struct KarateClub
+    metadata::Dict{String, Any}
+    graphs::Vector{Graph}
+end
 
-"""
-    edge_index()
-
-Returns an adjacency list where the first and second vector
-contain the source and target nodes of each edge respectively.
-
-```julia-repl
-using MLDatasets: KarateClub
-adj = KarateClub.edge_index()
-```
-"""
-function edge_index()::Vector{Vector{Int}}
+function KarateClub()
     src = [
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5,
@@ -64,45 +56,20 @@ function edge_index()::Vector{Vector{Int}}
         27, 28, 29, 30, 31, 32, 33
     ]
 
-    adj = [src, target]
-    return adj
-end
-
-"""
-    labels(mode = :club)
-
-Returns a vector containing the node labels indicating which club or community
-the node belongs to.
-
-The type of labels can be specifed using the `mode` variable which takes two values:
-`:club` and `:community`.
-
-```julia-repl
-using MLDatasets: KarateClub
-
-## Club labels
-club_labels = KarateClub.labels(:club)
-
-## Community labels
-com_labels = KarateClub.labels(:community) 
-```
-"""
-function labels(mode::Symbol = Symbol("club"))::Vector{Int}
-    if mode == :club
-        clubs = [
+    labels_clubs = [
             1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
-        return clubs
-    elseif mode == :community
-        communities = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    labels_comm = [
                 1, 1, 1, 1, 3, 3, 3, 1, 0, 1, 3, 1, 1, 1, 0, 0, 3, 1, 0, 1, 0, 1,
-                0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0
-            ]
-        return communities
-    else
-        ArgumentError("The valid label modes are `club` and `community`")
-    end
+                0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
+    
+    node_data = (; labels_clubs, labels_comm) 
+    g = Graph(; num_nodes=34, num_edges=156, directed=false, edge_index=(src, target), node_data)
+
+    metadata = Dict{String, Any}()
+    return KarateClub(metadata, [g])
 end
 
-end #module
+Base.length(d::KarateClub) = length(d.graphs) 
+Base.getindex(d::KarateClub) = d.graphs
+Base.getindex(d::KarateClub, i) = getindex(d.graphs, i)

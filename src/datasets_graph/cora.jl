@@ -79,15 +79,7 @@ struct Cora <: AbstractDataset
 end
 
 function Cora(; dir=nothing, reverse_edges=true)
-    data = read_planetoid_data("Cora", dir=dir, reverse_edges=reverse_edges)
-    node_data = (features=data.node_features, targets=data.node_labels, 
-                data.train_indices, data.val_indices, data.test_indices)
-    metadata = Dict{String,Any}(
-        "num_classes" => data.num_classes
-    )
-    edge_index = adjlist2edgeindex(data.adjacency_list)
-    g = Graph(; data.num_nodes, data.num_edges, edge_index, data.directed, 
-                node_data)
+    metadata, g = read_planetoid_data("Cora", dir=dir, reverse_edges=reverse_edges)
     return Cora(metadata, [g])
 end
 
