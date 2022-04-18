@@ -6,10 +6,10 @@ export Reddit
     The Reddit dataset was introduced in Ref [1].
     It is a graph dataset of Reddit posts made in the month of September, 2014.
     The dataset contains a single post-to-post graph, connecting posts if the same user comments on both. 
-    The node label in this case is one of the 50 communities, or “subreddit”s, that a post belongs to.  
-    This dataset contains 231,443 posts.
+    The node label in this case is one of the 41 communities, or “subreddit”s, that a post belongs to.  
+    This dataset contains 232,965 posts.
     The first 20 days are used for training and the remaining days for testing (with 30% used for validation).
-    For features, off-the-shelf 300-dimensional GloVe CommonCrawl word vectors are used.
+    Each node is represented by a 602 word vector.
 
 # Interface
 
@@ -50,7 +50,7 @@ function __init__()
 end
 
 """
-    dataset(self_loops=true; dir=nothing)
+    dataset(; data=Symbol("full"), dir=nothing)
 
 Retrieve the Reddit Graph Dataset. The output is a named tuple with fields
 ```julia-repl
@@ -69,12 +69,12 @@ train_features = data.node_features[train_indices, :]
 train_labels = data.node_labels[train_indices]
 ```
 """
-function dataset(self_loops=true; dir=nothing)
+function dataset(; data=Symbol("full"), dir=nothing)
 
-    if self_loops
-        graph_json = datafile(DEPNAME, DATA[1], dir)
+    if data == :full
+        graph_json = datafile(DEPNAME, DATA[2], dir)
     else
-        graph_json = datafile(DEPNAME, DATA[0], dir)
+        graph_json = datafile(DEPNAME, DATA[1], dir)
     end
     class_map_json = datafile(DEPNAME, DATA[4], dir)
     id_map_json = datafile(DEPNAME, DATA[6], dir)
@@ -90,29 +90,30 @@ function dataset(self_loops=true; dir=nothing)
     multigraph = graph["multigraph"]
     links = graph["links"]
     nodes = graph["nodes"]
-    num_edges = directed ? length(links) * 2 : length(links)
+    num_edges = directed ? length(links) : length(links) * 2
     num_nodes = length(nodes)
     num_graphs = length(graph["graph"]) # should be zero
 
     # edges
-    s = map(link->link["source"], links)
-    t = map(link->link["target"], links)
-    edge_index = directed ? [s t; t s] : [s; t] # not a vector of vector
+    s = get.(links, "source", nothing) .+ 1
+    t = get.(links, "target", nothing) .+ 1
+    edge_index = directed ? [s t] : [s t; t s] # not a vector of vector
 
     # labels
     node_keys = get.(nodes, "id", nothing)
-    node_idx = [id_map[key] for key in node_keys]
+    node_idx = [id_map[key] for key in node_keys] .+ 1
 
-    labels = [class_map[key] for key in  node_keys]
-    # TODO: ort according to the node_idx
+    sort_order = sortperm(node_idx)
+    node_idx = node_idx[sort_order]
+    labels = [class_map[key] for key in  node_keys][sort_order]
     @assert length(node_idx) == length(labels)
 
     # features
-    features = npzread(feat_path)
+    features = npzread(feat_path)[node_idx, :]
 
     # split
-    test_mask =  get.(nodes, "test", nothing)
-    val_mask = get.(nodes, "val", nothing)
+    test_mask =  get.(nodes, "test", nothing)[sort_order]
+    val_mask = get.(nodes, "val", nothing)[sort_order]
     # A node should not be both test and validation
     @assert sum(val_mask .& test_mask) == 0
     train_mask = nor.(test_mask, val_mask)

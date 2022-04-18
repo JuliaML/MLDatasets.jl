@@ -34,6 +34,7 @@ dataset_tests = [
     "datasets_graph/deprecated_tudataset.jl",
     "datasets_graph/deprecated_polblogs.jl",
     "datasets_graph/karateclub.jl",
+    "datasets_graph/deprecated_reddit.jl",
     #### text
     "datasets_text/deprecated_text.jl",
     "datasets_text/deprecated_smsspamcollection.jl",
