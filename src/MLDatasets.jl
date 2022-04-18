@@ -85,6 +85,8 @@ include("datasets_graph/OGBDataset/OGBDataset.jl")
 include("datasets_graph/PolBlogs/PolBlogs.jl")
 include("datasets_graph/KarateClub/KarateClub.jl")
 export KarateClub
+include("datasets_graph/Reddit/Reddit.jl")
+export Reddit
 
 function __init__()
 
