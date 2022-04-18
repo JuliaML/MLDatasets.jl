@@ -55,10 +55,13 @@ function test_inmemory_supervised_table_dataset(d::D;
 
     @test d[] === (; d.features, d.targets)
     @test length(d) == n_obs
+    @test numobs(d) == n_obs
     idx = rand(1:n_obs)
     @test isequal(d[idx], getobs((; d.features, d.targets), idx))
+    @test isequal(d[idx], getobs(d, idx))
     idxs = rand(1:n_obs, 2)
     @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs(d, idxs))
 end
 
 
@@ -67,7 +70,12 @@ function test_supervised_array_dataset(d::D;
         Tx=Any, Ty=Any,
         conv2img=false) where {D<:SupervisedDataset}
         
-    Nx = length(n_features) + 1
+    if n_features isa Int
+        @assert n_features != 0 "use n_features=() if you don't want features dimensions"
+        Nx == 2
+    else # tuple
+        Nx = length(n_features) + 1
+    end
     Ny = map(x -> x == 1 ? 1 : 2, n_targets)
 
     @test d.features isa Array{Tx, Nx}
@@ -93,15 +101,56 @@ function test_supervised_array_dataset(d::D;
     end
 
     @test length(d) == n_obs
+    @test numobs(d) == n_obs
     X, y = d[]
     @test X === d.features
     @test y === d.targets 
 
     idx = rand(1:n_obs)
     @test isequal(d[idx], getobs((; d.features, d.targets), idx))
+    @test isequal(d[idx], getobs(d, idx))
     idxs = rand(1:n_obs, 2)
     @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs(d, idxs))
+    
+    if conv2img
+        img = convert2image(d, 1)
+        @test img isa AbstractArray{<:Color}
+        x = d[1].features
+        @test convert2image(D, x) == img
+        @test convert2image(d, x) == img
+    end 
+end
 
+
+function test_unsupervised_array_dataset(d::D;
+        n_obs, n_features,
+        Tx=Any,
+        conv2img=false) where {D<:UnsupervisedDataset}
+        
+    n_features = n_features === nothing ? () : n_features
+    if n_features isa Int
+        @assert n_features != 0 "use n_features = () if you don't want features dimensions"
+        Nx == 2
+    else # tuple
+        Nx = length(n_features) + 1
+    end
+  
+    @test d.features isa Array{Tx, Nx}
+    @test size(d.features) == (n_features..., n_obs)
+    
+    @test length(d) == n_obs
+    @test numobs(d) == n_obs
+    X = d[]
+    @test X === d.features
+    
+    idx = rand(1:n_obs)
+    @test isequal(d[idx], getobs(d.features, idx))
+    @test isequal(d[idx], getobs(d, idx))
+    idxs = rand(1:n_obs, 2)
+    @test isequal(d[idxs], getobs(d.features, idxs))
+    @test isequal(d[idxs], getobs(d, idxs))
+    
     if conv2img
         img = convert2image(d, 1)
         @test img isa AbstractArray{<:Color}

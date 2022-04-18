@@ -71,9 +71,12 @@ include("datasets_vision/svhn2.jl")
 export SVHN2
 
 # Text
-include("datasets_text/PTBLM/PTBLM.jl")
-include("datasets_text/UD_English/UD_English.jl")
-include("datasets_text/SMSSpamCollection/SMSSpamCollection.jl")
+include("datasets_text/ptblm.jl")
+export PTBLM
+include("datasets_text/udenglish.jl")
+export UD_English
+include("datasets_text/smsspamcollection.jl")
+export SMSSpamCollection
 
 # Graphs
 include("datasets_graph/planetoid.jl")
@@ -89,12 +92,20 @@ include("datasets_graph/Reddit/Reddit.jl")
 export Reddit
 
 function __init__()
+    # TODO automatically find and execute __init__xxx functions
+
+    # graph
+    __init__ogbdataset()
+    __init__tudataset()
 
     # misc
     __init__iris()
     __init__mutagenesis()
-    __init__ogbdataset()
-    __init__tudataset()
+
+    #text
+    __init__ptblm()
+    __init__smsspam()
+    __init__udenglish()
 
     # vision
     __init__cifar10()
@@ -105,4 +116,4 @@ function __init__()
     __init__svhn2()
 end
 
-end
+end #module
