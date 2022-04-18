@@ -45,7 +45,7 @@ function __init__()
         Download Link: $LINK
         """,
         "http://snap.stanford.edu/graphsage/reddit.zip",
-        fetch_method=unpack
+        post_fetch_method=unpack
     ))
 end
 
@@ -57,7 +57,7 @@ Retrieve the Reddit Graph Dataset. The output is a named tuple with fields
 julia> keys(Reddit.dataset())
 (:directed, :multigraph, :num_graphs, :num_edges, :num_nodes, :edge_index, :node_labels, :node_features, :split)
 ```
-See also [`CiteSeer`](@ref).
+See also [`Reddit`](@ref).
 
 # Usage Examples
 
