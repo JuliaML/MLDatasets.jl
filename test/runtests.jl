@@ -33,7 +33,6 @@ dataset_tests = [
     "datasets_graph/deprecated_pubmed.jl",
     "datasets_graph/deprecated_tudataset.jl",
     "datasets_graph/deprecated_polblogs.jl",
-    "datasets_graph/deprecated_reddit.jl",
     "datasets_graph/deprecated_karateclub.jl",
     #### text
     "datasets_text/text.jl",
@@ -45,6 +44,7 @@ no_ci_dataset_tests = [
     "datasets_vision/cifar10.jl",
     "datasets_vision/cifar100.jl",
     "datasets_vision/svhn2.jl",
+    "datasets_graph/deprecated_reddit.jl",
     # "datasets_vision/deprecated_cifar10.jl",
     # "datasets_vision/deprecated_cifar100.jl",
     # "datasets_vision/deprecated_svhn2.jl", # NOT OK
