@@ -50,7 +50,7 @@ function __init__()
 end
 
 """
-    dataset(; data=Symbol("full"), dir=nothing)
+    dataset(; data=:full, dir=nothing)
 
 Retrieve the Reddit Graph Dataset. The output is a named tuple with fields
 ```julia-repl
@@ -69,7 +69,7 @@ train_features = data.node_features[train_indices, :]
 train_labels = data.node_labels[train_indices]
 ```
 """
-function dataset(; data=Symbol("full"), dir=nothing)
+function dataset(; data=:full, dir=nothing)
 
     if data == :full
         graph_json = datafile(DEPNAME, DATA[2], dir)
@@ -110,6 +110,7 @@ function dataset(; data=Symbol("full"), dir=nothing)
 
     # features
     features = npzread(feat_path)[node_idx, :]
+    features = transpose(features)
 
     # split
     test_mask =  get.(nodes, "test", nothing)[sort_order]

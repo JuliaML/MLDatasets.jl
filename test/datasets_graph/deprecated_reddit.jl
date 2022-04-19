@@ -8,7 +8,7 @@ end
     @test data.num_nodes == 232965
     @test data.num_edges == 114615892
     @test data.directed == false
-    @test size(data.node_features) == (data.num_nodes, 602)
+    @test size(data.node_features) == (602, data.num_nodes)
     @test size(data.node_labels) == (data.num_nodes,)
     @test size(data.split["train"]) == (153431,)
     @test size(data.split["val"]) == (23831,)
@@ -25,7 +25,7 @@ end
     @test data.num_nodes == 231443
     @test data.num_edges == 23213838
     @test data.directed == false
-    @test size(data.node_features) == (data.num_nodes, 602)
+    @test size(data.node_features) == (602, data.num_nodes)
     @test size(data.node_labels) == (data.num_nodes,)
     @test size(data.split["train"]) == (152410,)
     @test size(data.split["val"]) == (23699,)
