@@ -91,7 +91,8 @@ export PubMed
 include("datasets_graph/citeseer.jl")
 export CiteSeer
 include("datasets_graph/TUDataset/TUDataset.jl")
-include("datasets_graph/OGBDataset/OGBDataset.jl")
+include("datasets_graph/ogbdataset.jl")
+export OGBDataset
 include("datasets_graph/polblogs.jl")
 export PolBlogs
 include("datasets_graph/karateclub.jl")

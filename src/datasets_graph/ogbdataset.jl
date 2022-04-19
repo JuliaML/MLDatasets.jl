@@ -1,8 +1,3 @@
-export OGBDataset
-
-using DataDeps
-using DelimitedFiles: readdlm
-
 function __init__ogbdataset()
     DEPNAME = "OGBDataset"
     LINK = "http://snap.stanford.edu/ogb/data"
@@ -168,19 +163,19 @@ julia> labels
 """
 struct OGBDataset{L} <: AbstractDataset
     name::String
-    split::Symbol
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
-    labels::L
+    targets::L
+    split_idx::NamedTuple
 end
 
-function OGBDataset(fullname; split=:train, dir = nothing)
+function OGBDataset(fullname; dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
     path = makedir_ogb(fullname, metadata["url"], dir)
     metadata["path"] = path
-    
-    graphs, labels, split_idx = read_ogb_graph(path, metadata)
-    return OGBDataset(fullname, split, metadata, graphs, labels)
+    graph_dicts, labels, split_idx = read_ogb_graph(path, metadata)
+    graphs = ogbdict2graph.(graph_dicts)
+    return OGBDataset(fullname, metadata, graphs, labels, split_idx)
 end
 
 function read_ogb_metadata(fullname, dir = nothing)
@@ -233,11 +228,11 @@ end
 function read_ogb_graph(path, metadata)
     dict = Dict{String, Any}()
     
-    edge_index = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int, transp=false)
-    edge_index = dict["edge_index"] .+ 1 # from 0-indexing to 1-indexing
+    dict["edge_index"] = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int, transp=false)
+    dict["edge_index"] = dict["edge_index"] .+ 1 # from 0-indexing to 1-indexing
         
-    dict["node_feat"] = read_ogb_file(joinpath(path, "raw", "node-feat.csv"), Float32)
-    dict["edge_feat"] = read_ogb_file(joinpath(path, "raw", "edge-feat.csv"), Float32)
+    dict["node_features"] = read_ogb_file(joinpath(path, "raw", "node-feat.csv"), Float32)
+    dict["edge_features"] = read_ogb_file(joinpath(path, "raw", "edge-feat.csv"), Float32)
     
     dict["num_nodes"] = read_ogb_file(joinpath(path, "raw", "num-node-list.csv"), Int; tovec=true)
     dict["num_edges"] = read_ogb_file(joinpath(path, "raw", "num-edge-list.csv"), Int; tovec=true)
@@ -317,14 +312,7 @@ function read_ogb_graph(path, metadata)
     dlabels = Dict{String, Any}()
     for k in keys(dict)
         if contains(k, "label")
-            if k in [node_keys; edge_keys]
-                labels = []
-                for g in graphs
-                    push!(labels, g[k])
-                    delete!(g, k)
-                end
-                dlabels[k] = labels
-            else
+            if k ∉ [node_keys; edge_keys]
                 dlabels[k] = dict[k]
             end
         end
@@ -332,23 +320,22 @@ function read_ogb_graph(path, metadata)
     labels = isempty(dlabels) ? nothing : 
              length(dlabels) == 1 ? first(dlabels)[2] : dlabels
 
-    dsplit = Dict{String, Any}()
     splits = readdir(joinpath(path, "split"))
     @assert length(splits) == 1 # TODO check if datasets with multiple splits existin in OGB
     # TODO sometimes splits are given in .pt format
-    dsplit["train_idx"] = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true)
-    dsplit["val_idx"] = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true)
-    dsplit["test_idx"] = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true)
-    if dsplit["train_idx"] !== nothing 
-        dsplit["train_idx"] = dsplit["train_idx"] .+ 1
+    split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true),
+                 val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true),
+                test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true))
+    if split_idx.train !== nothing 
+        split_idx.train .+= 1
     end
-    if dsplit["val_idx"] !== nothing 
-        dsplit["val_idx"] = dsplit["val_idx"] .+ 1
+    if split_idx.val !== nothing 
+        split_idx.val .+= 1
     end
-    if dsplit["test_idx"] !== nothing 
-        dsplit["test_idx"] = dsplit["test_idx"] .+ 1
+    if split_idx.test !== nothing 
+        split_idx.test .+= 1
     end
-    return graphs, labels, dsplit
+    return graphs, labels, split_idx
 end
 
 function read_ogb_file(p, T; tovec = false, transp = true)
@@ -366,12 +353,19 @@ function read_ogb_file(p, T; tovec = false, transp = true)
     return res
 end
 
+
+function ogbdict2graph(d::Dict)
+    edge_index = d["edge_index"][:,1], d["edge_index"][:,2] 
+    num_nodes, num_edges = d["num_nodes"], d["num_edges"]
+    node_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "node_") && v !== nothing)
+    edge_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
+    node_data = isempty(node_data) ? nothing : (; node_data...)
+    edge_data = isempty(edge_data) ? nothing : (; edge_data...)
+    return Graph(; num_nodes, num_edges, directed=true,
+                 edge_index, node_data, edge_data)
+end
+
 Base.length(data::OGBDataset) = length(data.graphs)
 
-function Base.getindex(data::OGBDataset, i)
-    if data.labels === nothing
-        getindex(data.graphs, i)
-    else
-        getobs((data.graphs, data.labels), i) 
-    end
-end
+Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
+Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.targets), i) 
