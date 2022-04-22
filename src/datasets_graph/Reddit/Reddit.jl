@@ -44,7 +44,8 @@ function __init__()
         Website: $DOCS
         Download Link: $LINK
         """,
-        "http://snap.stanford.edu/graphsage/reddit.zip",
+        LINK,
+        "25337a21540cd373e4cee3751e6600324ab6a7377ef3966bb49f57412a17ed02",
         post_fetch_method=unpack
     ))
 end
@@ -110,7 +111,7 @@ function dataset(; data=:full, dir=nothing)
 
     # features
     features = npzread(feat_path)[node_idx, :]
-    features = transpose(features)
+    features = permutedims(features, (2, 1))
 
     # split
     test_mask =  get.(nodes, "test", nothing)[sort_order]
