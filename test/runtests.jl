@@ -41,11 +41,10 @@ dataset_tests = [
 ]
 
 no_ci_dataset_tests = [
-    ## vision
+    "datasets_graph/graphs_no_ci.jl",
     "datasets_vision/cifar10.jl",
     "datasets_vision/cifar100.jl",
     "datasets_vision/svhn2.jl",
-    "datasets_graph/deprecated_reddit.jl",
     # "datasets_vision/deprecated_cifar10.jl",
     # "datasets_vision/deprecated_cifar100.jl",
     # "datasets_vision/deprecated_svhn2.jl", # NOT OK

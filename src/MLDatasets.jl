@@ -15,6 +15,7 @@ using ColorTypes
 using MAT: matopen, matread
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
+using NPZ: npzread
 
 export getobs, numobs
 export convert2image
@@ -97,7 +98,7 @@ include("datasets_graph/polblogs.jl")
 export PolBlogs
 include("datasets_graph/karateclub.jl")
 export KarateClub
-include("datasets_graph/Reddit/Reddit.jl")
+include("datasets_graph/reddit.jl")
 export Reddit
 
 function __init__()
@@ -109,6 +110,7 @@ function __init__()
     __init__ogbdataset()
     __init__polblogs()
     __init__pubmed()
+    __init__reddit()
     __init__tudataset()
 
     # misc

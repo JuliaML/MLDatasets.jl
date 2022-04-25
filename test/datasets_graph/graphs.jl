@@ -117,5 +117,3 @@ end
         @test maximum(a) <= g.num_nodes 
     end
 end
-
-

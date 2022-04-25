@@ -1,38 +1,4 @@
-export Reddit
-
-"""
-    Reddit
-
-    The Reddit dataset was introduced in Ref [1].
-    It is a graph dataset of Reddit posts made in the month of September, 2014.
-    The dataset contains a single post-to-post graph, connecting posts if the same user comments on both. 
-    The node label in this case is one of the 41 communities, or “subreddit”s, that a post belongs to.  
-    This dataset contains 232,965 posts.
-    The first 20 days are used for training and the remaining days for testing (with 30% used for validation).
-    Each node is represented by a 602 word vector.
-
-# Interface
-
-- [`Reddit.dataset`](@ref)
-
-# References
-[1]: [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216)
-[2]: [Benchmarks on the Reddit Dataset](https://paperswithcode.com/dataset/reddit)
-"""
-module Reddit
-using DataDeps
-using JSON3
-using ..MLDatasets: datafile
-using NPZ: npzread
-
-DATAFILES =  [
-        "reddit-G.json", "reddit-G_full.json", "reddit-adjlist.txt",
-        "reddit-class_map.json", "reddit-feats.npy", "reddit-id_map.json"
-        ]
-DATA = joinpath.("reddit", DATAFILES)
-DEPNAME = "Reddit"
-
-function __init__()
+function __init__reddit()
     DEPNAME = "Reddit"
     LINK = "http://snap.stanford.edu/graphsage/reddit.zip"
     DOCS = "http://snap.stanford.edu/graphsage/"
@@ -51,32 +17,44 @@ function __init__()
 end
 
 """
-    dataset(; data=:full, dir=nothing)
+    Reddit(; full=true, dir=nothing)
 
-Retrieve the Reddit Graph Dataset. The output is a named tuple with fields
-```julia-repl
-julia> keys(Reddit.dataset())
-(:directed, :multigraph, :num_graphs, :num_edges, :num_nodes, :edge_index, :node_labels, :node_features, :split)
-```
-See also [`Reddit`](@ref).
+The Reddit dataset was introduced in Ref [1].
+It is a graph dataset of Reddit posts made in the month of September, 2014.
+The dataset contains a single post-to-post graph, connecting posts if the same user comments on both. 
+The node label in this case is one of the 41 communities, or “subreddit”s, that a post belongs to.  
+This dataset contains 232,965 posts.
+The first 20 days are used for training and the remaining days for testing (with 30% used for validation).
+Each node is represented by a 602 word vector.
 
-# Usage Examples
+Use `full=false` to lod only a subsample of the dataset.
 
-```julia
-using MLDatasets: Reddit
-data = Reddit.dataset()
-train_indices = data.split["train"]
-train_features = data.node_features[train_indices, :]
-train_labels = data.node_labels[train_indices]
-```
+
+# References
+[1]: [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216)
+[2]: [Benchmarks on the Reddit Dataset](https://paperswithcode.com/dataset/reddit)
 """
-function dataset(; data=:full, dir=nothing)
+struct Reddit <: AbstractDataset
+    metadata::Dict{String, Any}
+    graphs::Vector{Graph}
+end
 
-    if data == :full
+
+function Reddit(; full=true, dir=nothing)
+    DATAFILES =  [
+        "reddit-G.json", "reddit-G_full.json", "reddit-adjlist.txt",
+        "reddit-class_map.json", "reddit-feats.npy", "reddit-id_map.json"
+        ]
+    DATA = joinpath.("reddit", DATAFILES)
+    DEPNAME = "Reddit"
+
+
+    if full
         graph_json = datafile(DEPNAME, DATA[2], dir)
     else
         graph_json = datafile(DEPNAME, DATA[1], dir)
     end
+
     class_map_json = datafile(DEPNAME, DATA[4], dir)
     id_map_json = datafile(DEPNAME, DATA[6], dir)
     feat_path = datafile(DEPNAME, DATA[5], dir)
@@ -98,7 +76,9 @@ function dataset(; data=:full, dir=nothing)
     # edges
     s = get.(links, "source", nothing) .+ 1
     t = get.(links, "target", nothing) .+ 1
-    edge_index = directed ? [s t] : [s t; t s] # not a vector of vector
+    if !directed
+        s, t = [s; t], [t; s]
+    end
 
     # labels
     node_keys = get.(nodes, "id", nothing)
@@ -130,10 +110,17 @@ function dataset(; data=:full, dir=nothing)
         "val"  => val_idx
     )
 
-    return (
-        directed=directed, multigraph=multigraph, num_graphs=num_graphs, num_edges=num_edges, num_nodes=num_nodes, 
-        edge_index=edge_index, node_labels=labels, node_features=features, split=split
+    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph, 
+                "num_graphs" => num_graphs, "num_edges" => num_edges, "num_nodes" => num_nodes, 
+                "split" => split)
+    g = Graph(
+        directed=directed, num_edges=num_edges, num_nodes=num_nodes, 
+        edge_index=(s, t), 
+        node_data= (; labels, features)
     )
+    return Reddit(metadata, [g])
 end
 
-end #module
+Base.length(d::Reddit) = length(d.graphs) 
+Base.getindex(d::Reddit) = d.graphs
+Base.getindex(d::Reddit, i) = getindex(d.graphs, i)

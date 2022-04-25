@@ -25,11 +25,6 @@ the 2004 US Election: Divided they Blog](https://dl.acm.org/doi/10.1145/1134271.
 The links are automatically extracted from a crawl of the front page of the blog. 
 
 Each vertex receives a label indicating the political leaning of the blog: liberal or conservative.
-
-# Interface
-
-- [`PolBlogs.edge_index`](@ref)
-- [`PolBlogs.labels`](@ref)
 """
 struct PolBlogs <: AbstractDataset
     metadata::Dict{String, Any}
@@ -59,4 +54,3 @@ end
 Base.length(d::PolBlogs) = length(d.graphs) 
 Base.getindex(d::PolBlogs) = d.graphs
 Base.getindex(d::PolBlogs, i) = getindex(d.graphs, i)
-
