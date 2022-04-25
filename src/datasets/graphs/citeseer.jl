@@ -17,17 +17,13 @@ function __init__citeseer()
 end
 
 """
-    CiteSeer
+    CiteSeer(; dir=nothing)
 
 The CiteSeer citation network dataset from Ref. [1].
 Nodes represent documents and edges represent citation links.
 The dataset is designed for the node classification task. 
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
-
-# Interface
-
-- [`CiteSeer.dataset`](@ref)
 
 # References
 

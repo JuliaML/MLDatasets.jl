@@ -15,11 +15,6 @@ The community labels are obtained by modularity-based clustering following Ref [
 The data is retrieved from Ref [3] and [4].
 One node per unique label is used as training data.
 
-# Interface
-
-- [`KarateClub.edge_index`](@ref)
-- [`KarateClub.labels`](@ref)
-
 # References
 
 [1]: [An Information Flow Model for Conflict and Fission in Small Groups](http://www1.ind.ku.dk/complexLearning/zachary1977.pdf)

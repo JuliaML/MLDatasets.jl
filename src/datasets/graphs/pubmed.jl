@@ -25,39 +25,11 @@ The dataset is designed for the node classification task.
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
 
-# Interface
-
-- [`PubMed.dataset`](@ref)
-
 # References
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 
-# Examples
-
-The output is a named tuple with fields
-```julia-repl
-julia> keys(PubMed.dataset())
-(:node_features, :node_labels, :adjacency_list, :train_indices, :val_indices, :test_indices, :num_classes, :num_nodes, :num_edges, :directed)
-```
-
-In particular, `adjacency_list` is a vector of vector, 
-where `adjacency_list[i]` will contain the neighbors of node `i`
-through outgoing edges.
-
-If `reverse_edges=true`, the graph will contain
-the reverse of each edge and the graph will be undirected.
-
-See also [`PubMed`](@ref).
-
-# Usage Examples
-
-```julia
-using MLDatasets: PubMed
-data = PubMed.dataset()
-train_labels = data.node_labels[data.train_indices]
-```
 """
 struct PubMed <: AbstractDataset
     metadata::Dict{String, Any}
