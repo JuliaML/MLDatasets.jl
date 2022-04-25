@@ -15,6 +15,7 @@ using ColorTypes
 using MAT: matopen, matread
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
+using NPZ: npzread
 
 export getobs, numobs
 export convert2image
@@ -41,61 +42,75 @@ include("containers/cacheddataset.jl")
 export CachedDataset
 
 # Misc.
-include("datasets_misc/boston_housing.jl")
+include("datasets/misc/boston_housing.jl")
 export BostonHousing
-include("datasets_misc/iris.jl")
+include("datasets/misc/iris.jl")
 export Iris
-include("datasets_misc/mutagenesis.jl")
+include("datasets/misc/mutagenesis.jl")
 export Mutagenesis
-include("datasets_misc/titanic.jl")
+include("datasets/misc/titanic.jl")
 export Titanic
 
 
 # Vision
 
-include("datasets_vision/emnist.jl")
+include("datasets/vision/emnist.jl")
 export EMNIST
-include("datasets_vision/mnist_reader/MNISTReader.jl")
-include("datasets_vision/mnist.jl")
+include("datasets/vision/mnist_reader/MNISTReader.jl")
+include("datasets/vision/mnist.jl")
 export MNIST
-include("datasets_vision/fashion_mnist.jl")
+include("datasets/vision/fashion_mnist.jl")
 export FashionMNIST
-include("datasets_vision/cifar10_reader/CIFAR10Reader.jl")
-include("datasets_vision/cifar10.jl")
+include("datasets/vision/cifar10_reader/CIFAR10Reader.jl")
+include("datasets/vision/cifar10.jl")
 export CIFAR10
-include("datasets_vision/cifar100_reader/CIFAR100Reader.jl")
-include("datasets_vision/cifar100.jl")
+include("datasets/vision/cifar100_reader/CIFAR100Reader.jl")
+include("datasets/vision/cifar100.jl")
 export CIFAR100
 
-include("datasets_vision/svhn2.jl")
+include("datasets/vision/svhn2.jl")
 export SVHN2
 
 # Text
-include("datasets_text/ptblm.jl")
+include("datasets/text/ptblm.jl")
 export PTBLM
-include("datasets_text/udenglish.jl")
+include("datasets/text/udenglish.jl")
 export UD_English
-include("datasets_text/smsspamcollection.jl")
+include("datasets/text/smsspamcollection.jl")
 export SMSSpamCollection
 
 # Graphs
-include("datasets_graph/planetoid.jl")
-    include("datasets_graph/Cora/Cora.jl")
-    include("datasets_graph/PubMed/PubMed.jl")
-    include("datasets_graph/CiteSeer/CiteSeer.jl")
-include("datasets_graph/TUDataset/TUDataset.jl")
-include("datasets_graph/OGBDataset/OGBDataset.jl")
-include("datasets_graph/PolBlogs/PolBlogs.jl")
-include("datasets_graph/KarateClub/KarateClub.jl")
+include("graph.jl")
+# export Graph
+
+include("datasets/graphs/planetoid.jl")
+
+include("datasets/graphs/cora.jl")
+export Cora
+include("datasets/graphs/pubmed.jl")
+export PubMed
+include("datasets/graphs/citeseer.jl")
+export CiteSeer
+include("datasets/graphs/TUDataset/TUDataset.jl")
+include("datasets/graphs/ogbdataset.jl")
+export OGBDataset
+include("datasets/graphs/polblogs.jl")
+export PolBlogs
+include("datasets/graphs/karateclub.jl")
 export KarateClub
-include("datasets_graph/Reddit/Reddit.jl")
+include("datasets/graphs/reddit.jl")
 export Reddit
 
 function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__citeseer()
+    __init__cora()
     __init__ogbdataset()
+    __init__polblogs()
+    __init__pubmed()
+    __init__reddit()
     __init__tudataset()
 
     # misc
