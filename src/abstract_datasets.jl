@@ -1,6 +1,10 @@
 abstract type AbstractDataset <: AbstractDataContainer end
 
 function Base.show(io::IO, d::D) where D <: AbstractDataset
+    print(io, "$(D.name.name)()")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", d::D) where D <: AbstractDataset
     recur_io = IOContext(io, :compact => false)
     
     print(io, "dataset $(D.name.name):")  # if the type is parameterized don't print the parameters

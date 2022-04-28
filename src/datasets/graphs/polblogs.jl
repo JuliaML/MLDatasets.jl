@@ -44,7 +44,6 @@ function PolBlogs(; dir=nothing)
 
     metadata = Dict{String, Any}()
     g = Graph(; num_nodes=1490, num_edges=19025,
-            directed = true,
             edge_index = (s, t), 
             node_data = (; labels))
 

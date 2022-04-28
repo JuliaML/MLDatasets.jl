@@ -1,9 +1,3 @@
-export TUDataset
-
-using DataDeps
-# using ..MLDatasets: datafile, datadir
-using DelimitedFiles: readdlm
-
 function __init__tudataset()
     DEPNAME = "TUDataset"
     LINK = "https://www.chrsmrrs.com/graphkerneldatasets"
@@ -22,21 +16,6 @@ function __init__tudataset()
     ))
 end
 
-struct TUDataset
-    num_nodes::Int
-    num_edges::Int
-    num_graphs::Int
-    source::Vector{Int}
-    target::Vector{Int}
-    graph_indicator
-    node_labels::Union{Nothing, Vector{Int}}
-    edge_labels::Union{Nothing, Vector{Int}}
-    graph_labels
-    node_attributes
-    edge_attributes
-    graph_attributes
-end
-
 """
     TUDataset(name; dir=nothing)
 
@@ -46,23 +25,6 @@ Retrieve from TUDataset collection the dataset `name`, where `name`
 is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/). 
 
 A `TUDataset` object can be indexed to retrieve a specific graph or a subset of graphs.
-
-# Internal fields
-
-```
-num_nodes           # total number of nodes (considering all graphs)
-num_edges           # total number of edges (considering all graphs)       
-num_graphs          # total number of graphs
-source              # vector of edges' source vectors      
-target              # vector of edges' target vectors
-graph_indicator     # graph to which a node belongs too
-node_labels
-edge_labels
-graph_labels
-node_attributes
-edge_attributes
-graph_attributes
-```
 
 See [here](https://chrsmrrs.github.io/datasets/docs/format/) for an in-depth 
 description of the format. 
@@ -88,8 +50,18 @@ end
 X = d1.node_attributes # (nfeatures x nnodes) matrix
 ```
 """
+struct TUDataset <: AbstractDataset
+    name::String
+    metadata::Dict{String, Any}
+    graphs::Vector{Graph}
+    graph_data::Union{Nothing,NamedTuple}
+    num_nodes::Int
+    num_edges::Int
+    num_graphs::Int
+end
+
 function TUDataset(name; dir=nothing)
-    d = datadir_tudataset(name, dir)
+    d = tudataset_datadir(name, dir)
     # See here for the file format: https://chrsmrrs.github.io/datasets/docs/format/
     
     st = readdlm(joinpath(d, "$(name)_A.txt"), ',', Int)
@@ -126,20 +98,38 @@ function TUDataset(name; dir=nothing)
     graph_attributes = isfile(joinpath(d, "$(name)_graph_attributes.txt")) ?
                         readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',', Float32)' |> collect :
                         nothing
-    
 
-    TUDataset( num_nodes, num_edges, num_graphs,
-                source, target, 
-                graph_indicator,
-                node_labels,
-                edge_labels,            
-                graph_labels,
-                node_attributes, 
-                edge_attributes,
-                graph_attributes)
+    # We need this two vectors sorted for efficiency in tudataset_getgraph(full_dataset, i)
+    @assert issorted(graph_indicator)
+    if !issorted(source)
+        p = sortperm(source)
+        source, target[p] = source[p], target[p]
+        if edge_labels !== nothing
+            edge_labels = edge_labels[p]
+        end
+        if edge_attributes !== nothing
+            edge_attributes = edge_attributes[:,p]
+        end
+    end
+
+
+    full_dataset = (; num_nodes, num_edges, num_graphs,
+                        source, target, 
+                        graph_indicator,
+                        node_labels,
+                        edge_labels,            
+                        graph_labels,
+                        node_attributes, 
+                        edge_attributes,
+                        graph_attributes)
+
+    graphs = [tudataset_getgraph(full_dataset, i) for i in 1:num_graphs]
+    graph_data = (; features = graph_attributes, targets = graph_labels) |> clean_nt
+    metadata = Dict{String, Any}("name" => name)
+    return TUDataset(name, metadata, graphs, graph_data, num_nodes, num_edges, num_graphs)
 end
 
-function datadir_tudataset(name, dir = nothing)
+function tudataset_datadir(name, dir = nothing)
     dir = isnothing(dir) ? datadep"TUDataset" : dir
     LINK = "https://www.chrsmrrs.com/graphkerneldatasets/$name.zip"
     d  = joinpath(dir, name)
@@ -154,40 +144,49 @@ function datadir_tudataset(name, dir = nothing)
     return d
 end
 
-Base.getindex(data::TUDataset, i::Int) = getindex(data, [i])
 
-function Base.getindex(data::TUDataset, i::AbstractVector{Int})
-    node_mask = data.graph_indicator .∈ Ref(i)
+function tudataset_getgraph(data::NamedTuple, i::Int)
+    vmin = searchsortedfirst(data.graph_indicator, i)
+    vmax = searchsortedlast(data.graph_indicator, i)
+    nodes = vmin:vmax
+    node_labels = isnothing(data.node_labels) ? nothing : getobs(data.node_labels, nodes)
+    node_attributes = isnothing(data.node_attributes) ? nothing : getobs(data.node_attributes, nodes)
     
-    nodes = (1:data.num_nodes)[node_mask]
-    node_labels = isnothing(data.node_labels) ? nothing : data.node_labels[node_mask]
-    nodemap = Dict(v => vnew for (vnew, v) in enumerate(nodes))
+    emin = searchsortedfirst(data.source, vmin)
+    emax = searchsortedlast(data.source, vmax)
+    edges = emin:emax
+    source = data.source[edges] .- vmin .+ 1
+    target = data.target[edges] .- vmin .+ 1
+    edge_labels = isnothing(data.edge_labels) ? nothing : getobs(data.edge_labels, edges)
+    edge_attributes = isnothing(data.edge_attributes) ? nothing : getobs(data.edge_attributes, edges)
 
-    graphmap = Dict(i => inew for (inew, i) in enumerate(i))
-    graph_indicator = [graphmap[i] for i in data.graph_indicator[node_mask]]
-    
-    edge_mask = data.source .∈ Ref(nodes) 
-    source = [nodemap[i] for i in data.source[edge_mask]]
-    target = [nodemap[i] for i in data.target[edge_mask]]
-    edge_labels = isnothing(data.edge_labels) ? nothing : data.edge_labels[edge_mask]
-
-    graph_labels = isnothing(data.graph_labels) ? nothing : data.graph_labels[i]
-    
-    node_attributes = isnothing(data.node_attributes) ? nothing : data.node_attributes[:,node_mask]
-    edge_attributes = isnothing(data.edge_attributes) ? nothing : data.edge_attributes[:,edge_mask]
-    graph_attributes = isnothing(data.graph_attributes) ? nothing : data.graph_attributes[:,i]
-
-    num_nodes = length(graph_indicator)
+    num_nodes = length(nodes)
     num_edges = length(source)
-    num_graphs = length(i)
+    node_data = (features = node_attributes, targets = node_labels)
+    edge_data = (features = edge_attributes, targets = edge_labels)
+    
+    return Graph(; num_nodes, num_edges, 
+                edge_index = (source, target), 
+                node_data = node_data |> clean_nt,
+                edge_data = edge_data |> clean_nt,
+                )
+end
 
-    TUDataset(num_nodes, num_edges, num_graphs,
-            source, target, 
-            graph_indicator,
-            node_labels,
-            edge_labels,            
-            graph_labels,
-            node_attributes, 
-            edge_attributes,
-            graph_attributes)
+
+Base.length(data::TUDataset) = length(data.graphs)
+
+function Base.getindex(data::TUDataset) 
+    if data.graph_data === nothing
+        return getobs(data.graphs)
+    else
+        return getobs((; data.graphs, data.graph_data...))    
+    end
+end
+
+function Base.getindex(data::TUDataset, i) 
+    if data.graph_data === nothing
+        return getobs(data.graphs, i)
+    else
+        return getobs((; data.graphs, data.graph_data...), i)    
+    end
 end

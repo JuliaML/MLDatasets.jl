@@ -361,11 +361,10 @@ function ogbdict2graph(d::Dict)
     edge_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
-    return Graph(; num_nodes, num_edges, directed=true,
+    return Graph(; num_nodes, num_edges,
                  edge_index, node_data, edge_data)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
-
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
 Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.targets), i) 

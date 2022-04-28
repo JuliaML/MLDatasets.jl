@@ -59,7 +59,7 @@ function KarateClub()
                 0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
     
     node_data = (; labels_clubs, labels_comm) 
-    g = Graph(; num_nodes=34, num_edges=156, directed=false, edge_index=(src, target), node_data)
+    g = Graph(; num_nodes=34, num_edges=156, edge_index=(src, target), node_data)
 
     metadata = Dict{String, Any}()
     return KarateClub(metadata, [g])

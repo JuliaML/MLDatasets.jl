@@ -84,14 +84,14 @@ include("graph.jl")
 # export Graph
 
 include("datasets/graphs/planetoid.jl")
-
 include("datasets/graphs/cora.jl")
 export Cora
 include("datasets/graphs/pubmed.jl")
 export PubMed
 include("datasets/graphs/citeseer.jl")
 export CiteSeer
-include("datasets/graphs/TUDataset/TUDataset.jl")
+include("datasets/graphs/tudataset.jl")
+export TUDataset
 include("datasets/graphs/ogbdataset.jl")
 export OGBDataset
 include("datasets/graphs/polblogs.jl")

@@ -54,6 +54,15 @@ bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, r
 MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
 MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]
 
+function clean_nt(nt::NamedTuple)
+    res = (; (p for p in  pairs(nt) if p[2] !== nothing)...)
+    if isempty(res)
+        return nothing
+    else
+        return res
+    end
+end
+
 
 """
     convert2image(d, i)
@@ -74,7 +83,7 @@ julia> d = MNIST()
 
 julia> i = 1:2;
 
-julia> convert2image(d, i)
+julia> convert2image(d, i) # You should see 2 images in the terminal
 
 julia> x = d[1].features;
 

@@ -114,7 +114,7 @@ function Reddit(; full=true, dir=nothing)
                 "num_graphs" => num_graphs, "num_edges" => num_edges, "num_nodes" => num_nodes, 
                 "split" => split)
     g = Graph(
-        directed=directed, num_edges=num_edges, num_nodes=num_nodes, 
+        num_edges=num_edges, num_nodes=num_nodes, 
         edge_index=(s, t), 
         node_data= (; labels, features)
     )
