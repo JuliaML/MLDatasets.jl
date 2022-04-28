@@ -50,7 +50,10 @@ end
     @test data.num_graphs == length(data) == length(data.graphs)
     
     i = rand(1:length(data))
-    g, targets = data[i]
+    di = data[i]
+    @test di isa NamedTuple
+    g, targets = di.graphs, di.targets
+    @test targets == 1
     @test g isa Graph
     @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
     @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
