@@ -3,7 +3,7 @@
 """
     Graph(; kws...)
 
-A type representing a graph (a set of nodes and edges) that can also store additional node- edge- and graph- related data.
+A type representing a graph (a set of nodes and edges) that can also store additional node and edge data.
 
 Graph datasets in MLDatasets.jl contain one or more `Graph` objects.
 
@@ -11,20 +11,16 @@ Graph datasets in MLDatasets.jl contain one or more `Graph` objects.
 
 - num_nodes
 - num_edges
-- directed
 - edge_index
 - node_data
 - edge_data
-- graph_data
 """
 Base.@kwdef struct Graph
     num_nodes::Int
     num_edges::Int
-    directed::Bool
     edge_index::Tuple{Vector{Int}, Vector{Int}}
     node_data = nothing
     edge_data = nothing
-    graph_data = nothing
 end
 
 

@@ -78,7 +78,6 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     g = Graph(; num_nodes, 
                 num_edges = length(edge_index[1]), 
                 edge_index, 
-                directed = reverse_edges != true, 
                 node_data)
 
     return metadata, g
