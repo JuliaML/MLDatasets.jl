@@ -151,7 +151,7 @@ end
 # MNIST{Tx, A <: AbstractArray{Tx, 3}}
 function Base.getproperty(::Type{MNIST}, s::Symbol)
     if s === :traintensor
-        @warn "MNIST.traintensor() is deprecated, use `MNIST(split=:train).features` instead." maxlog=2
+        @warn "MNIST.traintensor() is deprecated, use `MNIST(split=:train).features` instead."
         traintensor(T::Type=N0f8; kws...) = traintensor(T, :; kws...)
         traintensor(i; kws...) = traintensor(N0f8, i; kws...)
         function traintensor(T::Type, i; dir=nothing)
@@ -159,7 +159,7 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return traintensor
     elseif s === :testtensor
-        @warn "MNIST.testtensor() is deprecated, use `MNIST(split=:test).features` instead."  maxlog=2
+        @warn "MNIST.testtensor() is deprecated, use `MNIST(split=:test).features` instead." 
         testtensor(T::Type=N0f8; kws...) = testtensor(T, :; kws...)
         testtensor(i; kws...) = testtensor(N0f8, i; kws...)
         function testtensor(T::Type, i; dir=nothing)
@@ -167,21 +167,21 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return testtensor        
     elseif s === :trainlabels
-        @warn "MNIST.trainlabels() is deprecated, use `MNIST(split=:train).targets` instead."  maxlog=2
+        @warn "MNIST.trainlabels() is deprecated, use `MNIST(split=:train).targets` instead." 
         trainlabels(; kws...) = trainlabels(:; kws...)
         function trainlabels(i; dir=nothing)
             MNIST(; split=:train, dir)[i][2]
         end
         return trainlabels
     elseif s === :testlabels
-        @warn "MNIST.testlabels() is deprecated, use `MNIST(split=:test).targets` instead." maxlog=2
+        @warn "MNIST.testlabels() is deprecated, use `MNIST(split=:test).targets` instead."
         testlabels(; kws...) = testlabels(:; kws...)
         function testlabels(i; dir=nothing)
             MNIST(; split=:test, dir)[i][2]
         end
         return testlabels
     elseif s === :traindata
-        @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[]` instead." maxlog=2
+        @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -189,7 +189,7 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return traindata
     elseif s === :testdata
-        @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[]` instead."  maxlog=2
+        @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

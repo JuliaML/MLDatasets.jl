@@ -1,7 +1,3 @@
-data_dir = withenv("DATADEPS_ALWAY_ACCEPT"=>"true") do
-    datadep"Cora"
-end
-
 @testset "Cora" begin
     data  = Cora.dataset()
     

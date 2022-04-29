@@ -1,12 +1,3 @@
-module SVHN2_Tests
-using Test
-using ColorTypes
-using ImageCore
-using FixedPointNumbers
-using MLDatasets
-using DataDeps
-using MAT
-
 @testset "Constants" begin
     @test SVHN2.classnames() isa Vector{Int}
     @test SVHN2.classnames() == [1,2,3,4,5,6,7,8,9,0]
@@ -20,7 +11,6 @@ end
     A = SVHN2.convert2image(data)
     @test size(A) == (32,32)
     @test eltype(A) == RGB{N0f8}
-    @test SVHN2.convert2image(vec(data)) == A
     @test permutedims(channelview(A), (3, 2, 1)) == data
     @test SVHN2.convert2image(reinterpret(UInt8, data)) == A
 
@@ -28,7 +18,6 @@ end
     A = SVHN2.convert2image(data)
     @test size(A) == (32,32,2)
     @test eltype(A) == RGB{N0f8}
-    @test SVHN2.convert2image(vec(data)) == A
     @test SVHN2.convert2image(reinterpret(UInt8, data)) == A
 end
 
@@ -212,6 +201,4 @@ else
             end
         end
     end
-end
-
 end

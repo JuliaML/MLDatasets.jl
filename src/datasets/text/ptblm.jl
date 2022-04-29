@@ -62,13 +62,13 @@ end
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{PTBLM}, s::Symbol)
     if s === :traindata
-        @warn "PTBLM.traindata() is deprecated, use `PTBLM(split=:train)[]` instead." maxlog=2
+        @warn "PTBLM.traindata() is deprecated, use `PTBLM(split=:train)[]` instead."
         function traindata(; dir=nothing)
             PTBLM(; split=:train, dir)[]
         end
         return traindata
     elseif s === :testdata
-        @warn "PTBLM.testdata() is deprecated, use `PTBLM(split=:test)[]` instead."  maxlog=2
+        @warn "PTBLM.testdata() is deprecated, use `PTBLM(split=:test)[]` instead." 
         function testdata(; dir=nothing)
             PTBLM(; split=:test, dir)[]
         end
