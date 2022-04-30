@@ -27,7 +27,7 @@ Pkg.add("MLDatasets")
 
 The way `MLDatasets.jl` is organized is that each dataset is its own type. 
 Where possible, those type share a common interface (fields and methods). 
-For example you can load the training set and the test set of the MNIST
+For example you can load the training set and the test set of the [MNIST](@ref)
 database of handwritten digits using the following commands:
 
 ```julia-repl
