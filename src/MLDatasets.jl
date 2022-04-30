@@ -91,6 +91,7 @@ include("graph.jl")
 # export Graph
 
 include("datasets/graphs/planetoid.jl")
+# export read_planetoid_data
 include("datasets/graphs/cora.jl")
 export Cora
 include("datasets/graphs/pubmed.jl")
