@@ -42,6 +42,28 @@ function PubMed(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::PubMed) = length(d.graphs) 
-Base.getindex(d::PubMed) = d.graphs
+Base.getindex(d::PubMed) = d.graphs[1]
 Base.getindex(d::PubMed, i) = getindex(d.graphs, i)
 
+
+# DEPRECATED in v0.6.0
+function Base.getproperty(::Type{PubMed}, s::Symbol)
+    if s === :dataset
+        @warn "PubMed.dataset() is deprecated, use `PubMed()` instead."
+        function dataset(; dir=nothing)
+            d = PubMed(; dir)
+            g = d[1]
+            adjacency_list = edgeindex2adjlist(g.edge_index..., g.num_nodes)
+            return  (; g.num_nodes, g.num_edges,
+                    node_features=g.node_data.features,
+                    node_labels=g.node_data.targets,
+                    train_indices = mask2indexes(g.node_data.train_mask),
+                    val_indices = mask2indexes(g.node_data.val_mask),
+                    test_indices = mask2indexes(g.node_data.test_mask),
+                    adjacency_list)
+        end
+        return dataset
+    else
+        return getfield(PubMed, s)
+    end
+end

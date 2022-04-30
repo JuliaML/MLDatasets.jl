@@ -25,7 +25,7 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
 
     if name == "citeseer"
         # There are some isolated nodes in the Citeseer graph, resulting in
-        # none consecutive test indices. We need to identify them and add them
+        # not consecutive test indices. We need to identify them and add them
         # as zero vectors to `tx` and `ty`.
         len_test_indices = (maximum(test_indices) - minimum(test_indices)) + 1
 
@@ -43,14 +43,6 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     test_indices = size(allx,2)+1:size(x,2)
     num_nodes = size(x, 2)
 
-    ## Use masks instead of indices?
-    # train_mask = falses(num_nodes)
-    # train_mask[train_indices] .= 1
-    # val_mask = falses(num_nodes)
-    # val_mask[val_indices] .= 1
-    # test_mask = falses(num_nodes)
-    # test_mask[test_indices] .= 1
-
     adj_list = [Int[] for i=1:num_nodes]
     for (i, neigs) in pairs(graph) # graph is dictionay representing the adjacency list
         neigs = unique(neigs) # remove duplicated edges
@@ -66,9 +58,18 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     end
 
     node_data = (features=x, targets=y, 
-                train_indices, val_indices, test_indices)
+                train_indices, 
+                val_indices, 
+                test_indices)
+
+
+    node_data = (features=x, targets=y, 
+                train_mask = indexes2mask(train_indices, num_nodes),
+                val_mask = indexes2mask(val_indices, num_nodes),
+                test_mask = indexes2mask(test_indices, num_nodes))
 
     metadata = Dict{String,Any}(
+        "name" => name,
         "num_classes" => length(unique(y)),
         "classes" => sort(unique(y))
     )
@@ -100,6 +101,9 @@ function read_planetoid_file(DEPNAME, name, dir)
         out = 1 .+ vec(readdlm(filename, Int))
     else
         out = read_pickle_file(filename, name)
+        if out isa SparseMatrixCSC
+            out = Matrix(out)
+        end
         if out isa Matrix
             out = collect(out')
         end

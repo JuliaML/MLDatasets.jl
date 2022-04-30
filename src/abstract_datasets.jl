@@ -1,3 +1,8 @@
+"""
+    AbstractDataset
+
+Super-type from which all datasets in MLDatasets.jl inherit.
+"""
 abstract type AbstractDataset <: AbstractDataContainer end
 
 function Base.show(io::IO, d::D) where D <: AbstractDataset

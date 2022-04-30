@@ -110,8 +110,10 @@ struct EMNIST <: SupervisedDataset
 end
 
 EMNIST(name; split=:train, Tx=Float32, dir=nothing) = EMNIST(name, Tx, split; dir)
+EMNIST(name, split::Symbol; kws...) = EMNIST(name; split, kws...)
+EMNIST(name, Tx::Type; kws...) = EMNIST(name; Tx, kws...)
 
-function EMNIST(name, Tx::Type, split::Symbol=:train; dir=nothing)
+function EMNIST(name, Tx::Type, split::Symbol; dir=nothing)
     @assert split ∈ [:train, :test]
     @assert name ∈ [:balanced, :byclass, :bymerge, :digits, :letters, :mnist]
     path = "matlab/emnist-$name.mat"

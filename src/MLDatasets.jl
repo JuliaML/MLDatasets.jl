@@ -1,24 +1,28 @@
 module MLDatasets
 
-using DelimitedFiles: readdlm
 using FixedPointNumbers
-using Pickle
 using SparseArrays
-using FileIO
-using DataFrames, CSV, Tables
+using DataFrames, Tables
 using Glob
+import ImageCore
+using ColorTypes
+import MLUtils
+using MLUtils: getobs, numobs, AbstractDataContainer
+
+### I/O imports
+import NPZ
+import Pickle
+using MAT: matopen, matread
+import CSV 
 using HDF5
 using JLD2
 import JSON3
-import ImageCore
-using ColorTypes
-using MAT: matopen, matread
-import MLUtils
-using MLUtils: getobs, numobs, AbstractDataContainer
-using NPZ: npzread
+using DelimitedFiles: readdlm
+##########
 
 export getobs, numobs
 export convert2image
+
 
 
 include("abstract_datasets.jl")
@@ -27,6 +31,9 @@ include("abstract_datasets.jl")
 
 include("utils.jl")
 export convert2image
+
+include("io.jl")
+# export read_csv, read_npy
 
 include("download.jl")
 
@@ -84,6 +91,7 @@ include("graph.jl")
 # export Graph
 
 include("datasets/graphs/planetoid.jl")
+# export read_planetoid_data
 include("datasets/graphs/cora.jl")
 export Cora
 include("datasets/graphs/pubmed.jl")

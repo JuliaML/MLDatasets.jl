@@ -66,5 +66,5 @@ function KarateClub()
 end
 
 Base.length(d::KarateClub) = length(d.graphs) 
-Base.getindex(d::KarateClub) = d.graphs
+Base.getindex(d::KarateClub) = d.graphs[1]
 Base.getindex(d::KarateClub, i) = getindex(d.graphs, i)

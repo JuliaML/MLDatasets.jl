@@ -103,8 +103,10 @@ struct CIFAR10 <: SupervisedDataset
 end
 
 CIFAR10(; split=:train, Tx=Float32, dir=nothing) = CIFAR10(Tx, split; dir)
+CIFAR10(split::Symbol; kws...) = CIFAR10(; split, kws...)
+CIFAR10(Tx::Type; kws...) = CIFAR10(; Tx, kws...)
 
-function CIFAR10(Tx::Type, split::Symbol=:train; dir=nothing)
+function CIFAR10(Tx::Type, split::Symbol; dir=nothing)
     DEPNAME = "CIFAR10"
     NCHUNKS = 5
     TESTSET_FILENAME = joinpath("cifar-10-batches-bin", "test_batch.bin")
@@ -170,7 +172,7 @@ end
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{CIFAR10}, s::Symbol)
     if s == :traintensor
-        @warn "CIFAR10.traintensor() is deprecated, use `CIFAR10(split=:train).features` instead." maxlog=2
+        @warn "CIFAR10.traintensor() is deprecated, use `CIFAR10(split=:train).features` instead."
         traintensor(T::Type=N0f8; kws...) = traintensor(T, :; kws...)
         traintensor(i; kws...) = traintensor(N0f8, i; kws...)
         function traintensor(T::Type, i; dir=nothing)
@@ -178,7 +180,7 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return traintensor
     elseif s == :testtensor
-        @warn "CIFAR10.testtensor() is deprecated, use `CIFAR10(split=:test).features` instead."  maxlog=2
+        @warn "CIFAR10.testtensor() is deprecated, use `CIFAR10(split=:test).features` instead." 
         testtensor(T::Type=N0f8; kws...) = testtensor(T, :; kws...)
         testtensor(i; kws...) = testtensor(N0f8, i; kws...)
         function testtensor(T::Type, i; dir=nothing)
@@ -186,21 +188,21 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return testtensor        
     elseif s == :trainlabels
-        @warn "CIFAR10.trainlabels() is deprecated, use `CIFAR10(split=:train).targets` instead."  maxlog=2
+        @warn "CIFAR10.trainlabels() is deprecated, use `CIFAR10(split=:train).targets` instead." 
         trainlabels(; kws...) = trainlabels(:; kws...)
         function trainlabels(i; dir=nothing)
             CIFAR10(; split=:train, dir)[i][2]
         end
         return trainlabels
     elseif s == :testlabels
-        @warn "CIFAR10.testlabels() is deprecated, use `CIFAR10(split=:test).targets` instead." maxlog=2
+        @warn "CIFAR10.testlabels() is deprecated, use `CIFAR10(split=:test).targets` instead."
         testlabels(; kws...) = testlabels(:; kws...)
         function testlabels(i; dir=nothing)
             CIFAR10(; split=:test, dir)[i][2]
         end
         return testlabels
     elseif s == :traindata
-        @warn "CIFAR10.traindata() is deprecated, use `CIFAR10(split=:train)[]` instead." maxlog=2
+        @warn "CIFAR10.traindata() is deprecated, use `CIFAR10(split=:train)[]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -208,7 +210,7 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "CIFAR10.testdata() is deprecated, use `CIFAR10(split=:test)[]` instead."  maxlog=2
+        @warn "CIFAR10.testdata() is deprecated, use `CIFAR10(split=:test)[]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

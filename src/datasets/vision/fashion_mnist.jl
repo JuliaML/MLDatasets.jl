@@ -52,6 +52,8 @@ struct FashionMNIST <: SupervisedDataset
 end
 
 FashionMNIST(; split=:train, Tx=Float32, dir=nothing) = FashionMNIST(Tx, split; dir)
+FashionMNIST(split::Symbol; kws...) = FashionMNIST(; split, kws...)
+FashionMNIST(Tx::Type; kws...) = FashionMNIST(; Tx, kws...)
 
 function FashionMNIST(Tx, split::Symbol; dir=nothing)
     @assert split in [:train, :test]
@@ -84,7 +86,7 @@ convert2image(::Type{<:FashionMNIST}, x::AbstractArray) = convert2image(MNIST, x
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
     if s == :traintensor
-        @warn "FashionMNIST.traintensor() is deprecated, use `FashionMNIST(split=:train).features` instead." maxlog=2
+        @warn "FashionMNIST.traintensor() is deprecated, use `FashionMNIST(split=:train).features` instead."
         traintensor(T::Type=N0f8; kws...) = traintensor(T, :; kws...)
         traintensor(i; kws...) = traintensor(N0f8, i; kws...)
         function traintensor(T::Type, i; dir=nothing)
@@ -92,7 +94,7 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return traintensor
     elseif s == :testtensor
-        @warn "FashionMNIST.testtensor() is deprecated, use `FashionMNIST(split=:test).features` instead."  maxlog=2
+        @warn "FashionMNIST.testtensor() is deprecated, use `FashionMNIST(split=:test).features` instead." 
         testtensor(T::Type=N0f8; kws...) = testtensor(T, :; kws...)
         testtensor(i; kws...) = testtensor(N0f8, i; kws...)
         function testtensor(T::Type, i; dir=nothing)
@@ -100,21 +102,21 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return testtensor        
     elseif s == :trainlabels
-        @warn "FashionMNIST.trainlabels() is deprecated, use `FashionMNIST(split=:train).targets` instead."  maxlog=2
+        @warn "FashionMNIST.trainlabels() is deprecated, use `FashionMNIST(split=:train).targets` instead." 
         trainlabels(; kws...) = trainlabels(:; kws...)
         function trainlabels(i; dir=nothing)
             FashionMNIST(; split=:train, dir)[i][2]
         end
         return trainlabels
     elseif s == :testlabels
-        @warn "FashionMNIST.testlabels() is deprecated, use `FashionMNIST(split=:test).targets` instead." maxlog=2
+        @warn "FashionMNIST.testlabels() is deprecated, use `FashionMNIST(split=:test).targets` instead."
         testlabels(; kws...) = testlabels(:; kws...)
         function testlabels(i; dir=nothing)
             FashionMNIST(; split=:test, dir)[i][2]
         end
         return testlabels
     elseif s == :traindata
-        @warn "FashionMNIST.traindata() is deprecated, use `FashionMNIST(split=:train)[]` instead." maxlog=2
+        @warn "FashionMNIST.traindata() is deprecated, use `FashionMNIST(split=:train)[]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -122,7 +124,7 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "FashionMNIST.testdata() is deprecated, use `FashionMNIST(split=:test)[]` instead."  maxlog=2
+        @warn "FashionMNIST.testdata() is deprecated, use `FashionMNIST(split=:test)[]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)
@@ -130,10 +132,10 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return testdata
     elseif s == :convert2image
-        @warn "FashionMNIST.convert2image(x) is deprecated, use `convert2image(FashionMNIST, x)` instead." maxlog=2
+        @warn "FashionMNIST.convert2image(x) is deprecated, use `convert2image(FashionMNIST, x)` instead."
         return x -> convert2image(FashionMNIST, x)
     elseif s == :classnames
-        @warn "FashionMNIST.classnames() is deprecated, use `FashionMNIST().metadata[\"class_names\"]` instead." maxlog=2
+        @warn "FashionMNIST.classnames() is deprecated, use `FashionMNIST().metadata[\"class_names\"]` instead."
         return () -> ["T-Shirt", "Trouser", "Pullover", "Dress", "Coat", "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]
     else
         return getfield(FashionMNIST, s)

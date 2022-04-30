@@ -1,17 +1,3 @@
-read_csv(path; kws...) = read_csv(path, DataFrame; kws...)
-
-# function read_csv(path, sink::Type{<:AbstractMatrix{T}}; delim=nothing, kws...) where T
-#     x = delim === nothing ? readdlm(path, T; kws...) : readdlm(path, delim, T; kws...)
-#     return x
-# end
-
-function read_csv(path, sink::Type{A}; kws...) where A <: AbstractMatrix
-    A(read_csv(path; kws...))
-end
-
-function read_csv(path, sink::Type{<:DataFrame}; kws...)
-    return CSV.read(path, sink; kws...)
-end
 
 function parse_pystring(s::AbstractString)
     s == "False" && return false
@@ -61,6 +47,17 @@ function clean_nt(nt::NamedTuple)
     else
         return res
     end
+end
+
+function indexes2mask(idxs::AbstractVector{Int}, n)
+    mask = falses(n)
+    mask[idxs] .= true
+    return mask
+end
+
+function mask2indexes(mask::BitVector)
+    n = length(mask)
+    return (1:n)[mask]
 end
 
 

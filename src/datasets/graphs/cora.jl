@@ -59,5 +59,28 @@ function Cora(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::Cora) = length(d.graphs) 
-Base.getindex(d::Cora) = d.graphs
+Base.getindex(d::Cora) = d.graphs[1]
 Base.getindex(d::Cora, i) = getindex(d.graphs, i)
+
+
+# DEPRECATED in v0.6.0
+function Base.getproperty(::Type{Cora}, s::Symbol)
+    if s === :dataset
+        @warn "Cora.dataset() is deprecated, use `Cora()` instead."
+        function dataset(; dir=nothing)
+            d = Cora(; dir)
+            g = d[1]
+            adjacency_list = edgeindex2adjlist(g.edge_index..., g.num_nodes)
+            return  (; g.num_nodes, g.num_edges,
+                    node_features=g.node_data.features,
+                    node_labels=g.node_data.targets,
+                    train_indices = mask2indexes(g.node_data.train_mask),
+                    val_indices = mask2indexes(g.node_data.val_mask),
+                    test_indices = mask2indexes(g.node_data.test_mask),
+                    adjacency_list)
+        end
+        return dataset
+    else
+        return getfield(Cora, s)
+    end
+end

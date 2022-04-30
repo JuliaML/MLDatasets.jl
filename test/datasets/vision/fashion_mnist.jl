@@ -13,6 +13,13 @@ n_targets = 1
         n_features, n_targets, n_obs=60000,
         Tx=Float32, Ty=Int,
         conv2img=true)
+
+
+    d = FashionMNIST(:train)
+    @test d.split == :train 
+    d = FashionMNIST(Int)
+    @test d.split == :train 
+    @test d.features isa Array{Int}
 end
 
 @testset "testset" begin
