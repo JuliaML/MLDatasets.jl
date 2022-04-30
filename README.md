@@ -4,14 +4,14 @@
 [![Docs Latest](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaML.github.io/MLDatasets.jl/dev)
 [![CI](https://github.com/JuliaML/MLDatasets.jl/workflows/Unit%20test/badge.svg)](https://github.com/JuliaML/MLDatasets.jl/actions)
 
-This package represents a community effort to provide a common interface for accessing common Machine Learning (ML) datasets. 
+This package represents a community effort to provide a common interface for accessing common Machine Learning datasets. 
 In contrast to other data-related Julia packages, the focus of MLDatasets.jl is specifically on downloading, unpacking, and accessing benchmark datasets. 
 Functionality for the purpose of data processing or visualization is only provided to a degree that is special to some dataset.
 
 This package is a part of the
-[`JuliaML`](https://github.com/JuliaML) ecosystem. 
+[JuliaML](https://github.com/JuliaML) ecosystem. 
 Its functionality is built on top of the package
-[`DataDeps.jl`](https://github.com/oxinabox/DataDeps.jl).
+[DataDeps.jl](https://github.com/oxinabox/DataDeps.jl).
 
 
 ## Available Datasets
@@ -26,7 +26,7 @@ Datasets are grouped into different categories. Click on the links below for a f
 
 ## Installation
 
-To install `MLDatasets.jl`, start up Julia and type the following code snippet into the REPL. It makes use of the native Julia package manger.
+To install MLDatasets.jl, start up Julia and type the following code snippet into the REPL. It makes use of the native Julia package manger.
 
 ```julia
 import Pkg
