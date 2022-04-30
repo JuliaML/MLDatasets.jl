@@ -3,15 +3,16 @@
     data  = Cora()
     @test length(data) == 1
     g = data[1]
+    @test g === data[]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 2708
     @test g.num_edges == 10556
     @test size(g.node_data.features) == (1433, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test size(g.node_data.train_indices) == (140,)
-    @test size(g.node_data.val_indices) == (500,)
-    @test size(g.node_data.test_indices) == (1000,)
+    @test sum(g.node_data.train_mask) == 140
+    @test sum(g.node_data.val_mask) == 500
+    @test sum(g.node_data.test_mask) == 1000
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
@@ -26,15 +27,16 @@ end
     data  = CiteSeer()
     @test length(data) == 1
     g = data[1]
+    @test g === data[]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 3327
     @test g.num_edges == 9104
     @test size(g.node_data.features) == (3703, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test size(g.node_data.train_indices) == (120,)
-    @test size(g.node_data.val_indices) == (500,)
-    @test size(g.node_data.test_indices) == (1015,)
+    @test sum(g.node_data.train_mask) == 120
+    @test sum(g.node_data.val_mask) == 500
+    @test sum(g.node_data.test_mask) == 1015
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
@@ -49,15 +51,16 @@ end
     data  = PubMed()
     @test length(data) == 1
     g = data[1]
+    @test g === data[]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 19717
     @test g.num_edges == 88648
     @test size(g.node_data.features) == (500, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test size(g.node_data.train_indices) == (60,)
-    @test size(g.node_data.val_indices) == (500,)
-    @test size(g.node_data.test_indices) == (1000,)
+    @test sum(g.node_data.train_mask) == 60
+    @test sum(g.node_data.val_mask) == 500
+    @test sum(g.node_data.test_mask) == 1000
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
@@ -72,6 +75,7 @@ end
     data  = KarateClub()
     @test length(data) == 1
     g = data[1]
+    @test g === data[]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 34
@@ -96,6 +100,7 @@ end
     data  = PolBlogs()
     @test length(data) == 1
     g = data[1]
+    @test g === data[]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 1490

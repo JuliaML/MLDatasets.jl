@@ -40,7 +40,7 @@ function Base.show(io::IO, ::MIME"text/plain", d::Graph)
 end
 
 
-function adjlist2edgeindex(adj; inneigs=true)
+function adjlist2edgeindex(adj; inneigs=false)
     s, t = Int[], Int[]     
     for i in 1:length(adj)
         for j in adj[i]
@@ -50,8 +50,19 @@ function adjlist2edgeindex(adj; inneigs=true)
     end
 
     if inneigs
-        return t, s
-    else
-        return s, t
+        s, t = t, s
     end
+
+    return s, t
+end
+
+function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
+    adj = [Int[] for _ in 1:num_nodes]
+    if inneigs
+        s, t = t, s
+    end
+    for (i, j) in zip(s, t)
+        push!(adj[i], j)
+    end
+    return adj
 end

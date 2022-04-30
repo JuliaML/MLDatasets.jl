@@ -9,16 +9,15 @@ using HDF5
 using JLD2
 using ColorTypes
 using FixedPointNumbers
-using MLDatasets
 using DataDeps
-
+using ImageCore: channelview
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
 include("test_utils.jl")
 
 dataset_tests = [
-    # "datasets/graphs.jl",
+    "datasets/graphs.jl",
     # "datasets/misc.jl",
     # "datasets/vision/emnist.jl",
     # "datasets/vision/fashion_mnist.jl",
@@ -36,17 +35,17 @@ no_ci_dataset_tests = [
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
 
 deprecated_interface = [
-    "datasets/vision/deprecated_fashion_mnist.jl",
-    "datasets/vision/deprecated_mnist.jl",
-    "datasets/vision/deprecated_cifar10.jl",
-    "datasets/vision/deprecated_cifar100.jl",
-    "datasets/vision/deprecated_svhn2.jl",
+    # "datasets/vision/deprecated_fashion_mnist.jl",
+    # "datasets/vision/deprecated_mnist.jl",
+    # "datasets/vision/deprecated_cifar10.jl",
+    # "datasets/vision/deprecated_cifar100.jl",
+    # "datasets/vision/deprecated_svhn2.jl",
     # "datasets/graphs/deprecated_citeseer.jl",
-    # "datasets/graphs/deprecated_cora.jl",
+    "datasets/graphs/deprecated_cora.jl",
     # "datasets/graphs/deprecated_pubmed.jl",
     # "datasets/graphs/deprecated_tudataset.jl",
-    "datasets/text_deprecated.jl",
-    "datasets/misc_deprecated.jl",
+    # "datasets/text_deprecated.jl",
+    # "datasets/misc_deprecated.jl",
 ]
 
 container_tests = [

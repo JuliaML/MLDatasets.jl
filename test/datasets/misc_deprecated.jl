@@ -62,8 +62,6 @@ end
     feature_names = ["PassengerId","Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
     target_names = ["Survived"]
 
-
-    # TODO remove
     @testset "deprecated interface" begin
         X = Titanic.features()
         Y = Titanic.targets()

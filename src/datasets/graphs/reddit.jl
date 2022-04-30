@@ -90,7 +90,7 @@ function Reddit(; full=true, dir=nothing)
     @assert length(node_idx) == length(labels)
 
     # features
-    features = npzread(feat_path)[node_idx, :]
+    features = read_npz(feat_path)[node_idx, :]
     features = permutedims(features, (2, 1))
 
     # split
