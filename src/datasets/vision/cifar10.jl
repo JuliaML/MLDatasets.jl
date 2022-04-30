@@ -103,8 +103,10 @@ struct CIFAR10 <: SupervisedDataset
 end
 
 CIFAR10(; split=:train, Tx=Float32, dir=nothing) = CIFAR10(Tx, split; dir)
+CIFAR10(split::Symbol; kws...) = CIFAR10(; split, kws...)
+CIFAR10(Tx::Type; kws...) = CIFAR10(; Tx, kws...)
 
-function CIFAR10(Tx::Type, split::Symbol=:train; dir=nothing)
+function CIFAR10(Tx::Type, split::Symbol; dir=nothing)
     DEPNAME = "CIFAR10"
     NCHUNKS = 5
     TESTSET_FILENAME = joinpath("cifar-10-batches-bin", "test_batch.bin")

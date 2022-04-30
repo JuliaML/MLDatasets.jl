@@ -18,18 +18,18 @@ include("test_utils.jl")
 
 dataset_tests = [
     "datasets/graphs.jl",
-    # "datasets/misc.jl",
-    # "datasets/vision/emnist.jl",
-    # "datasets/vision/fashion_mnist.jl",
-    # "datasets/vision/mnist.jl",
-    # "datasets/text.jl",
+    "datasets/misc.jl",
+    "datasets/vision/fashion_mnist.jl",
+    "datasets/vision/mnist.jl",
+    "datasets/text.jl",
 ]
 
 no_ci_dataset_tests = [
-    # "datasets/graphs_no_ci.jl",
-    # "datasets/vision/cifar10.jl",
-    # "datasets/vision/cifar100.jl",
-    # "datasets/vision/svhn2.jl",
+    "datasets/graphs_no_ci.jl",
+    "datasets/vision/cifar10.jl",
+    "datasets/vision/cifar100.jl",
+    "datasets/vision/emnist.jl",
+    "datasets/vision/svhn2.jl",
     ]
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
@@ -40,20 +40,17 @@ deprecated_interface = [
     "datasets/vision/deprecated_cifar10.jl",
     "datasets/vision/deprecated_cifar100.jl",
     "datasets/vision/deprecated_svhn2.jl",
-    "datasets/graphs/deprecated_citeseer.jl",
-    "datasets/graphs/deprecated_cora.jl",
-    "datasets/graphs/deprecated_pubmed.jl",
-    # "datasets/graphs/deprecated_tudataset.jl",
+    "datasets/graphs_deprecated.jl",
     "datasets/text_deprecated.jl",
     "datasets/misc_deprecated.jl",
 ]
 
 container_tests = [
-    # "containers/filedataset.jl",
-    # "containers/tabledataset.jl",
-    # "containers/hdf5dataset.jl",
-    # "containers/jld2dataset.jl",
-    # "containers/cacheddataset.jl",
+    "containers/filedataset.jl",
+    "containers/tabledataset.jl",
+    "containers/hdf5dataset.jl",
+    "containers/jld2dataset.jl",
+    "containers/cacheddataset.jl",
 ]
 
 @testset "Datasets" begin

@@ -100,8 +100,10 @@ struct CIFAR100 <: SupervisedDataset
 end
 
 CIFAR100(; split=:train, Tx=Float32, dir=nothing) = CIFAR100(Tx, split; dir)
+CIFAR100(split::Symbol; kws...) = CIFAR100(; split, kws...)
+CIFAR100(Tx::Type; kws...) = CIFAR100(; Tx, kws...)
 
-function CIFAR100(Tx::Type, split::Symbol=:train; dir=nothing)
+function CIFAR100(Tx::Type, split::Symbol; dir=nothing)
     DEPNAME = "CIFAR100"
     TRAINSET_FILENAME = joinpath("cifar-100-binary", "train.bin")
     TESTSET_FILENAME  = joinpath("cifar-100-binary", "test.bin")

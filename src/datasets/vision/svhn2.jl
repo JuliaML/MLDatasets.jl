@@ -106,8 +106,10 @@ struct SVHN2 <: SupervisedDataset
 end
 
 SVHN2(; split=:train, Tx=Float32, dir=nothing) = SVHN2(Tx, split; dir)
+SVHN2(split::Symbol; kws...) = SVHN2(; split, kws...)
+SVHN2(Tx::Type; kws...) = SVHN2(; Tx, kws...)
 
-function SVHN2(Tx::Type, split::Symbol=:train; dir=nothing)
+function SVHN2(Tx::Type, split::Symbol; dir=nothing)
     DEPNAME = "SVHN2"
     TRAINDATA = "train_32x32.mat"
     TESTDATA  = "test_32x32.mat"

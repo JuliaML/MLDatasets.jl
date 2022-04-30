@@ -13,6 +13,12 @@ n_targets = 1
         n_features, n_targets, n_obs=60000,
         Tx=Float32, Ty=Int,
         conv2img=true)
+
+    d = MNIST(:train)
+    @test d.split == :train 
+    d = MNIST(Int)
+    @test d.split == :train 
+    @test d.features isa Array{Int}
 end
 
 @testset "testset" begin
@@ -27,4 +33,9 @@ end
         Tx=UInt8, Ty=Int,
         conv2img=true)
 
+    d = MNIST(:test)
+    @test d.split == :test 
+    d = MNIST(Int, :test)
+    @test d.split == :test 
+    @test d.features isa Array{Int}
 end

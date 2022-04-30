@@ -52,6 +52,8 @@ struct FashionMNIST <: SupervisedDataset
 end
 
 FashionMNIST(; split=:train, Tx=Float32, dir=nothing) = FashionMNIST(Tx, split; dir)
+FashionMNIST(split::Symbol; kws...) = FashionMNIST(; split, kws...)
+FashionMNIST(Tx::Type; kws...) = FashionMNIST(; Tx, kws...)
 
 function FashionMNIST(Tx, split::Symbol; dir=nothing)
     @assert split in [:train, :test]

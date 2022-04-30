@@ -107,8 +107,10 @@ struct MNIST <: SupervisedDataset
 end
 
 MNIST(; split=:train, Tx=Float32, dir=nothing) = MNIST(Tx, split; dir)
+MNIST(split::Symbol; kws...) = MNIST(; split, kws...)
+MNIST(Tx::Type; kws...) = MNIST(; Tx, kws...)
 
-function MNIST(Tx::Type, split::Symbol=:train; dir=nothing)
+function MNIST(Tx::Type, split::Symbol; dir=nothing)
     @assert split in [:train, :test]
     if split === :train 
         IMAGESPATH = "train-images-idx3-ubyte.gz"

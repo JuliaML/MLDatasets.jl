@@ -12,6 +12,12 @@ n_targets = (coarse=1, fine=1)
     test_supervised_array_dataset(d;
         n_features, n_targets, n_obs=50000,
         Tx=Float32, Ty=Int)
+
+    d = CIFAR100(:train)
+    @test d.split == :train 
+    d = CIFAR100(Int, :train)
+    @test d.split == :train 
+    @test d.features isa AbstractArray{Int}
 end
 
 @testset "testset" begin 
