@@ -35,17 +35,17 @@ no_ci_dataset_tests = [
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
 
 deprecated_interface = [
-    # "datasets/vision/deprecated_fashion_mnist.jl",
-    # "datasets/vision/deprecated_mnist.jl",
-    # "datasets/vision/deprecated_cifar10.jl",
-    # "datasets/vision/deprecated_cifar100.jl",
-    # "datasets/vision/deprecated_svhn2.jl",
-    # "datasets/graphs/deprecated_citeseer.jl",
+    "datasets/vision/deprecated_fashion_mnist.jl",
+    "datasets/vision/deprecated_mnist.jl",
+    "datasets/vision/deprecated_cifar10.jl",
+    "datasets/vision/deprecated_cifar100.jl",
+    "datasets/vision/deprecated_svhn2.jl",
+    "datasets/graphs/deprecated_citeseer.jl",
     "datasets/graphs/deprecated_cora.jl",
-    # "datasets/graphs/deprecated_pubmed.jl",
+    "datasets/graphs/deprecated_pubmed.jl",
     # "datasets/graphs/deprecated_tudataset.jl",
-    # "datasets/text_deprecated.jl",
-    # "datasets/misc_deprecated.jl",
+    "datasets/text_deprecated.jl",
+    "datasets/misc_deprecated.jl",
 ]
 
 container_tests = [
