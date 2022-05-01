@@ -2,8 +2,16 @@
     AbstractDataset
 
 Super-type from which all datasets in MLDatasets.jl inherit.
+
+Implements the following functionality:
+- `getobs(d)` and `getobs(d, i)` falling back to `d[]` and `d[i]` 
+- Pretty printing.
 """
 abstract type AbstractDataset <: AbstractDataContainer end
+
+
+MLUtils.getobs(d::AbstractDataset) = d[]
+MLUtils.getobs(d::AbstractDataset, i) = d[i]
 
 function Base.show(io::IO, d::D) where D <: AbstractDataset
     print(io, "$(D.name.name)()")
@@ -40,7 +48,7 @@ _summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)
 _summary(x::Union{Tuple, NamedTuple}) = map(summary, x)
 
 """
-    abstract type SupervisedDataset <: AbstractDataset end
+    SupervisedDataset <: AbstractDataset
 
 An abstract dataset type for supervised learning tasks. 
 Concrete dataset types inheriting from it must provide
@@ -57,11 +65,10 @@ Base.getindex(d::SupervisedDataset) = getobs((; d.features, d.targets))
 Base.getindex(d::SupervisedDataset, i) = getobs((; d.features, d.targets), i)
 
 """
-    abstract type UnsupervisedDataset <: AbstractDataset end
+    UnsupervisedDataset <: AbstractDataset
 
 An abstract dataset type for unsupervised or self-supervised learning tasks. 
-Concrete dataset types inheriting from it must provide
-a `features` field.
+Concrete dataset types inheriting from it must provide a `features` field.
 """
 abstract type UnsupervisedDataset <: AbstractDataset end
 
@@ -78,8 +85,7 @@ Base.getindex(d::UnsupervisedDataset, i) = getobs(d.features, i)
 const ARGUMENTS_SUPERVISED_TABLE = """
 - If `as_df = true`, load the data as dataframes instead of plain arrays.
 
-- You can pass a specific `dir` where to load or download the dataset, otherwise uses
-the default one.
+- You can pass a specific `dir` where to load or download the dataset, otherwise uses the default one.
 """
 
 const FIELDS_SUPERVISED_TABLE = """
@@ -90,7 +96,7 @@ const FIELDS_SUPERVISED_TABLE = """
 """
 
 const METHODS_SUPERVISED_TABLE = """
-- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets . 
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
 - `dataset[]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """
@@ -99,8 +105,7 @@ const METHODS_SUPERVISED_TABLE = """
 # SUPERVISED ARRAY DATASET
 
 const ARGUMENTS_SUPERVISED_ARRAY = """
-- You can pass a specific `dir` where to load or download the dataset, otherwise uses
-the default one.
+- You can pass a specific `dir` where to load or download the dataset, otherwise uses the default one.
 """
 
 const FIELDS_SUPERVISED_ARRAY = """
@@ -110,7 +115,7 @@ const FIELDS_SUPERVISED_ARRAY = """
 """
 
 const METHODS_SUPERVISED_ARRAY = """
-- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets . 
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
 - `dataset[]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """
