@@ -1,4 +1,4 @@
-# Graph Datasets
+# Graphs Datasets
 
 ## Index
 
