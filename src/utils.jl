@@ -69,18 +69,18 @@ end
 Convert the observation(s) `i` from dataset `d` to image(s).
 It can also convert a numerical array `x`.
 
+In order to support a new dataset, e.g. `MyDataset`, 
+implement `convert2image(::Type{MyDataset}, x::AbstractArray)`.
+
 # Examples
 
 ```julia-repl
-julia> using MLDatasets: MNIST
-        
-julia> using ImageInTerminal
+julia> using MLDatasets, ImageInTerminal
 
 julia> d = MNIST()
 
-julia> i = 1:2;
-
-julia> convert2image(d, i) # You should see 2 images in the terminal
+julia> convert2image(d, 1:2) 
+# You should see 2 images in the terminal
 
 julia> x = d[1].features;
 

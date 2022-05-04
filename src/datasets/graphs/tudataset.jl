@@ -40,12 +40,6 @@ data = TUDataset("PROTEINS")
 # Access first graph
 d1 = data[1] 
 
-# Create a LightGraphs' graph
-g = SimpleGraph(d1.num_nodes)
-for (s, t) in zip(d1.source, d1.target)
-    add_edge!(g, s, t)
-end
-
 # Node features
 X = d1.node_attributes # (nfeatures x nnodes) matrix
 ```
@@ -165,7 +159,7 @@ function tudataset_getgraph(data::NamedTuple, i::Int)
     node_data = (features = node_attributes, targets = node_labels)
     edge_data = (features = edge_attributes, targets = edge_labels)
     
-    return Graph(; num_nodes, num_edges, 
+    return Graph(; num_nodes,
                 edge_index = (source, target), 
                 node_data = node_data |> clean_nt,
                 edge_data = edge_data |> clean_nt,

@@ -43,7 +43,7 @@ function PolBlogs(; dir=nothing)
     labels = Matrix{Int64}(readdlm(path, ',')) |> vec
 
     metadata = Dict{String, Any}()
-    g = Graph(; num_nodes=1490, num_edges=19025,
+    g = Graph(; num_nodes = 1490,
             edge_index = (s, t), 
             node_data = (; labels))
 

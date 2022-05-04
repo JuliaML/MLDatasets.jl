@@ -32,6 +32,7 @@ Use `full=false` to lod only a subsample of the dataset.
 
 # References
 [1]: [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216)
+
 [2]: [Benchmarks on the Reddit Dataset](https://paperswithcode.com/dataset/reddit)
 """
 struct Reddit <: AbstractDataset
@@ -113,8 +114,7 @@ function Reddit(; full=true, dir=nothing)
     metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph, 
                 "num_graphs" => num_graphs, "num_edges" => num_edges, "num_nodes" => num_nodes, 
                 "split" => split)
-    g = Graph(
-        num_edges=num_edges, num_nodes=num_nodes, 
+    g = Graph(; num_nodes, 
         edge_index=(s, t), 
         node_data= (; labels, features)
     )

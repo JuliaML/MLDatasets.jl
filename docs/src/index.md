@@ -68,9 +68,9 @@ julia> summary(X_train)
 "28×28×60000 Array{Float32, 3}"
 ```
 
-Input features are commonly denoted by `features`, while classification labels or regression targets are denoted by `targets`.
+Input features are commonly denoted by `features`, while classification labels and regression targets are denoted by `targets`.
 
-```julia
+```julia-repl
 julia> iris = Iris()
 dataset Iris:
   metadata    =>    Dict{String, Any} with 4 entries

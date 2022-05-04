@@ -18,8 +18,11 @@ One node per unique label is used as training data.
 # References
 
 [1]: [An Information Flow Model for Conflict and Fission in Small Groups](http://www1.ind.ku.dk/complexLearning/zachary1977.pdf)
+
 [2]: [Semi-supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907)
+
 [3]: [PyTorch Geometric Karate Club Dataset](https://pytorch-geometric.readthedocs.io/en/latest/_modules/torch_geometric/datasets/karate.html#KarateClub)
+
 [4]: [NetworkX Zachary's Karate Club Dataset](https://networkx.org/documentation/stable/_modules/networkx/generators/social.html#karate_club_graph)
 """
 struct KarateClub
@@ -59,7 +62,7 @@ function KarateClub()
                 0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
     
     node_data = (; labels_clubs, labels_comm) 
-    g = Graph(; num_nodes=34, num_edges=156, edge_index=(src, target), node_data)
+    g = Graph(; num_nodes=34, edge_index=(src, target), node_data)
 
     metadata = Dict{String, Any}()
     return KarateClub(metadata, [g])

@@ -28,8 +28,8 @@ The dataset is retrieved from Ref. [2].
 # References
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
-[2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 
+[2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
 struct PubMed <: AbstractDataset
     metadata::Dict{String, Any}
