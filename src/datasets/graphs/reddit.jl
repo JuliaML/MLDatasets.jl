@@ -27,7 +27,7 @@ This dataset contains 232,965 posts.
 The first 20 days are used for training and the remaining days for testing (with 30% used for validation).
 Each node is represented by a 602 word vector.
 
-Use `full=false` to lod only a subsample of the dataset.
+Use `full=false` to load only a subsample of the dataset.
 
 
 # References

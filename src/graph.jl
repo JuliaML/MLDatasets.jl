@@ -50,13 +50,13 @@ import Graphs, MLDatasets
 
 ## From Graphs.jl to MLDatasets.Graphs
 
-# A directed graph
+# From a directed graph
 g = Graphs.erdos_renyi(10, 20, is_directed=true)
 s = [e.src for e in Graphs.edges(g)]
 t = [e.dst for e in Graphs.edges(g)]
 mlg = MLDatasets.Graph(num_nodes=10, edge_index=(s, t))
 
-# An undirected graphs
+# From an undirected graph
 g = Graphs.erdos_renyi(10, 20, is_directed=false)
 s = [e.src for e in Graphs.edges(g)]
 t = [e.dst for e in Graphs.edges(g)]
@@ -65,8 +65,8 @@ mlg = MLDatasets.Graph(num_nodes=10, edge_index=(s, t))
 
 # From Graphs.jl to MLDatasets.Graphs
 s, t = mlg.edge_index
-g = Graphs.DiGraph()
-for (i, j) in zip(s, t):
+g = Graphs.DiGraph(mlg.num_nodes)
+for (i, j) in zip(s, t)
     Graphs.add_edge!(g, i, j)
 end
 ```
