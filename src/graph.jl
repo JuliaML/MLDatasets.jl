@@ -34,12 +34,12 @@ dataset Cora:
   metadata    =>    Dict{String, Any} with 3 entries
   graphs      =>    1-element Vector{Graph}
 
-julia> d[1] # a Graph
+julia> d[1]
 Graph:
   num_nodes   =>    2708
   num_edges   =>    10556
   edge_index  =>    ("10556-element Vector{Int64}", "10556-element Vector{Int64}")
-  node_data   =>    (features = "1433×2708 Matrix{Float32}", targets = "2708-element Vector{Int64}", train_mask = "2708-element BitVector", val_mask = "2708-element BitVector", test_mask = "2708-element BitVector")
+  node_data   =>    (features = "1433×2708 Matrix{Float32}", targets = "2708-element Vector{Int64}", train_mask = "2708-element BitVector with 140 trues", val_mask = "2708-element BitVector with 500 trues", test_mask = "2708-element BitVector with 1000 trues")
   edge_data   =>    nothing
 ```
 
@@ -63,7 +63,7 @@ t = [e.dst for e in Graphs.edges(g)]
 s, t = [s; t], [t; s] # adding reverse edges
 mlg = MLDatasets.Graph(num_nodes=10, edge_index=(s, t))
 
-# From Graphs.jl to MLDatasets.Graphs
+# From MLDatasets.Graphs to Graphs.jl
 s, t = mlg.edge_index
 g = Graphs.DiGraph(mlg.num_nodes)
 for (i, j) in zip(s, t)
