@@ -1,9 +1,9 @@
 export KarateClub
 
 """
-    Zachary's Karate Club
+    KarateClub()
 
-The Karate Club dataset originally appeared in Ref [1].
+The Zachary's karate club dataset originally appeared in Ref [1].
 
 The network contains 34 nodes (members of the karate club).
 The nodes are connected by 78 undirected and unweighted edges.
@@ -69,5 +69,5 @@ function KarateClub()
 end
 
 Base.length(d::KarateClub) = length(d.graphs) 
-Base.getindex(d::KarateClub) = d.graphs[1]
-Base.getindex(d::KarateClub, i) = getindex(d.graphs, i)
+Base.getindex(d::KarateClub, ::Colon) = d.graphs[1]
+Base.getindex(d::KarateClub, i) = d.graphs[i]

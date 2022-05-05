@@ -33,7 +33,6 @@ description of the format.
 
 ```julia
 using MLDatasets: TUDataset
-using LightGraphs: SimpleGraph, add_edge!
 
 data = TUDataset("PROTEINS")
 
@@ -169,11 +168,11 @@ end
 
 Base.length(data::TUDataset) = length(data.graphs)
 
-function Base.getindex(data::TUDataset) 
+function Base.getindex(data::TUDataset, ::Colon) 
     if data.graph_data === nothing
-        return getobs(data.graphs)
+        return data.graphs
     else
-        return getobs((; data.graphs, data.graph_data...))    
+        return (; data.graphs, data.graph_data...)
     end
 end
 

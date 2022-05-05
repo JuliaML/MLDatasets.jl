@@ -42,7 +42,7 @@ function PubMed(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::PubMed) = length(d.graphs) 
-Base.getindex(d::PubMed) = d.graphs[1]
+Base.getindex(d::PubMed, ::Colon) = d.graphs[1]
 Base.getindex(d::PubMed, i) = getindex(d.graphs, i)
 
 

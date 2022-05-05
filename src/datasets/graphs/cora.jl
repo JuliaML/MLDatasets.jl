@@ -60,7 +60,7 @@ function Cora(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::Cora) = length(d.graphs) 
-Base.getindex(d::Cora) = d.graphs[1]
+Base.getindex(d::Cora, ::Colon) = d.graphs[1]
 Base.getindex(d::Cora, i) = getindex(d.graphs, i)
 
 

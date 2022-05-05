@@ -162,7 +162,7 @@ function Base.getproperty(::Type{SVHN2}, s::Symbol)
         end
         return testtensor   
     elseif s == :extratensor
-        @warn "SVHN2.extratensor() is deprecated, use `SVHN2(split=:test)[]` instead." 
+        @warn "SVHN2.extratensor() is deprecated, use `SVHN2(split=:test)[:]` instead." 
         extratensor(T::Type=N0f8; kws...) = extratensor(T, :; kws...)
         extratensor(i; kws...) = extratensor(N0f8, i; kws...)
         function extratensor(T::Type, i; dir=nothing)
@@ -184,7 +184,7 @@ function Base.getproperty(::Type{SVHN2}, s::Symbol)
         end
         return testlabels
     elseif s == :extralabels
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[]` instead." 
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
         extralabels(T::Type=N0f8; kws...) = extralabels(T, :; kws...)
         extralabels(i; kws...) = extralabels(N0f8, i; kws...)
         function extralabels(T::Type, i; dir=nothing)
@@ -192,7 +192,7 @@ function Base.getproperty(::Type{SVHN2}, s::Symbol)
         end
         return extralabels
     elseif s == :traindata
-        @warn "SVHN2.traindata() is deprecated, use `SVHN2(split=:train)[]` instead."
+        @warn "SVHN2.traindata() is deprecated, use `SVHN2(split=:train)[:]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -200,7 +200,7 @@ function Base.getproperty(::Type{SVHN2}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[]` instead." 
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)
@@ -208,7 +208,7 @@ function Base.getproperty(::Type{SVHN2}, s::Symbol)
         end
         return testdata
     elseif s == :extradata
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[]` instead." 
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
         extradata(T::Type=N0f8; kws...) = extradata(T, :; kws...)
         extradata(i; kws...) = extradata(N0f8, i; kws...)
         function extradata(T::Type, i; dir=nothing)

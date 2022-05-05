@@ -43,10 +43,10 @@ end
     dval = Mutagenesis(split=:val)
     dall = Mutagenesis(split=:all)
 
-    train_x, train_y = dtrain[]
-    test_x, test_y = dtest[]
-    val_x, val_y = dval[]
-    all_x, all_y = dall[]
+    train_x, train_y = dtrain[:]
+    test_x, test_y = dtest[:]
+    val_x, val_y = dval[:]
+    all_x, all_y = dall[:]
 
     @test length(train_x) == length(train_y) == 100
     @test length(test_x) == length(test_y) == 44

@@ -3,7 +3,7 @@
     data  = Cora()
     @test length(data) == 1
     g = data[1]
-    @test g === data[]
+    @test g === data[:]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 2708
@@ -27,7 +27,7 @@ end
     data  = CiteSeer()
     @test length(data) == 1
     g = data[1]
-    @test g === data[]
+    @test g === data[:]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 3327
@@ -51,7 +51,7 @@ end
     data  = PubMed()
     @test length(data) == 1
     g = data[1]
-    @test g === data[]
+    @test g === data[:]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 19717
@@ -75,7 +75,7 @@ end
     data  = KarateClub()
     @test length(data) == 1
     g = data[1]
-    @test g === data[]
+    @test g === data[:]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 34
@@ -100,7 +100,7 @@ end
     data  = PolBlogs()
     @test length(data) == 1
     g = data[1]
-    @test g === data[]
+    @test g === data[:]
     @test g isa MLDatasets.Graph
 
     @test g.num_nodes == 1490

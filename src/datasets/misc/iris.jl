@@ -66,7 +66,7 @@ julia> dataset[1:2]
    1 │ Iris-setosa
    2 │ Iris-setosa)
 
-julia> X, y = Iris(as_df=false)[]
+julia> X, y = Iris(as_df=false)[:]
 ([5.1 4.9 … 6.2 5.9; 3.5 3.0 … 3.4 3.0; 1.4 1.4 … 5.4 5.1; 0.2 0.2 … 2.3 1.8], InlineStrings.String15["Iris-setosa" "Iris-setosa" … "Iris-virginica" "Iris-virginica"])
 ```
 """

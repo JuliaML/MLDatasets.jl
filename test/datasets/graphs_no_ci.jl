@@ -98,3 +98,10 @@ end
     @test size(g.edge_data.features) == (4, g.num_edges)
 end
 
+
+@testset "OGBDataset - ogbn-arxiv" begin
+    d = OGBDataset("ogbn-arxiv")
+    g = d[:]
+    @test g.num_nodes == 169343
+    @test g.num_edges == 1166243
+end

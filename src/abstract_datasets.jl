@@ -4,13 +4,13 @@
 Super-type from which all datasets in MLDatasets.jl inherit.
 
 Implements the following functionality:
-- `getobs(d)` and `getobs(d, i)` falling back to `d[]` and `d[i]` 
+- `getobs(d)` and `getobs(d, i)` falling back to `d[:]` and `d[i]` 
 - Pretty printing.
 """
 abstract type AbstractDataset <: AbstractDataContainer end
 
 
-MLUtils.getobs(d::AbstractDataset) = d[]
+MLUtils.getobs(d::AbstractDataset) = d[:]
 MLUtils.getobs(d::AbstractDataset, i) = d[i]
 
 function Base.show(io::IO, d::D) where D <: AbstractDataset
@@ -58,11 +58,10 @@ a `features` and a `targets` fields.
 abstract type SupervisedDataset <: AbstractDataset end
 
 
-
 Base.length(d::SupervisedDataset) = numobs((d.features, d.targets))
 
 # We return named tuples
-Base.getindex(d::SupervisedDataset) = getobs((; d.features, d.targets)) 
+Base.getindex(d::SupervisedDataset, ::Colon) = getobs((; d.features, d.targets))
 Base.getindex(d::SupervisedDataset, i) = getobs((; d.features, d.targets), i)
 
 """
@@ -76,7 +75,7 @@ abstract type UnsupervisedDataset <: AbstractDataset end
 
 Base.length(d::UnsupervisedDataset) = numobs(d.features)
 
-Base.getindex(d::UnsupervisedDataset) = getobs(d.features) 
+Base.getindex(d::UnsupervisedDataset, ::Colon) = getobs(d.features)
 Base.getindex(d::UnsupervisedDataset, i) = getobs(d.features, i)
 
 
@@ -98,7 +97,7 @@ const FIELDS_SUPERVISED_TABLE = """
 
 const METHODS_SUPERVISED_TABLE = """
 - `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
-- `dataset[]`: Return all observations as a named tuple of features and targets.
+- `dataset[:]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """
 
@@ -117,6 +116,6 @@ const FIELDS_SUPERVISED_ARRAY = """
 
 const METHODS_SUPERVISED_ARRAY = """
 - `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
-- `dataset[]`: Return all observations as a named tuple of features and targets.
+- `dataset[:]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """

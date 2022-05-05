@@ -51,5 +51,5 @@ function PolBlogs(; dir=nothing)
 end
 
 Base.length(d::PolBlogs) = length(d.graphs) 
-Base.getindex(d::PolBlogs) = d.graphs[1]
+Base.getindex(d::PolBlogs, ::Colon) = d.graphs[1]
 Base.getindex(d::PolBlogs, i) = getindex(d.graphs, i)

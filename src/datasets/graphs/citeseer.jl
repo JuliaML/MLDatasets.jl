@@ -42,9 +42,8 @@ function CiteSeer(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::CiteSeer) = length(d.graphs) 
-Base.getindex(d::CiteSeer) = d.graphs[1]
-Base.getindex(d::CiteSeer, i) = getindex(d.graphs, i)
-
+Base.getindex(d::CiteSeer, ::Colon) = d.graphs[1]
+Base.getindex(d::CiteSeer, i) = d.graphs[i]
 
 
 # DEPRECATED in v0.6.0

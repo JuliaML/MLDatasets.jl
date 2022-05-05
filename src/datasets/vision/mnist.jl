@@ -74,7 +74,7 @@ a vector of integers in `MNIST().targets`.
 ```julia-repl
 julia> using MLDatasets: MNIST
 
-julia> dataset = MNIST()
+julia> dataset = MNIST(:train)
 MNIST:
   metadata    =>    Dict{String, Any} with 3 entries
   split       =>    :train
@@ -89,7 +89,7 @@ julia> dataset[1:5].targets
 0
 4
 
-julia> X, y = dataset[];
+julia> X, y = dataset[:];
 
 julia> dataset = MNIST(UInt8, :test)
 MNIST:
@@ -183,7 +183,7 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return testlabels
     elseif s === :traindata
-        @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[]` instead."
+        @warn "MNIST.traindata() is deprecated, use `MNIST(split=:train)[:]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -191,7 +191,7 @@ function Base.getproperty(::Type{MNIST}, s::Symbol)
         end
         return traindata
     elseif s === :testdata
-        @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[]` instead." 
+        @warn "MNIST.testdata() is deprecated, use `MNIST(split=:test)[:]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

@@ -122,5 +122,5 @@ function Reddit(; full=true, dir=nothing)
 end
 
 Base.length(d::Reddit) = length(d.graphs) 
-Base.getindex(d::Reddit) = d.graphs
+Base.getindex(d::Reddit, ::Colon) = d.graphs
 Base.getindex(d::Reddit, i) = getindex(d.graphs, i)

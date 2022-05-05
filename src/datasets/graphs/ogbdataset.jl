@@ -42,67 +42,48 @@ end
 The collection of datasets from the [Open Graph Benchmark: Datasets for Machine Learning on Graphs](https://arxiv.org/abs/2005.00687)
 paper. 
 
-`name` is the name  of one of the dasets (listed [here](https://ogb.stanford.edu/docs/dataset_overview/))
+`name` is the name  of one of the datasets (listed [here](https://ogb.stanford.edu/docs/dataset_overview/))
 available for node prediction, edge prediction, or graph prediction tasks.
-
-The `OGBDataset` type stores the graphs internally as dictionary objects. 
-The key "edge_index" contains `2 x num_edges`, where the first and second
-column contain the source and target nodes of each edge respectively.
 
 # Examples
 
 ## Node prediction tasks
 
 ```julia-repl
-julia> data = OGBDataset("ogbn-arxiv")
-OGBDataset{Vector{Any}}:
-  name => ogbn-arxiv
-  path => /home/carlo/.julia/datadeps/OGBDataset/arxiv
-  metadata => Dict{String, Any} with 15 entries
-  graphs => 1-element Vector{Dict}
-  labels => 1-element Vector{Any}
-  split => Dict{String, Any} with 3 entries
+julia> d = OGBDataset("ogbn-arxiv")
+dataset OGBDataset:
+  name        =>    ogbn-arxiv
+  metadata    =>    Dict{String, Any} with 16 entries
+  graphs      =>    1-element Vector{MLDatasets.Graph}
+  targets     =>    nothing
+  split_idx   =>    (train = "90941-element Vector{Int64}", val = "29799-element Vector{Int64}", test = "48603-element Vector{Int64}")
 
+julia> data[:]
+Graph:
+  num_nodes   =>    169343
+  num_edges   =>    1166243
+  edge_index  =>    ("1166243-element Vector{Int64}", "1166243-element Vector{Int64}")
+  node_data   =>    (year = "1×169343 Matrix{Int64}", features = "128×169343 Matrix{Float32}", label = "1×169343 Matrix{Int64}")
+  edge_data   =>    nothing
 
 julia> data.metadata
-Dict{String, Any} with 15 entries:
-  "num classes"           => 40
-  "binary"                => false
-  "is hetero"             => false
-  "eval metric"           => "acc"
-  "task type"             => "multiclass classification"
-  "version"               => 1
-  "split"                 => "time"
+Dict{String, Any} with 16 entries:
   "download_name"         => "arxiv"
+  "num classes"           => 40
   "num tasks"             => 1
+  "binary"                => false
   "url"                   => "http://snap.stanford.edu/ogb/data/nodeproppred/arxiv.zip"
   "additional node files" => "node_year"
+  "is hetero"             => false
+  "path"                  => "/home/carlo/.julia/datadeps/OGBDataset/arxiv"
+  "eval metric"           => "acc"
+  "task type"             => "multiclass classification"
   "add_inverse_edge"      => false
   "has_node_attr"         => true
   "additional edge files" => nothing
+  "version"               => 1
   "has_edge_attr"         => false
-
-julia> data.split
-Dict{String, Any} with 3 entries:
-  "test_idx"  => [347, 399, 452, 481, 489, 491, 527, 538, 541, 603  …  169334, 169335, 169336, 169337, 169338, 169339, 169340, 169341, 169342, 169343]
-  "train_idx" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  169110, 169112, 169113, 169114, 169115, 169116, 169118, 169146, 169149, 169252]
-  "val_idx"   => [350, 358, 367, 383, 394, 422, 430, 436, 468, 470  …  169089, 169096, 169108, 169111, 169128, 169156, 169177, 169186, 169262, 169297]
-
-julia> length(data)
-1
-
-julia> graph, labels = data[1];
-
-julia> graph
-Dict{String, Any} with 6 entries:
-  "edge_index" => [104448 13092; 15859 47284; … ; 45119 162538; 45119 72718]
-  "edge_feat"  => nothing
-  "node_feat"  => Float32[-0.057943 -0.1245 … -0.138236 -0.029875; -0.05253 -0.070665 … 0.040885 0.268417; … ; -0.172796 -0.372111 … -0.041253 0.077647; -0.140059 -0.301036 … -0.376132 -0.091018]
-  "num_nodes"  => 169343
-  "node_year"  => [2013 2015 … 2020 2020]
-  "num_edges"  => 1166243
-
-julia> source, target = graph["edge_index][:,1], graph["edge_index][:,2];
+  "split"                 => "time"
 ```
 
 ## Edge prediction task
@@ -356,15 +337,16 @@ end
 
 function ogbdict2graph(d::Dict)
     edge_index = d["edge_index"][:,1], d["edge_index"][:,2] 
-    num_nodes, num_edges = d["num_nodes"], d["num_edges"]
+    num_nodes = d["num_nodes"]
     node_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "node_") && v !== nothing)
     edge_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
-    return Graph(; num_nodes, num_edges,
-                 edge_index, node_data, edge_data)
+    return Graph(; num_nodes, edge_index, node_data, edge_data)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
+Base.getindex(data::OGBDataset{Nothing}, ::Colon) = data.graphs
+Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.targets)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
 Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.targets), i) 
