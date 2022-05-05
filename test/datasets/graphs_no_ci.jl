@@ -104,4 +104,6 @@ end
     g = d[:]
     @test g.num_nodes == 169343
     @test g.num_edges == 1166243
+
+    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
 end

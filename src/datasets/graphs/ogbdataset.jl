@@ -50,7 +50,7 @@ available for node prediction, edge prediction, or graph prediction tasks.
 ## Node prediction tasks
 
 ```julia-repl
-julia> d = OGBDataset("ogbn-arxiv")
+julia> data = OGBDataset("ogbn-arxiv")
 dataset OGBDataset:
   name        =>    ogbn-arxiv
   metadata    =>    Dict{String, Any} with 16 entries
@@ -142,21 +142,20 @@ julia> labels
  0
 ```
 """
-struct OGBDataset{L} <: AbstractDataset
+struct OGBDataset{GD} <: AbstractDataset
     name::String
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
-    targets::L
-    split_idx::NamedTuple
+    graph_data::GD
 end
 
 function OGBDataset(fullname; dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
     path = makedir_ogb(fullname, metadata["url"], dir)
     metadata["path"] = path
-    graph_dicts, labels, split_idx = read_ogb_graph(path, metadata)
+    graph_dicts, graph_data = read_ogb_graph(path, metadata)
     graphs = ogbdict2graph.(graph_dicts)
-    return OGBDataset(fullname, metadata, graphs, labels, split_idx)
+    return OGBDataset(fullname, metadata, graphs, graph_data)
 end
 
 function read_ogb_metadata(fullname, dir = nothing)
@@ -175,6 +174,13 @@ function read_ogb_metadata(fullname, dir = nothing)
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
     metadata = Dict{String, Any}(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
+    if prefix == "ogbn"
+        metadata["task level"] = "node"
+    elseif prefix == "ogbl"
+        metadata["task level"] = "link"
+    elseif prefix == "ogbg"
+        metadata["task level"] = "graph"
+    end
     return metadata
 end
 
@@ -316,7 +322,40 @@ function read_ogb_graph(path, metadata)
     if split_idx.test !== nothing 
         split_idx.test .+= 1
     end
-    return graphs, labels, split_idx
+
+
+    graph_data = nothing
+    if metadata["task level"] == "node"
+        @assert length(graphs) == 1
+        g = graphs[1]
+        if split_idx.train !== nothing
+            g["node_train_mask"] = indexes2mask(split_idx.train, g["num_nodes"])
+        end
+        if split_idx.val !== nothing
+            g["node_val_mask"] = indexes2mask(split_idx.val, g["num_nodes"])
+        end
+        if split_idx.test !== nothing
+            g["node_test_mask"] = indexes2mask(split_idx.test, g["num_nodes"])
+        end
+
+    end
+    if metadata["task level"] == "link"
+        @assert length(graphs) == 1
+        g = graphs[1]
+        if split_idx.train !== nothing
+            g["edge_train_mask"] = indexes2mask(split_idx.train, g["num_edges"])
+        end
+        if split_idx.val !== nothing
+            g["edge_val_mask"] = indexes2mask(split_idx.val, g["num_edges"])
+        end
+        if split_idx.test !== nothing
+            g["edge_test_mask"] = indexes2mask(split_idx.test, g["num_edges"])
+        end
+    end
+    if metadata["task level"] == "graph"
+        graph_data = (; labels, split_idx)
+    end
+    return graphs, graph_data
 end
 
 function read_ogb_file(p, T; tovec = false, transp = true)
@@ -346,7 +385,7 @@ function ogbdict2graph(d::Dict)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
-Base.getindex(data::OGBDataset{Nothing}, ::Colon) = data.graphs
-Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.targets)
+Base.getindex(data::OGBDataset{Nothing}, ::Colon) = length(data.graphs) == 1 ? data.graphs[1] : data.graphs
+Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, targets=data.graph_data.labels)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
-Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.targets), i) 
+Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, targets=data.graph_data.labels), i) 
