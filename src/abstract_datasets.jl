@@ -46,7 +46,7 @@ _summary(x) = x
 _summary(x::Symbol) = ":$x"
 _summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)
 _summary(x::Union{Tuple, NamedTuple}) = map(_summary, x)
-_summary(x::BitVector) = summary(x) * " with $(count(x)) trues"
+_summary(x::BitVector) = "$(count(x))-trues BitVector"
 
 """
     SupervisedDataset <: AbstractDataset

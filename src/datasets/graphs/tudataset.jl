@@ -21,7 +21,7 @@ end
 
 A variety of graph benchmark datasets, *.e.g.* "QM9", "IMDB-BINARY",
 "REDDIT-BINARY" or "PROTEINS", collected from the [TU Dortmund University](https://chrsmrrs.github.io/datasets/).
-Retrieve from TUDataset collection the dataset `name`, where `name`
+Retrieve from the TUDataset collection the dataset `name`, where `name`
 is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/). 
 
 A `TUDataset` object can be indexed to retrieve a specific graph or a subset of graphs.
@@ -31,16 +31,19 @@ description of the format.
 
 # Usage Example
 
-```julia
-using MLDatasets: TUDataset
+```julia-repl
+julia> data = TUDataset("PROTEINS")
+dataset TUDataset:
+  name        =>    PROTEINS
+  metadata    =>    Dict{String, Any} with 1 entry
+  graphs      =>    1113-element Vector{MLDatasets.Graph}
+  graph_data  =>    (targets = "1113-element Vector{Int64}",)
+  num_nodes   =>    43471
+  num_edges   =>    162088
+  num_graphs  =>    1113
 
-data = TUDataset("PROTEINS")
-
-# Access first graph
-d1 = data[1] 
-
-# Node features
-X = d1.node_attributes # (nfeatures x nnodes) matrix
+julia> data[1]
+(graphs = Graph(42, 162), targets = 1)
 ```
 """
 struct TUDataset <: AbstractDataset

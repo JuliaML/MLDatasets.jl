@@ -60,6 +60,8 @@ function mask2indexes(mask::BitVector)
     return (1:n)[mask]
 end
 
+maybesqueeze(x) = x
+maybesqueeze(x::AbstractMatrix) = size(x, 1) == 1 ? vec(x) : x
 
 """
     convert2image(d, i)
