@@ -1,4 +1,4 @@
-# Graphs Datasets
+# Graph Datasets
 
 A collection of datasets with an underlying graph structure.
 Some of these datasets contain a single graph, that can be accessed
