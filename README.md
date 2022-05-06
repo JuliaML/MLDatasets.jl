@@ -16,7 +16,7 @@ Its functionality is built on top of the package
 ## Available Datasets
 
 **Warning**: this package is under heavy redesign. The link belows point to the documentation for the yet to be released version. 
-For the tagged version instead, please consult the [stable docs](https://JuliaML.github.io/MLDatasets.jl/stable) 
+For the tagged version instead, please consult the [stable docs](https://JuliaML.github.io/MLDatasets.jl/stable).
 
 Datasets are grouped into different categories. Click on the links below for a full list of datasets available in each category.
 

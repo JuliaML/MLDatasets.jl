@@ -20,3 +20,7 @@ end
 function read_npz(path)
     return NPZ.npzread(path)
 end
+
+function read_pytorch(path)
+    return Pickle.Torch.THload(path)
+end

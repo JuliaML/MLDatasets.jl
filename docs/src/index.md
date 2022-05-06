@@ -38,7 +38,7 @@ Where possible, those types share a common interface (fields and methods).
 
 Once a dataset has been instantiated, e.g. by `dataset = MNIST()`,  
 an observation `i` can be retrieved using the indexing syntax `dataset[i]`.
-By indexing with no arguments, `dataset[]`, the whole set of observations is collected.
+By indexing with no arguments, `dataset[:]`, the whole set of observations is collected.
 The total number of observations is given by `length(dataset)`.
 
 For example you can load the training set of the [`MNIST`](@ref)
@@ -60,7 +60,7 @@ julia> trainset[1]  # return first observation as a NamedTuple
 (features = Float32[0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], 
  targets = 5)
 
-julia> X_train, y_train = trainset[] # return all observations
+julia> X_train, y_train = trainset[:] # return all observations
 (features = [0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; … ;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], 
  targets = [5, 0, 4, 1, 9, 2, 1, 3, 1, 4  …  9, 2, 9, 5, 1, 8, 3, 5, 6, 8])
 
@@ -68,9 +68,9 @@ julia> summary(X_train)
 "28×28×60000 Array{Float32, 3}"
 ```
 
-Input features are commonly denoted by `features`, while classification labels or regression targets are denoted by `targets`.
+Input features are commonly denoted by `features`, while classification labels and regression targets are denoted by `targets`.
 
-```julia
+```julia-repl
 julia> iris = Iris()
 dataset Iris:
   metadata    =>    Dict{String, Any} with 4 entries

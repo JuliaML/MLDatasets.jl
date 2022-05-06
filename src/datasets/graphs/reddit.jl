@@ -27,11 +27,12 @@ This dataset contains 232,965 posts.
 The first 20 days are used for training and the remaining days for testing (with 30% used for validation).
 Each node is represented by a 602 word vector.
 
-Use `full=false` to lod only a subsample of the dataset.
+Use `full=false` to load only a subsample of the dataset.
 
 
 # References
 [1]: [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216)
+
 [2]: [Benchmarks on the Reddit Dataset](https://paperswithcode.com/dataset/reddit)
 """
 struct Reddit <: AbstractDataset
@@ -71,7 +72,7 @@ function Reddit(; full=true, dir=nothing)
     nodes = graph["nodes"]
     num_edges = directed ? length(links) : length(links) * 2
     num_nodes = length(nodes)
-    num_graphs = length(graph["graph"]) # should be zero
+    @assert length(graph["graph"]) == 0 # should be zero
 
     # edges
     s = get.(links, "source", nothing) .+ 1
@@ -100,27 +101,15 @@ function Reddit(; full=true, dir=nothing)
     @assert sum(val_mask .& test_mask) == 0
     train_mask = nor.(test_mask, val_mask)
 
-    train_idx = node_idx[train_mask]
-    test_idx = node_idx[test_mask]
-    val_idx = node_idx[val_mask]
-
-    split = Dict(
-        "train" => train_idx,
-        "test" => test_idx,
-        "val"  => val_idx
-    )
-
     metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph, 
-                "num_graphs" => num_graphs, "num_edges" => num_edges, "num_nodes" => num_nodes, 
-                "split" => split)
-    g = Graph(
-        num_edges=num_edges, num_nodes=num_nodes, 
+                "num_edges" => num_edges, "num_nodes" => num_nodes)
+    g = Graph(; num_nodes, 
         edge_index=(s, t), 
-        node_data= (; labels, features)
+        node_data= (; labels, features, train_mask, val_mask, test_mask)
     )
     return Reddit(metadata, [g])
 end
 
 Base.length(d::Reddit) = length(d.graphs) 
-Base.getindex(d::Reddit) = d.graphs
+Base.getindex(d::Reddit, ::Colon) = d.graphs
 Base.getindex(d::Reddit, i) = getindex(d.graphs, i)

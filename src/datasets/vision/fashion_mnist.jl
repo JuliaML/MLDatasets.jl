@@ -116,7 +116,7 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return testlabels
     elseif s == :traindata
-        @warn "FashionMNIST.traindata() is deprecated, use `FashionMNIST(split=:train)[]` instead."
+        @warn "FashionMNIST.traindata() is deprecated, use `FashionMNIST(split=:train)[:]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -124,7 +124,7 @@ function Base.getproperty(::Type{FashionMNIST}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "FashionMNIST.testdata() is deprecated, use `FashionMNIST(split=:test)[]` instead." 
+        @warn "FashionMNIST.testdata() is deprecated, use `FashionMNIST(split=:test)[:]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

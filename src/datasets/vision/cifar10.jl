@@ -80,7 +80,7 @@ julia> dataset[1:5].targets
  4
  1
 
-julia> X, y = dataset[];
+julia> X, y = dataset[:];
 
 julia> dataset = CIFAR10(Tx=Float64, split=:test)
 CIFAR10:
@@ -202,7 +202,7 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return testlabels
     elseif s == :traindata
-        @warn "CIFAR10.traindata() is deprecated, use `CIFAR10(split=:train)[]` instead."
+        @warn "CIFAR10.traindata() is deprecated, use `CIFAR10(split=:train)[:]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -210,7 +210,7 @@ function Base.getproperty(::Type{CIFAR10}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "CIFAR10.testdata() is deprecated, use `CIFAR10(split=:test)[]` instead." 
+        @warn "CIFAR10.testdata() is deprecated, use `CIFAR10(split=:test)[:]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

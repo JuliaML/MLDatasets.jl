@@ -46,6 +46,7 @@ doesn't consider all nodes.
 # References
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
+
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid
 """
 struct Cora <: AbstractDataset
@@ -59,7 +60,7 @@ function Cora(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::Cora) = length(d.graphs) 
-Base.getindex(d::Cora) = d.graphs[1]
+Base.getindex(d::Cora, ::Colon) = d.graphs[1]
 Base.getindex(d::Cora, i) = getindex(d.graphs, i)
 
 

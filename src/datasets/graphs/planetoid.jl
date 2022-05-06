@@ -77,7 +77,6 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     edge_index = adjlist2edgeindex(adj_list)
     
     g = Graph(; num_nodes, 
-                num_edges = length(edge_index[1]), 
                 edge_index, 
                 node_data)
 

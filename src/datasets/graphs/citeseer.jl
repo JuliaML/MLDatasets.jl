@@ -27,7 +27,8 @@ The dataset is retrieved from Ref. [2].
 
 # References
 
-[1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
+[1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815) 
+ 
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
 struct CiteSeer <: AbstractDataset
@@ -41,9 +42,8 @@ function CiteSeer(; dir=nothing, reverse_edges=true)
 end
 
 Base.length(d::CiteSeer) = length(d.graphs) 
-Base.getindex(d::CiteSeer) = d.graphs[1]
-Base.getindex(d::CiteSeer, i) = getindex(d.graphs, i)
-
+Base.getindex(d::CiteSeer, ::Colon) = d.graphs[1]
+Base.getindex(d::CiteSeer, i) = d.graphs[i]
 
 
 # DEPRECATED in v0.6.0

@@ -91,7 +91,7 @@ julia> dataset[1:5].targets
 0
 4
 
-julia> X, y = dataset[];
+julia> X, y = dataset[:];
 
 julia> dataset = EMNIST(:balanced, Tx=UInt8, split=:test)
 EMNIST:

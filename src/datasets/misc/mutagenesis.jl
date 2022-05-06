@@ -18,7 +18,8 @@ function __init__mutagenesis()
 end
 
 """
-    Mutagenesis(; split, dir=nothing)
+    Mutagenesis(; split=:train, dir=nothing)
+    Mutagenesis(split; dir=nothing)
 
 The `Mutagenesis` dataset comprises 188 molecules trialed for mutagenicity on Salmonella typhimurium, available from
  [relational.fit.cvut.cz](https://relational.fit.cvut.cz/dataset/Mutagenesis) and
@@ -35,7 +36,7 @@ License: CC0
 ```julia-repl
 julia> using MLDatasets: Mutagenesis
 
-julia> dataset = Mutagenesis(split=:train)
+julia> dataset = Mutagenesis(:train)
 Mutagenesis dataset:
   split : train
   indexes : 100-element Vector{Int64}
@@ -53,7 +54,7 @@ Dict{Symbol, Any} with 5 entries:
 julia> dataset[1].targets
 1
 
-julia> dataset = Mutagenesis(split=:all)
+julia> dataset = Mutagenesis(:all)
 Mutagenesis dataset:
   split : all
   indexes : 188-element Vector{Int64}
@@ -69,7 +70,9 @@ struct Mutagenesis <: SupervisedDataset
     targets::Vector{Int}
 end
 
-function Mutagenesis(; split::Symbol, dir=nothing)
+Mutagenesis(; split=:train, dir=nothing) = Mutagenesis(split; dir)
+
+function Mutagenesis(split::Symbol; dir=nothing)
     DEPNAME = "Mutagenesis"
     DATA = "data.json"
     METADATA = "meta.json"

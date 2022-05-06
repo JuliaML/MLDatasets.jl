@@ -42,12 +42,8 @@ end
 The collection of datasets from the [Open Graph Benchmark: Datasets for Machine Learning on Graphs](https://arxiv.org/abs/2005.00687)
 paper. 
 
-`name` is the name  of one of the dasets (listed [here](https://ogb.stanford.edu/docs/dataset_overview/))
+`name` is the name  of one of the datasets (listed [here](https://ogb.stanford.edu/docs/dataset_overview/))
 available for node prediction, edge prediction, or graph prediction tasks.
-
-The `OGBDataset` type stores the graphs internally as dictionary objects. 
-The key "edge_index" contains `2 x num_edges`, where the first and second
-column contain the source and target nodes of each edge respectively.
 
 # Examples
 
@@ -55,127 +51,79 @@ column contain the source and target nodes of each edge respectively.
 
 ```julia-repl
 julia> data = OGBDataset("ogbn-arxiv")
-OGBDataset{Vector{Any}}:
-  name => ogbn-arxiv
-  path => /home/carlo/.julia/datadeps/OGBDataset/arxiv
-  metadata => Dict{String, Any} with 15 entries
-  graphs => 1-element Vector{Dict}
-  labels => 1-element Vector{Any}
-  split => Dict{String, Any} with 3 entries
+dataset OGBDataset:
+  name        =>    ogbn-arxiv
+  metadata    =>    Dict{String, Any} with 17 entries
+  graphs      =>    1-element Vector{MLDatasets.Graph}
+  graph_data  =>    nothing
 
+julia> data[:]
+Graph:
+  num_nodes   =>    169343
+  num_edges   =>    1166243
+  edge_index  =>    ("1166243-element Vector{Int64}", "1166243-element Vector{Int64}")
+  node_data   =>    (val_mask = "29799-trues BitVector", test_mask = "48603-trues BitVector", year = "169343 Vector{Int64}", features = "128×169343 Matrix{Float32}", label = "169343 Vector{Int64}", train_mask = "90941-trues BitVector")
+  edge_data   =>    nothing
 
 julia> data.metadata
-Dict{String, Any} with 15 entries:
-  "num classes"           => 40
-  "binary"                => false
-  "is hetero"             => false
-  "eval metric"           => "acc"
-  "task type"             => "multiclass classification"
-  "version"               => 1
-  "split"                 => "time"
+Dict{String, Any} with 17 entries:
   "download_name"         => "arxiv"
+  "num classes"           => 40
   "num tasks"             => 1
+  "binary"                => false
   "url"                   => "http://snap.stanford.edu/ogb/data/nodeproppred/arxiv.zip"
   "additional node files" => "node_year"
-  "add_inverse_edge"      => false
-  "has_node_attr"         => true
-  "additional edge files" => nothing
-  "has_edge_attr"         => false
-
-julia> data.split
-Dict{String, Any} with 3 entries:
-  "test_idx"  => [347, 399, 452, 481, 489, 491, 527, 538, 541, 603  …  169334, 169335, 169336, 169337, 169338, 169339, 169340, 169341, 169342, 169343]
-  "train_idx" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  169110, 169112, 169113, 169114, 169115, 169116, 169118, 169146, 169149, 169252]
-  "val_idx"   => [350, 358, 367, 383, 394, 422, 430, 436, 468, 470  …  169089, 169096, 169108, 169111, 169128, 169156, 169177, 169186, 169262, 169297]
-
-julia> length(data)
-1
-
-julia> graph, labels = data[1];
-
-julia> graph
-Dict{String, Any} with 6 entries:
-  "edge_index" => [104448 13092; 15859 47284; … ; 45119 162538; 45119 72718]
-  "edge_feat"  => nothing
-  "node_feat"  => Float32[-0.057943 -0.1245 … -0.138236 -0.029875; -0.05253 -0.070665 … 0.040885 0.268417; … ; -0.172796 -0.372111 … -0.041253 0.077647; -0.140059 -0.301036 … -0.376132 -0.091018]
-  "num_nodes"  => 169343
-  "node_year"  => [2013 2015 … 2020 2020]
-  "num_edges"  => 1166243
-
-julia> source, target = graph["edge_index][:,1], graph["edge_index][:,2];
+  "is hetero"             => false
+  "task level"            => "node"
+  ⋮                       => ⋮
 ```
 
 ## Edge prediction task
 
 ```julia-repl
 julia> data = OGBDataset("ogbl-collab")
-OGBDataset{Nothing}:
-  name => ogbl-collab
-  path => /home/carlo/.julia/datadeps/OGBDataset/collab
-  metadata => Dict{String, Any} with 13 entries
-  graphs => 1-element Vector{Dict}
-  labels => nothing
-  split => Dict{String, Any} with 3 entries
+dataset OGBDataset:
+  name        =>    ogbl-collab
+  metadata    =>    Dict{String, Any} with 15 entries
+  graphs      =>    1-element Vector{MLDatasets.Graph}
+  graph_data  =>    nothing
 
-julia> graph = data[1]  # no labels for this dataset
-Dict{String, Any} with 7 entries:
-  "edge_index"  => [150990 224882; 150990 224882; … ; 221742 135759; 207233 140615]
-  "edge_feat"   => nothing
-  "node_feat"   => Float32[-0.177486 -0.237488 … 0.004236 -0.035025; -0.10298 0.022193 … 0.031942 -0.118059; … ; 0.003879 0.062124 … 0.05208 -0.176961; -0.276317 -0.081464 … -0.201557 -0.258715]
-  "num_nodes"   => 235868
-  "edge_year"   => [2004 2002 … 2006 1984; 2004 2002 … 2006 1984]
-  "edge_weight" => [2 1 … 1 1; 2 1 … 1 1]
-  "num_edges"   => 2358104
+julia> data[:]
+Graph:
+  num_nodes   =>    235868
+  num_edges   =>    2358104
+  edge_index  =>    ("2358104-element Vector{Int64}", "2358104-element Vector{Int64}")
+  node_data   =>    (features = "128×235868 Matrix{Float32}",)
+  edge_data   =>    (year = "2×1179052 Matrix{Int64}", weight = "2×1179052 Matrix{Int64}")
 ```
 
 ## Graph prediction task
 
 ```julia-repl
 julia> data = OGBDataset("ogbg-molhiv")
-OGBDataset{Matrix{Int64}}:
-  name => ogbg-molhiv
-  path => /home/carlo/.julia/datadeps/OGBDataset/molhiv
-  metadata => Dict{String, Any} with 15 entries
-  graphs => 41127-element Vector{Dict}
-  labels => 1×41127 Matrix{Int64}
-  split => Dict{String, Any} with 3 entries
+dataset OGBDataset:
+  name        =>    ogbg-molhiv
+  metadata    =>    Dict{String, Any} with 17 entries
+  graphs      =>    41127-element Vector{MLDatasets.Graph}
+  graph_data  =>    (labels = "41127-element Vector{Int64}", train_mask = "32901-trues BitVector", val_mask = "4113-trues BitVector", test_mask = "4113-trues BitVector")
 
-julia> length(data)
-41127
-
-julia> graph, labels = data[10]
-(Dict{String, Any}("edge_index" => [-202 -201; -201 -200; … ; -198 -184; -201 -202], "node_feat" => Float32[7.0 6.0 … 7.0 7.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], "edge_feat" => Float32[0.0 0.0 … 0.0 1.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 1.0], "num_nodes" => 20, "num_edges" => 42), [0])
-
-julia> graph, labels = data[10];
-
-julia> graph
-Dict{String, Any} with 5 entries:
-  "edge_index" => [1 2; 2 3; … ; 5 19; 2 1]
-  "edge_feat"  => Float32[0.0 0.0 … 0.0 1.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 1.0]
-  "node_feat"  => Float32[7.0 6.0 … 7.0 7.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0]
-  "num_nodes"  => 20
-  "num_edges"  => 42
-
-julia> labels
-1-element Vector{Int64}:
- 0
+julia> data[1]
 ```
 """
-struct OGBDataset{L} <: AbstractDataset
+struct OGBDataset{GD} <: AbstractDataset
     name::String
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
-    targets::L
-    split_idx::NamedTuple
+    graph_data::GD
 end
 
 function OGBDataset(fullname; dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
     path = makedir_ogb(fullname, metadata["url"], dir)
     metadata["path"] = path
-    graph_dicts, labels, split_idx = read_ogb_graph(path, metadata)
+    graph_dicts, graph_data = read_ogb_graph(path, metadata)
     graphs = ogbdict2graph.(graph_dicts)
-    return OGBDataset(fullname, metadata, graphs, labels, split_idx)
+    return OGBDataset(fullname, metadata, graphs, graph_data)
 end
 
 function read_ogb_metadata(fullname, dir = nothing)
@@ -194,6 +142,13 @@ function read_ogb_metadata(fullname, dir = nothing)
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
     metadata = Dict{String, Any}(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
+    if prefix == "ogbn"
+        metadata["task level"] = "node"
+    elseif prefix == "ogbl"
+        metadata["task level"] = "link"
+    elseif prefix == "ogbg"
+        metadata["task level"] = "graph"
+    end
     return metadata
 end
 
@@ -322,10 +277,13 @@ function read_ogb_graph(path, metadata)
 
     splits = readdir(joinpath(path, "split"))
     @assert length(splits) == 1 # TODO check if datasets with multiple splits existin in OGB
+    
     # TODO sometimes splits are given in .pt format
+    # Use read_pytorch in src/io.jl to load them.
     split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true),
                  val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true),
                 test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true))
+    
     if split_idx.train !== nothing 
         split_idx.train .+= 1
     end
@@ -335,7 +293,44 @@ function read_ogb_graph(path, metadata)
     if split_idx.test !== nothing 
         split_idx.test .+= 1
     end
-    return graphs, labels, split_idx
+
+
+    graph_data = nothing
+    if metadata["task level"] == "node"
+        @assert length(graphs) == 1
+        g = graphs[1]
+        if split_idx.train !== nothing
+            g["node_train_mask"] = indexes2mask(split_idx.train, g["num_nodes"])
+        end
+        if split_idx.val !== nothing
+            g["node_val_mask"] = indexes2mask(split_idx.val, g["num_nodes"])
+        end
+        if split_idx.test !== nothing
+            g["node_test_mask"] = indexes2mask(split_idx.test, g["num_nodes"])
+        end
+
+    end
+    if metadata["task level"] == "link"
+        @assert length(graphs) == 1
+        g = graphs[1]
+        if split_idx.train !== nothing
+            g["edge_train_mask"] = indexes2mask(split_idx.train, g["num_edges"])
+        end
+        if split_idx.val !== nothing
+            g["edge_val_mask"] = indexes2mask(split_idx.val, g["num_edges"])
+        end
+        if split_idx.test !== nothing
+            g["edge_test_mask"] = indexes2mask(split_idx.test, g["num_edges"])
+        end
+    end
+    if metadata["task level"] == "graph"
+        train_mask = split_idx.train !== nothing ? indexes2mask(split_idx.train, num_graphs) : nothing
+        val_mask = split_idx.val !== nothing ? indexes2mask(split_idx.val, num_graphs) : nothing 
+        test_mask = split_idx.test !== nothing ? indexes2mask(split_idx.test, num_graphs) : nothing
+
+        graph_data = clean_nt((; labels=maybesqueeze(labels), train_mask, val_mask, test_mask))
+    end
+    return graphs, graph_data
 end
 
 function read_ogb_file(p, T; tovec = false, transp = true)
@@ -356,15 +351,16 @@ end
 
 function ogbdict2graph(d::Dict)
     edge_index = d["edge_index"][:,1], d["edge_index"][:,2] 
-    num_nodes, num_edges = d["num_nodes"], d["num_edges"]
-    node_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "node_") && v !== nothing)
-    edge_data = Dict(Symbol(k[6:end]) => v for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
+    num_nodes = d["num_nodes"]
+    node_data = Dict(Symbol(k[6:end]) => maybesqueeze(v) for (k,v) in d if startswith(k, "node_") && v !== nothing)
+    edge_data = Dict(Symbol(k[6:end]) => maybesqueeze(v) for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
-    return Graph(; num_nodes, num_edges,
-                 edge_index, node_data, edge_data)
+    return Graph(; num_nodes, edge_index, node_data, edge_data)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
+Base.getindex(data::OGBDataset{Nothing}, ::Colon) = length(data.graphs) == 1 ? data.graphs[1] : data.graphs
+Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.graph_data.labels)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
-Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.targets), i) 
+Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.graph_data.labels), i) 

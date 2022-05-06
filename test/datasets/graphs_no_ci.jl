@@ -7,14 +7,13 @@
     @test g.num_edges == 114615892
     @test size(g.node_data.features) == (602, g.num_nodes)
     @test size(g.node_data.labels) == (g.num_nodes,)
-    @test size(data.metadata["split"]["train"]) == (153431,)
-    @test size(data.metadata["split"]["val"]) == (23831,)
-    @test size(data.metadata["split"]["test"]) == (55703,)
+    @test count(g.node_data.train_mask) == 153431
+    @test count(g.node_data.val_mask) == 23831
+    @test count(g.node_data.test_mask) == 55703
     s, t = g.edge_index
     @test length(s) == length(t) == g.num_edges
     @test minimum(s) == minimum(t) == 1
     @test maximum(s) == maximum(t) == g.num_nodes
-    @test sum(length.(values(data.metadata["split"]))) == g.num_nodes
 end
 
 @testset "Reddit_subset" begin
@@ -25,14 +24,13 @@ end
     @test g.num_edges == 23213838
     @test size(g.node_data.features) == (602, g.num_nodes)
     @test size(g.node_data.labels) == (g.num_nodes,)
-    @test size(data.metadata["split"]["train"]) == (152410,)
-    @test size(data.metadata["split"]["val"]) == (23699,)
-    @test size(data.metadata["split"]["test"]) == (55334,)
+    @test count(g.node_data.train_mask) == 152410
+    @test count(g.node_data.val_mask) == 23699
+    @test count(g.node_data.test_mask) == 55334
     s, t = g.edge_index
     @test length(s) == length(t) == g.num_edges
     @test minimum(s) == minimum(t) == 1
     @test maximum(s) == maximum(t) == g.num_nodes
-    @test sum(length.(values(data.metadata["split"]))) == g.num_nodes
 end
 
 
@@ -98,3 +96,18 @@ end
     @test size(g.edge_data.features) == (4, g.num_edges)
 end
 
+
+@testset "OGBDataset - ogbn-arxiv" begin
+    d = OGBDataset("ogbn-arxiv")
+    g = d[:]
+    @test g.num_nodes == 169343
+    @test g.num_edges == 1166243
+
+    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
+end
+
+@testset "OGBDataset - ogbg-molhiv" begin
+    d = OGBDataset("ogbg-molhiv")
+    
+    @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+end

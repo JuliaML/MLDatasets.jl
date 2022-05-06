@@ -83,7 +83,7 @@ CIFAR100:
 julia> dataset[1:5].targets
 (coarse = [11, 15, 4, 14, 1], fine = [19, 29, 0, 11, 1])
 
-julia> X, y = dataset[];
+julia> X, y = dataset[:];
 
 julia> dataset.metadata
 Dict{String, Any} with 3 entries:
@@ -169,7 +169,7 @@ function Base.getproperty(::Type{CIFAR100}, s::Symbol)
         end
         return testlabels
     elseif s == :traindata
-        @warn "CIFAR100.traindata() is deprecated, use `CIFAR100(split=:train)[]` instead."
+        @warn "CIFAR100.traindata() is deprecated, use `CIFAR100(split=:train)[:]` instead."
         traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
         function traindata(T::Type, i; dir=nothing)
@@ -178,7 +178,7 @@ function Base.getproperty(::Type{CIFAR100}, s::Symbol)
         end
         return traindata
     elseif s == :testdata
-        @warn "CIFAR100.testdata() is deprecated, use `CIFAR100(split=:test)[]` instead." 
+        @warn "CIFAR100.testdata() is deprecated, use `CIFAR100(split=:test)[:]` instead." 
         testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
         function testdata(T::Type, i; dir=nothing)

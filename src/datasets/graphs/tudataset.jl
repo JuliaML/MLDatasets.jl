@@ -21,7 +21,7 @@ end
 
 A variety of graph benchmark datasets, *.e.g.* "QM9", "IMDB-BINARY",
 "REDDIT-BINARY" or "PROTEINS", collected from the [TU Dortmund University](https://chrsmrrs.github.io/datasets/).
-Retrieve from TUDataset collection the dataset `name`, where `name`
+Retrieve from the TUDataset collection the dataset `name`, where `name`
 is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/). 
 
 A `TUDataset` object can be indexed to retrieve a specific graph or a subset of graphs.
@@ -31,23 +31,19 @@ description of the format.
 
 # Usage Example
 
-```julia
-using MLDatasets: TUDataset
-using LightGraphs: SimpleGraph, add_edge!
+```julia-repl
+julia> data = TUDataset("PROTEINS")
+dataset TUDataset:
+  name        =>    PROTEINS
+  metadata    =>    Dict{String, Any} with 1 entry
+  graphs      =>    1113-element Vector{MLDatasets.Graph}
+  graph_data  =>    (targets = "1113-element Vector{Int64}",)
+  num_nodes   =>    43471
+  num_edges   =>    162088
+  num_graphs  =>    1113
 
-data = TUDataset("PROTEINS")
-
-# Access first graph
-d1 = data[1] 
-
-# Create a LightGraphs' graph
-g = SimpleGraph(d1.num_nodes)
-for (s, t) in zip(d1.source, d1.target)
-    add_edge!(g, s, t)
-end
-
-# Node features
-X = d1.node_attributes # (nfeatures x nnodes) matrix
+julia> data[1]
+(graphs = Graph(42, 162), targets = 1)
 ```
 """
 struct TUDataset <: AbstractDataset
@@ -165,7 +161,7 @@ function tudataset_getgraph(data::NamedTuple, i::Int)
     node_data = (features = node_attributes, targets = node_labels)
     edge_data = (features = edge_attributes, targets = edge_labels)
     
-    return Graph(; num_nodes, num_edges, 
+    return Graph(; num_nodes,
                 edge_index = (source, target), 
                 node_data = node_data |> clean_nt,
                 edge_data = edge_data |> clean_nt,
@@ -175,11 +171,11 @@ end
 
 Base.length(data::TUDataset) = length(data.graphs)
 
-function Base.getindex(data::TUDataset) 
+function Base.getindex(data::TUDataset, ::Colon) 
     if data.graph_data === nothing
-        return getobs(data.graphs)
+        return data.graphs
     else
-        return getobs((; data.graphs, data.graph_data...))    
+        return (; data.graphs, data.graph_data...)
     end
 end
 
