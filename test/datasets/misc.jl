@@ -58,16 +58,16 @@ end
     @test !any(haskey.(test_x, :mutagenic))
     @test !any(haskey.(val_x, :mutagenic))
     # test data is materialized
-    @show typeof(train_x)
     @test train_x isa Vector{<:Dict}
     @test test_x isa Vector{<:Dict}
     @test val_x isa Vector{<:Dict}
 
     x, y = dtrain[1:2]
+    @show typeof(x) typeof(y)
     @test x isa Vector{Dict{Symbol, Any}}
-    # @test length(x) == 2
-    # @test y isa Vector{Int}
-    # @test length(y) == 2
+    @test length(x) == 2
+    @test y isa Vector{Int}
+    @test length(y) == 2
 end
 
 @testset "Titanic" begin
