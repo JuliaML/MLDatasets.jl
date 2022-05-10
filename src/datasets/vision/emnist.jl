@@ -31,7 +31,7 @@ function __init__emnist()
         """,
         "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip",
         "e1fa805cdeae699a52da0b77c2db17f6feb77eed125f9b45c022e7990444df95",
-        post_fetch_method = file -> (run(BinDeps.unpack_cmd(file, dirname(file), ".zip", "")); rm(file))
+        post_fetch_method = DataDeps.unpack
     ))
 end
 
@@ -119,7 +119,7 @@ function EMNIST(name, Tx::Type, split::Symbol; dir=nothing)
     path = "matlab/emnist-$name.mat"
     
     path = datafile("EMNIST", path, dir)
-    vars = matread(path)
+    vars = read_mat(path)
     features = reshape(vars["dataset"]["$split"]["images"], :, 28, 28)
     features = permutedims(features, (3, 2, 1))
     targets = Int.(vars["dataset"]["$split"]["labels"] |> vec)

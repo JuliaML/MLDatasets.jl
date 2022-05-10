@@ -62,7 +62,9 @@ function Titanic(; as_df = true, dir = nothing)
     @assert dir === nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "titanic.csv")
     df = read_csv(path)
-    features = df[!, Not(:Survived)]
+    DFs = checked_import(idDataFrames)
+    
+    features = df[!, DFs.Not(:Survived)]
     targets = df[!, [:Survived]]
     
     metadata = Dict{String, Any}()

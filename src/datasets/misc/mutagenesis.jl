@@ -81,8 +81,8 @@ function Mutagenesis(split::Symbol; dir=nothing)
     
     data_path = datafile(DEPNAME, DATA, dir)
     metadata_path = datafile(DEPNAME, METADATA, dir)
-    samples = open(JSON3.read, data_path)
-    metadata = open(JSON3.read, metadata_path)
+    samples = read_json(data_path)
+    metadata = read_json(metadata_path)
     labelkey = metadata["label"]
     targets = map(i -> i[labelkey], samples)
     features = map(x->delete!(copy(x), Symbol(labelkey)), samples)

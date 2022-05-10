@@ -25,11 +25,11 @@ dataset_tests = [
 ]
 
 no_ci_dataset_tests = [
-    "datasets/graphs_no_ci.jl",
-    "datasets/vision/cifar10.jl",
-    "datasets/vision/cifar100.jl",
-    "datasets/vision/emnist.jl",
-    "datasets/vision/svhn2.jl",
+    # "datasets/graphs_no_ci.jl",
+    # "datasets/vision/cifar10.jl",
+    # "datasets/vision/cifar100.jl",
+    # "datasets/vision/emnist.jl",
+    # "datasets/vision/svhn2.jl",
     ]
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
@@ -46,11 +46,11 @@ deprecated_interface = [
 ]
 
 container_tests = [
-    "containers/filedataset.jl",
-    "containers/tabledataset.jl",
-    "containers/hdf5dataset.jl",
-    "containers/jld2dataset.jl",
-    "containers/cacheddataset.jl",
+    # "containers/filedataset.jl",
+    # "containers/tabledataset.jl",
+    # "containers/hdf5dataset.jl",
+    # "containers/jld2dataset.jl",
+    # "containers/cacheddataset.jl",
 ]
 
 @testset "Datasets" begin
@@ -65,7 +65,7 @@ container_tests = [
         end
     else
         @info "CI detected: skipping tests on large datasets"
-    end    
+    end
 
     if !isempty(deprecated_interface)
         @info "Testing deprecated dataset interface"

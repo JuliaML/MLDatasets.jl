@@ -78,7 +78,8 @@ function BostonHousing(; as_df = true, dir = nothing)
     @assert dir === nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "boston_housing.csv")
     df = read_csv(path)
-    features = df[!, Not(:MEDV)]
+    DFs = checked_import(idDataFrames)
+    features = df[!, DFs.Not(:MEDV)]
     targets = df[!, [:MEDV]]
     
     metadata = Dict{String, Any}()

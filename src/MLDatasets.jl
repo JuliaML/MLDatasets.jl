@@ -2,21 +2,24 @@ module MLDatasets
 
 using FixedPointNumbers
 using SparseArrays
-using DataFrames, Tables
+using Tables
 using Glob
-import ImageCore
-using ColorTypes
+# using DataFrames
+# import ImageCore
+using DataDeps
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
+using ColorTypes
 
 ### I/O imports
-import NPZ
-import Pickle
-using MAT: matopen, matread
-import CSV 
-using HDF5
-using JLD2
-import JSON3
+# import NPZ
+# import Pickle
+# using MAT: matopen, matread
+using FileIO
+# import CSV 
+# using HDF5
+# using JLD2
+# import JSON3
 using DelimitedFiles: readdlm
 ##########
 
@@ -29,24 +32,26 @@ include("abstract_datasets.jl")
 # export AbstractDataset, 
 #        SupervisedDataset
 
+include("imports.jl")
 include("utils.jl")
 export convert2image
 
 include("io.jl")
-# export read_csv, read_npy
+# export read_csv, read_npy, ...
 
 include("download.jl")
 
-include("containers/filedataset.jl")
-export FileDataset
-include("containers/tabledataset.jl")
-export TableDataset
-include("containers/hdf5dataset.jl")
-export HDF5Dataset
-include("containers/jld2dataset.jl")
-export JLD2Dataset
-include("containers/cacheddataset.jl")
-export CachedDataset
+### API to be revisited with conditional module loading
+# include("containers/filedataset.jl")
+# export FileDataset
+# include("containers/tabledataset.jl")
+# export TableDataset
+# include("containers/hdf5dataset.jl")
+# export HDF5Dataset
+# # include("containers/jld2dataset.jl")
+# # export JLD2Dataset
+# include("containers/cacheddataset.jl")
+# export CachedDataset
 
 # Misc.
 include("datasets/misc/boston_housing.jl")

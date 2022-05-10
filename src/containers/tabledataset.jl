@@ -19,7 +19,7 @@ struct TableDataset{T} <: AbstractDataContainer
 end
 
 TableDataset(table::T) where {T} = TableDataset{T}(table)
-TableDataset(path::AbstractString) = TableDataset(DataFrame(CSV.File(path)))
+# TableDataset(path::AbstractString) = TableDataset(DataFrame(CSV.File(path)))
 
 # slow accesses based on Tables.jl
 _getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
@@ -54,8 +54,8 @@ Base.getindex(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]
 Base.length(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
 
 # fast access for CSV.File
-Base.getindex(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]
-Base.length(dataset::TableDataset{<:CSV.File}) = length(dataset.table)
+# Base.getindex(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]
+# Base.length(dataset::TableDataset{<:CSV.File}) = length(dataset.table)
 
 ## Tables.jl interface
 
