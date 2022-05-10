@@ -64,7 +64,6 @@ end
     @test val_x isa Vector{<:Dict}
 
     x, y = dtrain[1:2]
-    @show typeof(x) typeof(y)
     @test x isa Vector{Dict{Symbol, Any}}
     # @test length(x) == 2
     # @test y isa Vector{Int}

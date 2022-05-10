@@ -101,6 +101,10 @@ function Mutagenesis(split::Symbol; dir=nothing)
     Mutagenesis(metadata, split, indexes, features[indexes], targets[indexes])
 end
 
+Base.length(d::Mutagenesis, ::Colon) = numobs((; d.features, d.targets))
+Base.getindex(d::Mutagenesis, ::Colon) = getobs((; d.features, d.targets))
+Base.getindex(d::Mutagenesis, i) = getobs((; d.features, d.targets), i)
+
 # deprecated in v0.6
 function Base.getproperty(::Type{Mutagenesis}, s::Symbol)
     if s == :traindata
