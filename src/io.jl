@@ -1,3 +1,8 @@
+# IMPORTS 
+# Use `lazy_import(:SomePkg)` whenever the returned types are "native" types,
+#  i.e. not defined in SomePkg itself, otherwise use `require_import(:SomePkg)`.
+
+
 function read_csv(path; kws...)
     return read_csv_asdf(path; kws...)
 end
@@ -8,34 +13,39 @@ end
 # end
 
 function read_csv(path, sink::Type{A}; kws...) where A <: AbstractMatrix
-    A(read_csv(path; kws...))
+    return A(read_csv(path; kws...))
 end
 
 function read_csv_asdf(path; kws...)
-    DF = checked_import(idDataFrames).mod.DataFrame
-    return checked_import(idCSV).read(path, DF; kws...)
+    DataFrames = require_import(:DataFrames)
+    CSV = lazy_import(:CSV)
+    return CSV.read(path, DataFrames.DataFrame; kws...)
 end
 
 function read_npy(path)
-    return FileIO.load(File{format"NPY"}(path))
+    return FileIO.load(File{format"NPY"}(path)) # FileIO does lazy import of NPZ.jl
 end
 
 function read_npz(path)
-    return FileIO.load(File{format"NPZ"}(path))
+    return FileIO.load(File{format"NPZ"}(path)) # FileIO does lazy import of NPZ.jl
 end
 
 function read_pytorch(path)
-    Base.invokelatest(checked_import(idPickle).mod.Torch.THload, path)
+    Pickle = lazy_import(:Pickle)
+    return Pickle.Torch.THload(path)
 end
 
 function read_pickle(path)
-    checked_import(idPickle).npyload(path)
+    Pickle = lazy_import(:Pickle)
+    return Pickle.npyload(path)
 end
 
 function read_mat(path)
-    checked_import(idMAT).matread(path)
+    MAT = lazy_import(:MAT)
+    return MAT.matread(path)
 end
 
 function read_json(path)
-    Base.invokelatest(open, checked_import(idJSON3).mod.read, path)
+    JSON3 = require_import(:JSON3)
+    return open(JSON3.read, path)
 end

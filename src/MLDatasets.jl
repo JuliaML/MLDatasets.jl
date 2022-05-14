@@ -3,7 +3,7 @@ module MLDatasets
 using FixedPointNumbers
 using SparseArrays
 using Tables
-using Glob
+# using Glob
 # using DataFrames
 # import ImageCore
 using DataDeps
@@ -23,10 +23,7 @@ using FileIO
 using DelimitedFiles: readdlm
 ##########
 
-export getobs, numobs
-export convert2image
-
-
+export getobs, numobs # From MLUtils.jl
 
 include("abstract_datasets.jl")
 # export AbstractDataset, 

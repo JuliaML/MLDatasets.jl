@@ -2,15 +2,11 @@ using Test
 using MLDatasets
 using MLDatasets: SupervisedDataset, UnsupervisedDataset, AbstractDataset
 using MLDatasets: Graph
-using FileIO
-using DataDeps
-using DataFrames, CSV, Tables
-using HDF5
-using JLD2
+using DataFrames, Tables
 using ColorTypes
 using FixedPointNumbers
-using DataDeps
-using ImageCore: channelview
+
+using Pickle, JSON3
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 

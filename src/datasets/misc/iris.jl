@@ -80,7 +80,7 @@ end
 function Iris(; dir = nothing, as_df = true)
     path = datafile("Iris", "iris.data", dir)
     df = read_csv(path, header=0)
-    DFs = checked_import(idDataFrames)
+    DFs = require_import(:DataFrames)
     DFs.rename!(df, ["sepallength", "sepalwidth", "petallength", "petalwidth", "class"])
 
     features = df[!, DFs.Not(:class)]
