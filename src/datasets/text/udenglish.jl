@@ -22,7 +22,8 @@ function __init__udenglish()
         detail on the Website.
         """,
         "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/" .* [TRAINFILE, DEVFILE, TESTFILE],
-    ))
+        "1475f7ced5b3d65c14dd18eabd2196047a10122f7085516a83d846b5516287bc"
+        ))
 end
 
 """

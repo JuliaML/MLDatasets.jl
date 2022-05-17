@@ -51,13 +51,6 @@ container_tests = [
     else
         @info "CI detected: skipping tests on large datasets"
     end
-
-    if !isempty(deprecated_interface)
-        @info "Testing deprecated dataset interface"
-        @testset "$(split(t,"/")[end])" for t in deprecated_interface
-            include(t)
-        end
-    end
 end
 
 @testset "Containers" begin
