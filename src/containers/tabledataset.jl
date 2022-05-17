@@ -50,8 +50,8 @@ function Base.length(dataset::TableDataset)
 end
 
 # fast access for DataFrame
-Base.getindex(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]
-Base.length(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
+# Base.getindex(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]
+# Base.length(dataset::TableDataset{<:DataFrame}) = nrow(dataset.table)
 
 # fast access for CSV.File
 # Base.getindex(dataset::TableDataset{<:CSV.File}, i) = dataset.table[i]

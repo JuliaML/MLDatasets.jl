@@ -3,25 +3,32 @@ module MLDatasets
 using FixedPointNumbers
 using SparseArrays
 using Tables
-# using Glob
-# using DataFrames
-# import ImageCore
 using DataDeps
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
 using ColorTypes
-
-### I/O imports
-# import NPZ
-# import Pickle
-# using MAT: matopen, matread
-using FileIO
-# import CSV 
-# using HDF5
-# using JLD2
-# import JSON3
+using Glob
 using DelimitedFiles: readdlm
-##########
+using FileIO
+using LazyModules: @lazy
+
+include("require.jl") # export @require
+
+# Use `@lazy import SomePkg` whenever the returned types are not its own types,
+# since for methods applied on the returned types we would encounter in world-age issues
+# (see discussion in  https://github.com/JuliaML/MLDatasets.jl/pull/128).
+# In the other case instead, use `require import SomePkg` to force 
+# the use to manually import.
+
+@require import JSON3="0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+@require import DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+@lazy import ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534"
+# @lazy import NPZ # lazy imported by FileIO
+@lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
+@lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
+@lazy import CSV="336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+@lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+# @lazy import JLD2
 
 export getobs, numobs # From MLUtils.jl
 
@@ -29,7 +36,7 @@ include("abstract_datasets.jl")
 # export AbstractDataset, 
 #        SupervisedDataset
 
-include("imports.jl")
+# include("imports.jl")
 include("utils.jl")
 export convert2image
 
@@ -39,16 +46,16 @@ include("io.jl")
 include("download.jl")
 
 ### API to be revisited with conditional module loading
-# include("containers/filedataset.jl")
-# export FileDataset
-# include("containers/tabledataset.jl")
-# export TableDataset
+include("containers/filedataset.jl")
+export FileDataset
+include("containers/tabledataset.jl")
+export TableDataset
 # include("containers/hdf5dataset.jl")
 # export HDF5Dataset
 # # include("containers/jld2dataset.jl")
 # # export JLD2Dataset
-# include("containers/cacheddataset.jl")
-# export CachedDataset
+include("containers/cacheddataset.jl")
+export CachedDataset
 
 # Misc.
 include("datasets/misc/boston_housing.jl")

@@ -5,8 +5,7 @@ using MLDatasets: Graph
 using DataFrames, Tables
 using ColorTypes
 using FixedPointNumbers
-
-using Pickle, JSON3
+using JSON3
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 

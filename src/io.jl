@@ -1,7 +1,3 @@
-# IMPORTS 
-# Use `lazy_import(:SomePkg)` whenever the returned types are "native" types,
-#  i.e. not defined in SomePkg itself, otherwise use `require_import(:SomePkg)`.
-
 
 function read_csv(path; kws...)
     return read_csv_asdf(path; kws...)
@@ -17,8 +13,6 @@ function read_csv(path, sink::Type{A}; kws...) where A <: AbstractMatrix
 end
 
 function read_csv_asdf(path; kws...)
-    DataFrames = require_import(:DataFrames)
-    CSV = lazy_import(:CSV)
     return CSV.read(path, DataFrames.DataFrame; kws...)
 end
 
@@ -31,21 +25,17 @@ function read_npz(path)
 end
 
 function read_pytorch(path)
-    Pickle = lazy_import(:Pickle)
     return Pickle.Torch.THload(path)
 end
 
 function read_pickle(path)
-    Pickle = lazy_import(:Pickle)
     return Pickle.npyload(path)
 end
 
 function read_mat(path)
-    MAT = lazy_import(:MAT)
     return MAT.matread(path)
 end
 
 function read_json(path)
-    JSON3 = require_import(:JSON3)
     return open(JSON3.read, path)
 end

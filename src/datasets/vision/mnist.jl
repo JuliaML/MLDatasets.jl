@@ -141,7 +141,6 @@ convert2image(::Type{<:MNIST}, x::AbstractArray{<:Integer}) =
 function convert2image(::Type{<:MNIST}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 2 || N == 3
     x = permutedims(x, (2, 1, 3:N...))
-    ImageCore = lazy_import(:ImageCore)
     return ImageCore.colorview(Gray, x)
 end
 
