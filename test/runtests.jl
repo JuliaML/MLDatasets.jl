@@ -32,7 +32,7 @@ no_ci_dataset_tests = [
 
 container_tests = [
     "containers/filedataset.jl",
-    "containers/tabledataset.jl",
+    # "containers/tabledataset.jl",
     # "containers/hdf5dataset.jl",
     # "containers/jld2dataset.jl",
     "containers/cacheddataset.jl",

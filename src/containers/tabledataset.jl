@@ -21,41 +21,36 @@ end
 TableDataset(table::T) where {T} = TableDataset{T}(table)
 TableDataset(path::AbstractString) = TableDataset(read_csv(path))
 
-# see https://github.com/JuliaML/MLUtils.jl/issues/67
-# Assume the table provides a size and indexing interface (DataFrame does)
-# otherwise have to resort to very slow fallbacks
-numobs_table(x) = size(x, 1)
-getobs_table(x, i) = x[i, :]
 
-# # slow accesses based on Tables.jl
-# _getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
-# function _getobs_column(x, i)
-#     colnames = Tuple(Tables.columnnames(x))
-#     rowvals = ntuple(j -> Tables.getcolumn(x, j)[i], length(colnames))
+# slow accesses based on Tables.jl
+_getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
+function _getobs_column(x, i)
+    colnames = Tuple(Tables.columnnames(x))
+    rowvals = ntuple(j -> Tables.getcolumn(x, j)[i], length(colnames))
 
-#     return NamedTuple{colnames}(rowvals)
-# end
+    return NamedTuple{colnames}(rowvals)
+end
 
-# function getobs_table(table, i)
-#     if Tables.rowaccess(table)
-#         return _getobs_row(Tables.rows(table), i)
-#     elseif Tables.columnaccess(table)
-#         return _getobs_column(table, i)
-#     else
-#         error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
-#     end
-# end
+function getobs_table(table, i)
+    if Tables.rowaccess(table)
+        return _getobs_row(Tables.rows(table), i)
+    elseif Tables.columnaccess(table)
+        return _getobs_column(table, i)
+    else
+        error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
+    end
+end
 
-# function numobs_table(table)
-#     if Tables.columnaccess(table)
-#         return length(Tables.getcolumn(table, 1))
-#     elseif Tables.rowaccess(table)
-#         # length might not be defined, but has to be for this to work.
-#         return length(Tables.rows(table))
-#     else
-#         error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
-#     end
-# end
+function numobs_table(table)
+    if Tables.columnaccess(table)
+        return length(Tables.getcolumn(table, 1))
+    elseif Tables.rowaccess(table)
+        # length might not be defined, but has to be for this to work.
+        return length(Tables.rows(table))
+    else
+        error("The Tables.jl implementation used should have either rowaccess or columnaccess.")
+    end
+end
 
 Base.getindex(dataset::TableDataset, i) = getobs_table(dataset.table, i)
 Base.length(dataset::TableDataset) = numobs_table(dataset.table)

@@ -45,10 +45,10 @@ include("download.jl")
 
 include("containers/filedataset.jl")
 export FileDataset
-include("containers/tabledataset.jl")
-export TableDataset
 include("containers/cacheddataset.jl")
 export CachedDataset
+# include("containers/tabledataset.jl")
+# export TableDataset
 
 ## TODO add back when compatible with `@lazy` or `@require`
 ## which means that they cannot dispatch on types from JLD2 and HDF5
