@@ -36,7 +36,6 @@ include("abstract_datasets.jl")
 # export AbstractDataset, 
 #        SupervisedDataset
 
-# include("imports.jl")
 include("utils.jl")
 export convert2image
 
@@ -45,19 +44,22 @@ include("io.jl")
 
 include("download.jl")
 
-### API to be revisited with conditional module loading
 include("containers/filedataset.jl")
 export FileDataset
 include("containers/tabledataset.jl")
 export TableDataset
-# include("containers/hdf5dataset.jl")
-# export HDF5Dataset
-# # include("containers/jld2dataset.jl")
-# # export JLD2Dataset
 include("containers/cacheddataset.jl")
 export CachedDataset
 
-# Misc.
+## TODO add back when compatible with `@lazy` or `@require`
+## which means that they cannot dispatch on types from JLD2 and HDF5
+# include("containers/hdf5dataset.jl")
+# export HDF5Dataset
+# include("containers/jld2dataset.jl")
+# export JLD2Dataset
+
+## Misc.
+
 include("datasets/misc/boston_housing.jl")
 export BostonHousing
 include("datasets/misc/iris.jl")
@@ -68,7 +70,7 @@ include("datasets/misc/titanic.jl")
 export Titanic
 
 
-# Vision
+## Vision
 
 include("datasets/vision/emnist.jl")
 export EMNIST
@@ -82,12 +84,12 @@ include("datasets/vision/cifar10.jl")
 export CIFAR10
 include("datasets/vision/cifar100_reader/CIFAR100Reader.jl")
 include("datasets/vision/cifar100.jl")
-export CIFAR100
-
+export CIFAR100#
 include("datasets/vision/svhn2.jl")
 export SVHN2
 
-# Text
+## Text
+#
 include("datasets/text/ptblm.jl")
 export PTBLM
 include("datasets/text/udenglish.jl")
