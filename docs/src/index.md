@@ -71,6 +71,8 @@ julia> summary(X_train)
 Input features are commonly denoted by `features`, while classification labels and regression targets are denoted by `targets`.
 
 ```julia-repl
+julia> using MLDatasets, DataFrames
+
 julia> iris = Iris()
 dataset Iris:
   metadata    =>    Dict{String, Any} with 4 entries
@@ -135,6 +137,38 @@ julia> iris.targets
 
 MLDatasets.jl garuantees compatibility with the [getobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.getobs) and [numobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.numobs) interface defined in [MLUtils.jl](https://github.com/JuliaML/MLUtils.jl).
 In practice, applying `getobs` and `numobs` on datasets is equivalent to applying indexing and `length`.
+
+## Conditional module loading
+
+MLDatasets.jl relies on many different packages in order to load and process the diverse type of
+datasets it supports. Most likely, any single user of the library will use a limited subset 
+of these functionalities. In order to reduce the time taken by `using MLDatasets` in users' code,
+we use a [lazy import system](https://github.com/johnnychen94/LazyModules.jl) that defers the import of packages inside MLDatasets.jl as much as possible.  
+For some of the packages like (e.g. `DataFrames.jl`) some manual intervention is needed from the user. 
+As an example, the following code will produce an error:
+```julia-repl
+julia> using MLDataset
+
+julia> MNIST(); # fine, MNIST doesn't requ
+```
+```julia-repl
+julia> using MLDataset
+
+julia> MNIST(); # fine, MNIST doesn't require DataFrames
+
+julia> Iris() # ERROR: Add `import DataFrames` or `using DataFrames` to your code to unlock this functionality.
+```
+As recommended by the error message we can easily fix the error with an additional import:
+```
+julia> using MLDataset, DataFrames
+
+julia> Iris()
+dataset Iris:
+  metadata    =>    Dict{String, Any} with 4 entries
+  features    =>    150×4 DataFrame
+  targets     =>    150×1 DataFrame
+  dataframe   =>    150×5 DataFrame
+```
 
 ## Download location
 

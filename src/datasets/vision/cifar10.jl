@@ -165,7 +165,8 @@ convert2image(::Type{<:CIFAR10}, x::AbstractArray{<:Integer}) =
 function convert2image(::Type{<:CIFAR10}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 3 || N == 4
     x = permutedims(x, (3, 2, 1, 4:N...))
-    return ImageCore.colorview(RGB, x)
+    ImageCore = ImageShow.ImageCore
+    return ImageCore.colorview(ImageCore.RGB, x)
 end
 
 

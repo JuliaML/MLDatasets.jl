@@ -36,9 +36,6 @@ bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
 
-# see https://github.com/JuliaML/MLUtils.jl/issues/67
-numobs_table(x) = size(x, 1)
-getobs_table(x, i) = x[i, :]
 
 function clean_nt(nt::NamedTuple)
     res = (; (p for p in  pairs(nt) if p[2] !== nothing)...)
