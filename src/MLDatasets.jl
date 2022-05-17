@@ -84,12 +84,12 @@ include("datasets/vision/cifar10.jl")
 export CIFAR10
 include("datasets/vision/cifar100_reader/CIFAR100Reader.jl")
 include("datasets/vision/cifar100.jl")
-export CIFAR100#
+export CIFAR100
 include("datasets/vision/svhn2.jl")
 export SVHN2
 
 ## Text
-#
+
 include("datasets/text/ptblm.jl")
 export PTBLM
 include("datasets/text/udenglish.jl")
