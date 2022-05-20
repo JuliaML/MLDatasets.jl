@@ -60,6 +60,13 @@ end
 maybesqueeze(x) = x
 maybesqueeze(x::AbstractMatrix) = size(x, 1) == 1 ? vec(x) : x
 
+## Need this until we don't have an interface in Tables.jl
+## https://github.com/JuliaData/Tables.jl/pull/278
+getobs_table(table) = table
+getobs_table(table, i) = table[i, :]
+numobs_table(table) = size(table, 1)
+
+
 """
     convert2image(d, i)
     convert2image(d, x)
