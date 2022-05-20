@@ -140,17 +140,12 @@ In practice, applying `getobs` and `numobs` on datasets is equivalent to applyin
 
 ## Conditional module loading
 
-MLDatasets.jl relies on many different packages in order to load and process the diverse type of
-datasets it supports. Most likely, any single user of the library will use a limited subset 
-of these functionalities. In order to reduce the time taken by `using MLDatasets` in users' code,
+MLDatasets.jl relies on many different packages in order to load and process the diverse type of datasets it supports. Most likely, any single user of the library will use a limited subset of these functionalities.
+In order to reduce the time taken by `using MLDatasets` in users' code,
 we use a [lazy import system](https://github.com/johnnychen94/LazyModules.jl) that defers the import of packages inside MLDatasets.jl as much as possible.  
-For some of the packages like (e.g. `DataFrames.jl`) some manual intervention is needed from the user. 
+For some of the packages, some manual intervention is needed from the user. 
 As an example, the following code will produce an error:
-```julia-repl
-julia> using MLDataset
 
-julia> MNIST(); # fine, MNIST doesn't requ
-```
 ```julia-repl
 julia> using MLDataset
 
@@ -158,8 +153,10 @@ julia> MNIST(); # fine, MNIST doesn't require DataFrames
 
 julia> Iris() # ERROR: Add `import DataFrames` or `using DataFrames` to your code to unlock this functionality.
 ```
-As recommended by the error message we can easily fix the error with an additional import:
-```
+
+We can easily fix the error with an additional import as recommended by the error message:
+
+```julia-repl
 julia> using MLDataset, DataFrames
 
 julia> Iris()
