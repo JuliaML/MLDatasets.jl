@@ -31,7 +31,7 @@ function __init__cifar10()
         """,
         "https://www.cs.toronto.edu/~kriz/cifar-10-binary.tar.gz",
         "c4a38c50a1bc5f3a1c5537f2155ab9d68f9f25eb1ed8d9ddda3db29a59bca1dd",
-        post_fetch_method = file -> (run(BinDeps.unpack_cmd(file, dirname(file), ".gz", ".tar")); rm(file))
+        post_fetch_method = DataDeps.unpack
     ))
 end
 
@@ -165,7 +165,8 @@ convert2image(::Type{<:CIFAR10}, x::AbstractArray{<:Integer}) =
 function convert2image(::Type{<:CIFAR10}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 3 || N == 4
     x = permutedims(x, (3, 2, 1, 4:N...))
-    return  ImageCore.colorview(RGB, x)
+    ImageCore = ImageShow.ImageCore
+    return ImageCore.colorview(ImageCore.RGB, x)
 end
 
 

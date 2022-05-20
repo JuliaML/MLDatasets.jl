@@ -141,7 +141,8 @@ convert2image(::Type{<:MNIST}, x::AbstractArray{<:Integer}) =
 function convert2image(::Type{<:MNIST}, x::AbstractArray{T,N}) where {T,N}
     @assert N == 2 || N == 3
     x = permutedims(x, (2, 1, 3:N...))
-    return ImageCore.colorview(Gray, x)
+    ImageCore = ImageShow.ImageCore
+    return ImageCore.colorview(ImageCore.Gray, x)
 end
 
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)

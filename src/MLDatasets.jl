@@ -2,28 +2,34 @@ module MLDatasets
 
 using FixedPointNumbers
 using SparseArrays
-using DataFrames, Tables
-using Glob
-import ImageCore
-using ColorTypes
+using Tables
+using DataDeps
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
-
-### I/O imports
-import NPZ
-import Pickle
-using MAT: matopen, matread
-import CSV 
-using HDF5
-using JLD2
-import JSON3
+using Glob
 using DelimitedFiles: readdlm
-##########
+using FileIO
+using LazyModules: @lazy
 
-export getobs, numobs
-export convert2image
+include("require.jl") # export @require
 
+# Use `@lazy import SomePkg` whenever the returned types are not its own types,
+# since for methods applied on the returned types we would encounter in world-age issues
+# (see discussion in  https://github.com/JuliaML/MLDatasets.jl/pull/128).
+# In the other case instead, use `require import SomePkg` to force 
+# the use to manually import.
 
+@require import JSON3="0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+@require import DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+@require import ImageShow="4e3cecfd-b093-5904-9786-8bbb286a6a31"
+# @lazy import NPZ # lazy imported by FileIO
+@lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
+@lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
+@lazy import CSV="336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+@lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+# @lazy import JLD2
+
+export getobs, numobs # From MLUtils.jl
 
 include("abstract_datasets.jl")
 # export AbstractDataset, 
@@ -33,22 +39,26 @@ include("utils.jl")
 export convert2image
 
 include("io.jl")
-# export read_csv, read_npy
+# export read_csv, read_npy, ...
 
 include("download.jl")
 
 include("containers/filedataset.jl")
 export FileDataset
-include("containers/tabledataset.jl")
-export TableDataset
-include("containers/hdf5dataset.jl")
-export HDF5Dataset
-include("containers/jld2dataset.jl")
-export JLD2Dataset
 include("containers/cacheddataset.jl")
 export CachedDataset
+# include("containers/tabledataset.jl")
+# export TableDataset
 
-# Misc.
+## TODO add back when compatible with `@lazy` or `@require`
+## which means that they cannot dispatch on types from JLD2 and HDF5
+# include("containers/hdf5dataset.jl")
+# export HDF5Dataset
+# include("containers/jld2dataset.jl")
+# export JLD2Dataset
+
+## Misc.
+
 include("datasets/misc/boston_housing.jl")
 export BostonHousing
 include("datasets/misc/iris.jl")
@@ -59,7 +69,7 @@ include("datasets/misc/titanic.jl")
 export Titanic
 
 
-# Vision
+## Vision
 
 include("datasets/vision/emnist.jl")
 export EMNIST
@@ -74,11 +84,11 @@ export CIFAR10
 include("datasets/vision/cifar100_reader/CIFAR100Reader.jl")
 include("datasets/vision/cifar100.jl")
 export CIFAR100
-
 include("datasets/vision/svhn2.jl")
 export SVHN2
 
-# Text
+## Text
+
 include("datasets/text/ptblm.jl")
 export PTBLM
 include("datasets/text/udenglish.jl")

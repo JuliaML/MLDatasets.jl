@@ -1,6 +1,5 @@
 module MNISTReader
     using GZip
-    using BinDeps
 
     export
         readimages,

@@ -125,7 +125,7 @@ function SVHN2(Tx::Type, split::Symbol; dir=nothing)
     end
 
     path = datafile(DEPNAME, PATH, dir)
-    vars = matread(path)
+    vars = read_mat(path)
     images = vars["X"]::Array{UInt8,4}
     labels = vars["y"]
     images = permutedims(images, (2, 1, 3, 4))

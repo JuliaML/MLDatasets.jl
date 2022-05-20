@@ -42,10 +42,12 @@ function leftalign(s::AbstractString, n::Int)
     end
 end
 
-_summary(x) = x
+_summary(x) = Tables.istable(x) ? summary(x) : x
 _summary(x::Symbol) = ":$x"
-_summary(x::Union{Dict, AbstractArray, DataFrame}) = summary(x)
-_summary(x::Union{Tuple, NamedTuple}) = map(_summary, x)
+_summary(x::Dict) = summary(x)
+_summary(x::Tuple) = map(_summary, x)
+_summary(x::NamedTuple) = map(_summary, x)
+_summary(x::AbstractArray) = summary(x)
 _summary(x::BitVector) = "$(count(x))-trues BitVector"
 
 """
@@ -58,11 +60,18 @@ a `features` and a `targets` fields.
 abstract type SupervisedDataset <: AbstractDataset end
 
 
-Base.length(d::SupervisedDataset) = numobs((d.features, d.targets))
+Base.length(d::SupervisedDataset) = Tables.istable(d.features) ? numobs_table(d.features) : 
+                                                                 numobs((d.features, d.targets))
+
 
 # We return named tuples
-Base.getindex(d::SupervisedDataset, ::Colon) = getobs((; d.features, d.targets))
-Base.getindex(d::SupervisedDataset, i) = getobs((; d.features, d.targets), i)
+Base.getindex(d::SupervisedDataset, ::Colon) = Tables.istable(d.features) ?
+    (features = d.features, targets=d.targets) :
+    getobs((; d.features, d.targets))
+
+Base.getindex(d::SupervisedDataset, i) = Tables.istable(d.features) ? 
+    (features = getobs_table(d.features, i), targets=getobs_table(d.targets, i)) :
+    getobs((; d.features, d.targets), i)
 
 """
     UnsupervisedDataset <: AbstractDataset

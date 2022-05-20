@@ -25,7 +25,7 @@ Pkg.add("MLDatasets")
 
 Datasets are grouped into different categories. Click on the links below for a full list of datasets available in each category.
 
-- [Graphs Datasets](@ref) - datasets with an underlying graph structure: Cora, PubMed, CiteSeer, ...
+- [Graph Datasets](@ref) - datasets with an underlying graph structure: Cora, PubMed, CiteSeer, ...
 - [Miscellaneuous Datasets](@ref) - datasets that do not fall into any of the other categories: Iris, BostonHousing, ...
 - [Text Datasets](@ref) - datasets for language models. 
 - [Vision Datasets](@ref) - vision related datasets such as MNIST, CIFAR10, CIFAR100, ... 
@@ -71,6 +71,8 @@ julia> summary(X_train)
 Input features are commonly denoted by `features`, while classification labels and regression targets are denoted by `targets`.
 
 ```julia-repl
+julia> using MLDatasets, DataFrames
+
 julia> iris = Iris()
 dataset Iris:
   metadata    =>    Dict{String, Any} with 4 entries
@@ -135,6 +137,35 @@ julia> iris.targets
 
 MLDatasets.jl garuantees compatibility with the [getobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.getobs) and [numobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.numobs) interface defined in [MLUtils.jl](https://github.com/JuliaML/MLUtils.jl).
 In practice, applying `getobs` and `numobs` on datasets is equivalent to applying indexing and `length`.
+
+## Conditional module loading
+
+MLDatasets.jl relies on many different packages in order to load and process the diverse type of datasets it supports. Most likely, any single user of the library will use a limited subset of these functionalities.
+In order to reduce the time taken by `using MLDatasets` in users' code,
+we use a [lazy import system](https://github.com/johnnychen94/LazyModules.jl) that defers the import of packages inside MLDatasets.jl as much as possible.  
+For some of the packages, some manual intervention is needed from the user. 
+As an example, the following code will produce an error:
+
+```julia-repl
+julia> using MLDataset
+
+julia> MNIST(); # fine, MNIST doesn't require DataFrames
+
+julia> Iris() # ERROR: Add `import DataFrames` or `using DataFrames` to your code to unlock this functionality.
+```
+
+We can easily fix the error with an additional import as recommended by the error message:
+
+```julia-repl
+julia> using MLDataset, DataFrames
+
+julia> Iris()
+dataset Iris:
+  metadata    =>    Dict{String, Any} with 4 entries
+  features    =>    150×4 DataFrame
+  targets     =>    150×1 DataFrame
+  dataframe   =>    150×5 DataFrame
+```
 
 ## Download location
 

@@ -21,7 +21,7 @@ function restrict_array_type(res::AbstractArray)
     end
 end
 
-function df_to_matrix(df::AbstractDataFrame)
+function df_to_matrix(df)
     x = Matrix(df)
     if size(x, 2) == 1
         return reshape(x, 1, size(x, 1))
@@ -36,9 +36,6 @@ bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
 bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
 
-# PIRACY # see https://github.com/JuliaML/MLUtils.jl/issues/67
-MLUtils.numobs(x::AbstractDataFrame) = size(x, 1)
-MLUtils.getobs(x::AbstractDataFrame, i) = x[i, :]
 
 function clean_nt(nt::NamedTuple)
     res = (; (p for p in  pairs(nt) if p[2] !== nothing)...)
@@ -62,6 +59,13 @@ end
 
 maybesqueeze(x) = x
 maybesqueeze(x::AbstractMatrix) = size(x, 1) == 1 ? vec(x) : x
+
+## Need this until we don't have an interface in Tables.jl
+## https://github.com/JuliaData/Tables.jl/pull/278
+getobs_table(table) = table
+getobs_table(table, i) = table[i, :]
+numobs_table(table) = size(table, 1)
+
 
 """
     convert2image(d, i)

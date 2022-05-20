@@ -61,9 +61,9 @@ function Reddit(; full=true, dir=nothing)
     feat_path = datafile(DEPNAME, DATA[5], dir)
 
     # Read the json files
-    graph = open(JSON3.read, graph_json)
-    class_map = open(JSON3.read, class_map_json)
-    id_map = open(JSON3.read, id_map_json)
+    graph = read_json(graph_json)
+    class_map = read_json(class_map_json)
+    id_map = read_json(id_map_json)
 
     # Metadata
     directed = graph["directed"]

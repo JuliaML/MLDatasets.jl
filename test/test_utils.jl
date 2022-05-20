@@ -1,5 +1,11 @@
 
 ### TRAITS CHECKS ###########
+# see https://github.com/JuliaML/MLUtils.jl/issues/67
+numobs_df(x) = numobs(x)
+getobs_df(x, i) = getobs(x, i)
+getobs_df(x::NamedTuple, i) = map(y -> getobs_df(y, i), x)
+getobs_df(x::DataFrame, i) = x[i, :]
+numobs_df(x::DataFrame) = size(x, 1)
 
 function test_inmemory_supervised_table_dataset(d::D;
         n_obs, n_features, n_targets,
@@ -57,13 +63,12 @@ function test_inmemory_supervised_table_dataset(d::D;
     @test length(d) == n_obs
     @test numobs(d) == n_obs
     idx = rand(1:n_obs)
-    @test isequal(d[idx], getobs((; d.features, d.targets), idx))
+    @test isequal(d[idx], getobs_df((; d.features, d.targets), idx))
     @test isequal(d[idx], getobs(d, idx))
     idxs = rand(1:n_obs, 2)
-    @test isequal(d[idxs], getobs((; d.features, d.targets), idxs))
+    @test isequal(d[idxs], getobs_df((; d.features, d.targets), idxs))
     @test isequal(d[idxs], getobs(d, idxs))
 end
-
 
 function test_supervised_array_dataset(d::D;
         n_obs, n_features, n_targets,

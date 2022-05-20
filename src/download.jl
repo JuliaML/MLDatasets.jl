@@ -1,8 +1,5 @@
-import BinDeps
-using DataDeps
-
 function with_accept(f, manual_overwrite)
-    auto_accept = if manual_overwrite == nothing
+    auto_accept = if manual_overwrite === nothing
         get(ENV, "DATADEPS_ALWAYS_ACCEPT", false)
     else
         manual_overwrite
@@ -12,7 +9,7 @@ end
 
 function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)
     with_accept(i_accept_the_terms_of_use) do
-        if dir == nothing
+        if dir === nothing
             # use DataDeps defaults
             @datadep_str depname
         else

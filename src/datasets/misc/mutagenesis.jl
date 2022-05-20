@@ -81,11 +81,11 @@ function Mutagenesis(split::Symbol; dir=nothing)
     
     data_path = datafile(DEPNAME, DATA, dir)
     metadata_path = datafile(DEPNAME, METADATA, dir)
-    samples = open(JSON3.read, data_path)
-    metadata = open(JSON3.read, metadata_path)
+    samples = read_json(data_path)
+    metadata = read_json(metadata_path)
     labelkey = metadata["label"]
     targets = map(i -> i[labelkey], samples)
-    features = map(x->delete!(copy(x), Symbol(labelkey)), samples)
+    features = map(x -> delete!(copy(x), Symbol(labelkey)), samples)
     val_num = metadata["val_samples"]
     test_num = metadata["test_samples"]
     train_idxs = 1:length(samples)-val_num-test_num
@@ -100,6 +100,10 @@ function Mutagenesis(split::Symbol; dir=nothing)
 
     Mutagenesis(metadata, split, indexes, features[indexes], targets[indexes])
 end
+
+Base.length(d::Mutagenesis, ::Colon) = numobs((; d.features, d.targets))
+Base.getindex(d::Mutagenesis, ::Colon) = getobs((; d.features, d.targets))
+Base.getindex(d::Mutagenesis, i) = getobs((; d.features, d.targets), i)
 
 # deprecated in v0.6
 function Base.getproperty(::Type{Mutagenesis}, s::Symbol)

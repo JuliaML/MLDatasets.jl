@@ -28,7 +28,7 @@ makedocs(
             "Text" => "datasets/text.md",
             "Vision" => "datasets/vision.md",
         ],
-        "Creating Datasets" => Any["containers/overview.md"],
+        "Creating Datasets" => Any["containers/overview.md"], # still experimental
         "LICENSE.md",
     ],
     strict = true,

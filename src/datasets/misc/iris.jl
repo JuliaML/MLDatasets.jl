@@ -80,9 +80,9 @@ end
 function Iris(; dir = nothing, as_df = true)
     path = datafile("Iris", "iris.data", dir)
     df = read_csv(path, header=0)
-    rename!(df, ["sepallength", "sepalwidth", "petallength", "petalwidth", "class"])
+    DataFrames.rename!(df, ["sepallength", "sepalwidth", "petallength", "petalwidth", "class"])
 
-    features = df[!, Not(:class)]
+    features = df[!, DataFrames.Not(:class)]
     targets = df[!, [:class]]
 
     metadata = Dict{String, Any}()

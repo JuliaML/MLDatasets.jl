@@ -2,15 +2,11 @@ using Test
 using MLDatasets
 using MLDatasets: SupervisedDataset, UnsupervisedDataset, AbstractDataset
 using MLDatasets: Graph
-using FileIO
-using DataDeps
-using DataFrames, CSV, Tables
-using HDF5
-using JLD2
+using DataFrames, Tables, CSV
+using ImageShow
 using ColorTypes
 using FixedPointNumbers
-using DataDeps
-using ImageCore: channelview
+using JSON3
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
@@ -34,22 +30,11 @@ no_ci_dataset_tests = [
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
 
-deprecated_interface = [
-    #"datasets/vision/deprecated_fashion_mnist.jl",
-    #"datasets/vision/deprecated_mnist.jl",
-    #"datasets/vision/deprecated_cifar10.jl",
-    #"datasets/vision/deprecated_cifar100.jl",
-    #"datasets/vision/deprecated_svhn2.jl",
-    #"datasets/graphs_deprecated.jl",
-    #"datasets/text_deprecated.jl",
-    #"datasets/misc_deprecated.jl",
-]
-
 container_tests = [
     "containers/filedataset.jl",
-    "containers/tabledataset.jl",
-    "containers/hdf5dataset.jl",
-    "containers/jld2dataset.jl",
+    # "containers/tabledataset.jl",
+    # "containers/hdf5dataset.jl",
+    # "containers/jld2dataset.jl",
     "containers/cacheddataset.jl",
 ]
 
@@ -65,13 +50,6 @@ container_tests = [
         end
     else
         @info "CI detected: skipping tests on large datasets"
-    end    
-
-    if !isempty(deprecated_interface)
-        @info "Testing deprecated dataset interface"
-        @testset "$(split(t,"/")[end])" for t in deprecated_interface
-            include(t)
-        end
     end
 end
 
