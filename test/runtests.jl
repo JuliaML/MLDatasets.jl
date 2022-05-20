@@ -2,7 +2,7 @@ using Test
 using MLDatasets
 using MLDatasets: SupervisedDataset, UnsupervisedDataset, AbstractDataset
 using MLDatasets: Graph
-using DataFrames, Tables
+using DataFrames, Tables, CSV
 using ImageShow
 using ColorTypes
 using FixedPointNumbers
