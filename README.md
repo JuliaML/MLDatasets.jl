@@ -15,9 +15,6 @@ Its functionality is built on top of the package
 
 ## Available Datasets
 
-**Warning**: this package is under heavy redesign. The link belows point to the documentation for the yet to be released version. 
-For the tagged version instead, please consult the [stable docs](https://JuliaML.github.io/MLDatasets.jl/stable).
-
 Datasets are grouped into different categories. Click on the links below for a full list of datasets available in each category.
 
 - [Graphs](https://juliaml.github.io/MLDatasets.jl/dev/datasets/graphs) - Datasets with an underlying graph structure: Cora, PubMed, CiteSeer, ...
@@ -37,7 +34,19 @@ Pkg.add("MLDatasets")
 
 ## Contributing to MLDatasets
 
-Pull requests contributing new datasets are warmly welcome. See the source code of any of the currently implemented datasets, e.g. [Iris](https://github.com/JuliaML/MLDatasets.jl/blob/master/src/datasets/misc/iris.jl), for examples.
+Pull requests contributing new datasets are warmly welcome. See the source code of any of the available implemented datasets for 
+implementation examples.
+
+## Other data repositories for Julia
+
+If you don't find here the dataset you are looking for, please let us know by opening an issue.
+Moreover, you can check out these other packages to find what you need:
+
+- [OutlierDetectionData.jl](https://github.com/OutlierDetectionJL/OutlierDetectionData.jl)
+- [MarketData.jl](https://github.com/JuliaQuant/MarketData.jl)
+- [ForecastData.jl](https://github.com/viraltux/ForecastData.jl)
+- [RDatasets.jl](https://github.com/JuliaStats/RDatasets.jl)
+- [CDSAPI.jl](https://github.com/JuliaClimate/CDSAPI.jl)
 
 ## License
 
