@@ -25,7 +25,7 @@ One node per unique label is used as training data.
 
 [4]: [NetworkX Zachary's Karate Club Dataset](https://networkx.org/documentation/stable/_modules/networkx/generators/social.html#karate_club_graph)
 """
-struct KarateClub
+struct KarateClub <: AbstractDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end

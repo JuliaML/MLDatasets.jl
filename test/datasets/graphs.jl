@@ -1,6 +1,7 @@
 
 @testset "Cora" begin
     data  = Cora()
+    @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
@@ -25,6 +26,7 @@ end
 
 @testset "CiteSeer" begin
     data  = CiteSeer()
+    @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
@@ -49,6 +51,7 @@ end
 
 @testset "PubMed" begin
     data  = PubMed()
+    @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
@@ -73,6 +76,7 @@ end
 
 @testset "KarateClub" begin
     data  = KarateClub()
+    @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
@@ -98,6 +102,7 @@ end
 
 @testset "PolBlogs" begin
     data  = PolBlogs()
+    @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
