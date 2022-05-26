@@ -16,7 +16,7 @@ include("require.jl") # export @require
 # Use `@lazy import SomePkg` whenever the returned types are not its own types,
 # since for methods applied on the returned types we would encounter in world-age issues
 # (see discussion in  https://github.com/JuliaML/MLDatasets.jl/pull/128).
-# In the other case instead, use `require import SomePkg` to force 
+# In the other case instead, use `require import SomePkg` to force
 # the use to manually import.
 
 @require import JSON3="0f8b85d8-7281-11e9-16c2-39a750bddbf1"
@@ -25,14 +25,14 @@ include("require.jl") # export @require
 # @lazy import NPZ # lazy imported by FileIO
 @lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
 @lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
-@lazy import CSV="336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+import CSV
 @lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
 export getobs, numobs # From MLUtils.jl
 
 include("abstract_datasets.jl")
-# export AbstractDataset, 
+# export AbstractDataset,
 #        SupervisedDataset
 
 include("utils.jl")
