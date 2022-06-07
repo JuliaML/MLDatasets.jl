@@ -113,7 +113,7 @@ julia> data[1]
 struct OGBDataset{GD} <: AbstractDataset
     name::String
     metadata::Dict{String, Any}
-    graphs::Vector{Graph}
+    graphs::Vector{<:AbstractGraph}
     graph_data::GD
 end
 
@@ -121,8 +121,13 @@ function OGBDataset(fullname; dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
     path = makedir_ogb(fullname, metadata["url"], dir)
     metadata["path"] = path
-    graph_dicts, graph_data = read_ogb_graph(path, metadata)
-    graphs = ogbdict2graph.(graph_dicts)
+    if metadata["is hetero"]
+      graph_dicts, graph_data = read_ogb_hetero_graph(path, metadata)
+      graphs = ogbdict2heterograph.(graph_dicts)
+    else
+      graph_dicts, graph_data = read_ogb_graph(path, metadata)
+      graphs = ogbdict2graph.(graph_dicts)
+    end
     return OGBDataset(fullname, metadata, graphs, graph_data)
 end
 
@@ -346,29 +351,88 @@ function read_ogb_hetero_graph(path, metadata)
     triplets = sort([Tuple(triplet[:]) for triplet in eachrow(triplet_mat)])
 
     edge_dict = Dict{Tuple{String, String, String}, Matrix{Int}}()
-    num_edge_dict = Dict{Tuple{String, String, String}, Int}()
+    num_edges = Dict()
     edge_feat_dict = Dict{Tuple{String, String, String}, Any}()
 
     for triplet in triplets
         subdir = joinpath(path, "raw", "relations", join(triplet, "___"))
 
         edge_dict[triplet] = read_ogb_file(joinpath(subdir, "edge.csv"), Int, transp=false)
-        num_edge_dict[triplet] = read_ogb_file(joinpath(subdir, "num-edge-list.csv"), Int)[1]
-        edge_feat = read_ogb_file(joinpath(subdir, "edge-feat.csv"), Float32)
+        num_edges[triplet] = read_ogb_file(joinpath(subdir, "num-edge-list.csv"), Int)
+        edge_feat = read_ogb_file(joinpath(subdir, "edge-feat.csv"), AbstractFloat) end 
+  # Check if the number of graphs are consistent accross node and edge data
+    @assert length(num_nodes[node_types[1]]) == length(num_edges[triplets[1]])
+
+    # for node_type in node_types
+    #     subdir = joinpath(path, "raw", "node-feat", node_type)
+
+    #     node_feat = read_ogb_file(joinpath(subdir, "node-feat.csv"), Float32)
+    #     node_feat_dict[node_type] = node_feat
+    # end
+
+    # additional_node_info = Dict()
+    # for additional_file in metadata["additional node files"]
+    #     additional_feat_dict = Dict()
+    #     @assert additional_file[:5] == "node_"
+
+    #     for node_type in node_types
+    #         subdir = joinpath(path, "raw", "node-feat", node_type)
+
+    #         node_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), Float32)
+    #         @assert length(node_feat) == sum(num_nodes[node_type])
+    #         additional_feat_dict[node_type] = node_feat
+    #     end
+    # end
+
+    # additional_edge_info = Dict()
+    # for additional_file in metadata["additional edge files"]
+    #     additional_feat_dict = Dict()
+    #     @assert additional_file[:5] == "edge_"
+
+    #     for triplet in triplets
+    #         subdir = joinpath(path, "raw", "relations", join(triplet, "___"))
+
+    #         edge_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), Float32)
+    #         @assert length(node_feat) == sum(num_nodes[node_type])
+    #         additional_feat_dict[triplet] = node_feat
+    #     end
+    # end
+
+    graphs = Dict[]
+    num_node_accum = Dict(node_type=> 0 for node_type in node_types)
+    num_edge_accums = Dict(triplet=> 0 for triplet in triplets)
+    graph_data = Dict()
+
+    for i in 1:num_graphs
+      graph = Dict{String, Any}()
+      graph["num_nodes"] = Dict(k => v[i] for (k, v) in num_nodes)
+      graph["num_edges"] = Dict()
+      graph["edge_indices"] = Dict()
+      graph["edge_feat"] = Dict()
+
+      for triplet in triplets
+          edge = edge_dict[triplet]
+          num_edge = num_edges[triplet][i]
+          num_edge_accum = num_edge_accums[triplet]
+
+          if metadata["add_inverse_edge"]
+            edge_index = edge[num_edge_accum+1:num_edge_accum+num_edge, :]
+            # Compensate for the duplicate/inverse the edges for
+            s, t = edge_index[:, 1], edge_index[:, 2]
+            graph["edge_indices"][triplet] = [s t; t s]
+
+            graph["num_edges"][triplet] = 2 * num_edge
+          else
+            graph["edge_indices"][triplet] = edge[num_edge_accum+1:num_edge_accum+num_edge, :]
+            graph["num_edges"][triplet] = num_edge
+          end
+          # node_edge_accums[triplet] += num_edge
+      end
+      # graph["edge_feat"][triplet] = edge_feat[triplet]
+      push!(graphs, graph)
     end
-    @assert length(num_nodes[node_types[1]]) == length(num_edge_dict[triplets[1]])
 
-    node_feat_dict = Dict{String, Any}()
-    for node_type in node_types
-        subdir = joinpath(path, "raw", "node-feat", node_type)
-
-        node_feat = read_ogb_file(joinpath(subdir, "node-feat.csv"), Float32)
-        node_feat_dict[node_type] = node_feat
-    end
-    
-    num_node_accum = {node_type: 0 for node_type in node_types}
-    num_edge_accum = {edge_type: 0 for triplet in triplets}
-
+  return graphs, graph_data
 end
 
 function read_ogb_file(p, T; tovec = false, transp = true)
@@ -395,6 +459,21 @@ function ogbdict2graph(d::Dict)
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
     return Graph(; num_nodes, edge_index, node_data, edge_data)
+end
+
+function ogbdict2heterograph(d::Dict)
+    num_nodes = d["num_nodes"]
+    num_edges = d["num_edges"]
+    edge_indices = Dict(triplet => (ei[:, 1], ei[:, 2])
+                        for (triplet, ei) in d["edge_indices"])
+
+    return HeteroGraph(
+                        num_nodes=num_nodes,
+                        num_edges=num_edges,
+                        edge_indices=edge_indices,
+                        node_data=nothing,
+                        edge_data=nothing
+                    )
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)

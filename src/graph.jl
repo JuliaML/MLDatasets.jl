@@ -1,4 +1,5 @@
 
+abstract type AbstractGraph end
 
 """
     Graph(; kws...)
@@ -71,7 +72,7 @@ for (i, j) in zip(s, t)
 end
 ```
 """
-struct Graph
+struct Graph <: AbstractGraph
     num_nodes::Int
     num_edges::Int
     edge_index::Tuple{Vector{Int}, Vector{Int}}
@@ -142,4 +143,31 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
         push!(adj[i], j)
     end
     return adj
+end
+
+
+"""
+    HeteroGraph(; kws...)
+
+Type that represents heterogeneous Graph.
+"""
+struct HeteroGraph <: AbstractGraph
+    num_nodes::Dict{String, Int}
+    num_edges::Dict{Tuple{String, String, String}, Int}
+    edge_indices
+    node_data
+    edge_data
+end
+
+function HeteroGraph(;
+    num_nodes::Dict{String, Int},
+    num_edges,
+    edge_indices,
+    node_data,
+    edge_data
+    )
+    edge_indices = edge_indices
+    node_data = nothing
+    edge_data = nothing
+    return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
 end
