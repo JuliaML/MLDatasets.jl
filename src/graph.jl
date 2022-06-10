@@ -116,10 +116,33 @@ function Base.show(io::IO, ::MIME"text/plain", d::Graph)
     end
 end
 
+"""
+    HeteroGraph(; kws...)
+
+Type that represents heterogeneous Graph.
+"""
+struct HeteroGraph <: AbstractGraph
+    num_nodes::Dict{String, Int}
+    num_edges::Dict{Tuple{String, String, String}, Int}
+    edge_indices
+    node_data
+    edge_data
+end
+
+function HeteroGraph(;
+    num_nodes::Dict{String, Int},
+    num_edges,
+    edge_indices,
+    node_data,
+    edge_data
+    )
+    return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
+end
+
 # Transform an adjacency list to edge index.
 # If inneigs = true, assume neighbors from incoming edges.
 function adjlist2edgeindex(adj; inneigs=false)
-    s, t = Int[], Int[]     
+    s, t = Int[], Int[]
     for i in 1:length(adj)
         for j in adj[i]
             push!(s, i)
@@ -146,28 +169,3 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
 end
 
 
-"""
-    HeteroGraph(; kws...)
-
-Type that represents heterogeneous Graph.
-"""
-struct HeteroGraph <: AbstractGraph
-    num_nodes::Dict{String, Int}
-    num_edges::Dict{Tuple{String, String, String}, Int}
-    edge_indices
-    node_data
-    edge_data
-end
-
-function HeteroGraph(;
-    num_nodes::Dict{String, Int},
-    num_edges,
-    edge_indices,
-    node_data,
-    edge_data
-    )
-    edge_indices = edge_indices
-    node_data = nothing
-    edge_data = nothing
-    return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
-end
