@@ -148,8 +148,10 @@ function read_ogb_metadata(fullname, dir = nothing)
     @assert fullname ∈ names(df)
     metadata = Dict{String, Any}(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
     # edge cases for additional node and edge files
-    for additonal_keys in ["additional edge files", "additional node files"]
-        metadata[additonal_keys] = Vector{String}(split(metadata[additonal_keys], ","))
+    for additional_keys in ["additional edge files", "additional node files"]
+        if !isnothing(metadata[additional_keys])
+          metadata[additional_keys] = Vector{String}(split(metadata[additional_keys], ","))
+        end
     end
     if prefix == "ogbn"
         metadata["task level"] = "node"
@@ -349,7 +351,6 @@ function read_ogb_hetero_graph(path, metadata)
     num_node_df = read_csv_asdf(joinpath(path, "raw", "num-node-dict.csv"))
     dict["num_nodes"] = Dict(String(node) => Vector{Int}(num) for (node, num) in pairs(eachcol(num_node_df)))
     node_types = sort(collect(keys(dict["num_nodes"])))
-
     num_graphs = length(dict["num_nodes"][node_types[1]])
 
     triplet_mat = read_ogb_file(joinpath(path, "raw", "triplet-type-list.csv"), String, transp=false)
@@ -366,6 +367,9 @@ function read_ogb_hetero_graph(path, metadata)
         dict["num_edges"][triplet] = read_ogb_file(joinpath(subdir, "num-edge-list.csv"), Int)
         dict["edge_features"][triplet] = read_ogb_file(joinpath(subdir, "edge-feat.csv"), AbstractFloat)
     end
+
+    @assert length(dict["num_nodes"][node_types[1]]) == length(dict["num_edges"][triplets[1]])
+
     # Check if the number of graphs are consistent accross node and edge data
     # @assert length(num_nodes[node_types[1]]) == length(dict["num_edges"][triplets[1]])
 
@@ -382,7 +386,7 @@ function read_ogb_hetero_graph(path, metadata)
         for node_type in node_types
             subdir = joinpath(path, "raw", "node-feat", node_type)
             node_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), Float32)
-            # @assert length(node_feat) == sum(dict["num_nodes"][node_type])
+            isnothing(node_feat) || @assert length(node_feat) == sum(dict["num_nodes"][node_type])
             node_add_feat[node_type] = node_feat
         end
         dict[additional_file] = node_add_feat
@@ -413,7 +417,6 @@ function read_ogb_hetero_graph(path, metadata)
     for i in 1:num_graphs
         graph = Dict{String, Any}()
         graph["num_nodes"] = Dict(k => v[i] for (k, v) in dict["num_nodes"])
-        graph["num_edges"] = Dict()
         graph["edge_indices"] = Dict()
         for key in vcat(node_keys, edge_keys)
           graph[key] = Dict()
@@ -447,7 +450,6 @@ function read_ogb_hetero_graph(path, metadata)
                         graph[k] = [x; x]
                     end
                 end
-                graph["num_edges"][triplet] = 2 * num_edge
           else
               graph["edge_indices"][triplet] = edge_indices[num_edge_accum+1:num_edge_accum+num_edge, :]
               for k in edge_keys
@@ -458,7 +460,6 @@ function read_ogb_hetero_graph(path, metadata)
                       graph[k][triplet] = v[:, num_edge_accum+1:num_edge_accum+num_edge]
                   end
               end
-              graph["num_edges"][triplet] = num_edge
           end
           num_edge_accums[triplet] += num_edge
         end
@@ -511,7 +512,6 @@ end
 
 function ogbdict2heterograph(d::Dict)
     num_nodes = d["num_nodes"]
-    num_edges = d["num_edges"]
     edge_indices = Dict(triplet => (ei[:, 1], ei[:, 2])
                         for (triplet, ei) in d["edge_indices"])
     edge_data = Dict()
@@ -521,7 +521,6 @@ function ogbdict2heterograph(d::Dict)
         edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
       end
     end
-
     node_data = Dict()
     for (k,v) in d
       if startswith(k, "node_") && sum(values(v) .!== nothing) != 0
@@ -530,7 +529,10 @@ function ogbdict2heterograph(d::Dict)
       end
     end
 
-    return HeteroGraph(;num_nodes, num_edges,
+    node_data = isempty(node_data) ? nothing : (; node_data...)
+    edge_data = isempty(edge_data) ? nothing : (; edge_data...)
+
+    return HeteroGraph(;num_nodes,
                         edge_indices=edge_indices,
                         edge_data=edge_data,
                         node_data=node_data
