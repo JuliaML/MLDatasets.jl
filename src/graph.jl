@@ -9,7 +9,7 @@ It doesn't distinguish between directed or undirected graph, therefore for
 undirected graphs will store edges in both directions.
 Nodes are indexed in `1:num_nodes`.
 
-Graph datasets in MLDatasets.jl contain one or more `Graph` or [`MLDataset.HeteroGraph`](@ref) objects.
+Graph datasets in MLDatasets.jl contain one or more `Graph` or [`HeteroGraph`](@ref) objects.
 
 # Keyword Arguments
 
