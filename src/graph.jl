@@ -6,27 +6,27 @@ abstract type AbstractGraph end
 
 A type that represents a graph and that can also store node and edge data.
 It doesn't distinguish between directed or undirected graph, therefore for
-undirected graphs will store edges in both directions. 
+undirected graphs will store edges in both directions.
 Nodes are indexed in `1:num_nodes`.
 
-Graph datasets in MLDatasets.jl contain one or more `Graph` objects.
+Graph datasets in MLDatasets.jl contain one or more `Graph` or [`MLDataset.HeteroGraph`](@ref) objects.
 
-# Keyword Arguments 
+# Keyword Arguments
 
 - `num_nodes`: the number of nodes. If omitted, is inferred from `edge_index`.
-- `edge_index`: a tuple containing two vectors with length equal to the number of edges. 
+- `edge_index`: a tuple containing two vectors with length equal to the number of edges.
     The first vector contains the list of the source nodes of each edge, the second the target nodes.
-    Defaults to `(Int[], Int[])`.  
+    Defaults to `(Int[], Int[])`.
 - `node_data`: node-related data. Can be `nothing`, a named tuple of arrays or a dictionary of arrays.
-            The arrays last dimension size should be equal to the number of nodes. 
+            The arrays last dimension size should be equal to the number of nodes.
             Default `nothing`.
 - `edge_data`: edge-related data. Can be `nothing`, a named tuple of arrays or a dictionary of arrays.
-             The arrays' last dimension size should be equal to the number of edges. 
+             The arrays' last dimension size should be equal to the number of edges.
              Default `nothing`.
 
 # Examples
 
-All graph datasets in MLDatasets.jl contain `Graph` objects:
+All graph datasets in MLDatasets.jl contain `Graph` or `HeteroGraph` objects:
 ```julia-repl
 julia> using MLDatasets: Cora
 
@@ -93,18 +93,18 @@ function Graph(;
         if num_edges == 0
             num_nodes = 0
         else
-            num_nodes = max(maximum(s), maximum(t)) 
+            num_nodes = max(maximum(s), maximum(t))
         end
     end
     return Graph(num_nodes, num_edges, edge_index, node_data, edge_data)
 end
 
 
-function Base.show(io::IO, d::Graph)    
+function Base.show(io::IO, d::Graph)
     print(io, "Graph($(d.num_nodes), $(d.num_edges))")
 end
 
-function Base.show(io::IO, ::MIME"text/plain", d::Graph)    
+function Base.show(io::IO, ::MIME"text/plain", d::Graph)
     recur_io = IOContext(io, :compact => false)
     print(io, "Graph:")
     for f in fieldnames(Graph)
@@ -119,7 +119,30 @@ end
 """
     HeteroGraph(; kws...)
 
-Type that represents heterogeneous Graph.
+HeteroGraph is used for HeteroGeneous Graphs.
+
+`HeteroGraph` unlike `Graph` can have different types of nodes. Each node pertains to different types of information. 
+
+Edges in `HeteroGraph` is defined by relations. A relation is a tuple of 
+(`src_node_type`, `edge_type`, `target_node_type`) where `edge_type` represents the relation
+between the src and target nodes. Edges between same node types are possible. 
+
+A `HeteroGraph` can be directed or undirected. It doesn't distinguish between directed 
+or undirected graphs. Therefore, for undirected graphs, it will store edges in both directions.
+Nodes are indexed in `1:num_nodes`.
+
+# Keyword Arguments
+
+- `num_nodes`: Dictionary containing the number of nodes for each node type. If omitted, is inferred from `edge_index`.
+- `num_edges`: Dictionary containing the number of edges for each relation.
+- `edge_indices`: Dictionary containing the `edge_index` for each edge relation. An `edge_index` is a tuple containing two vectors with length equal to the number of edges for the relation.
+    The first vector contains the list of the source nodes of each edge, the second contains the target nodes.
+- `node_data`: node-related data. Can be `nothing`, a named tuple of arrays or a dictionary of arrays.
+            The array's last dimension size should be equal to the number of nodes.
+            Default `nothing`.
+- `edge_data`: edge-related data. Can be `nothing`, a named tuple of arrays or a dictionary of arrays.
+            The array's last dimension size should be equal to the number of edges.
+            Default `nothing`.
 """
 struct HeteroGraph <: AbstractGraph
     num_nodes::Dict{String, Int}
@@ -130,17 +153,28 @@ struct HeteroGraph <: AbstractGraph
 end
 
 function HeteroGraph(;
-    num_nodes::Dict{String, Int},
-    num_edges,
+    num_nodes::Union{Dict{String, Int}, Nothing}=nothing,
     edge_indices,
     node_data,
     edge_data
     )
     num_edges = Dict()
+    node_types = isnothing(num_nodes) ? nothing : keys(num_nodes)
+    isnothing(num_nodes) && (num_nodes = Dict{String, Int}())
     for (relation, edge_index) in edge_indices
+        (from, _, to) = relation
         s, t = edge_index
         @assert length(s) == length(t)
         num_edges[relation] = length(s)
+
+        if !isnothing(node_types)
+            @assert to ∈ node_types
+            @assert from ∈ node_types
+        else
+            # try to infer number of nodes from edge indices
+            num_nodes[from] = max(maximum(s), get(num_nodes, from, 0))
+            num_nodes[to] = max(maximum(t), get(num_nodes, to, 0))
+        end
     end
     return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
 end
@@ -189,5 +223,3 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
     end
     return adj
 end
-
-

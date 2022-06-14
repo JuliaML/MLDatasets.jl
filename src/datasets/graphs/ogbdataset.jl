@@ -150,7 +150,7 @@ function read_ogb_metadata(fullname, dir = nothing)
     # edge cases for additional node and edge files
     for additional_keys in ["additional edge files", "additional node files"]
         if !isnothing(metadata[additional_keys])
-          metadata[additional_keys] = Vector{String}(split(metadata[additional_keys], ","))
+            metadata[additional_keys] = Vector{String}(split(metadata[additional_keys], ","))
         end
     end
     if prefix == "ogbn"
@@ -406,6 +406,20 @@ function read_ogb_hetero_graph(path, metadata)
     dict[additional_file] = edge_add_feats
     end
 
+    if metadata["task level"] == "node"
+        dict["node_label"] = Dict()
+        nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw", "nodetype-has-label.csv"))
+        nodetype_has_label = Dict(String(node) => num[1] for (node, num) in pairs(eachcol(nodetype_has_label_df)))
+        for (node_type, has_label) in nodetype_has_label
+            @assert node_type ∈ node_types
+            if has_label
+                dict["node_label"][node_type] = read_ogb_file(joinpath(path, "raw", "node-label", node_type, "node-label.csv"), Int)
+            else
+                dict["node_label"][node_type] = nothing
+            end
+        end
+    end
+
     node_keys = [k for k in keys(dict) if startswith(k, "node_")]
     edge_keys = [k for k in keys(dict) if startswith(k, "edge_") && k != "edge_indices"]
 
@@ -419,7 +433,7 @@ function read_ogb_hetero_graph(path, metadata)
         graph["num_nodes"] = Dict(k => v[i] for (k, v) in dict["num_nodes"])
         graph["edge_indices"] = Dict()
         for key in vcat(node_keys, edge_keys)
-          graph[key] = Dict()
+            graph[key] = Dict()
         end
 
         for triplet in triplets
@@ -433,50 +447,42 @@ function read_ogb_hetero_graph(path, metadata)
                 s, t = edge_index[:, 1], edge_index[:, 2]
                 graph["edge_indices"][triplet] = [s t; t s]
 
-              for k in edge_keys
-                  v = dict[k][triplet]
-                  if v === nothing
-                      graph[k][triplet] = nothing
-                  else
-                      x = v[:, num_edge_accum+1:num_edge_accum+num_edge]
-                      graph[k][triplet] = [x; x]
-                  end
-              end
                 for k in edge_keys
-                    v = dict[k]
+                    v = dict[k][triplet]
                     if v === nothing
-                        graph[k] = nothing
+                        graph[k][triplet] = nothing
                     else
-                        graph[k] = [x; x]
+                        x = v[:, num_edge_accum+1:num_edge_accum+num_edge]
+                        graph[k][triplet] = [x; x]
                     end
                 end
-          else
-              graph["edge_indices"][triplet] = edge_indices[num_edge_accum+1:num_edge_accum+num_edge, :]
-              for k in edge_keys
-                  v = dict[k][triplet]
-                  if v === nothing
-                      graph[k][triplet] = nothing
-                  else
-                      graph[k][triplet] = v[:, num_edge_accum+1:num_edge_accum+num_edge]
-                  end
-              end
-          end
-          num_edge_accums[triplet] += num_edge
+            else
+                graph["edge_indices"][triplet] = edge_indices[num_edge_accum+1:num_edge_accum+num_edge, :]
+                for k in edge_keys
+                    v = dict[k][triplet]
+                    if v === nothing
+                        graph[k][triplet] = nothing
+                    else
+                        graph[k][triplet] = v[:, num_edge_accum+1:num_edge_accum+num_edge]
+                    end
+                end
+            end
+            num_edge_accums[triplet] += num_edge
         end
 
         for node_type in node_types
-          num_node = dict["num_nodes"][node_type][i]
-          num_node_accum = num_node_accums[node_type]
+            num_node = dict["num_nodes"][node_type][i]
+            num_node_accum = num_node_accums[node_type]
 
-          for k in node_keys
-              v = dict[k][node_type]
-              if v === nothing
-                  graph[k][node_type] = nothing
-              else
-                  graph[k][node_type] = v[:, num_node_accum+1:num_node_accum+num_node]
-              end
-          end
-          num_node_accums[node_type] += num_node
+            for k in node_keys
+                v = dict[k][node_type]
+                if v === nothing
+                    graph[k][node_type] = nothing
+                else
+                    graph[k][node_type] = v[:, num_node_accum+1:num_node_accum+num_node]
+                end
+            end
+            num_node_accums[node_type] += num_node
         end
 
         push!(graphs, graph)
@@ -516,27 +522,21 @@ function ogbdict2heterograph(d::Dict)
                         for (triplet, ei) in d["edge_indices"])
     edge_data = Dict()
     for (k,v) in d
-      if startswith(k, "edge_") && k!="edge_indices" && sum(values(v) .!== nothing) != 0
-        # v is a dict in itself
-        edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
-      end
+        if startswith(k, "edge_") && k!="edge_indices" && sum(values(v) .!== nothing) != 0
+            edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
+        end
     end
     node_data = Dict()
     for (k,v) in d
-      if startswith(k, "node_") && sum(values(v) .!== nothing) != 0
-        # v is a dict in itself
-        node_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
-      end
+        if startswith(k, "node_") && sum(values(v) .!== nothing) != 0
+            # v is a dict in itself
+            node_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
+        end
     end
-
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
 
-    return HeteroGraph(;num_nodes,
-                        edge_indices=edge_indices,
-                        edge_data=edge_data,
-                        node_data=node_data
-                    )
+    return HeteroGraph(;num_nodes, edge_indices, edge_data, node_data)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
@@ -544,3 +544,20 @@ Base.getindex(data::OGBDataset{Nothing}, ::Colon) = length(data.graphs) == 1 ? d
 Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.graph_data.labels)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
 Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.graph_data.labels), i)
+
+# dataset OGBDaataset looks odd
+function Base.show(io::IO, ::MIME"text/plain", d::OGBDataset)
+    recur_io = IOContext(io, :compact => false)
+    
+    print(io, "OGBDataset $(d.name):")  # if the type is parameterized don't print the parameters
+    
+    for f in fieldnames(OGBDataset)
+        if !startswith(string(f), "_") && f != :name
+            fstring = leftalign(string(f), 10)
+            print(recur_io, "\n  $fstring  =>    ")
+            # show(recur_io, MIME"text/plain"(), getfield(d, f))
+            # println(recur_io)
+            print(recur_io, "$(_summary(getfield(d, f)))")
+        end
+    end
+end
