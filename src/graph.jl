@@ -81,7 +81,7 @@ struct Graph <: AbstractGraph
 end
 
 function Graph(;
-    num_nodes::Int = nothing,
+    num_nodes::Union{Int, Nothing} = nothing,
     edge_index::Tuple{Vector{Int}, Vector{Int}} = (Int[], Int[]),
     node_data = nothing,
     edge_data = nothing)
@@ -124,7 +124,7 @@ Type that represents heterogeneous Graph.
 struct HeteroGraph <: AbstractGraph
     num_nodes::Dict{String, Int}
     num_edges::Dict{Tuple{String, String, String}, Int}
-    edge_indices
+    edge_indices::Dict{Tuple{String, String, String}, Tuple{Vector{Int}, Vector{Int}}}
     node_data
     edge_data
 end
@@ -136,7 +136,29 @@ function HeteroGraph(;
     node_data,
     edge_data
     )
+    num_edges = Dict()
+    for (relation, edge_index) in edge_indices
+        s, t = edge_index
+        @assert length(s) == length(t)
+        num_edges[relation] = length(s)
+    end
     return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
+end
+
+function Base.show(io::IO, d::HeteroGraph)
+    print(io, "HeteroGraph($(length(d.num_nodes)) node types, $(length(d.num_edges)) relations)")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", d::HeteroGraph)
+    recur_io = IOContext(io, :compact => false)
+    print(io, "HeteroGraph:")
+    for f in fieldnames(HeteroGraph)
+        if !startswith(string(f), "_")
+            fstring = leftalign(string(f), 12)
+            print(recur_io, "\n  $fstring  =>    ")
+            print(recur_io, "$(_summary(getfield(d, f)))")
+        end
+    end
 end
 
 # Transform an adjacency list to edge index.
