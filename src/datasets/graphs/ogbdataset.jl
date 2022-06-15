@@ -163,7 +163,8 @@ function makedir_ogb(fullname, url, dir = nothing)
         cd(root_dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(local_filepath)
         unzipped = local_filepath[1:findlast('.', local_filepath)-1]
-        mv(unzipped, data_dir) 
+        # conditions when unzipped folder is our required data dir
+        (unzipped == data_dir) || mv(unzipped, data_dir) # none of them are relative path
         for (root, dirs, files) in walkdir(data_dir)
             for file in files
                 if endswith(file, r"zip|gz")
