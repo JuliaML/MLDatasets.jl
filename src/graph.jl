@@ -185,7 +185,7 @@ end
 
 function Base.show(io::IO, ::MIME"text/plain", d::HeteroGraph)
     recur_io = IOContext(io, :compact => false)
-    print(io, "HeteroGraph:")
+    print(io, "Heterogeneous Graph:")
     for f in fieldnames(HeteroGraph)
         if !startswith(string(f), "_")
             fstring = leftalign(string(f), 12)

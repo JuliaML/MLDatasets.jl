@@ -51,8 +51,7 @@ available for node prediction, edge prediction, or graph prediction tasks.
 
 ```julia-repl
 julia> data = OGBDataset("ogbn-arxiv")
-dataset OGBDataset:
-  name        =>    ogbn-arxiv
+OGBDataset ogbn-arxiv:
   metadata    =>    Dict{String, Any} with 17 entries
   graphs      =>    1-element Vector{MLDatasets.Graph}
   graph_data  =>    nothing
@@ -62,7 +61,7 @@ Graph:
   num_nodes   =>    169343
   num_edges   =>    1166243
   edge_index  =>    ("1166243-element Vector{Int64}", "1166243-element Vector{Int64}")
-  node_data   =>    (val_mask = "29799-trues BitVector", test_mask = "48603-trues BitVector", year = "169343 Vector{Int64}", features = "128×169343 Matrix{Float32}", label = "169343 Vector{Int64}", train_mask = "90941-trues BitVector")
+  node_data   =>    (val_mask = "29799-trues BitVector", test_mask = "48603-trues BitVector", year = "169343-element Vector{Int64}", features = "128×169343 Matrix{Float32}", label = "169343-element Vector{Int64}", train_mask = "90941-trues BitVector")
   edge_data   =>    nothing
 
 julia> data.metadata
@@ -72,18 +71,30 @@ Dict{String, Any} with 17 entries:
   "num tasks"             => 1
   "binary"                => false
   "url"                   => "http://snap.stanford.edu/ogb/data/nodeproppred/arxiv.zip"
-  "additional node files" => "node_year"
+  "additional node files" => ["node_year"]
   "is hetero"             => false
   "task level"            => "node"
   ⋮                       => ⋮
 ```
+julia> data = OGBDataset("ogbn-mag")
+OGBDataset ogbn-mag:
+  metadata    =>    Dict{String, Any} with 17 entries
+  graphs      =>    1-element Vector{MLDatasets.HeteroGraph}
+  graph_data  =>    nothing
+
+julia> data[:]
+Heterogeneous Graph:
+  num_nodes     =>    Dict{String, Int64} with 4 entries
+  num_edges     =>    Dict{Tuple{String, String, String}, Int64} with 4 entries
+  edge_indices  =>    Dict{Tuple{String, String, String}, Tuple{Vector{Int64}, Vector{Int64}}} with 4 entries
+  node_data     =>    (year = "Dict{String, Vector{Float32}} with 1 entry", features = "Dict{String, Matrix{Float32}} with 1 entry", label = "Dict{String, Vector{Int64}} with 1 entry")
+  edge_data     =>    (reltype = "Dict{Tuple{String, String, String}, Vector{Float32}} with 4 entries",)
 
 ## Edge prediction task
 
 ```julia-repl
 julia> data = OGBDataset("ogbl-collab")
-dataset OGBDataset:
-  name        =>    ogbl-collab
+OGBDataset ogbl-collab:
   metadata    =>    Dict{String, Any} with 15 entries
   graphs      =>    1-element Vector{MLDatasets.Graph}
   graph_data  =>    nothing
@@ -101,13 +112,13 @@ Graph:
 
 ```julia-repl
 julia> data = OGBDataset("ogbg-molhiv")
-dataset OGBDataset:
-  name        =>    ogbg-molhiv
+OGBDataset ogbg-molhiv:
   metadata    =>    Dict{String, Any} with 17 entries
   graphs      =>    41127-element Vector{MLDatasets.Graph}
   graph_data  =>    (labels = "41127-element Vector{Int64}", train_mask = "32901-trues BitVector", val_mask = "4113-trues BitVector", test_mask = "4113-trues BitVector")
-
+  
 julia> data[1]
+(graphs = Graph(19, 40), labels = 0)
 ```
 """
 struct OGBDataset{GD} <: AbstractDataset
@@ -121,7 +132,7 @@ function OGBDataset(fullname; dir = nothing)
     metadata = read_ogb_metadata(fullname, dir)
     path = makedir_ogb(fullname, metadata["url"], dir)
     metadata["path"] = path
-    if metadata["is hetero"]
+    if get(metadata, "is hetero", false)
         graph_dicts, graph_data = read_ogb_hetero_graph(path, metadata)
         graphs = ogbdict2heterograph.(graph_dicts)
     else
