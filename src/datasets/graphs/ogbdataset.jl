@@ -205,7 +205,7 @@ function read_ogb_graph(path, metadata)
 
     # replace later with data from metadata?
     for file in readdir(joinpath(path, "raw"))
-        if file ∉ ["edge.csv", "num-node-list.csv", "num-edge-list.csv", "node-feat.csv", "edge-feat.csv"]
+    if file ∉ ["edge.csv", "num-node-list.csv", "num-edge-list.csv", "node-feat.csv", "edge-feat.csv"] && file[end-3:end] == ".csv"
             propname = replace(split(file,".")[1], "-" => "_")
             dict[propname] = read_ogb_file(joinpath(path, "raw", file), Any)
 
@@ -368,10 +368,8 @@ function read_ogb_hetero_graph(path, metadata)
         dict["edge_features"][triplet] = read_ogb_file(joinpath(subdir, "edge-feat.csv"), AbstractFloat)
     end
 
-    @assert length(dict["num_nodes"][node_types[1]]) == length(dict["num_edges"][triplets[1]])
-
     # Check if the number of graphs are consistent accross node and edge data
-    # @assert length(num_nodes[node_types[1]]) == length(dict["num_edges"][triplets[1]])
+    @assert length(dict["num_nodes"][node_types[1]]) == length(dict["num_edges"][triplets[1]])
 
     dict["node_features"] = Dict{String, Any}()
     for node_type in node_types
@@ -400,7 +398,7 @@ function read_ogb_hetero_graph(path, metadata)
             subdir = joinpath(path, "raw", "relations", join(triplet, "___"))
 
             edge_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), AbstractFloat)
-            @assert length(edge_feat) == sum(dict["num_edges"][triplet]) 
+            @assert length(edge_feat) == sum(dict["num_edges"][triplet])
             edge_add_feats[triplet] = edge_feat
         end
     dict[additional_file] = edge_add_feats
@@ -426,7 +424,7 @@ function read_ogb_hetero_graph(path, metadata)
     graphs = Dict[]
     num_node_accums = Dict(node_type=> 0 for node_type in node_types)
     num_edge_accums = Dict(triplet=> 0 for triplet in triplets)
-    graph_data = Dict()
+    graph_data = nothing
 
     for i in 1:num_graphs
         graph = Dict{String, Any}()
@@ -522,15 +520,16 @@ function ogbdict2heterograph(d::Dict)
                         for (triplet, ei) in d["edge_indices"])
     edge_data = Dict()
     for (k,v) in d
-        if startswith(k, "edge_") && k!="edge_indices" && sum(values(v) .!== nothing) != 0
-            edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
+        # v is a dict
+        # the number of nothing values should not be equal to totoal number of values
+        if startswith(k, "edge_") && k!="edge_indices" && sum(isnothing.(values(v))) < length(v)
+            edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v if !isnothing(ev))
         end
     end
     node_data = Dict()
     for (k,v) in d
-        if startswith(k, "node_") && sum(values(v) .!== nothing) != 0
-            # v is a dict in itself
-            node_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v)
+        if startswith(k, "node_") && sum(isnothing.(values(v))) < length(v)
+            node_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v if !isnothing(ev))
         end
     end
     node_data = isempty(node_data) ? nothing : (; node_data...)
@@ -548,9 +547,9 @@ Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.graph_data.labe
 # dataset OGBDaataset looks odd
 function Base.show(io::IO, ::MIME"text/plain", d::OGBDataset)
     recur_io = IOContext(io, :compact => false)
-    
+
     print(io, "OGBDataset $(d.name):")  # if the type is parameterized don't print the parameters
-    
+
     for f in fieldnames(OGBDataset)
         if !startswith(string(f), "_") && f != :name
             fstring = leftalign(string(f), 10)

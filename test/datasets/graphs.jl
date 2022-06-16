@@ -122,3 +122,26 @@ end
         @test maximum(a) <= g.num_nodes 
     end
 end
+
+# maybe, maybe, maybe??
+@testset "OGBn-mag" begin
+    # data = OGBDataset("ogbn-mag")
+    # @test data isa AbstractDataset
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
+    # check if the number of ndoes are consistent
+    for node_data in g.node_data
+        for (node_type, features) in node_data
+            @test g.num_nodes[node_type] == size(features)[end]
+        end
+    end
+    # check if the number of edges are consistent
+    for edge_data in g.edge_data
+        for (edge_type, features) in edge_data
+            @test g.num_edges[edge_type] == size(features)[end]
+        end
+    end
+end
