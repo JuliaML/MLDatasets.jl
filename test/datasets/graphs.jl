@@ -125,7 +125,7 @@ end
 
 # maybe, maybe, maybe??
 @testset "OGBn-mag" begin
-    # data = OGBDataset("ogbn-mag")
+    data = OGBDataset("ogbn-mag")
     # @test data isa AbstractDataset
     @test length(data) == 1
 
