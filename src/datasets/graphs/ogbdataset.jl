@@ -116,7 +116,7 @@ OGBDataset ogbg-molhiv:
   metadata    =>    Dict{String, Any} with 17 entries
   graphs      =>    41127-element Vector{MLDatasets.Graph}
   graph_data  =>    (labels = "41127-element Vector{Int64}", train_mask = "32901-trues BitVector", val_mask = "4113-trues BitVector", test_mask = "4113-trues BitVector")
-  
+
 julia> data[1]
 (graphs = Graph(19, 40), labels = 0)
 ```
@@ -483,7 +483,6 @@ function read_ogb_hetero_graph(path, metadata)
         for node_type in node_types
             num_node = dict["num_nodes"][node_type][i]
             num_node_accum = num_node_accums[node_type]
-
             for k in node_keys
                 v = dict[k][node_type]
                 if v === nothing
@@ -530,22 +529,34 @@ function ogbdict2heterograph(d::Dict)
     num_nodes = d["num_nodes"]
     edge_indices = Dict(triplet => (ei[:, 1], ei[:, 2])
                         for (triplet, ei) in d["edge_indices"])
-    edge_data = Dict()
-    for (k,v) in d
+
+    edge_data = Dict(k => Dict{Symbol, Any}() for k in keys(edge_indices))
+    for (feature_name, v) in d
         # v is a dict
-        # the number of nothing values should not be equal to totoal number of values
-        if startswith(k, "edge_") && k!="edge_indices" && sum(isnothing.(values(v))) < length(v)
-            edge_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v if !isnothing(ev))
+        # the number of nothing values should not be equal to total number of values
+        if startswith(feature_name, "edge_") && feature_name != "edge_indices" && sum(isnothing.(values(v))) < length(v)
+            for (edge_key, edge_value) in v
+                if !isnothing(edge_value)
+                    edge_data[edge_key][Symbol(feature_name[6:end])] = maybesqueeze(edge_value)
+                end
+            end
         end
     end
-    node_data = Dict()
-    for (k,v) in d
-        if startswith(k, "node_") && sum(isnothing.(values(v))) < length(v)
-            node_data[Symbol(k[6:end])] = Dict(k => maybesqueeze(ev) for (k,ev) in v if !isnothing(ev))
+
+    node_data = Dict(k => Dict{Symbol, Any}() for k in keys(num_nodes))
+    for (feature_name, v) in d
+        if startswith(feature_name, "node_") && sum(isnothing.(values(v))) < length(v)
+            for (node_key, node_value) in v
+                if !isnothing(node_value)
+                    node_data[node_key][Symbol(feature_name[6:end])] = maybesqueeze(node_value)
+                end
+            end
         end
     end
-    node_data = isempty(node_data) ? nothing : (; node_data...)
-    edge_data = isempty(edge_data) ? nothing : (; edge_data...)
+    node_data = Dict(k => v for (k,v) in node_data if !isempty(v))
+    edge_data = Dict(k => v for (k,v) in edge_data if !isempty(v))
+    # node_data = isempty(node_data) ? nothing : (; node_data...)
+    # edge_data = map(x -> isempty(x) ? nothing : (; x...), edge_data)
 
     return HeteroGraph(;num_nodes, edge_indices, edge_data, node_data)
 end

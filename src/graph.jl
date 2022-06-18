@@ -145,11 +145,13 @@ Nodes are indexed in `1:num_nodes`.
             Default `nothing`.
 """
 struct HeteroGraph <: AbstractGraph
+    node_types::Vector{String}
+    edge_types::Vector{Tuple{String, String, String}}
     num_nodes::Dict{String, Int}
     num_edges::Dict{Tuple{String, String, String}, Int}
     edge_indices::Dict{Tuple{String, String, String}, Tuple{Vector{Int}, Vector{Int}}}
-    node_data
-    edge_data
+    node_data::Dict{String, Dict}
+    edge_data::Dict{Tuple{String, String, String}, Dict}
 end
 
 function HeteroGraph(;
@@ -159,7 +161,8 @@ function HeteroGraph(;
     edge_data
     )
     num_edges = Dict()
-    node_types = isnothing(num_nodes) ? nothing : keys(num_nodes)
+    node_types = isnothing(num_nodes) ? nothing : keys(num_nodes) |> collect
+    edge_types = keys(edge_indices) |> collect
     isnothing(num_nodes) && (num_nodes = Dict{String, Int}())
     for (relation, edge_index) in edge_indices
         (from, _, to) = relation
@@ -176,7 +179,8 @@ function HeteroGraph(;
             num_nodes[to] = max(maximum(t), get(num_nodes, to, 0))
         end
     end
-    return HeteroGraph(num_nodes, num_edges, edge_indices, node_data, edge_data)
+    isnothing(node_types) && (node_types = keys(num_nodes) |> collect)
+    return HeteroGraph(node_types, edge_types, num_nodes, num_edges, edge_indices, node_data, edge_data)
 end
 
 function Base.show(io::IO, d::HeteroGraph)
