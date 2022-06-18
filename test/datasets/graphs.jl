@@ -132,16 +132,43 @@ end
     g = data[1]
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
-    # check if the number of ndoes are consistent
-    for node_data in g.node_data
-        for (node_type, features) in node_data
-            @test g.num_nodes[node_type] == size(features)[end]
+
+    num_nodes = Dict(
+        "paper"          => 736389,
+        "author"         => 1134649,
+        "institution"    => 8740,
+        "field_of_study" => 59965
+        )
+    num_edges = Dict(
+        ("author", "affiliated_with", "institution") => 1043998,
+        ("author", "writes", "paper")                => 7145660,
+        ("paper", "cites", "paper")                  => 5416271,
+        ("paper", "has_topic", "field_of_study")     => 7505078
+    )
+
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        node_data = get(g.node_data, type, nothing)
+        isnothing(node_data) || for (key, val) in node_data
+            @assert key ∈ [:year, :features, :label]
+            if key == :features
+                @test size(val)[1] == 128
+            end
+            @test size(val)[end] == num_nodes[type]
         end
     end
-    # check if the number of edges are consistent
-    for edge_data in g.edge_data
-        for (edge_type, features) in edge_data
-            @test g.num_edges[edge_type] == size(features)[end]
+
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @assert key == :reltype
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
         end
     end
 end
