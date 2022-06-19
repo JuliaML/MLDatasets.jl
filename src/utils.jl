@@ -102,3 +102,15 @@ convert2image(d::SupervisedDataset, i::AbstractVector) =
     convert2image(typeof(d), d[i].features)
 convert2image(d::SupervisedDataset, x::AbstractArray) =
     convert2image(typeof(d), x)
+
+"""
+    creates_default_dir(data_name)
+
+Creates the default datadir for the DataHub or Dataset.
+"""
+function create_default_dir(data_name::AbstractString)::String
+    # don't overrride methods for ManualDataDeps
+    dir = DataDeps.determine_save_path(data_name)
+    isdir(dir) || mkpath(dir)
+    return dir
+end
