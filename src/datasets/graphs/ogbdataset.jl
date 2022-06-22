@@ -508,7 +508,7 @@ function read_ogb_file(p, T; tovec = false, transp = true)
     if transp && res !== nothing && !tovec
         res = collect(res')
     end
-    if res !== nothing T === Any
+    if res !== nothing && T === Any
         res = restrict_array_type(res)
     end
     return res
