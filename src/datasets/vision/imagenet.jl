@@ -5,7 +5,6 @@ function __init__imagenet()
     return register(
         ManualDataDep(
             DEPNAME,
-            # shell script based on
             # TODO: currently markdown formatting is not applied
             """
             The ImageNet 2012 Classification Dataset (ILSVRC 2012-2017) can be downloaded at
@@ -70,6 +69,8 @@ function __init__imagenet()
             mkdir -p ImageNet/devkit && tar -xvf ILSVRC2012_img_val.tar -C ImageNet/devkit
             ```
             """,
+            # shell script based on PyTorch example "ImageNet training in PyTorch":
+            # https://github.com/pytorch/examples/blob/d5478765d38210addf474dd73faf0d103052027a/imagenet/extract_ILSVRC.sh
         ),
     )
 end
