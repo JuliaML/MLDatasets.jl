@@ -26,11 +26,15 @@ struct ImageNetFile
 end
 
 # Load file paths and labels/WNIDs of the entire dataset split in `dir`.
-function readdata(dir::AbstractString, wnids::AbstractVector{<:AbstractString})::Vector{ImageNetFile}
+function readdata(
+    dir::AbstractString, wnids::AbstractVector{<:AbstractString}
+)::Vector{ImageNetFile}
     return reduce(vcat, readfolder(dir, i, w) for (i, w) in enumerate(wnids))
 end
 
-function readfolder(split_dir::AbstractString, id::Integer, wnid::AbstractString)::Vector{ImageNetFile}
+function readfolder(
+    split_dir::AbstractString, id::Integer, wnid::AbstractString
+)::Vector{ImageNetFile}
     path = joinpath(split_dir, wnid)
     img_paths = filter!(isfile, readdir(path; join=true))
     return [ImageNetFile(p, id, wnid) for p in img_paths]
@@ -43,9 +47,9 @@ function readimage(Tx::Type, i::ImageNetFile)
 end
 
 # Load batched array of images
-cat_batchdim(xs...) = cat(xs..., dims=4)
+cat_batchdim(xs...) = cat(xs...; dims=4)
 function readimage(Tx::Type, is::AbstractVector{ImageNetFile})
-    reduce(cat_batchdim, readimage(Tx, i) for i in is)
+    return reduce(cat_batchdim, readimage(Tx, i) for i in is)
 end
 
 end # module

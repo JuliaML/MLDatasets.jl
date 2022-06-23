@@ -19,6 +19,9 @@ function __init__imagenet()
             ├── train
             ├── val
             │   ├── n01440764
+            │   │   ├── ILSVRC2012_val_00000293.JPEG
+            │   │   ├── ILSVRC2012_val_00002138.JPEG
+            │   │   └── ...
             │   ├── n01443537
             │   └── ...
             ├── test
@@ -169,15 +172,21 @@ function ImageNet(
     file_path = datafile(DEPNAME, METADATA_FILENAME, dir)
     metadata = ImageNetReader.read_metadata(file_path)
 
-    root = @datadep_str DEPNAME
+    root_dir = @datadep_str DEPNAME
     if split == :train
-        image_files = ImageNetReader.readdata(joinpath(root, train_dir), metadata["class_WNID"])
+        image_files = ImageNetReader.readdata(
+            joinpath(root_dir, train_dir), metadata["class_WNID"]
+        )
         @assert length(image_files) == TRAINSET_SIZE
     elseif split == :val
-        image_files = ImageNetReader.readdata(joinpath(root, val_dir), metadata["class_WNID"])
+        image_files = ImageNetReader.readdata(
+            joinpath(root_dir, val_dir), metadata["class_WNID"]
+        )
         @assert length(image_files) == VALSET_SIZE
     else
-        image_files = ImageNetReader.readdata(joinpath(root, test_dir), metadata["class_WNID"])
+        image_files = ImageNetReader.readdata(
+            joinpath(root_dir, test_dir), metadata["class_WNID"]
+        )
         @assert length(image_files) == TESTSET_SIZE
     end
     targets = [i.ID for i in image_files]
