@@ -11,12 +11,6 @@ function resize_smallest_dimension(im, len)
         round(Int, old_size[1] * reduction_factor),
         round(Int, old_size[2] * reduction_factor),
     )
-    if reduction_factor < 1.0
-        # Images.jl's imresize() needs to first lowpass the image, it won't do it for us
-        im = Images.imfilter(
-            im, Images.KernelFactors.gaussian(0.75 / reduction_factor), Images.Inner()
-        )
-    end
     return Images.imresize(im, new_size)
 end
 
