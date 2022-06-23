@@ -30,7 +30,7 @@ import CSV
 # @lazy import JLD2
 
 # Required for ImageNet
-@lazy import ImageMagick="6218d12a-5da1-5696-b52f-db25d2ecc6d1" # Open jpg files
+@lazy import JpegTurbo="b835a17e-a41a-41e7-81f0-2f016b05efe0" # Open jpg files
 @lazy import Images="916415d5-f1e6-5110-898d-aaa5f9f070e0" # preprocessing
 
 export getobs, numobs # From MLUtils.jl

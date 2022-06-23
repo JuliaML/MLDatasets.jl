@@ -1,7 +1,5 @@
 # Image preprocessing for ImageNet models.
 # Code adapted from Metalhead 0.5.3's utils.jl
-import ..@lazy
-@lazy import Images="916415d5-f1e6-5110-898d-aaa5f9f070e0"
 
 # Resize an image such that its smallest dimension is the given length
 function resize_smallest_dimension(im, len)

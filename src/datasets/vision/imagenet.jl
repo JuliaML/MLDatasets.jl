@@ -112,9 +112,9 @@ julia> using MLDatasets: ImageNet
 
 julia> dataset = ImageNet(:val)
 dataset ImageNet:
-  metadata    =>    Dict{String, Any} with 3 entries
+  metadata    =>    Dict{String, Any} with 4 entries
   split       =>    :val
-  image_file  =>    50000-element Vector{MLDatasets.ImageNetReader.ImageNetFile}
+  files       =>    50000-element Vector{String}
   targets     =>    50000-element Vector{Int64}
   Tx          =>    Float32
 
@@ -132,16 +132,17 @@ julia> size(X)
 (224, 224, 3, 5)
 
 julia> dataset.metadata
-Dict{String, Any} with 3 entries:
-  "class_description" => ["small grey fox of southwestern United States; may be a subspecies of Vulpes velox", "an English breed having a plumed tail and a soft silky coat that is chiefly white", "breed of sled dog developed in n…
-  "class_names"       => Vector{SubString{String}}[["kit fox", "Vulpes macrotis"], ["English setter"], ["Siberian husky"], ["Australian terrier"], ["English springer", "English springer spaniel"], ["grey whale", "gray whale", "de…
-  "class_WNID"        => ["n02119789", "n02100735", "n02110185", "n02096294", "n02102040", "n02066245", "n02509815", "n02124075", "n02417914", "n02123394"  …  "n02815834", "n09229709", "n07697313", "n03888605", "n03355925", "n030…
+Dict{String, Any} with 4 entries:
+  "class_WNIDs"       => ["n02119789", "n02100735", "n02110185", "n02096294", "n02102040", "n02066245", "n02509815", "n02124075", "n02417914", "n02123394"  …  "n02815834", "n09229709", "n07697313", "n03888605", "n03355925", "n03…
+  "class_description" => ["small grey fox of southwestern United States; may be a subspecies of Vulpes velox", "an English breed having a plumed tail and a soft silky coat that is chiefly white", "breed of sled dog developed in …
+  "class_names"       => Vector{SubString{String}}[["kit fox", "Vulpes macrotis"], ["English setter"], ["Siberian husky"], ["Australian terrier"], ["English springer", "English springer spaniel"], ["grey whale", "gray whale", "d…
+  "wnid_to_label"     => Dict("n07693725"=>768, "n03775546"=>829, "n01689811"=>469, "n02100877"=>192, "n02441942"=>48, "n04371774"=>569, "n07717410"=>741, "n03347037"=>919, "n04355338"=>526, "n02097474"=>158…)
 ```
 """
 struct ImageNet <: SupervisedDataset
     metadata::Dict{String,Any}
     split::Symbol
-    image_files::Vector{ImageNetReader.ImageNetFile}
+    files::Vector{String}
     targets::Vector{Int}
     Tx::Type
 end
@@ -174,24 +175,17 @@ function ImageNet(
 
     root_dir = @datadep_str DEPNAME
     if split == :train
-        image_files = ImageNetReader.readdata(
-            joinpath(root_dir, train_dir), metadata["class_WNID"]
-        )
-        @assert length(image_files) == TRAINSET_SIZE
+        files = ImageNetReader.readdata(joinpath(root_dir, train_dir))
+        @assert length(files) == TRAINSET_SIZE
     elseif split == :val
-        image_files = ImageNetReader.readdata(
-            joinpath(root_dir, val_dir), metadata["class_WNID"]
-        )
-        @assert length(image_files) == VALSET_SIZE
+        files = ImageNetReader.readdata(joinpath(root_dir, val_dir))
+        @assert length(files) == VALSET_SIZE
     else
-        image_files = ImageNetReader.readdata(
-            joinpath(root_dir, test_dir), metadata["class_WNID"]
-        )
-        @assert length(image_files) == TESTSET_SIZE
+        files = ImageNetReader.readdata(joinpath(root_dir, test_dir))
+        @assert length(files) == TESTSET_SIZE
     end
-    targets = [i.ID for i in image_files]
-
-    return ImageNet(metadata, split, image_files, targets, Tx)
+    targets = [metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.load_wnids(files)]
+    return ImageNet(metadata, split, files, targets, Tx)
 end
 
 function convert2image(::Type{<:ImageNet}, x::AbstractArray{<:Integer})
@@ -202,11 +196,8 @@ convert2image(::Type{<:ImageNet}, x) = ImageNetReader.inverse_preprocess(x)
 Base.length(d::ImageNet) = length(d.image_files)
 function Base.getindex(d::ImageNet, ::Colon)
     # Throw warning here that ImageNet probably will not fit in memory?
-    return (
-        features=ImageNetReader.get_images(d.features, 1:length(d.image_files)),
-        targets=d.targets,
-    )
+    return (features=ImageNetReader.readimage(d.Tx, d.files), targets=d.targets)
 end
 function Base.getindex(d::ImageNet, i)
-    return (features=ImageNetReader.readimage(d.Tx, d.image_files[i]), targets=d.targets[i])
+    return (features=ImageNetReader.readimage(d.Tx, d.files[i]), targets=d.targets[i])
 end
