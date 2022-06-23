@@ -5,6 +5,8 @@ import ..@lazy
 
 @lazy import JpegTurbo = "b835a17e-a41a-41e7-81f0-2f016b05efe0"
 @lazy import ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534"
+@lazy import StackViews="cae243ae-269e-4f55-b966-ac2d0dc13c15"
+
 const NCLASSES = 1000
 const IMGSIZE = (224, 224)
 
@@ -32,15 +34,15 @@ function load_wnids(files::AbstractVector{<:AbstractString})
 end
 
 # Load image from ImageNetFile path and preprocess it to normalized 224x224x3 Array{Tx,3}
-function readimage(Tx::Type{<:Real}, path::AbstractString)
-    im = JpegTurbo.jpeg_decode(ImageCore.RGB{Tx}, path; preferred_size=IMGSIZE)
+function readimage(Tx::Type{<:Real}, file::AbstractString)
+    im = JpegTurbo.jpeg_decode(ImageCore.RGB{Tx}, file; preferred_size=IMGSIZE)
     return preprocess(Tx, im)
 end
 
 # Load batched array of images
 cat_batchdim(xs...) = cat(xs...; dims=4)
-function readimage(Tx::Type, is::AbstractVector{<:AbstractString})
-    return reduce(cat_batchdim, readimage(Tx, i) for i in is)
+function readimage(Tx::Type, files::AbstractVector{<:AbstractString})
+    return StackViews.StackView([readimage(Tx, f) for f in files])
 end
 
 end # module

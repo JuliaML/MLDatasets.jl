@@ -26,6 +26,7 @@ end
 function inverse_preprocess(x::AbstractArray{T,N}) where {T,N}
     @assert N == 3 || N == 4
     return ImageCore.colorview(
-        ImageCore.RGB, PermutedDimsArray(x, (3, 2, 1, 4:N...)) .* PYTORCH_STD .+ PYTORCH_MEAN
+        ImageCore.RGB,
+        PermutedDimsArray(x, (3, 2, 1, 4:N...)) .* PYTORCH_STD .+ PYTORCH_MEAN,
     )
 end
