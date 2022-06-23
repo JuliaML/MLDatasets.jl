@@ -5,10 +5,10 @@ import ..@lazy
 
 @lazy import JpegTurbo = "b835a17e-a41a-41e7-81f0-2f016b05efe0"
 @lazy import Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+const NCLASSES = 1000
+const IMGSIZE = (224, 224)
 
 include("preprocess.jl")
-
-const NCLASSES = 1000
 
 function read_metadata(file::AbstractString)
     meta = read_mat(file)["synsets"]
@@ -33,7 +33,7 @@ end
 
 # Load image from ImageNetFile path and preprocess it to normalized 224x224x3 Array{Tx,3}
 function readimage(Tx::Type{<:Real}, path::AbstractString)
-    im = JpegTurbo.jpeg_decode(Images.RGB{Tx}, path; preferred_size=(224, 224))
+    im = JpegTurbo.jpeg_decode(Images.RGB{Tx}, path; preferred_size=IMGSIZE)
     return preprocess(Tx, im)
 end
 
