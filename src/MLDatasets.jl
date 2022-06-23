@@ -29,6 +29,10 @@ import CSV
 @lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
+# Required for ImageNet
+@lazy import ImageMagick="6218d12a-5da1-5696-b52f-db25d2ecc6d1" # Open jpg files
+@lazy import Images="916415d5-f1e6-5110-898d-aaa5f9f070e0" # preprocessing
+
 export getobs, numobs # From MLUtils.jl
 
 include("abstract_datasets.jl")

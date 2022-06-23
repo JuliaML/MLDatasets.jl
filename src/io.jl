@@ -39,3 +39,7 @@ end
 function read_json(path)
     return open(JSON3.read, path)
 end
+
+function read_jpg(path)
+    return ImageMagick.load(path)
+end
