@@ -90,6 +90,9 @@ include("datasets/vision/cifar100.jl")
 export CIFAR100
 include("datasets/vision/svhn2.jl")
 export SVHN2
+include("datasets/vision/imagenet_reader/ImageNetReader.jl")
+include("datasets/vision/imagenet.jl")
+export ImageNet
 
 ## Text
 
@@ -151,6 +154,7 @@ function __init__()
     __init__fashionmnist()
     __init__mnist()
     __init__svhn2()
+    __init__imagenet()
 end
 
 end #module
