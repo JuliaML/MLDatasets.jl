@@ -118,6 +118,8 @@ include("datasets/graphs/karateclub.jl")
 export KarateClub
 include("datasets/graphs/reddit.jl")
 export Reddit
+include("datasets/graphs/movielens.jl")
+export MovieLens
 
 function __init__()
     # TODO automatically find and execute __init__xxx functions
@@ -130,6 +132,7 @@ function __init__()
     __init__pubmed()
     __init__reddit()
     __init__tudataset()
+    __init__movielens()
 
     # misc
     __init__iris()
