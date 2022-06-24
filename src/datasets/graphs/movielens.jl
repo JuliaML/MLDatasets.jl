@@ -30,6 +30,11 @@ function MovieLens(name::String; dir=nothing)
       g = generate_movielens_graph(user_data, movie_data, rating_data)
       metadata = get_movielens_metadata([user_data, movie_data, rating_data])
       return MovieLens(name, metadata, [g])
+    elseif name == "1m"
+      user_data, movie_data, rating_data = read_1m_data(dir)
+      g = generate_movielens_graph(user_data, movie_data, rating_data)
+      metadata = get_movielens_metadata([user_data, movie_data, rating_data])
+      return MovieLens(name, metadata, [g])
     else
       error("Functionality for ml-$name has not been implemented yet")
     end
@@ -42,6 +47,85 @@ function read_100k_data(dir::String)
   return (user_data, movie_data, rating_data)
 end
 
+function read_1m_data(dir::String)
+  user_data = read_1m_user_data(dir)
+  movie_data = read_1m_movie_data(dir)
+  rating_data = read_1m_rating_data(dir)
+  return (user_data, movie_data, rating_data)
+end
+
+function read_1m_user_data(dir::String)
+    user_data_file = "users.dat"
+    user_df = read_csv_asdf(joinpath(dir, user_data_file), header=false, delim="::")
+    user_data = Dict()
+
+    occupation_names = [
+      "other/not specified",
+      "academic/educator",
+      "artist",
+      "clerical/admin",
+      "college/grad student",
+      "customer service",
+      "doctor/health care",
+      "executive/managerial",
+      "farmer",
+      "homemaker",
+      "K-12 student",
+      "lawyer",
+      "programmer",
+      "retired",
+      "sales/marketing",
+      "scientist",
+      "self-employed",
+      "technician/engineer",
+      "tradesman/craftsman",
+      "unemployed",
+      "writer",
+  ]
+    user_ids = user_df[!, 1]
+    @assert minimum(user_ids) == 1
+    @assert maximum(user_ids) == length(user_ids)
+    user_data["num_users"] = maximum(user_ids)
+    user_data["gender"] = user_df[!, 2] .== "M"
+    user_data["age"] = user_df[!, 3]
+    ouccupation_ids = user_df[!, 4] .+ 1
+    user_data["occupation"] = [occupation_names[i] for i in ouccupation_ids]
+    user_data["zipcode"] = user_df[!, 5]
+    return user_data
+end
+
+function read_1m_movie_data(dir::String)::Dict
+    movie_data_file = "movies.dat"
+    movie_df = read_csv_asdf(joinpath(dir, movie_data_file), header=false, delim="::")
+    movie_data = Dict()
+
+    movie_ids = movie_df[!, 1]
+    @assert minimum(movie_ids) == 1
+    @warn "Due to some duplicacy in the dataset, final number of movies < highest movie_id"
+    movie_data["num_movies"] = length(movie_ids)
+    genres = movie_df[!, 3]
+    # children's and children are same
+    genres = replace.(genres, "Children's"=> "Children")
+    genres = split.(genres, "|")
+    movie_data["genres"] = genres
+
+    movie_data["metadata"] = Dict("movie_names" => movie_df[!, 2])
+    return movie_data
+end
+
+function read_1m_rating_data(dir::String)::Dict
+    rating_data_file = "ratings.dat"
+
+    rating_info = read_csv(joinpath(dir, rating_data_file), Matrix{Int}, header=false, delim="::")
+    @assert size(rating_info)[2] == 4
+
+    rating_data = Dict()
+    rating_data["user_movie"] = rating_info[:, 1:2]
+    rating_data["rating"] = rating_info[:, 3]
+    rating_data["timestamp"] = rating_info[:, 4]
+   return rating_data
+end
+
 function read_100k_user_data(dir::String)::Dict
   user_data_file = "u.user"
   user_data = Dict()
@@ -49,6 +133,7 @@ function read_100k_user_data(dir::String)::Dict
 
   user_ids = user_df[!, 1]
   @assert minimum(user_ids) == 1
+  @assert maximum(user_ids) == length(user_ids)
   user_data["num_users"] = maximum(user_ids)
   user_data["age"] = user_df[!, 2]
   user_data["gender"] = user_df[!, 3] .== "M" # I hope I don't get cancelled for binarizing this field
@@ -59,7 +144,7 @@ end
 
 function read_100k_rating_data(dir::String)::Dict
     rating_data_file = "u.data"
-    rating_info = read_csv(joinpath(dir, rating_data_file), header=false)
+    rating_info = read_csv(joinpath(dir, rating_data_file), Matrix{Int}, header=false)
     @assert size(rating_info)[2] == 4
 
     rating_data = Dict()
@@ -76,6 +161,7 @@ function read_100k_movie_data(dir::String)::Dict
 
     movie_ids = movie_df[!, 1]
     @assert minimum(movie_ids) == 1
+    @assert maximum(movie_ids) == length(movie_ids)
     movie_data["num_movies"] = maximum(movie_ids)
     movie_data["release_date"] = movie_df[!, 3]
     genres = movie_df[!, 6:end] |> Matrix{Bool}
