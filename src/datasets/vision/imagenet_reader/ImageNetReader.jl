@@ -1,6 +1,5 @@
 module ImageNetReader
 using ImageCore: channelview, colorview, AbstractRGB, RGB
-using StackViews: StackView
 
 import ..FileDataset
 import ..read_mat
@@ -27,23 +26,22 @@ function read_metadata(file::AbstractString)
 end
 
 # The full ImageNet dataset doesn't fit into memory, so we only save filenames
-readdata(dir::AbstractString) = FileDataset(identity, dir, "*.JPEG").paths
+function readdata(Tx::Type{<:Real}, dir::AbstractString)
+    return FileDataset(image_loader(Tx), dir, "*.JPEG")
+end
 
 # Get WordNet ID from path
-function load_wnids(files::AbstractVector{<:AbstractString})
-    return [split(f, "/")[end - 1] for f in files]
-end
+load_wnids(d::FileDataset) = load_wnids(d.paths)
+load_wnids(fs::AbstractVector{<:AbstractString}) = [split(f, "/")[end - 1] for f in fs]
 
-# Load image from ImageNetFile path and preprocess it to normalized 224x224x3 Array{Tx,3}
-function readimage(Tx::Type{<:Real}, file::AbstractString)
-    im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=IMGSIZE)
-    return preprocess(Tx, im)
-end
-
-# Load batched array of images
-cat_batchdim(xs...) = cat(xs...; dims=4)
-function readimage(Tx::Type, files::AbstractVector{<:AbstractString})
-    return StackView([readimage(Tx, f) for f in files])
+# Construct a function that loads images from FileDataset path
+# and preprocess it to normalized 224x224x3 Array{Tx,3}
+function image_loader(Tx::Type{<:Real})
+    function load_image(file::AbstractString)::AbstractArray{Tx,3}
+        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=IMGSIZE)
+        return preprocess(Tx, im)
+    end
+    return load_image
 end
 
 end # module

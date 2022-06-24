@@ -9,6 +9,7 @@ using MLUtils: getobs, numobs, AbstractDataContainer
 using Glob
 using DelimitedFiles: readdlm
 using FileIO
+using StackViews: StackView
 using LazyModules: @lazy
 
 include("require.jl") # export @require

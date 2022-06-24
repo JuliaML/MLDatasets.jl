@@ -111,13 +111,7 @@ $METHODS_SUPERVISED_ARRAY
 ```julia-repl
 julia> using MLDatasets: ImageNet
 
-julia> dataset = ImageNet(:val)
-dataset ImageNet:
-  metadata    =>    Dict{String, Any} with 4 entries
-  split       =>    :val
-  files       =>    50000-element Vector{String}
-  targets     =>    50000-element Vector{Int64}
-  Tx          =>    Float32
+julia> dataset = ImageNet(:val);
 
 julia> dataset[1:5].targets
 5-element Vector{Int64}:
@@ -143,9 +137,8 @@ Dict{String, Any} with 4 entries:
 struct ImageNet <: SupervisedDataset
     metadata::Dict{String,Any}
     split::Symbol
-    files::Vector{String}
+    dataset::FileDataset
     targets::Vector{Int}
-    Tx::Type
 end
 
 ImageNet(; split=:train, Tx=Float32, dir=nothing) = ImageNet(Tx, split; dir)
@@ -176,29 +169,30 @@ function ImageNet(
 
     root_dir = @datadep_str DEPNAME
     if split == :train
-        files = ImageNetReader.readdata(joinpath(root_dir, train_dir))
-        @assert length(files) == TRAINSET_SIZE
+        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, train_dir))
+        @assert length(dataset) == TRAINSET_SIZE
     elseif split == :val
-        files = ImageNetReader.readdata(joinpath(root_dir, val_dir))
-        @assert length(files) == VALSET_SIZE
+        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, val_dir))
+        @assert length(dataset) == VALSET_SIZE
     else
-        files = ImageNetReader.readdata(joinpath(root_dir, test_dir))
-        @assert length(files) == TESTSET_SIZE
+        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, test_dir))
+        @assert length(dataset) == TESTSET_SIZE
     end
-    targets = [metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.load_wnids(files)]
-    return ImageNet(metadata, split, files, targets, Tx)
+    targets = [
+        metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.load_wnids(dataset)
+    ]
+    return ImageNet(metadata, split, dataset, targets)
 end
 
-function convert2image(::Type{<:ImageNet}, x::AbstractArray{<:Integer})
-    return convert2image(ImageNet, reinterpret(N0f8, convert(Array{UInt8}, x)))
-end
 convert2image(::Type{<:ImageNet}, x) = ImageNetReader.inverse_preprocess(x)
 
-Base.length(d::ImageNet) = length(d.image_files)
-function Base.getindex(d::ImageNet, ::Colon)
-    # Throw warning here that ImageNet probably will not fit in memory?
-    return (features=ImageNetReader.readimage(d.Tx, d.files), targets=d.targets)
-end
-function Base.getindex(d::ImageNet, i)
-    return (features=ImageNetReader.readimage(d.Tx, d.files[i]), targets=d.targets[i])
+Base.length(d::ImageNet) = length(d.dataset)
+
+const IMAGENET_MEM_WARNING = """Loading the entire ImageNet dataset into memory might not be possible.
+    If you are sure you want to load all of ImageNet, index the dataset with `[1:end]` instead of `[:]`.
+    """
+Base.getindex(::ImageNet, ::Colon) = throw(ArgumentError(IMAGENET_MEM_WARNING))
+Base.getindex(d::ImageNet, i::Integer) = (features=d.dataset[i], targets=d.targets[i])
+function Base.getindex(d::ImageNet, is::AbstractVector)
+    return (features=StackView(d.dataset[is]), targets=d.targets[is])
 end
