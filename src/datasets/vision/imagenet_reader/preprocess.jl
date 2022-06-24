@@ -16,17 +16,16 @@ end
 const PYTORCH_MEAN = [0.485f0, 0.456f0, 0.406f0]
 const PYTORCH_STD = [0.229f0, 0.224f0, 0.225f0]
 
-function preprocess(Tx::Type, im::AbstractMatrix{<:ImageCore.AbstractRGB})
+function preprocess(Tx::Type, im::AbstractMatrix{<:AbstractRGB})
     im = center_crop_view(im)
-    im = (ImageCore.channelview(im) .- PYTORCH_MEAN) ./ PYTORCH_STD
+    im = (channelview(im) .- PYTORCH_MEAN) ./ PYTORCH_STD
     # Convert from CHW (Image.jl's channel ordering) to WHC:
     return Tx.(PermutedDimsArray(im, (3, 2, 1)))
 end
 
 function inverse_preprocess(x::AbstractArray{T,N}) where {T,N}
     @assert N == 3 || N == 4
-    return ImageCore.colorview(
-        ImageCore.RGB,
-        PermutedDimsArray(x, (3, 2, 1, 4:N...)) .* PYTORCH_STD .+ PYTORCH_MEAN,
+    return colorview(
+        RGB, PermutedDimsArray(x, (3, 2, 1, 4:N...)) .* PYTORCH_STD .+ PYTORCH_MEAN
     )
 end

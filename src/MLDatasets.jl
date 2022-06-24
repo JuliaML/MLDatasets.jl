@@ -29,10 +29,7 @@ import CSV
 @lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
-# Required for ImageNet
-@lazy import JpegTurbo="b835a17e-a41a-41e7-81f0-2f016b05efe0"   # Open jpg-files
-@lazy import ImageCore="a09fc81d-aa75-5fe9-8630-4744c3626534"   # Preprocessing
-@lazy import StackViews="cae243ae-269e-4f55-b966-ac2d0dc13c15"  # Batching of images
+@lazy import JpegTurbo="b835a17e-a41a-41e7-81f0-2f016b05efe0" # Required for ImageNet
 
 export getobs, numobs # From MLUtils.jl
 
