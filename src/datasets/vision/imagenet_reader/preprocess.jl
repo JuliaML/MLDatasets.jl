@@ -7,8 +7,8 @@ function center_crop_view(im::AbstractMatrix, outsize=IMGSIZE)
     h2, w2 = div.(outsize, 2) # half height, half width of view
     h_adjust, w_adjust = adjust.(outsize)
     return @view im[
-        (div(end, 2) - h2):(div(end, 2) + h2 - h_adjust),
-        (div(end, 2) - w2):(div(end, 2) + w2 - w_adjust),
+        ((div(end, 2) - h2):(div(end, 2) + h2 - h_adjust)) .+ 1,
+        ((div(end, 2) - w2):(div(end, 2) + w2 - w_adjust)) .+ 1,
     ]
 end
 
