@@ -36,7 +36,7 @@ end
 
 @testset "TUDataset - PROTEINS" begin
     data  = TUDataset("PROTEINS")
-    
+
     @test data.num_nodes == 43471
     @test data.num_edges == 162088
     @test data.num_graphs == 1113
@@ -46,7 +46,7 @@ end
     @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
     @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
-    
+
     i = rand(1:length(data))
     di = data[i]
     @test di isa NamedTuple
@@ -55,14 +55,14 @@ end
     @test g isa Graph
     @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
     @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
-    
-    # graph data 
+
+    # graph data
     @test size(data.graph_data.targets) == (data.num_graphs,)
 
     # node data
     @test size(g.node_data.features) == (1, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    
+
     # edge data
     @test g.edge_data === nothing
 end
@@ -79,19 +79,19 @@ end
     @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
     @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
-    
+
     i = rand(1:length(data))
     g, features = data[i]
     @test g isa Graph
     @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
     @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
-    
-    # graph data 
+
+    # graph data
     @test size(data.graph_data.features) == (19, data.num_graphs)
 
     # node data
     @test size(g.node_data.features) == (16, g.num_nodes)
-    
+
     # edge data
     @test size(g.edge_data.features) == (4, g.num_edges)
 end
@@ -108,6 +108,84 @@ end
 
 @testset "OGBDataset - ogbg-molhiv" begin
     d = OGBDataset("ogbg-molhiv")
-    
+
     @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+end
+
+@testset "ml-20m" begin
+    data = MovieLens("20m")
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
+
+    num_nodes = Dict(
+        "tag"   => 465564,
+        "movie" => 27278,
+        "user"  => 138493
+        )
+    num_edges = Dict(
+        ("movie", "score", "tag")    => 23419536,
+        ("user", "tag", "movie")     => 931128,
+        ("user", "rating", "movie")  => 40000526
+    )
+
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        @test isempty(g.node_data)
+    end
+
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @test key in  [:timestamp, :tag_name, :rating, :score]
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
+        end
+    end
+end
+
+@testset "ml-25m" begin
+    data = MovieLens("25m")
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
+
+    num_nodes = Dict(
+        "tag"   => 1093360,
+        "movie" => 62423,
+        "user"  => 162541
+        )
+    num_edges = Dict(
+        ("movie", "score", "tag")   => 31168896,
+        ("user", "tag", "movie")    => 2186720,
+        ("user", "rating", "movie") => 50000190
+    )
+
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        @test isempty(g.node_data)
+    end
+
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @test key in  [:timestamp, :tag_name, :rating, :score]
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
+        end
+    end
 end

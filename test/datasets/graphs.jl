@@ -20,7 +20,7 @@
         @test a isa Vector{Int}
         @test length(a) == g.num_edges
         @test minimum(a) == 1
-        @test maximum(a) == g.num_nodes 
+        @test maximum(a) == g.num_nodes
     end
 end
 
@@ -45,7 +45,7 @@ end
         @test a isa Vector{Int}
         @test length(a) == g.num_edges
         @test minimum(a) == 1
-        @test maximum(a) == g.num_nodes 
+        @test maximum(a) == g.num_nodes
     end
 end
 
@@ -70,7 +70,7 @@ end
         @test a isa Vector{Int}
         @test length(a) == g.num_edges
         @test minimum(a) == 1
-        @test maximum(a) == g.num_nodes 
+        @test maximum(a) == g.num_nodes
     end
 end
 
@@ -95,7 +95,7 @@ end
         @test a isa Vector{Int}
         @test length(a) == g.num_edges
         @test minimum(a) == 1
-        @test maximum(a) == g.num_nodes 
+        @test maximum(a) == g.num_nodes
     end
 end
 
@@ -112,14 +112,14 @@ end
     @test g.num_edges == 19025
     @test size(g.node_data.labels) == (g.num_nodes,)
     @test sort(unique(g.node_data.labels)) == [0, 1]
-    
+
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
         @test a isa Vector{Int}
         @test length(a) == g.num_edges
         @test minimum(a) >= 1
-        @test maximum(a) <= g.num_nodes 
+        @test maximum(a) <= g.num_nodes
     end
 end
 
@@ -151,7 +151,7 @@ end
         @test g.num_nodes[type] == num_nodes[type]
         node_data = get(g.node_data, type, nothing)
         isnothing(node_data) || for (key, val) in node_data
-            @assert key ∈ [:year, :features, :label]
+            @test key ∈ [:year, :features, :label]
             if key == :features
                 @test size(val)[1] == 128
             end
@@ -166,7 +166,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @assert key == :reltype
+            @test key == :reltype
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -193,9 +193,9 @@ end
         @test type ∈ g.node_types
         @test g.num_nodes[type] == num_nodes[type]
         node_data = get(g.node_data, type, nothing)
-        @assert !isnothing(node_data)
+        @test !isnothing(node_data)
         for (key, val) in node_data
-            @assert key ∈ [:release_date, :genres, :age, :occupation, :zipcode, :gender]
+            @test key ∈ [:release_date, :genres, :age, :occupation, :zipcode, :gender]
             @test size(val)[end] == num_nodes[type]
         end
     end
@@ -207,7 +207,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @assert key in  [:timestamp, :rating]
+            @test key in  [:timestamp, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -223,8 +223,8 @@ end
     @test g isa MLDatasets.HeteroGraph
 
     num_nodes = Dict(
-          "movie" => 3883,
-          "user"  => 6040
+            "movie" => 3883,
+            "user"  => 6040
         )
     num_edges = Dict(
         ("user", "rating", "movie") => 2000418
@@ -234,9 +234,9 @@ end
         @test type ∈ g.node_types
         @test g.num_nodes[type] == num_nodes[type]
         node_data = get(g.node_data, type, nothing)
-        @assert !isnothing(node_data)
+        @test !isnothing(node_data)
         for (key, val) in node_data
-            @assert key ∈ [:genres, :age, :occupation, :zipcode, :gender]
+            @test key ∈ [:genres, :age, :occupation, :zipcode, :gender]
             @test size(val)[end] == num_nodes[type]
         end
     end
@@ -248,7 +248,48 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @assert key in  [:timestamp, :rating]
+            @test key in  [:timestamp, :rating]
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
+        end
+    end
+end
+
+@testset "ml-latest-small" begin
+    data = MovieLens("latest-small")
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
+
+    num_nodes = Dict(
+        "tag"   => 3683,
+        "movie" => 9742,
+        "user"  => 610
+        )
+    num_edges = Dict(
+        ("user", "rating", "movie") => 201672,
+        ("user", "tag", "movie")    => 7366
+    )
+
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        node_data = get(g.node_data, type, nothing)
+        isnothing(node_data) || for (key, val) in node_data
+            @test size(val)[end] == num_nodes[type]
+        end
+    end
+
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @test key in  [:timestamp, :tag_name, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end

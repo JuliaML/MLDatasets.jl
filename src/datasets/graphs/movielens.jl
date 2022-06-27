@@ -35,7 +35,7 @@ function MovieLens(name::String; dir=nothing)
         g = generate_movielens_graph(data...)
         metadata = get_movielens_metadata(data)
         return MovieLens(name, metadata, [g])
-    elseif name in ["20m", "25m"]
+    elseif name in ["20m", "25m", "latest-small"]
         data = read_current_data(dir)
         g = generate_movielens_graph(data...)
         metadata = get_movielens_metadata(data)
@@ -64,12 +64,25 @@ function read_current_data(dir::String)
     genome_tag_data = read_genome_tag_data(dir)
     user_tag_data = read_user_tag_data(dir)
     movies_data = read_current_movie_data(dir)
-    return (movies_data, rating_data, user_tag_data, genome_tag_data)
+    link_data = read_link_data(dir)
+    return (movies_data, rating_data, user_tag_data, genome_tag_data, link_data)
 end
 
-function read_current_rating_data(dir::String)
-    rating_csv = "ratings.csv"
+function read_link_data(dir::String)::Dict
+    link_csv = "links.csv"
+    link_df = read_csv(joinpath(dir, link_csv))
 
+    movieId  = link_df[:, :movieId]
+    imdbId = link_df[:, :imdbId]
+    tmdbId = link_df[:, :imdbId]
+    metadata = Dict()
+    metadata["movieId_to_imdbID"] = Dict(movieId .=> imdbId)
+    metadata["movieId_to_tmdbID"] = Dict(movieId .=> tmdbId)
+    return Dict("metadata" => metadata)
+end
+
+function read_current_rating_data(dir::String)::Dict
+    rating_csv = "ratings.csv"
     rating_df = read_csv(joinpath(dir, rating_csv))
     @assert size(rating_df)[2] == 4
 
@@ -80,9 +93,12 @@ function read_current_rating_data(dir::String)
     return rating_data
 end
 
-function read_genome_tag_data(dir::String)
+function read_genome_tag_data(dir::String)::Dict
     tag_csv = "genome-tags.csv"
     score_csv = "genome-scores.csv"
+    # return empty dict if the genome files are not present
+    isfile(joinpath(dir, tag_csv)) || return Dict()
+
     tag_df = read_csv(joinpath(dir, tag_csv))
     score_df = read_csv(joinpath(dir, score_csv))
 
@@ -90,17 +106,17 @@ function read_genome_tag_data(dir::String)
     tag_ids = tag_df[:, :tagId]
     @assert minimum(tag_ids) == 1
     tag_data["num_tags"] = maximum(tag_ids)
-    tag_data["metadata"] = Dict("genome_tag_id_to_name" => Dict(tag_ids .=>tag_df[:, :tag] |> Vector))
+    tag_data["metadata"] = Dict("tag_id_to_name" => Dict(tag_ids .=> tag_df[:, :tag] |> Vector))
     tag_data["movie_tag"] = score_df[:, [:movieId, :tagId]] |> Matrix{Int}
     tag_data["score"] = score_df[:, :relevance] |> Vector
 
     return tag_data
 end
 
-function read_user_tag_data(dir::String)
+function read_user_tag_data(dir::String)::Dict
     # user tagged a movie to be a certain category
-    tag_data_file = "tags.csv"
-    tag_df = read_csv(joinpath(dir, tag_data_file))
+    tag_data_csv = "tags.csv"
+    tag_df = read_csv(joinpath(dir, tag_data_csv))
 
     tag_data = Dict{String, Any}()
     tag_data["tag_name"] = tag_df[:, :tag] |> Vector{String}
@@ -109,7 +125,7 @@ function read_user_tag_data(dir::String)
     return tag_data
 end
 
-function read_current_movie_data(dir::String)
+function read_current_movie_data(dir::String)::Dict
     movie_csv = "movies.csv"
     movie_df = read_csv(joinpath(dir, movie_csv))
 
@@ -119,12 +135,13 @@ function read_current_movie_data(dir::String)
     @assert minimum(movie_ids) == 1
     # @assert maximum(movie_ids) == length(movie_ids)
     movie_data["num_movies"] = length(movie_ids)
-    movie_data["metadata"] = Dict("movie_titles" => movie_df[:, :title] |> Vector{String})
+    movie_data["metadata"] = Dict(
+        "movie_id_to_title" => Dict( movie_ids .=> movie_df[:, :title] |> Vector{String}))
 
     return movie_data
 end
 
-function read_1m_user_data(dir::String)
+function read_1m_user_data(dir::String)::Dict
     user_data_file = "users.dat"
     user_df = read_csv_asdf(joinpath(dir, user_data_file), header=false, delim="::")
     user_data = Dict()
@@ -157,10 +174,10 @@ function read_1m_user_data(dir::String)
     @assert maximum(user_ids) == length(user_ids)
     user_data["num_users"] = maximum(user_ids)
     user_data["gender"] = user_df[!, 2] .== "M"
-    user_data["age"] = user_df[!, 3]
+    user_data["age"] = user_df[!, 3]  |> Vector{Int}
     ouccupation_ids = user_df[!, 4] .+ 1
     user_data["occupation"] = [occupation_names[i] for i in ouccupation_ids]
-    user_data["zipcode"] = user_df[!, 5]
+    user_data["zipcode"] = user_df[!, 5] |> Vector{String}
     return user_data
 end
 
@@ -171,15 +188,15 @@ function read_1m_movie_data(dir::String)::Dict
 
     movie_ids = movie_df[!, 1]
     @assert minimum(movie_ids) == 1
-    @warn "Due to some duplicacy in the dataset, final number of movies < highest movie_id"
     movie_data["num_movies"] = length(movie_ids)
     genres = movie_df[!, 3]
     # children's and children are same
     genres = replace.(genres, "Children's"=> "Children")
     genres = split.(genres, "|")
-    movie_data["genres"] = genres
+    movie_data["genres"] = genres # user needs to do the one hot matrix using Flux.onehot
 
-    movie_data["metadata"] = Dict("movie_names" => movie_df[!, 2])
+    movie_data["metadata"] = Dict(
+        "movie_id_to_title" => Dict( movie_ids .=> movie_df[!, 2]))
     return movie_data
 end
 
@@ -191,7 +208,7 @@ function read_1m_rating_data(dir::String)::Dict
 
     rating_data = Dict()
     rating_data["user_movie"] = rating_info[:, 1:2]
-    rating_data["rating"] = rating_info[:, 3]
+    rating_data["rating"] = rating_info[:, 3] |> Vector{Float16}
     rating_data["timestamp"] = rating_info[:, 4]
     return rating_data
 end
@@ -205,10 +222,10 @@ function read_100k_user_data(dir::String)::Dict
     @assert minimum(user_ids) == 1
     @assert maximum(user_ids) == length(user_ids)
     user_data["num_users"] = maximum(user_ids)
-    user_data["age"] = user_df[!, 2]
+    user_data["age"] = user_df[!, 2] |> Vector{Int}
     user_data["gender"] = user_df[!, 3] .== "M" # I hope I don't get cancelled for binarizing this field
-    user_data["occupation"] = user_df[!, 4]
-    user_data["zipcode"] = user_df[!, 5]
+    user_data["occupation"] = user_df[!, 4] |> Vector{String}
+    user_data["zipcode"] = user_df[!, 5]  |> Vector{String}
     return user_data
 end
 
@@ -219,7 +236,7 @@ function read_100k_rating_data(dir::String)::Dict
 
     rating_data = Dict()
     rating_data["user_movie"] = rating_info[:, 1:2]
-    rating_data["rating"] = rating_info[:, 3]
+    rating_data["rating"] = rating_info[:, 3] |> Vector{Float16}
     rating_data["timestamp"] = rating_info[:, 4]
     return rating_data
 end
@@ -229,6 +246,9 @@ function read_100k_movie_data(dir::String)::Dict
     movie_df = read_csv_asdf(joinpath(dir, movie_data_file), header=false, dateformat="dd-u-yyyy")
     movie_data = Dict()
 
+    genre_labels = [ "Unknown", "Action", "Adventure", "Animation", "Children", "Comedy",
+    "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical",
+    "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western" ]
     movie_ids = movie_df[!, 1]
     @assert minimum(movie_ids) == 1
     @assert maximum(movie_ids) == length(movie_ids)
@@ -239,21 +259,19 @@ function read_100k_movie_data(dir::String)::Dict
     movie_data["genres"] = genres
 
     movie_data["metadata"] = Dict()
-    movie_data["metadata"]["movie_names"] = movie_df[!, 2]
-    movie_data["metadata"]["genre_labels"] = [ "Unknown", "Action", "Adventure", "Animation", "Children", "Comedy",
-        "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical",
-        "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western" ]
+    movie_data["metadata"]["movie_id_to_title"] = Dict( movie_ids .=> movie_df[!, 2])
+    movie_data["metadata"]["genre_labels"] = genre_labels
     return movie_data
 end
 
-function generate_movielens_graph(user_data::Dict, movie_data::Dict, rating_data::Dict)
+function generate_movielens_graph(user_data::Dict, movie_data::Dict, rating_data::Dict)::HeteroGraph
     num_nodes = Dict("user" => user_data["num_users"], "movie" => movie_data["num_movies"])
     node_data = Dict()
     node_data["user"] = Dict(Symbol(k) => maybesqueeze(v) for (k, v) in user_data if k ∉ ["num_users", "metadata"])
     node_data["movie"] = Dict(Symbol(k) => maybesqueeze(v) for (k, v) in movie_data if k ∉ ["num_movies", "metadata"])
 
-    edges = rating_data["user_movie"]
-    user_ids, movie_ids = edges[:, 1], edges[:, 2]
+    user_rates_movie = rating_data["user_movie"]
+    user_ids, movie_ids = user_rates_movie[:, 1], user_rates_movie[:, 2]
     edge_indices = Dict(("user", "rating", "movie") => ([user_ids; movie_ids], [movie_ids; user_ids]))
 
     edge_data = Dict(("user", "rating", "movie") => Dict(Symbol(k) => maybesqueeze([v;v]) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"]))
@@ -261,7 +279,7 @@ function generate_movielens_graph(user_data::Dict, movie_data::Dict, rating_data
     return HeteroGraph(; num_nodes, edge_indices, node_data, edge_data)
 end
 
-function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_data::Dict, genome_tag_data::Dict)
+function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_data::Dict, genome_tag_data::Dict, link_data::Dict)
 
     edge_indices = Dict()
     user_rates_movie = rating_data["user_movie"]
@@ -274,32 +292,35 @@ function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_
     num_users = max(num_users, user_ids |> unique |> length)
     edge_indices[("user", "tag", "movie")] = ([user_ids; movie_ids], [movie_ids; user_ids])
 
-    movie_score_tag = genome_tag_data["movie_tag"]
-    movie_ids, tag_ids = movie_score_tag[:, 1], movie_score_tag[:, 1]
-    edge_indices[("movie", "score", "tag")] = ([movie_ids; tag_ids], [movie_ids; tag_ids])
+    if !isempty(genome_tag_data)
+        movie_score_tag = genome_tag_data["movie_tag"]
+        movie_ids, tag_ids = movie_score_tag[:, 1], movie_score_tag[:, 1]
+        edge_indices[("movie", "score", "tag")] = ([movie_ids; tag_ids], [movie_ids; tag_ids])
+    end
 
     # ideally the HeteroGraph function should be able to compute the number of egdes,
     # but we know other 2 values, so it is ifefficient to compute other two again
-    num_nodes = Dict("user" => num_users, "tag" => genome_tag_data["num_tags"], "movie" => movie_data["num_movies"])
+    # num_nodes = Dict("user" => num_users, "tag" => genome_tag_data["num_tags"], "movie" => movie_data["num_movies"])
+    num_nodes = Dict("user" => num_users, "tag" => length(user_tag_data["tag_name"]), "movie" => movie_data["num_movies"])
 
     _edge_data = Dict()
     _edge_data[("user", "rating", "movie")] = Dict(
         Symbol(k) => maybesqueeze([v;v]) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"])
     _edge_data[("user", "tag", "movie")] = Dict(
         Symbol(k) => maybesqueeze([v;v]) for (k, v) in user_tag_data if  k ∉ ["user_movie", "metadata"])
-    _edge_data[("movie", "score", "tag")] = Dict(
-        Symbol(k) => maybesqueeze([v;v]) for (k, v) in genome_tag_data if  k ∉ ["movie_tag", "metadata", "num_tags"])
+    isempty(genome_tag_data) || (_edge_data[("movie", "score", "tag")] = Dict(
+        Symbol(k) => maybesqueeze([v;v]) for (k, v) in genome_tag_data if  k ∉ ["movie_tag", "metadata", "num_tags"]))
 
     edge_data = Dict(k=>v for (k,v) in _edge_data if !isempty(v))
-    
+
     _node_data = Dict()
     _node_data["movie"] = Dict(Symbol(k) => maybesqueeze(v) for (k, v) in movie_data if k ∉ ["num_movies", "metadata"])
     node_data = Dict(k=>v for (k,v) in _node_data if !isempty(v))
 
     return HeteroGraph(; num_nodes, edge_indices, node_data, edge_data)
-end
+end::HeteroGraph
 
-function get_movielens_metadata(data::Tuple)
+function get_movielens_metadata(data::Tuple)::Dict
     # the recieved data in generally user_data, movie_data and rating_data
     metadata = Dict()
     for d in data
