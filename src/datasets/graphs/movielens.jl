@@ -279,7 +279,7 @@ function generate_movielens_graph(user_data::Dict, movie_data::Dict, rating_data
     return HeteroGraph(; num_nodes, edge_indices, node_data, edge_data)
 end
 
-function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_data::Dict, genome_tag_data::Dict, link_data::Dict)
+function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_data::Dict, genome_tag_data::Dict, link_data::Dict)::HeteroGraph
 
     edge_indices = Dict()
     user_rates_movie = rating_data["user_movie"]
@@ -318,7 +318,7 @@ function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_
     node_data = Dict(k=>v for (k,v) in _node_data if !isempty(v))
 
     return HeteroGraph(; num_nodes, edge_indices, node_data, edge_data)
-end::HeteroGraph
+end
 
 function get_movielens_metadata(data::Tuple)::Dict
     # the recieved data in generally user_data, movie_data and rating_data
