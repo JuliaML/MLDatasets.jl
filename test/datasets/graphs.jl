@@ -124,7 +124,7 @@ end
 end
 
 # maybe, maybe, maybe??
-Sys.iswindows() && @testset "OGBn-mag" begin
+Sys.iswindows() || @testset "OGBn-mag" begin
     data = OGBDataset("ogbn-mag")
     # @test data isa AbstractDataset
     @test length(data) == 1
