@@ -113,7 +113,7 @@ end
 end
 
 @testset "ml-10m" begin
-    # data = MovieLens("10m")
+    data = MovieLens("10m")
     @test length(data) == 1
 
     g = data[1]
