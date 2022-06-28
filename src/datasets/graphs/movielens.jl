@@ -35,6 +35,11 @@ function MovieLens(name::String; dir=nothing)
         g = generate_movielens_graph(data...)
         metadata = get_movielens_metadata(data)
         return MovieLens(name, metadata, [g])
+    elseif name == "10m"
+        data = read_10m_data(dir)
+        g = generate_movielens_graph(data...)
+        metadata = get_movielens_metadata(data)
+        return MovieLens(name, metadata, [g])
     elseif name in ["20m", "25m", "latest-small"]
         data = read_current_data(dir)
         g = generate_movielens_graph(data...)
@@ -59,13 +64,66 @@ function read_1m_data(dir::String)
     return (user_data, movie_data, rating_data)
 end
 
+function read_10m_data(dir::String)
+    rating_data = read_10m_rating_data(dir)
+    movies_data = read_10m_movie_data(dir)
+    user_tag_data = read_10m_user_tag_data(dir)
+    return (movies_data, rating_data, user_tag_data, Dict(), Dict())
+end
+
 function read_current_data(dir::String)
     rating_data = read_current_rating_data(dir)
     genome_tag_data = read_genome_tag_data(dir)
-    user_tag_data = read_user_tag_data(dir)
+    user_tag_data = read_current_user_tag_data(dir)
     movies_data = read_current_movie_data(dir)
     link_data = read_link_data(dir)
     return (movies_data, rating_data, user_tag_data, genome_tag_data, link_data)
+end
+
+function read_10m_rating_data(dir::String)
+    rating_data_file = "ratings.dat"
+    rating_df = read_csv_asdf(joinpath(dir, rating_data_file), header=false, delim="::")
+    @assert size(rating_df)[2] == 4
+
+    rating_data = Dict()
+    rating_data["user_movie"] = rating_df[!, 1:2] |> Matrix{Int}
+    rating_data["rating"] = rating_df[!, 3] |> Vector{Float16}
+    rating_data["timestamp"] = rating_df[!, 4] |> Vector{Int}
+    return rating_data
+end
+
+function read_10m_movie_data(dir::String)
+    movie_data_file = "movies.dat"
+    movie_df = read_csv_asdf(joinpath(dir, movie_data_file), header=false, delim="::")
+    movie_data = Dict()
+
+    movie_ids = movie_df[!, 1]
+    @assert minimum(movie_ids) == 1
+    movie_data["num_movies"] = length(movie_ids)
+    movie_titles = movie_df[!, 2]
+
+    # bit of data cleaning
+    movie_titles[9811] = "\"Great Performances\" Cats (1998)"
+    genres = movie_df[!, 3]
+    # children's and children are same
+    genres = replace.(genres, "Children's"=> "Children")
+    genres = split.(genres, "|")
+    movie_data["genres"] = genres |> Vector{Vector{String}}# user needs to do the one hot matrix using Flux.onehot
+
+    movie_data["metadata"] =  Dict(
+        "movie_id_to_title" => Dict( movie_ids .=> movie_df[!, 2]))
+    return movie_data
+end
+
+function read_10m_user_tag_data(dir::String)
+    tag_data_file = "tags.dat"
+    tag_df = read_csv(joinpath(dir, tag_data_file), header=false, delim="::")
+
+    tag_data = Dict{String, Any}()
+    tag_data["user_movie"] = tag_df[!, 1:2] |> Matrix{Int}
+    tag_data["tag_name"] = tag_df[!, 3] |> Vector{String}
+    tag_data["timestamp"] = tag_df[!, 4] |> Vector
+    return tag_data
 end
 
 function read_link_data(dir::String)::Dict
@@ -113,7 +171,7 @@ function read_genome_tag_data(dir::String)::Dict
     return tag_data
 end
 
-function read_user_tag_data(dir::String)::Dict
+function read_current_user_tag_data(dir::String)::Dict
     # user tagged a movie to be a certain category
     tag_data_csv = "tags.csv"
     tag_df = read_csv(joinpath(dir, tag_data_csv))
@@ -193,7 +251,7 @@ function read_1m_movie_data(dir::String)::Dict
     # children's and children are same
     genres = replace.(genres, "Children's"=> "Children")
     genres = split.(genres, "|")
-    movie_data["genres"] = genres # user needs to do the one hot matrix using Flux.onehot
+    movie_data["genres"] = genres |> Vector{Vector{String}} # user needs to do the one hot matrix using Flux.onehot
 
     movie_data["metadata"] = Dict(
         "movie_id_to_title" => Dict( movie_ids .=> movie_df[!, 2]))
@@ -343,6 +401,11 @@ function movielens_datadir(name, dir = nothing)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(joinpath(dir, "$dname.zip"))
+        # conditions when unzipped folder is our required data dir
+        if name == "10m"
+            unzipped = joinpath(dir, "ml-10M100K")
+            mv(unzipped, d) # none of them are relative path
+        end
         cd(currdir)
     end
     @assert isdir(d)
