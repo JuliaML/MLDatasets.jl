@@ -23,8 +23,8 @@ The 100k and 1k datasets contain movie data and rating data along with demograph
 Starting from the 10m dataset, Movielens datasets no longer contain the demographic data. 
 These datasets contain movie data, rating data, and tag information. 
 
-The 20m, 25m datasets additonally contain [genome tag scores](http://files.grouplens.org/papers/tag_genome.pdf). 
-Each movie in theses datasets contains tag relevance scores for every tag.
+The 20m and 25m datasets additionally contain [genome tag scores](http://files.grouplens.org/papers/tag_genome.pdf). 
+Each movie in these datasets contains tag relevance scores for every tag.
 
 `movie` and `user` represent the movie and user nodes in the graph. The rating is represented by an edge between them : `(user, rating, movie)`. 
 20m, 25m and latest-small datasets also contain `tag` nodes. The relation between the other nodes are represented using edges: `(user, tag, movie)` and 
