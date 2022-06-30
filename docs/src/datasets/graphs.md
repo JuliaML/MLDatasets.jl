@@ -28,4 +28,5 @@ PolBlogs
 PubMed
 Reddit
 TUDataset
+MovieLens
 ```
