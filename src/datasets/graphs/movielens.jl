@@ -28,7 +28,7 @@ Each movie in these datasets contains tag relevance scores for every tag.
 
 Each dataset contains an heterogeneous graph, with two kinds of nodes, 
 `movie` and `user`. The rating is represented by an edge between them: `(user, rating, movie)`. 
-20m, 25m and latest-small datasets also contain `tag` nodes. The relation between the other nodes are represented using edges: `(user, tag, movie)` and 
+20m, 25m, and latest-small datasets also contain `tag` nodes and edges of type `(user, tag, movie)` and 
 optionally `(movie, score, tag)`.
 
 # Examples
