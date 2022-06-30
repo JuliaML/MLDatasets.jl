@@ -132,27 +132,18 @@ function MovieLens(name::String; dir=nothing)
     # format varied in older generations of MovieLens datasets
     if name == "100k"
         data = read_100k_data(dir)
-        g = generate_movielens_graph(data ...)
-        metadata = get_movielens_metadata(data)
-        return MovieLens(name, metadata, [g])
     elseif name == "1m"
         data = read_1m_data(dir)
-        g = generate_movielens_graph(data...)
-        metadata = get_movielens_metadata(data)
-        return MovieLens(name, metadata, [g])
     elseif name == "10m"
         data = read_10m_data(dir)
-        g = generate_movielens_graph(data...)
-        metadata = get_movielens_metadata(data)
-        return MovieLens(name, metadata, [g])
     elseif name in ["20m", "25m", "latest-small"]
         data = read_current_data(dir)
-        g = generate_movielens_graph(data...)
-        metadata = get_movielens_metadata(data)
-        return MovieLens(name, metadata, [g])
     else
         error("Functionality for ml-$name has not been implemented yet")
     end
+    g = generate_movielens_graph(data...)
+    metadata = get_movielens_metadata(data)
+    return MovieLens(name, metadata, [g])
 end
 
 function read_100k_data(dir::String)
