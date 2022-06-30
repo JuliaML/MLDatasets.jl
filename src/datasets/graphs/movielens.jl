@@ -18,10 +18,10 @@ Datasets from the [MovieLens website](https://movielens.org) collected and maint
 The MovieLens datasets are presented in a Graph format. 
 For license and usage resitrictions please refer to the Readme.md of the datasets.
 
-There are 6 versions of movielens datasets currently supported: "25m", "20m", "latest-small", "10m", "1m", "100k". 
-The 1m and 100k datasets contains movies data and ratings data along with demographic data.
-Starting from 10m datset, Movielens datasets no longer contain the demographic data. 
-These datassets contain movie data, rating data and tag inoformation. 
+There are 6 versions of movielens datasets currently supported: "100k",  "1m",  "10m", "20m", "25m", "latest-small". 
+The 100k and 1k datasets contain movie data and rating data along with demographic data.
+Starting from the 10m dataset, Movielens datasets no longer contain the demographic data. 
+These datasets contain movie data, rating data, and tag information. 
 
 The 20m, 25m datasets additonally contain [genome tag scores](http://files.grouplens.org/papers/tag_genome.pdf). 
 Each movie in theses datasets contains tag relevance scores for every tag.
