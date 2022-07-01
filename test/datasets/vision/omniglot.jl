@@ -33,7 +33,7 @@ end
         Tx=UInt8, Ty=String,
         conv2img=true)
 
-    d = Omnoglot(:test)
+    d = Omniglot(:test)
     @test d.split == :test 
     d = Omniglot(Int, :test)
     @test d.split == :test 
@@ -52,7 +52,7 @@ end
         Tx=UInt8, Ty=String,
         conv2img=true)
 
-    d = Omnoglot(:small1)
+    d = Omniglot(:small1)
     @test d.split == :small1 
     d = Omniglot(Int, :small1)
     @test d.split == :small1 
@@ -71,7 +71,7 @@ end
         Tx=UInt8, Ty=String,
         conv2img=true)
 
-    d = Omnoglot(:small2)
+    d = Omniglot(:small2)
     @test d.split == :small2 
     d = Omniglot(Int, :small2)
     @test d.split == :small2 
