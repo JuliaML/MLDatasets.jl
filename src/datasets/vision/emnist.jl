@@ -50,7 +50,7 @@ at https://arxiv.org/abs/1702.05373v1.
 # Arguments
 
 - `name`: name of the EMNIST dataset. Possible values are: `:balanced, :byclass, :bymerge, :digits, :letters, :mnist`.
-- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+- `split`: selects the data partition. Can take the values `:train` or `:test`. 
 $ARGUMENTS_SUPERVISED_ARRAY
 
 # Fields
