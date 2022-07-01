@@ -26,4 +26,5 @@ EMNIST
 FashionMNIST
 MNIST
 SVHN2
+Omniglot
 ```
