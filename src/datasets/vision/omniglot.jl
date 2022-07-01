@@ -63,11 +63,9 @@ $METHODS_SUPERVISED_ARRAY
 # Examples
 
 The images are loaded as a multi-dimensional array of eltype `Tx`.
-If `Tx <: Integer`, then all values will be within `0` and `255`, 
-otherwise the values are scaled to be between `0` and `1`.
-`Omniglot().features` is a 3D array (i.e. a `Array{Tx,3}`), in
-WHN format (width, height, num_images). Labels are stored as
-a vector of strings in `Omniglot().targets`. 
+All values will be `0` or `1`. `Omniglot().features` is a 3D array
+(i.e. a `Array{Tx,3}`), in WHN format (width, height, num_images).
+Labels are stored as a vector of strings in `Omniglot().targets`. 
 
 ```julia-repl
 julia> using MLDatasets: Omniglot

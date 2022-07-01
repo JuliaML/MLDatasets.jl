@@ -25,7 +25,7 @@ end
     d = Omniglot(split=:test, Tx=UInt8)
 
     @test d.split == :test
-    @test extrema(d.features) == (0, 255)
+    @test extrema(d.features) == (0, 1)
     @test convert2image(d, 1) isa AbstractMatrix{<:Gray}
 
     test_supervised_array_dataset(d;
@@ -41,10 +41,10 @@ end
 end
 
 @testset "small1set" begin
-    d = Omniglot(split=:small1, Tx=UInt8)
+    d = Omniglot(split=:small1, Tx=Float32)
 
     @test d.split == :small1
-    @test extrema(d.features) == (0, 255)
+    @test extrema(d.features) == (0, 1)
     @test convert2image(d, 1) isa AbstractMatrix{<:Gray}
 
     test_supervised_array_dataset(d;
@@ -63,7 +63,7 @@ end
     d = Omniglot(split=:small2, Tx=UInt8)
 
     @test d.split == :small2
-    @test extrema(d.features) == (0, 255)
+    @test extrema(d.features) == (0, 1)
     @test convert2image(d, 1) isa AbstractMatrix{<:Gray}
 
     test_supervised_array_dataset(d;
