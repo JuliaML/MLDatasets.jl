@@ -17,13 +17,12 @@ function __init__omniglot()
                 Human-level concept learning through probabilistic program induction.
                 Science, 350(6266), 1332-1338.
 
-            The files are available for download at the official github
+            The files are available for download at the official
             github repository linked above. Note that using the data
             responsibly and respecting copyright remains your
             responsibility. The authors of Omniglot aren't really
             explicit about any terms of use, so please read the
-            website to make sure you want to download the
-            dataset.
+            website to make sure you want to download the dataset.
             """,
             "https://github.com/brendenlake/omniglot/raw/master/matlab/" .* [TRAIN, TEST, SMALL1, SMALL2],
             "1cfb52d931d794a3dd2717da6c80ddb8f48b0a6f559916c60fcdcd908b65d3d8", #matlab links
