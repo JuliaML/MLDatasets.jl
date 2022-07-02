@@ -112,6 +112,47 @@ end
     @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
 end
 
+@testset "ml-1m" begin
+    data = MovieLens("1m")
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
+
+    num_nodes = Dict(
+            "movie" => 3883,
+            "user"  => 6040
+        )
+    num_edges = Dict(
+        ("user", "rating", "movie") => 2000418
+    )
+
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        node_data = get(g.node_data, type, nothing)
+        @test !isnothing(node_data)
+        for (key, val) in node_data
+            @test key ∈ [:genres, :age, :occupation, :zipcode, :gender]
+            @test size(val)[end] == num_nodes[type]
+        end
+    end
+
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @test key in  [:timestamp, :rating]
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
+        end
+    end
+end
+
 @testset "ml-10m" begin
     data = MovieLens("10m")
     @test length(data) == 1
