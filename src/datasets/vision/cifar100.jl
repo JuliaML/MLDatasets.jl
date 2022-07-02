@@ -58,7 +58,7 @@ two `Vector{Int}`. The variables returned are the coarse label(s)
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+- `split`: selects the data partition. Can take the values `:train` or `:test`. 
 
 # Fields
 

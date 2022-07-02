@@ -48,7 +48,7 @@ per class.
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+- `split`: selects the data partition. Can take the values `:train` or `:test`. 
 
 # Fields
 
