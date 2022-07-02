@@ -49,7 +49,7 @@ end
 
     test_supervised_array_dataset(d;
         n_features, n_targets, n_obs=2720,
-        Tx=UInt8, Ty=String,
+        Tx=Float32, Ty=String,
         conv2img=true)
 
     d = Omniglot(:small1)
