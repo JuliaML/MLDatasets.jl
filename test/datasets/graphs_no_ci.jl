@@ -135,7 +135,8 @@ end
         @test g.num_nodes[type] == num_nodes[type]
         node_data = get(g.node_data, type, nothing)
         isnothing(node_data) || for (key, val) in node_data
-        @test size(val)[end] == num_nodes[type]
+            @test size(val)[end] == num_nodes[type]
+        end
     end
 
     for type in keys(num_edges)
