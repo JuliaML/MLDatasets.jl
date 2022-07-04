@@ -86,6 +86,8 @@ include("datasets/vision/cifar100.jl")
 export CIFAR100
 include("datasets/vision/svhn2.jl")
 export SVHN2
+include("datasets/vision/omniglot.jl")
+export Omniglot
 
 ## Text
 
@@ -149,6 +151,7 @@ function __init__()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()
+    __init__omniglot()
     __init__svhn2()
 end
 

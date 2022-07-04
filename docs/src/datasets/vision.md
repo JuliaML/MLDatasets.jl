@@ -25,5 +25,6 @@ CIFAR100
 EMNIST
 FashionMNIST
 MNIST
+Omniglot
 SVHN2
 ```
