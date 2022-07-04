@@ -244,12 +244,12 @@ end
     @test g isa MLDatasets.HeteroGraph
 
     num_nodes = Dict(
-        "tag"   => 95579,
+        "tag"   => 95580,
         "movie" => 10681,
         "user"  => 69878
         )
     num_edges = Dict(
-        ("user", "tag", "movie")    => 191158,
+        ("user", "tag", "movie")    => 191160,
         ("user", "rating", "movie") => 20000108
     )
 
