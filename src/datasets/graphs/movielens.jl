@@ -178,7 +178,7 @@ end
 
 function read_10m_rating_data(dir::String)
     rating_data_file = "ratings.dat"
-    rating_df = read_csv_asdf(joinpath(dir, rating_data_file), header=false, delim="::")
+    rating_df = read_csv_asdf(joinpath(dir, rating_data_file), header=false, delim="::", quoted=false)
     @assert size(rating_df)[2] == 4
 
     rating_data = Dict()
@@ -190,7 +190,7 @@ end
 
 function read_10m_movie_data(dir::String)
     movie_data_file = "movies.dat"
-    movie_df = read_csv_asdf(joinpath(dir, movie_data_file), header=false, delim="::")
+    movie_df = read_csv_asdf(joinpath(dir, movie_data_file), header=false, delim="::", quoted=false)
     movie_data = Dict()
 
     movie_ids = movie_df[!, 1]
@@ -213,7 +213,7 @@ end
 
 function read_10m_user_tag_data(dir::String)
     tag_data_file = "tags.dat"
-    tag_df = read_csv(joinpath(dir, tag_data_file), header=false, delim="::")
+    tag_df = read_csv(joinpath(dir, tag_data_file), header=false, delim="::", quoted=false)
 
     tag_data = Dict{String, Any}()
     tag_data["user_movie"] = tag_df[!, 1:2] |> Matrix{Int}
