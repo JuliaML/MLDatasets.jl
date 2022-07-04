@@ -249,7 +249,7 @@ end
         "user"  => 69878
         )
     num_edges = Dict(
-        ("user", "tag", "movie")    => 191158,
+        ("user", "tag", "movie")    => 191160,
         ("user", "rating", "movie") => 20000108
     )
 
