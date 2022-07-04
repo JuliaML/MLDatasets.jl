@@ -48,7 +48,7 @@ sequences of [x,y,t] coordinates with time (t) in milliseconds.
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train`, `:test`, `:small1`, or `:small2data`. 
+- `split`: selects the data partition. Can take the values `:train`, `:test`, `:small1`, or `:small2`. 
 
 # Fields
 

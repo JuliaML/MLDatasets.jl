@@ -25,8 +25,8 @@ no_ci_dataset_tests = [
     "datasets/vision/cifar10.jl",
     "datasets/vision/cifar100.jl",
     "datasets/vision/emnist.jl",
-    "datasets/vision/svhn2.jl",
     "datasets/vision/omniglot.jl"
+    "datasets/vision/svhn2.jl",
     ]
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))

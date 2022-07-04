@@ -151,8 +151,8 @@ function __init__()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()
-    __init__svhn2()
     __init__omniglot()
+    __init__svhn2()
 end
 
 end #module
