@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · MLDatasets.jl</title><script data-outdated-warner src="assets/warner.js"></script><link rel="canonical" href="https://juliadata.github.io/MLDatasets.jl/stable/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href><img src="assets/logo.png" alt="MLDatasets.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href>MLDatasets.jl</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Available-Datasets"><span>Available Datasets</span></a></li><li><a class="tocitem" href="#Basic-Usage"><span>Basic Usage</span></a></li><li><a class="tocitem" href="#MLUtils-compatibility"><span>MLUtils compatibility</span></a></li><li><a class="tocitem" href="#Conditional-module-loading"><span>Conditional module loading</span></a></li><li><a class="tocitem" href="#Download-location"><span>Download location</span></a></li></ul></li><li><span class="tocitem">Datasets</span><ul><li><a class="tocitem" href="datasets/graphs/">Graphs</a></li><li><a class="tocitem" href="datasets/misc/">Miscellaneous</a></li><li><a class="tocitem" href="datasets/text/">Text</a></li><li><a class="tocitem" href="datasets/vision/">Vision</a></li></ul></li><li><span class="tocitem">Creating Datasets</span><ul><li><a class="tocitem" href="containers/overview/">Dataset Containers</a></li></ul></li><li><a class="tocitem" href="LICENSE/">LICENSE</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaML/MLDatasets.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="MLDatasets.jl&#39;s-Documentation"><a class="docs-heading-anchor" href="#MLDatasets.jl&#39;s-Documentation">MLDatasets.jl&#39;s Documentation</a><a id="MLDatasets.jl&#39;s-Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#MLDatasets.jl&#39;s-Documentation" title="Permalink"></a></h1><p>This package represents a community effort to provide a common interface for accessing common Machine Learning (ML) datasets. In contrast to other data-related Julia packages, the focus of <code>MLDatasets.jl</code> is specifically on downloading, unpacking, and accessing benchmark dataset. Functionality for the purpose of data processing or visualization is only provided to a degree that is special to some dataset.</p><p>This package is a part of the <a href="https://github.com/JuliaML"><code>JuliaML</code></a> ecosystem.</p><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p>To install <code>MLDatasets.jl</code>, start up Julia and type the following code snippet into the REPL. It makes use of the native Julia package manger.</p><pre><code class="language-julia hljs">Pkg.add(&quot;MLDatasets&quot;)</code></pre><h2 id="Available-Datasets"><a class="docs-heading-anchor" href="#Available-Datasets">Available Datasets</a><a id="Available-Datasets-1"></a><a class="docs-heading-anchor-permalink" href="#Available-Datasets" title="Permalink"></a></h2><p>Datasets are grouped into different categories. Click on the links below for a full list of datasets available in each category.</p><ul><li><a href="datasets/graphs/#Graph-Datasets">Graph Datasets</a> - datasets with an underlying graph structure: Cora, PubMed, CiteSeer, ...</li><li><a href="datasets/misc/#Miscellaneuous-Datasets">Miscellaneuous Datasets</a> - datasets that do not fall into any of the other categories: Iris, BostonHousing, ...</li><li><a href="datasets/text/#Text-Datasets">Text Datasets</a> - datasets for language models. </li><li><a href="datasets/vision/#Vision-Datasets">Vision Datasets</a> - vision related datasets such as MNIST, CIFAR10, CIFAR100, ... </li></ul><h2 id="Basic-Usage"><a class="docs-heading-anchor" href="#Basic-Usage">Basic Usage</a><a id="Basic-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Usage" title="Permalink"></a></h2><p>The way <code>MLDatasets.jl</code> is organized is that each dataset is its own type.  Where possible, those types share a common interface (fields and methods). </p><p>Once a dataset has been instantiated, e.g. by <code>dataset = MNIST()</code>,   an observation <code>i</code> can be retrieved using the indexing syntax <code>dataset[i]</code>. By indexing with no arguments, <code>dataset[:]</code>, the whole set of observations is collected. The total number of observations is given by <code>length(dataset)</code>.</p><p>For example you can load the training set of the <a href="datasets/vision/#MLDatasets.MNIST"><code>MNIST</code></a> database of handwritten digits using the following commands:</p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets
+
+julia&gt; trainset = MNIST(:train)
+dataset MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    28×28×60000 Array{Float32, 3}
+  targets     =&gt;    60000-element Vector{Int64}
+
+julia&gt; length(d)
+60000
+
+julia&gt; trainset[1]  # return first observation as a NamedTuple
+(features = Float32[0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], 
+ targets = 5)
+
+julia&gt; X_train, y_train = trainset[:] # return all observations
+(features = [0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; … ;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0;;; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0; … ; 0.0 0.0 … 0.0 0.0; 0.0 0.0 … 0.0 0.0], 
+ targets = [5, 0, 4, 1, 9, 2, 1, 3, 1, 4  …  9, 2, 9, 5, 1, 8, 3, 5, 6, 8])
+
+julia&gt; summary(X_train)
+&quot;28×28×60000 Array{Float32, 3}&quot;</code></pre><p>Input features are commonly denoted by <code>features</code>, while classification labels and regression targets are denoted by <code>targets</code>.</p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets, DataFrames
+
+julia&gt; iris = Iris()
+dataset Iris:
+  metadata    =&gt;    Dict{String, Any} with 4 entries
+  features    =&gt;    150×4 DataFrame
+  targets     =&gt;    150×1 DataFrame
+  dataframe   =&gt;    150×5 DataFrame
+
+julia&gt; iris.features
+150×4 DataFrame
+ Row │ sepallength  sepalwidth  petallength  petalwidth 
+     │ Float64      Float64     Float64      Float64    
+─────┼──────────────────────────────────────────────────
+   1 │         5.1         3.5          1.4         0.2
+   2 │         4.9         3.0          1.4         0.2
+   3 │         4.7         3.2          1.3         0.2
+   4 │         4.6         3.1          1.5         0.2
+   5 │         5.0         3.6          1.4         0.2
+   6 │         5.4         3.9          1.7         0.4
+   7 │         4.6         3.4          1.4         0.3
+   8 │         5.0         3.4          1.5         0.2
+   9 │         4.4         2.9          1.4         0.2
+  ⋮  │      ⋮           ⋮            ⋮           ⋮
+ 142 │         6.9         3.1          5.1         2.3
+ 143 │         5.8         2.7          5.1         1.9
+ 144 │         6.8         3.2          5.9         2.3
+ 145 │         6.7         3.3          5.7         2.5
+ 146 │         6.7         3.0          5.2         2.3
+ 147 │         6.3         2.5          5.0         1.9
+ 148 │         6.5         3.0          5.2         2.0
+ 149 │         6.2         3.4          5.4         2.3
+ 150 │         5.9         3.0          5.1         1.8
+                                        132 rows omitted
+
+julia&gt; iris.targets
+150×1 DataFrame
+ Row │ class          
+     │ String15       
+─────┼────────────────
+   1 │ Iris-setosa
+   2 │ Iris-setosa
+   3 │ Iris-setosa
+   4 │ Iris-setosa
+   5 │ Iris-setosa
+   6 │ Iris-setosa
+   7 │ Iris-setosa
+   8 │ Iris-setosa
+   9 │ Iris-setosa
+  ⋮  │       ⋮
+ 142 │ Iris-virginica
+ 143 │ Iris-virginica
+ 144 │ Iris-virginica
+ 145 │ Iris-virginica
+ 146 │ Iris-virginica
+ 147 │ Iris-virginica
+ 148 │ Iris-virginica
+ 149 │ Iris-virginica
+ 150 │ Iris-virginica
+      132 rows omitted</code></pre><h2 id="MLUtils-compatibility"><a class="docs-heading-anchor" href="#MLUtils-compatibility">MLUtils compatibility</a><a id="MLUtils-compatibility-1"></a><a class="docs-heading-anchor-permalink" href="#MLUtils-compatibility" title="Permalink"></a></h2><p>MLDatasets.jl garuantees compatibility with the <a href="https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.getobs">getobs</a> and <a href="https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.numobs">numobs</a> interface defined in <a href="https://github.com/JuliaML/MLUtils.jl">MLUtils.jl</a>. In practice, applying <code>getobs</code> and <code>numobs</code> on datasets is equivalent to applying indexing and <code>length</code>.</p><h2 id="Conditional-module-loading"><a class="docs-heading-anchor" href="#Conditional-module-loading">Conditional module loading</a><a id="Conditional-module-loading-1"></a><a class="docs-heading-anchor-permalink" href="#Conditional-module-loading" title="Permalink"></a></h2><p>MLDatasets.jl relies on many different packages in order to load and process the diverse type of datasets it supports. Most likely, any single user of the library will use a limited subset of these functionalities. In order to reduce the time taken by <code>using MLDatasets</code> in users&#39; code, we use a <a href="https://github.com/johnnychen94/LazyModules.jl">lazy import system</a> that defers the import of packages inside MLDatasets.jl as much as possible.   For some of the packages, some manual intervention is needed from the user.  As an example, the following code will produce an error:</p><pre><code class="language-julia-repl hljs">julia&gt; using MLDataset
+
+julia&gt; MNIST(); # fine, MNIST doesn&#39;t require DataFrames
+
+julia&gt; Iris() # ERROR: Add `import DataFrames` or `using DataFrames` to your code to unlock this functionality.</code></pre><p>We can easily fix the error with an additional import as recommended by the error message:</p><pre><code class="language-julia-repl hljs">julia&gt; using MLDataset, DataFrames
+
+julia&gt; Iris()
+dataset Iris:
+  metadata    =&gt;    Dict{String, Any} with 4 entries
+  features    =&gt;    150×4 DataFrame
+  targets     =&gt;    150×1 DataFrame
+  dataframe   =&gt;    150×5 DataFrame</code></pre><h2 id="Download-location"><a class="docs-heading-anchor" href="#Download-location">Download location</a><a id="Download-location-1"></a><a class="docs-heading-anchor-permalink" href="#Download-location" title="Permalink"></a></h2><p>MLDatasets.jl is build on top of the package <a href="https://github.com/oxinabox/DataDeps.jl"><code>DataDeps.jl</code></a>. To load the data the package looks for the necessary files in various locations (see <a href="https://github.com/oxinabox/DataDeps.jl#configuration"><code>DataDeps.jl</code></a> for more information on how to configure such defaults). If the data can&#39;t be found in any of those locations, then the package will trigger a download dialog to <code>~/.julia/datadeps/&lt;DATASETNAME&gt;</code>. To overwrite this on a case by case basis, it is possible to specify a data directory directly in the dataset constructor (e.g. <code>MNIST(dir = &lt;directory&gt;)</code>).</p><p>In order to download datasets without having to manually confirm the download,  you can set to true the following enviromental variable:</p><pre><code class="language-julia hljs">ENV[&quot;DATADEPS_ALWAYS_ACCEPT&quot;] = true</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="datasets/graphs/">Graphs »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Tuesday 5 July 2022 06:36">Tuesday 5 July 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
