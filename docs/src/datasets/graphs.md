@@ -23,10 +23,10 @@ MLDatasets.HeteroGraph
 CiteSeer
 Cora
 KarateClub
+MovieLens
 OGBDataset
 PolBlogs
 PubMed
 Reddit
 TUDataset
-MovieLens
 ```

@@ -1,115 +1,43 @@
 
-@testset "Reddit_full" begin
-    data  = Reddit(full=true)
+@testset "ml-latest-small" begin
+    data = MovieLens("latest-small")
     @test length(data) == 1
+
     g = data[1]
-    @test g.num_nodes == 232965
-    @test g.num_edges == 114615892
-    @test size(g.node_data.features) == (602, g.num_nodes)
-    @test size(g.node_data.labels) == (g.num_nodes,)
-    @test count(g.node_data.train_mask) == 153431
-    @test count(g.node_data.val_mask) == 23831
-    @test count(g.node_data.test_mask) == 55703
-    s, t = g.edge_index
-    @test length(s) == length(t) == g.num_edges
-    @test minimum(s) == minimum(t) == 1
-    @test maximum(s) == maximum(t) == g.num_nodes
-end
+    @test g == data[:]
+    @test g isa MLDatasets.HeteroGraph
 
-@testset "Reddit_subset" begin
-    data  = Reddit(full=false)
-    @test length(data) == 1
-    g = data[1]
-    @test g.num_nodes == 231443
-    @test g.num_edges == 23213838
-    @test size(g.node_data.features) == (602, g.num_nodes)
-    @test size(g.node_data.labels) == (g.num_nodes,)
-    @test count(g.node_data.train_mask) == 152410
-    @test count(g.node_data.val_mask) == 23699
-    @test count(g.node_data.test_mask) == 55334
-    s, t = g.edge_index
-    @test length(s) == length(t) == g.num_edges
-    @test minimum(s) == minimum(t) == 1
-    @test maximum(s) == maximum(t) == g.num_nodes
-end
+    num_nodes = Dict(
+        "tag"   => 3683,
+        "movie" => 9742,
+        "user"  => 610
+        )
+    num_edges = Dict(
+        ("user", "rating", "movie") => 201672,
+        ("user", "tag", "movie")    => 7366
+    )
 
+    for type in keys(num_nodes)
+        @test type ∈ g.node_types
+        @test g.num_nodes[type] == num_nodes[type]
+        node_data = get(g.node_data, type, nothing)
+        isnothing(node_data) || for (key, val) in node_data
+            @test size(val)[end] == num_nodes[type]
+        end
+    end
 
-@testset "TUDataset - PROTEINS" begin
-    data  = TUDataset("PROTEINS")
-
-    @test data.num_nodes == 43471
-    @test data.num_edges == 162088
-    @test data.num_graphs == 1113
-
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
-    @test data.num_graphs == length(data) == length(data.graphs)
-
-    i = rand(1:length(data))
-    di = data[i]
-    @test di isa NamedTuple
-    g, targets = di.graphs, di.targets
-    @test targets isa Int
-    @test g isa Graph
-    @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
-    @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
-
-    # graph data
-    @test size(data.graph_data.targets) == (data.num_graphs,)
-
-    # node data
-    @test size(g.node_data.features) == (1, g.num_nodes)
-    @test size(g.node_data.targets) == (g.num_nodes,)
-
-    # edge data
-    @test g.edge_data === nothing
-end
-
-@testset "TUDataset - QM9" begin
-    data  = TUDataset("QM9")
-
-    @test data.num_nodes == 2333625
-    @test data.num_edges == 4823498
-    @test data.num_graphs == 129433
-
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
-    @test data.num_graphs == length(data) == length(data.graphs)
-
-    i = rand(1:length(data))
-    g, features = data[i]
-    @test g isa Graph
-    @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
-    @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
-
-    # graph data
-    @test size(data.graph_data.features) == (19, data.num_graphs)
-
-    # node data
-    @test size(g.node_data.features) == (16, g.num_nodes)
-
-    # edge data
-    @test size(g.edge_data.features) == (4, g.num_edges)
-end
-
-
-@testset "OGBDataset - ogbn-arxiv" begin
-    d = OGBDataset("ogbn-arxiv")
-    g = d[:]
-    @test g.num_nodes == 169343
-    @test g.num_edges == 1166243
-
-    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
-end
-
-@testset "OGBDataset - ogbg-molhiv" begin
-    d = OGBDataset("ogbg-molhiv")
-
-    @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+    for type in keys(num_edges)
+        @test type ∈ g.edge_types
+        @test g.num_edges[type] == num_edges[type]
+        @test length(g.edge_indices[type][1]) == num_edges[type]
+        @test length(g.edge_indices[type][2]) == num_edges[type]
+        edge_data = g.edge_data[type]
+        for (key, val) in edge_data
+            @test key in  [:timestamp, :tag_name, :rating]
+            @test ndims(val) == 1
+            @test size(val)[end] == num_edges[type]
+        end
+    end
 end
 
 @testset "ml-100k" begin
@@ -147,47 +75,6 @@ end
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
             @test key in  [:timestamp, :rating]
-            @test ndims(val) == 1
-            @test size(val)[end] == num_edges[type]
-        end
-    end
-end
-
-@testset "ml-latest-small" begin
-    data = MovieLens("latest-small")
-    @test length(data) == 1
-
-    g = data[1]
-    @test g == data[:]
-    @test g isa MLDatasets.HeteroGraph
-
-    num_nodes = Dict(
-        "tag"   => 3683,
-        "movie" => 9742,
-        "user"  => 610
-        )
-    num_edges = Dict(
-        ("user", "rating", "movie") => 201672,
-        ("user", "tag", "movie")    => 7366
-    )
-
-    for type in keys(num_nodes)
-        @test type ∈ g.node_types
-        @test g.num_nodes[type] == num_nodes[type]
-        node_data = get(g.node_data, type, nothing)
-        isnothing(node_data) || for (key, val) in node_data
-            @test size(val)[end] == num_nodes[type]
-        end
-    end
-
-    for type in keys(num_edges)
-        @test type ∈ g.edge_types
-        @test g.num_edges[type] == num_edges[type]
-        @test length(g.edge_indices[type][1]) == num_edges[type]
-        @test length(g.edge_indices[type][2]) == num_edges[type]
-        edge_data = g.edge_data[type]
-        for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -352,4 +239,116 @@ end
             @test size(val)[end] == num_edges[type]
         end
     end
+end
+
+@testset "OGBDataset - ogbn-arxiv" begin
+    d = OGBDataset("ogbn-arxiv")
+    g = d[:]
+    @test g.num_nodes == 169343
+    @test g.num_edges == 1166243
+
+    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
+end
+
+@testset "OGBDataset - ogbg-molhiv" begin
+    d = OGBDataset("ogbg-molhiv")
+
+    @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+end
+
+@testset "Reddit_full" begin
+    data  = Reddit(full=true)
+    @test length(data) == 1
+    g = data[1]
+    @test g.num_nodes == 232965
+    @test g.num_edges == 114615892
+    @test size(g.node_data.features) == (602, g.num_nodes)
+    @test size(g.node_data.labels) == (g.num_nodes,)
+    @test count(g.node_data.train_mask) == 153431
+    @test count(g.node_data.val_mask) == 23831
+    @test count(g.node_data.test_mask) == 55703
+    s, t = g.edge_index
+    @test length(s) == length(t) == g.num_edges
+    @test minimum(s) == minimum(t) == 1
+    @test maximum(s) == maximum(t) == g.num_nodes
+end
+
+@testset "Reddit_subset" begin
+    data  = Reddit(full=false)
+    @test length(data) == 1
+    g = data[1]
+    @test g.num_nodes == 231443
+    @test g.num_edges == 23213838
+    @test size(g.node_data.features) == (602, g.num_nodes)
+    @test size(g.node_data.labels) == (g.num_nodes,)
+    @test count(g.node_data.train_mask) == 152410
+    @test count(g.node_data.val_mask) == 23699
+    @test count(g.node_data.test_mask) == 55334
+    s, t = g.edge_index
+    @test length(s) == length(t) == g.num_edges
+    @test minimum(s) == minimum(t) == 1
+    @test maximum(s) == maximum(t) == g.num_nodes
+end
+
+
+@testset "TUDataset - PROTEINS" begin
+    data  = TUDataset("PROTEINS")
+
+    @test data.num_nodes == 43471
+    @test data.num_edges == 162088
+    @test data.num_graphs == 1113
+
+    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g->g.num_edges, data.graphs)
+    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_graphs == length(data) == length(data.graphs)
+
+    i = rand(1:length(data))
+    di = data[i]
+    @test di isa NamedTuple
+    g, targets = di.graphs, di.targets
+    @test targets isa Int
+    @test g isa Graph
+    @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
+    @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
+
+    # graph data
+    @test size(data.graph_data.targets) == (data.num_graphs,)
+
+    # node data
+    @test size(g.node_data.features) == (1, g.num_nodes)
+    @test size(g.node_data.targets) == (g.num_nodes,)
+
+    # edge data
+    @test g.edge_data === nothing
+end
+
+@testset "TUDataset - QM9" begin
+    data  = TUDataset("QM9")
+
+    @test data.num_nodes == 2333625
+    @test data.num_edges == 4823498
+    @test data.num_graphs == 129433
+
+    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g->g.num_edges, data.graphs)
+    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_graphs == length(data) == length(data.graphs)
+
+    i = rand(1:length(data))
+    g, features = data[i]
+    @test g isa Graph
+    @test all(1 .<= g.edge_index[1] .<= g.num_nodes)
+    @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
+
+    # graph data
+    @test size(data.graph_data.features) == (19, data.num_graphs)
+
+    # node data
+    @test size(g.node_data.features) == (16, g.num_nodes)
+
+    # edge data
+    @test size(g.edge_data.features) == (4, g.num_edges)
 end

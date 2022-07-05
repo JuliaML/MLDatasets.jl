@@ -15,9 +15,9 @@ include("test_utils.jl")
 dataset_tests = [
     "datasets/graphs.jl",
     "datasets/misc.jl",
+    "datasets/text.jl",
     "datasets/vision/fashion_mnist.jl",
     "datasets/vision/mnist.jl",
-    "datasets/text.jl",
 ]
 
 no_ci_dataset_tests = [

@@ -71,23 +71,24 @@ export Titanic
 
 ## Vision
 
-include("datasets/vision/emnist.jl")
-export EMNIST
-include("datasets/vision/mnist_reader/MNISTReader.jl")
-include("datasets/vision/mnist.jl")
-export MNIST
-include("datasets/vision/fashion_mnist.jl")
-export FashionMNIST
 include("datasets/vision/cifar10_reader/CIFAR10Reader.jl")
 include("datasets/vision/cifar10.jl")
 export CIFAR10
 include("datasets/vision/cifar100_reader/CIFAR100Reader.jl")
 include("datasets/vision/cifar100.jl")
 export CIFAR100
-include("datasets/vision/svhn2.jl")
-export SVHN2
+include("datasets/vision/emnist.jl")
+export EMNIST
+include("datasets/vision/fashion_mnist.jl")
+export FashionMNIST
+include("datasets/vision/mnist_reader/MNISTReader.jl")
+include("datasets/vision/mnist.jl")
+export MNIST
 include("datasets/vision/omniglot.jl")
 export Omniglot
+include("datasets/vision/svhn2.jl")
+export SVHN2
+
 
 ## Text
 
@@ -106,22 +107,22 @@ include("datasets/graphs/planetoid.jl")
 # export read_planetoid_data
 include("datasets/graphs/cora.jl")
 export Cora
-include("datasets/graphs/pubmed.jl")
-export PubMed
 include("datasets/graphs/citeseer.jl")
 export CiteSeer
-include("datasets/graphs/tudataset.jl")
-export TUDataset
+include("datasets/graphs/karateclub.jl")
+export KarateClub
+include("datasets/graphs/movielens.jl")
+export MovieLens
 include("datasets/graphs/ogbdataset.jl")
 export OGBDataset
 include("datasets/graphs/polblogs.jl")
 export PolBlogs
-include("datasets/graphs/karateclub.jl")
-export KarateClub
+include("datasets/graphs/pubmed.jl")
+export PubMed
 include("datasets/graphs/reddit.jl")
 export Reddit
-include("datasets/graphs/movielens.jl")
-export MovieLens
+include("datasets/graphs/tudataset.jl")
+export TUDataset
 
 function __init__()
     # TODO automatically find and execute __init__xxx functions
@@ -129,12 +130,12 @@ function __init__()
     # graph
     __init__citeseer()
     __init__cora()
+    __init__movielens()
     __init__ogbdataset()
     __init__polblogs()
     __init__pubmed()
     __init__reddit()
     __init__tudataset()
-    __init__movielens()
 
     # misc
     __init__iris()

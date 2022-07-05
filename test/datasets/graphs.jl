@@ -1,29 +1,4 @@
 
-@testset "Cora" begin
-    data  = Cora()
-    @test data isa AbstractDataset
-    @test length(data) == 1
-    g = data[1]
-    @test g === data[:]
-    @test g isa MLDatasets.Graph
-
-    @test g.num_nodes == 2708
-    @test g.num_edges == 10556
-    @test size(g.node_data.features) == (1433, g.num_nodes)
-    @test size(g.node_data.targets) == (g.num_nodes,)
-    @test sum(g.node_data.train_mask) == 140
-    @test sum(g.node_data.val_mask) == 500
-    @test sum(g.node_data.test_mask) == 1000
-    @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
-    s, t = g.edge_index
-    for a in (s, t)
-        @test a isa Vector{Int}
-        @test length(a) == g.num_edges
-        @test minimum(a) == 1
-        @test maximum(a) == g.num_nodes
-    end
-end
-
 @testset "CiteSeer" begin
     data  = CiteSeer()
     @test data isa AbstractDataset
@@ -49,19 +24,19 @@ end
     end
 end
 
-@testset "PubMed" begin
-    data  = PubMed()
+@testset "Cora" begin
+    data  = Cora()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
     @test g === data[:]
     @test g isa MLDatasets.Graph
 
-    @test g.num_nodes == 19717
-    @test g.num_edges == 88648
-    @test size(g.node_data.features) == (500, g.num_nodes)
+    @test g.num_nodes == 2708
+    @test g.num_edges == 10556
+    @test size(g.node_data.features) == (1433, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test sum(g.node_data.train_mask) == 60
+    @test sum(g.node_data.train_mask) == 140
     @test sum(g.node_data.val_mask) == 500
     @test sum(g.node_data.test_mask) == 1000
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
@@ -99,7 +74,6 @@ end
     end
 end
 
-
 @testset "PolBlogs" begin
     data  = PolBlogs()
     @test data isa AbstractDataset
@@ -120,6 +94,31 @@ end
         @test length(a) == g.num_edges
         @test minimum(a) >= 1
         @test maximum(a) <= g.num_nodes
+    end
+end
+
+@testset "PubMed" begin
+    data  = PubMed()
+    @test data isa AbstractDataset
+    @test length(data) == 1
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 19717
+    @test g.num_edges == 88648
+    @test size(g.node_data.features) == (500, g.num_nodes)
+    @test size(g.node_data.targets) == (g.num_nodes,)
+    @test sum(g.node_data.train_mask) == 60
+    @test sum(g.node_data.val_mask) == 500
+    @test sum(g.node_data.test_mask) == 1000
+    @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
+    s, t = g.edge_index
+    for a in (s, t)
+        @test a isa Vector{Int}
+        @test length(a) == g.num_edges
+        @test minimum(a) == 1
+        @test maximum(a) == g.num_nodes
     end
 end
 
