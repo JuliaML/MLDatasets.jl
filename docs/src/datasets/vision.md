@@ -22,9 +22,9 @@ convert2image
 ```@docs
 CIFAR10
 CIFAR100
-ImageNet
 EMNIST
 FashionMNIST
+ImageNet
 MNIST
 SVHN2
 ```

@@ -151,9 +151,9 @@ function __init__()
     __init__cifar100()
     __init__emnist()
     __init__fashionmnist()
+    __init__imagenet()
     __init__mnist()
     __init__svhn2()
-    __init__imagenet()
 end
 
 end #module

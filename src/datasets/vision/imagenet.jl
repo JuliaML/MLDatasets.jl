@@ -25,13 +25,6 @@ This is the most highly-used subset of ImageNet. It spans 1000 object classes an
 1,281,167 training images, 50,000 validation images and 100,000 test images.
 Each image is in 224x224x3 format using RGB color space.
 
-- Authors: Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, Sanjeev Satheesh,
-    Sean Ma, Zhiheng Huang, Andrej Karpathy, Aditya Khosla, Michael Bernstein,
-    Alexander C. Berg, Li Fei-Fei
-- Website: $IMAGENET_WEBSITE
-- Reference: Russakovsky et al., ImageNet Large Scale Visual Recognition Challenge
-    (https://arxiv.org/abs/1409.0575)
-
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
@@ -74,6 +67,10 @@ Dict{String, Any} with 4 entries:
   "class_names"       => Vector{SubString{String}}[["kit fox", "Vulpes macrotis"], ["English setter"], ["Siberian husky"], ["Australian terrier"], ["English springer", "English springer spaniel"], ["grey whale", "gray whale", "d…
   "wnid_to_label"     => Dict("n07693725"=>768, "n03775546"=>829, "n01689811"=>469, "n02100877"=>192, "n02441942"=>48, "n04371774"=>569, "n07717410"=>741, "n03347037"=>919, "n04355338"=>526, "n02097474"=>158…)
 ```
+
+# References
+
+[1]: [Russakovsky et al., ImageNet Large Scale Visual Recognition Challenge](https://arxiv.org/abs/1409.0575)
 """
 struct ImageNet <: SupervisedDataset
     metadata::Dict{String,Any}
@@ -130,7 +127,7 @@ convert2image(::Type{<:ImageNet}, x) = ImageNetReader.inverse_preprocess(x)
 Base.length(d::ImageNet) = length(d.dataset)
 
 const IMAGENET_MEM_WARNING = """Loading the entire ImageNet dataset into memory might not be possible.
-    If you are sure you want to load all of ImageNet, index the dataset with `[1:end]` instead of `[:]`.
+    If you are sure you want to load all of ImageNet, use `dataset[1:end]` instead of `dataset[:]`.
     """
 Base.getindex(::ImageNet, ::Colon) = throw(ArgumentError(IMAGENET_MEM_WARNING))
 Base.getindex(d::ImageNet, i::Integer) = (features=d.dataset[i], targets=d.targets[i])
