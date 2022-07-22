@@ -19,22 +19,22 @@ end
 
 function Base.show(io::IO, ::MIME"text/plain", d::D) where D <: AbstractDataset
     recur_io = IOContext(io, :compact => false)
-    
+
     print(io, "dataset $(D.name.name):")  # if the type is parameterized don't print the parameters
-    
-    for f in fieldnames(D)
-        if !startswith(string(f), "_")
-            fstring = leftalign(string(f), 10)
-            print(recur_io, "\n  $fstring  =>    ")
-            # show(recur_io, MIME"text/plain"(), getfield(d, f))
-            # println(recur_io)
-            print(recur_io, "$(_summary(getfield(d, f)))")
-        end
+
+    fnames = filter(!startswith("_"), string.(fieldnames(D)))
+    f_length = max(length.(fnames)...)
+    for f in fnames
+        fstring = leftalign(f, f_length)
+        print(recur_io, "\n  $fstring  =>    ")
+        # show(recur_io, MIME"text/plain"(), getfield(d, f))
+        # println(recur_io)
+        print(recur_io, "$(_summary(getfield(d, Symbol(f))))")
     end
 end
 
 function leftalign(s::AbstractString, n::Int)
-    m = length(s) 
+    m = length(s)
     if m > n
         return s[1:n]
     else
@@ -60,7 +60,7 @@ a `features` and a `targets` fields.
 abstract type SupervisedDataset <: AbstractDataset end
 
 
-Base.length(d::SupervisedDataset) = Tables.istable(d.features) ? numobs_table(d.features) : 
+Base.length(d::SupervisedDataset) = Tables.istable(d.features) ? numobs_table(d.features) :
                                                                  numobs((d.features, d.targets))
 
 
@@ -69,7 +69,7 @@ Base.getindex(d::SupervisedDataset, ::Colon) = Tables.istable(d.features) ?
     (features = d.features, targets=d.targets) :
     getobs((; d.features, d.targets))
 
-Base.getindex(d::SupervisedDataset, i) = Tables.istable(d.features) ? 
+Base.getindex(d::SupervisedDataset, i) = Tables.istable(d.features) ?
     (features = getobs_table(d.features, i), targets=getobs_table(d.targets, i)) :
     getobs((; d.features, d.targets), i)
 
@@ -99,13 +99,13 @@ const ARGUMENTS_SUPERVISED_TABLE = """
 
 const FIELDS_SUPERVISED_TABLE = """
 - `metadata`: A dictionary containing additional information on the dataset.
-- `features`: The data features. An array if `as_df=true`, otherwise a dataframe. 
+- `features`: The data features. An array if `as_df=true`, otherwise a dataframe.
 - `targets`: The targets for supervised learning. An array if `as_df=true`, otherwise a dataframe.
 - `dataframe`: A dataframe containing both `features` and `targets`. It is `nothing` if `as_df=false`.
 """
 
 const METHODS_SUPERVISED_TABLE = """
-- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets.
 - `dataset[:]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """
@@ -119,12 +119,12 @@ const ARGUMENTS_SUPERVISED_ARRAY = """
 
 const FIELDS_SUPERVISED_ARRAY = """
 - `metadata`: A dictionary containing additional information on the dataset.
-- `features`: An array storing the data features. 
+- `features`: An array storing the data features.
 - `targets`: An array storing the targets for supervised learning.
 """
 
 const METHODS_SUPERVISED_ARRAY = """
-- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets. 
+- `dataset[i]`: Return observation(s) `i` as a named tuple of features and targets.
 - `dataset[:]`: Return all observations as a named tuple of features and targets.
 - `length(dataset)`: Number of observations.
 """

@@ -6,6 +6,7 @@ using Tables
 using DataDeps
 import MLUtils
 using MLUtils: getobs, numobs, AbstractDataContainer
+using Printf
 using Glob
 using DelimitedFiles: readdlm
 using FileIO
@@ -121,6 +122,11 @@ export Reddit
 include("datasets/graphs/movielens.jl")
 export MovieLens
 
+# Meshes
+
+include("datasets/meshes/mpi_faust.jl")
+export FAUST
+
 function __init__()
     # TODO automatically find and execute __init__xxx functions
 
@@ -150,6 +156,9 @@ function __init__()
     __init__fashionmnist()
     __init__mnist()
     __init__svhn2()
+
+    # mesh
+    __init__faust()
 end
 
 end #module
