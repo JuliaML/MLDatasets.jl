@@ -114,9 +114,12 @@ score = g.edge_data[("movie", "score", "tag")][:score]
 
 ## References
 
-[1] [GroupLens Website](https://grouplens.org/datasets/movielens/)   
+[1] [GroupLens Website](https://grouplens.org/datasets/movielens/)
+
 [2] [TensorFlow MovieLens Implementation](https://www.tensorflow.org/datasets/catalog/movielens)   
+
 [3] Jesse Vig, Shilad Sen, and John Riedl. 2012. The Tag Genome: Encoding Community Knowledge to Support Novel Interaction. ACM Trans. Interact. Intell. Syst. 2, 3, Article 13 (September 2012), 44 pages. https://doi.org/10.1145/2362394.2362395.   
+
 [4] F. Maxwell Harper and Joseph A. Konstan. 2015. The MovieLens Datasets: History and Context. ACM Trans. Interact. Intell. Syst. 5, 4, Article 19 (January 2016), 19 pages. https://doi.org/10.1145/2827872  
 """
 struct MovieLens
