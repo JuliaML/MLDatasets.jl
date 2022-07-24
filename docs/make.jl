@@ -24,6 +24,7 @@ makedocs(
         "Home" => "index.md",
         "Datasets" => Any[
             "Graphs" => "datasets/graphs.md",
+            "Meshes" => "datasets/meshes.md",
             "Miscellaneous" => "datasets/misc.md",
             "Text" => "datasets/text.md",
             "Vision" => "datasets/vision.md",

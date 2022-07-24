@@ -11,6 +11,96 @@ function __init__faust()
     ))
 end
 
+"""
+    FAUST(split=:train; dir=nothing)
+
+The MPI FAUST dataset(2014).
+
+FAUST contains 300 real, high-resolution human scans of 10 different subjects in 30 different poses, with automatically computed ground-truth correspondences.
+
+Each scan is a high-resolution, triangulated, non-watertight mesh acquired with a 3D multi-stereo system.
+
+FAUST is subdivided into a training and a test set. The training set includes 100 scans (10 per subject) with their corresponding ground-truth alignments. The test set includes 200 scans. The FAUST benchmark defines 100 preselected scan pairs, partitioned into two classes – 60 requiring intra-subject matching, 40 requiring inter-subject matching.
+
+The dataset required to be downloaded manually from the [website](http://faust.is.tue.mpg.de/) and extracted in the correct location. For information about where to place the dataset, refer to the example section.
+
+# Dataset Variables
+
+- `scans`: Vector of non-watertight scans in the form of `Mesh`.
+- `registrations`: Vector of registrations corresponding to each scan in `scans`. `registrations` like `scans` are also in the form of `Mesh`.
+- `labels`: For each scan in the training set, we provide the boolean Vector of length equal to the number of vertices in the corresponding scan. It represents which vertices were reliably registered by the corresponding registration.
+- `metadata`: A dictionary containing additional information on the dataset. Currently only `:test` split has metadata containing information about the registrations required for the inter and intra challenge proposed by the author.
+
+# Examples
+
+## Loading the dataset
+
+```julia-repl
+julia> using MLDatasets
+
+julia> dataset = FAUST()
+[ Info: This program requested access to the data dependency MPI-FAUST
+[ Info: It could not be found on your system. It requires manual installation.
+┌ Info: Please install it to one of the directories in the DataDeps load path: /home/user/.julia/packages/DataDeps/EDWdQ/deps/data/MPI-FAUST,
+│ /home/user/.julia/datadeps/MPI-FAUST,
+│ /home/user/.julia/juliaup/julia-1.7.3+0.x86/local/share/julia/datadeps/MPI-FAUST,
+│ /home/user/.julia/juliaup/julia-1.7.3+0.x86/share/julia/datadeps/MPI-FAUST,
+│ /home/user/datadeps/MPI-FAUST,
+│ /scratch/datadeps/MPI-FAUST,
+│ /staging/datadeps/MPI-FAUST,
+│ /usr/share/datadeps/MPI-FAUST,
+└ or /usr/local/share/datadeps/MPI-FAUST
+[ Info: by following the instructions:
+┌ Info: Dataset: MPI-FAUST.
+└ Website: http://faust.is.tue.mpg.de/
+Once installed please enter 'y' reattempt loading, or 'a' to abort
+[y/a]
+```
+Now download and extract the dataset into one of the given locations. For unix link systems, an example command can be
+```bash
+unzip -q <path-to-filename</filename.zip ~/.julia/datadeps
+```
+The corresponding folder tree should look like
+```
+├── test
+│   ├── challenge_pairs
+│   └── scans
+└── training
+    ├── ground_truth_vertices
+    ├── registrations
+    └── scans
+```
+Press `y` to re-attept loading.
+```julia-repl
+dataset FAUST:
+  scans          =>    100-element Vector{Any}
+  registrations  =>    100-element Vector{Any}
+  labels         =>    100-element Vector{Vector{Bool}}
+  metadata       =>    Dict{String, Any} with 0 entries
+```
+
+## Load train and test split
+
+```julia-repl
+julia> train_faust = FAUST(:train)
+julia> test_faust = FAUST(:test)
+```
+
+## Scan, registrations and ground-truth
+
+```julia-repl
+julia> dataset = FAUST() # defaults to train split
+julia> scan = dataset.scans[1] # pick one scan
+julia> registration = dataset.registrations[1] # The corresponding registration
+julia> label = dataset.labels[1] # The ground-truth/labels for each vertices in scan
+```
+
+# Refereneces
+
+1. [MPI Faust Website](http://faust.is.tue.mpg.de/)
+
+2. Bogo, Federica & Romero, Javier & Loper, Matthew & Black, Michael. (2014). FAUST: Dataset and evaluation for 3D mesh registration. Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition. 10.1109/CVPR.2014.491.
+"""
 struct FAUST <: AbstractDataset
     scans::Vector
     registrations::Vector
@@ -69,4 +159,3 @@ function read_challenge_file(filename::String)::Vector{Tuple{Int, Int}}
     end
     return pairs
 end
-
