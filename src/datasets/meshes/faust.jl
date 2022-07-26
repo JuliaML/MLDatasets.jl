@@ -14,15 +14,21 @@ end
 """
     FAUST(split=:train; dir=nothing)
 
-The MPI FAUST dataset(2014).
+The MPI FAUST dataset (2014).
 
-FAUST contains 300 real, high-resolution human scans of 10 different subjects in 30 different poses, with automatically computed ground-truth correspondences.
+FAUST contains 300 real, high-resolution human scans of 10 different subjects in 30 different poses,
+with automatically computed ground-truth correspondences.
 
 Each scan is a high-resolution, triangulated, non-watertight mesh acquired with a 3D multi-stereo system.
 
-FAUST is subdivided into a training and a test set. The training set includes 100 scans (10 per subject) with their corresponding ground-truth alignments. The test set includes 200 scans. The FAUST benchmark defines 100 preselected scan pairs, partitioned into two classes – 60 requiring intra-subject matching, 40 requiring inter-subject matching.
+FAUST is subdivided into a training and a test set. The training set includes 100 scans (10 per subject)
+with their corresponding ground-truth alignments. The test set includes 200 scans. The FAUST benchmark defines
+100 preselected scan pairs, partitioned into two classes – 60 requiring intra-subject matching,
+40 requiring inter-subject matching.
 
-The dataset required to be downloaded manually from the [website](http://faust.is.tue.mpg.de/) and extracted in the correct location. For information about where to place the dataset, refer to the example section.
+The dataset required to be downloaded manually from the [website](http://faust.is.tue.mpg.de/) 
+and extracted in the correct location. For information about where to place the dataset, refer to the example section.
+
 
 # Dataset Variables
 
@@ -83,16 +89,50 @@ dataset FAUST:
 
 ```julia-repl
 julia> train_faust = FAUST(:train)
+dataset FAUST:
+  scans          =>    100-element Vector{Any}
+  registrations  =>    100-element Vector{Any}
+  labels         =>    100-element Vector{Vector{Bool}}
+  metadata       =>    Dict{String, Any} with 0 entries
 julia> test_faust = FAUST(:test)
+dataset FAUST:
+  scans          =>    100-element Vector{Any}
+  registrations  =>    100-element Vector{Any}
+  labels         =>    100-element Vector{Vector{Bool}}
+  metadata       =>    Dict{String, Any} with 0 entries
 ```
 
 ## Scan, registrations and ground-truth
 
 ```julia-repl
-julia> dataset = FAUST() # defaults to train split
+julia> dataset = FAUST(); # defaults to train split
 julia> scan = dataset.scans[1] # pick one scan
+Mesh{3, Float32, Triangle}:
+ Triangle(Float32[-0.0045452323, 0.08537669, 0.22134435], Float32[-0.0030340434, 0.08542955, 0.22206494], Float32[-0.0042151767, 0.08697654, 0.22171047])
+ Triangle(Float32[-0.05358432, 0.08490027, 0.17748278], Float32[-0.05379858, 0.083174236, 0.17670263], Float32[-0.052645437, 0.08346437, 0.17816517])
+.
+.
+.
+ Triangle(Float32[-0.07851, -1.0956081, 0.07093428], Float32[-0.06905176, -1.0986279, 0.07775441], Float32[-0.069199145, -1.0928112, 0.06812464])
 julia> registration = dataset.registrations[1] # The corresponding registration
+Mesh{3, Float32, Triangle}:
+ Triangle(Float32[0.12491254, 0.51199615, 0.29041073], Float32[0.11376736, 0.5156298, 0.3007352], Float32[0.119374536, 0.50043654, 0.29687837])
+ Triangle(Float32[0.119374536, 0.50043654, 0.29687837], Float32[0.11376736, 0.5156298, 0.3007352], Float32[0.10888693, 0.5008964, 0.30557302])
+.
+.
+.
+ Triangle(Float32[0.033744745, 0.030968456, 0.2359996], Float32[0.058017172, 0.044458304, 0.23422624], Float32[0.03615713, 0.04858183, 0.23596591])
 julia> label = dataset.labels[1] # The ground-truth/labels for each vertices in scan
+176387-element Vector{Bool}:
+ 1
+ 1
+ 1
+ .
+ .
+ .
+ 0
+ 0
+ 0
 ```
 
 # Refereneces

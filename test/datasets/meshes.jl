@@ -1,3 +1,4 @@
+# requires manual downloading
 @testset "MPI-FAUST" begin
     train_data  = FAUST()
     test_data  = FAUST(:test)

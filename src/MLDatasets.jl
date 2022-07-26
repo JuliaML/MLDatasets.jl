@@ -124,7 +124,7 @@ export MovieLens
 
 # Meshes
 
-include("datasets/meshes/mpi_faust.jl")
+include("datasets/meshes/faust.jl")
 export FAUST
 
 function __init__()
