@@ -133,6 +133,7 @@ Float32[0.10888693, 0.5008964, 0.30557302])
 .
  Triangle(Float32[0.033744745, 0.030968456, 0.2359996], Float32[0.058017172, 0.044458304, 0.23422624],
 Float32[0.03615713, 0.04858183, 0.23596591])
+
 julia> label = dataset.labels[1] # The ground-truth/labels for each vertices in scan
 176387-element Vector{Bool}:
  1
