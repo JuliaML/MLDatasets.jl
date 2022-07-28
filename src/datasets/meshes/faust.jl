@@ -111,6 +111,7 @@ dataset FAUST:
 
 ```julia-repl
 julia> dataset = FAUST(); # defaults to train split
+
 julia> scan = dataset.scans[1] # pick one scan
 Mesh{3, Float32, Triangle}:
  Triangle(Float32[-0.0045452323, 0.08537669, 0.22134435], Float32[-0.0030340434, 0.08542955, 0.22206494],
