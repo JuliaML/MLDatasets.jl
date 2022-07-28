@@ -22,6 +22,7 @@ dataset_tests = [
 
 no_ci_dataset_tests = [
     "datasets/graphs_no_ci.jl",
+    "datasets/text_no_ci.jl",
     "datasets/vision/cifar10.jl",
     "datasets/vision/cifar100.jl",
     "datasets/vision/emnist.jl",
