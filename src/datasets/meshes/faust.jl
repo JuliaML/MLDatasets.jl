@@ -122,6 +122,7 @@ Float32[-0.052645437, 0.08346437, 0.17816517])
 .
  Triangle(Float32[-0.07851, -1.0956081, 0.07093428], Float32[-0.06905176, -1.0986279, 0.07775441],
 Float32[-0.069199145, -1.0928112, 0.06812464])
+
 julia> registration = dataset.registrations[1] # The corresponding registration
 Mesh{3, Float32, Triangle}:
  Triangle(Float32[0.12491254, 0.51199615, 0.29041073], Float32[0.11376736, 0.5156298, 0.3007352],
