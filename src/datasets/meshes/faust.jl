@@ -192,20 +192,20 @@ function FAUST(split=:train; dir=nothing)
             push!(labels, gt)
         end
         return FAUST(scans, registrations, labels, Dict())
+    else
+        scan_dir = joinpath(dir, "test", "scans")
+        for i in range(0, 199)
+            scan_file = @sprintf("test_scan_%03d.ply", i)
+            scan = load(joinpath(scan_dir, scan_file))
+            push!(scans, scan)
+        end
+        interfile = joinpath(dir, "test", "challenge_pairs", "inter_challenge.txt")
+        intrafile = joinpath(dir, "test", "challenge_pairs", "intra_challenge.txt")
+        inter_pairs = read_challenge_file(interfile)
+        intra_pairs = read_challenge_file(intrafile)
+        metadata = Dict("Inter_Pairs" => inter_pairs, "Intra_Pairs" => intra_pairs)
+        return FAUST(scans, registrations, labels, metadata)
     end
-
-    scan_dir = joinpath(dir, "test", "scans")
-    for i in range(0, 199)
-        scan_file = @sprintf("test_scan_%03d.ply", i)
-        scan = load(joinpath(scan_dir, scan_file))
-        push!(scans, scan)
-    end
-    interfile = joinpath(dir, "test", "challenge_pairs", "inter_challenge.txt")
-    intrafile = joinpath(dir, "test", "challenge_pairs", "intra_challenge.txt")
-    inter_pairs = read_challenge_file(interfile)
-    intra_pairs = read_challenge_file(intrafile)
-    metadata = Dict("Inter_Pairs" => inter_pairs, "Intra_Pairs" => intra_pairs)
-    return FAUST(scans, registrations, labels, metadata)
 end
 
 function read_challenge_file(filename::String)::Vector{Tuple{Int, Int}}
