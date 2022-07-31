@@ -99,6 +99,7 @@ dataset FAUST:
   registrations  =>    100-element Vector{Any}
   labels         =>    100-element Vector{Vector{Bool}}
   metadata       =>    Dict{String, Any} with 0 entries
+
 julia> test_faust = FAUST(:test)
 dataset FAUST:
   scans          =>    100-element Vector{Any}
