@@ -47,7 +47,7 @@ doesn't consider all nodes.
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
 
-[2]: [Planetoid](https://github.com/kimiyoung/planetoid
+[2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
 struct Cora <: AbstractDataset
     metadata::Dict{String, Any}
