@@ -71,7 +71,7 @@ function Reddit(; full=true, dir=nothing)
     nodes = graph["nodes"]
     num_edges = directed ? length(links) : length(links) * 2
     num_nodes = length(nodes)
-    @assert length(graph["graph"]) == 0 # should be zero
+    @assert length(graph["graph"]) == 0
 
     # edges
     s = get.(links, "source", nothing) .+ 1
@@ -100,11 +100,15 @@ function Reddit(; full=true, dir=nothing)
     @assert sum(val_mask .& test_mask) == 0
     train_mask = nor.(test_mask, val_mask)
 
-    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph, 
-                "num_edges" => num_edges, "num_nodes" => num_nodes)
-    g = Graph(; num_nodes, 
-        edge_index=(s, t), 
-        node_data= (; labels, features, train_mask, val_mask, test_mask)
+    split = ( train = train_mask,
+              val = val_mask,
+              test = test_mask)
+
+    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph,
+                "num_edges" => num_edges, "num_nodes" => num_nodes, "node" => (; split=[split]))
+    g = Graph(; num_nodes,
+        edge_index=(s, t),
+        node_data= (; labels, features)
     )
     return Reddit(metadata, [g])
 end
