@@ -75,7 +75,7 @@ Dict{String, Any} with 17 entries:
   "is hetero"             => false
   "task level"            => "node"
   ⋮                       => ⋮
-```
+
 julia> data = OGBDataset("ogbn-mag")
 OGBDataset ogbn-mag:
   metadata    =>    Dict{String, Any} with 17 entries
@@ -89,6 +89,7 @@ Heterogeneous Graph:
   edge_indices  =>    Dict{Tuple{String, String, String}, Tuple{Vector{Int64}, Vector{Int64}}} with 4 entries
   node_data     =>    (year = "Dict{String, Vector{Float32}} with 1 entry", features = "Dict{String, Matrix{Float32}} with 1 entry", label = "Dict{String, Vector{Int64}} with 1 entry")
   edge_data     =>    (reltype = "Dict{Tuple{String, String, String}, Vector{Float32}} with 4 entries",)
+```
 
 ## Edge prediction task
 
@@ -120,8 +121,12 @@ OGBDataset ogbg-molhiv:
 julia> data[1]
 (graphs = Graph(19, 40), labels = 0)
 ```
+
+# References
+
+[1] [Open Graph Benchmark: Datasets for Machine Learning on Graphs](https://arxiv.org/pdf/2005.00687.pdf)
 """
-struct OGBDataset{GD} <: AbstractDataset
+struct OGBDataset{GD} <: GraphDataset
     name::String
     metadata::Dict{String, Any}
     graphs::Vector{<:AbstractGraph}
@@ -297,7 +302,7 @@ function read_ogb_graph(path, metadata)
         end
     end
     labels = isempty(dlabels) ? nothing :
-             length(dlabels) == 1 ? first(dlabels)[2] : dlabels
+                length(dlabels) == 1 ? first(dlabels)[2] : dlabels
 
     splits = readdir(joinpath(path, "split"))
     @assert length(splits) == 1 # TODO check if datasets with multiple splits existin in OGB
@@ -561,7 +566,6 @@ function ogbdict2heterograph(d::Dict)
     return HeteroGraph(;num_nodes, edge_indices, edge_data, node_data)
 end
 
-Base.length(data::OGBDataset) = length(data.graphs)
 Base.getindex(data::OGBDataset{Nothing}, ::Colon) = length(data.graphs) == 1 ? data.graphs[1] : data.graphs
 Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.graph_data.labels)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)

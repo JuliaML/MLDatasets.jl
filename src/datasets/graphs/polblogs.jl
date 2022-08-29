@@ -1,7 +1,6 @@
 function __init__polblogs()
     LINK = "https://netset.telecom-paris.fr/datasets/polblogs.tar.gz"
     DEPNAME = "PolBlogs"
-    
 
     register(DataDep(DEPNAME,
     """
@@ -16,17 +15,20 @@ end
 
 """
     PolBlogs(; dir=nothing)
- 
-The Political Blogs dataset from the [The Political Blogosphere and
-the 2004 US Election: Divided they Blog](https://dl.acm.org/doi/10.1145/1134271.1134277) paper.
+
+The Political Blogs dataset from Ref. [1].
 
 `PolBlogs` is a graph with 1,490 vertices (representing political blogs) and 19,025 edges (links between blogs).
 
-The links are automatically extracted from a crawl of the front page of the blog. 
+The links are automatically extracted from a crawl of the front page of the blog.
 
 Each vertex receives a label indicating the political leaning of the blog: liberal or conservative.
+
+# References
+
+[1]  [The Political Blogosphere and the 2004 US Election: Divided they Blog](https://dl.acm.org/doi/10.1145/1134271.1134277) paper.
 """
-struct PolBlogs <: AbstractDataset
+struct PolBlogs <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
@@ -44,12 +46,8 @@ function PolBlogs(; dir=nothing)
 
     metadata = Dict{String, Any}()
     g = Graph(; num_nodes = 1490,
-            edge_index = (s, t), 
+            edge_index = (s, t),
             node_data = (; labels))
 
     return PolBlogs(metadata, [g])
 end
-
-Base.length(d::PolBlogs) = length(d.graphs) 
-Base.getindex(d::PolBlogs, ::Colon) = d.graphs[1]
-Base.getindex(d::PolBlogs, i) = getindex(d.graphs, i)

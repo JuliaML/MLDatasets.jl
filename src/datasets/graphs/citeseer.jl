@@ -21,17 +21,17 @@ end
 
 The CiteSeer citation network dataset from Ref. [1].
 Nodes represent documents and edges represent citation links.
-The dataset is designed for the node classification task. 
+The dataset is designed for the node classification task.
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
 
 # References
 
-[1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815) 
- 
+[1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
+
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
-struct CiteSeer <: AbstractDataset
+struct CiteSeer <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
@@ -40,10 +40,6 @@ function CiteSeer(; dir=nothing, reverse_edges=true)
     metadata, g = read_planetoid_data("CiteSeer", dir=dir, reverse_edges=reverse_edges)
     return CiteSeer(metadata, [g])
 end
-
-Base.length(d::CiteSeer) = length(d.graphs) 
-Base.getindex(d::CiteSeer, ::Colon) = d.graphs[1]
-Base.getindex(d::CiteSeer, i) = d.graphs[i]
 
 
 # DEPRECATED in v0.6.0
@@ -67,5 +63,3 @@ function Base.getproperty(::Type{CiteSeer}, s::Symbol)
         return getfield(CiteSeer, s)
     end
 end
-
-

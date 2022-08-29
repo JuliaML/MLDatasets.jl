@@ -121,13 +121,13 @@ end
 
 HeteroGraph is used for HeteroGeneous Graphs.
 
-`HeteroGraph` unlike `Graph` can have different types of nodes. Each node pertains to different types of information. 
+`HeteroGraph` unlike `Graph` can have different types of nodes. Each node pertains to different types of information.
 
-Edges in `HeteroGraph` is defined by relations. A relation is a tuple of 
+Edges in `HeteroGraph` is defined by relations. A relation is a tuple of
 (`src_node_type`, `edge_type`, `target_node_type`) where `edge_type` represents the relation
-between the src and target nodes. Edges between same node types are possible. 
+between the src and target nodes. Edges between same node types are possible.
 
-A `HeteroGraph` can be directed or undirected. It doesn't distinguish between directed 
+A `HeteroGraph` can be directed or undirected. It doesn't distinguish between directed
 or undirected graphs. Therefore, for undirected graphs, it will store edges in both directions.
 Nodes are indexed in `1:num_nodes`.
 
@@ -137,10 +137,10 @@ Nodes are indexed in `1:num_nodes`.
 - `num_edges`: Dictionary containing the number of edges for each relation.
 - `edge_indices`: Dictionary containing the `edge_index` for each edge relation. An `edge_index` is a tuple containing two vectors with length equal to the number of edges for the relation.
     The first vector contains the list of the source nodes of each edge, the second contains the target nodes.
-- `node_data`: node-related data. Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of node can be accessed 
+- `node_data`: node-related data. Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of node can be accessed
             using node_data[node_type].The array's last dimension size should be equal to the number of nodes.
             Default `nothing`.
-- `edge_data`: Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of edge can be accessed 
+- `edge_data`: Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of edge can be accessed
             using edge_data[edge_type].The array's last dimension size should be equal to the number of nodes.
             Default `nothing`.
 """
@@ -227,3 +227,5 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
     end
     return adj
 end
+
+

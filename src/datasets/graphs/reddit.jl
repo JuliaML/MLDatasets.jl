@@ -19,7 +19,7 @@ end
 """
     Reddit(; full=true, dir=nothing)
 
-The Reddit dataset was introduced in Ref [1].
+The Reddit dataset was introduced in Ref. [1].
 It is a graph dataset of Reddit posts made in the month of September, 2014.
 The dataset contains a single post-to-post graph, connecting posts if the same user comments on both. 
 The node label in this case is one of the 41 communities, or “subreddit”s, that a post belongs to.  
@@ -31,15 +31,15 @@ Use `full=false` to load only a subsample of the dataset.
 
 
 # References
+
 [1]: [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216)
 
 [2]: [Benchmarks on the Reddit Dataset](https://paperswithcode.com/dataset/reddit)
 """
-struct Reddit <: AbstractDataset
+struct Reddit <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
-
 
 function Reddit(; full=true, dir=nothing)
     DATAFILES =  [
@@ -48,7 +48,6 @@ function Reddit(; full=true, dir=nothing)
         ]
     DATA = joinpath.("reddit", DATAFILES)
     DEPNAME = "Reddit"
-
 
     if full
         graph_json = datafile(DEPNAME, DATA[2], dir)
@@ -109,7 +108,3 @@ function Reddit(; full=true, dir=nothing)
     )
     return Reddit(metadata, [g])
 end
-
-Base.length(d::Reddit) = length(d.graphs) 
-Base.getindex(d::Reddit, ::Colon) = d.graphs
-Base.getindex(d::Reddit, i) = getindex(d.graphs, i)

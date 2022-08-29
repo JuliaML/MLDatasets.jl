@@ -21,7 +21,7 @@ end
 
 The PubMed citation network dataset from Ref. [1].
 Nodes represent documents and edges represent citation links.
-The dataset is designed for the node classification task. 
+The dataset is designed for the node classification task.
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
 
@@ -31,7 +31,7 @@ The dataset is retrieved from Ref. [2].
 
 [2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
-struct PubMed <: AbstractDataset
+struct PubMed <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
@@ -40,10 +40,6 @@ function PubMed(; dir=nothing, reverse_edges=true)
     metadata, g = read_planetoid_data("PubMed", dir=dir, reverse_edges=reverse_edges)
     return PubMed(metadata, [g])
 end
-
-Base.length(d::PubMed) = length(d.graphs) 
-Base.getindex(d::PubMed, ::Colon) = d.graphs[1]
-Base.getindex(d::PubMed, i) = getindex(d.graphs, i)
 
 
 # DEPRECATED in v0.6.0

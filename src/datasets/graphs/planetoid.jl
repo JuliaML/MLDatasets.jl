@@ -8,7 +8,7 @@ https://github.com/kimiyoung/planetoid/raw/master/data
 """
 function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
     name = lowercase(DEPNAME)
-    
+
     x  = read_planetoid_file(DEPNAME, "ind.$(name).x", dir)
     y  = read_planetoid_file(DEPNAME, "ind.$(name).y", dir)
     allx  = read_planetoid_file(DEPNAME, "ind.$(name).allx", dir)
@@ -57,27 +57,24 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
         end
     end
 
-    node_data = (features=x, targets=y, 
-                train_indices, 
-                val_indices, 
-                test_indices)
-
-
-    node_data = (features=x, targets=y, 
-                train_mask = indexes2mask(train_indices, num_nodes),
-                val_mask = indexes2mask(val_indices, num_nodes),
-                test_mask = indexes2mask(test_indices, num_nodes))
+    node_data = (features=x, targets=y)
+    split = ( train = indexes2mask(train_indices, num_nodes),
+            val = indexes2mask(val_indices, num_nodes),
+            test = indexes2mask(test_indices, num_nodes))
 
     metadata = Dict{String,Any}(
         "name" => name,
         "num_classes" => length(unique(y)),
-        "classes" => sort(unique(y))
+        "classes" => sort(unique(y)),
+        "node" => (; split=[split]),
+        "edge" => nothing,
+        "graph" => nothing
     )
 
     edge_index = adjlist2edgeindex(adj_list)
-    
-    g = Graph(; num_nodes, 
-                edge_index, 
+
+    g = Graph(; num_nodes,
+                edge_index,
                 node_data)
 
     return metadata, g

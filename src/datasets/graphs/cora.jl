@@ -18,18 +18,17 @@ function __init__cora()
     ))
 end
 
-
 """
     Cora()
 
 The Cora citation network dataset from Ref. [1].
 Nodes represent documents and edges represent citation links.
-Each node has a predefined feature with 1433 dimensions. 
-The dataset is designed for the node classification task. 
+Each node has a predefined feature with 1433 dimensions.
+The dataset is designed for the node classification task.
 The task is to predict the category of certain paper.
 The dataset is retrieved from Ref. [2].
 
-# Statistics 
+# Statistics
 
 - Nodes: 2708
 - Edges: 10556
@@ -39,17 +38,16 @@ The dataset is retrieved from Ref. [2].
     - Val:    500
     - Test:  1000
 
-The split is the one used in the original paper [1] and 
+The split is the one used in the original paper [1] and
 doesn't consider all nodes.
-
 
 # References
 
 [1]: [Deep Gaussian Embedding of Graphs: Unsupervised Inductive Learning via Ranking](https://arxiv.org/abs/1707.03815)
 
-[2]: [Planetoid](https://github.com/kimiyoung/planetoid
+[2]: [Planetoid](https://github.com/kimiyoung/planetoid)
 """
-struct Cora <: AbstractDataset
+struct Cora <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
@@ -58,10 +56,6 @@ function Cora(; dir=nothing, reverse_edges=true)
     metadata, g = read_planetoid_data("Cora", dir=dir, reverse_edges=reverse_edges)
     return Cora(metadata, [g])
 end
-
-Base.length(d::Cora) = length(d.graphs) 
-Base.getindex(d::Cora, ::Colon) = d.graphs[1]
-Base.getindex(d::Cora, i) = getindex(d.graphs, i)
 
 
 # DEPRECATED in v0.6.0

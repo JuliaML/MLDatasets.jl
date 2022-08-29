@@ -3,16 +3,16 @@ export KarateClub
 """
     KarateClub()
 
-The Zachary's karate club dataset originally appeared in Ref [1].
+The Zachary's karate club dataset originally appeared in Ref. [1].
 
 The network contains 34 nodes (members of the karate club).
 The nodes are connected by 78 undirected and unweighted edges.
 The edges indicate if the two members interacted outside the club.
 
 The node labels indicate which community or the karate club the member belongs to.
-The club based labels are as per the original dataset in Ref [1].
-The community labels are obtained by modularity-based clustering following Ref [2].
-The data is retrieved from Ref [3] and [4].
+The club based labels are as per the original dataset in Ref. [1].
+The community labels are obtained by modularity-based clustering following Ref. [2].
+The data is retrieved from Ref. [3] and [4].
 One node per unique label is used as training data.
 
 # References
@@ -25,7 +25,7 @@ One node per unique label is used as training data.
 
 [4]: [NetworkX Zachary's Karate Club Dataset](https://networkx.org/documentation/stable/_modules/networkx/generators/social.html#karate_club_graph)
 """
-struct KarateClub <: AbstractDataset
+struct KarateClub <: GraphDataset
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
 end
@@ -60,14 +60,10 @@ function KarateClub()
     labels_comm = [
                 1, 1, 1, 1, 3, 3, 3, 1, 0, 1, 3, 1, 1, 1, 0, 0, 3, 1, 0, 1, 0, 1,
                 0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
-    
-    node_data = (; labels_clubs, labels_comm) 
+
+    node_data = (; labels_clubs, labels_comm)
     g = Graph(; num_nodes=34, edge_index=(src, target), node_data)
 
     metadata = Dict{String, Any}()
     return KarateClub(metadata, [g])
 end
-
-Base.length(d::KarateClub) = length(d.graphs) 
-Base.getindex(d::KarateClub, ::Colon) = d.graphs[1]
-Base.getindex(d::KarateClub, i) = d.graphs[i]

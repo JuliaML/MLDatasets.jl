@@ -17,12 +17,12 @@ end
 A variety of graph benchmark datasets, *.e.g.* "QM9", "IMDB-BINARY",
 "REDDIT-BINARY" or "PROTEINS", collected from the [TU Dortmund University](https://chrsmrrs.github.io/datasets/).
 Retrieve from the TUDataset collection the dataset `name`, where `name`
-is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/). 
+is any of the datasets available [here](https://chrsmrrs.github.io/datasets/docs/datasets/).
 
 A `TUDataset` object can be indexed to retrieve a specific graph or a subset of graphs.
 
-See [here](https://chrsmrrs.github.io/datasets/docs/format/) for an in-depth 
-description of the format. 
+See [here](https://chrsmrrs.github.io/datasets/docs/format/) for an in-depth
+description of the format.
 
 # Usage Example
 
@@ -40,8 +40,13 @@ dataset TUDataset:
 julia> data[1]
 (graphs = Graph(42, 162), targets = 1)
 ```
+
+# References
+
+[1] [TUDataset: A collection of benchmark datasets for learning with graphs](https://arxiv.org/pdf/2007.08663.pdf)
+
 """
-struct TUDataset <: AbstractDataset
+struct TUDataset <: GraphDataset
     name::String
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
@@ -55,14 +60,14 @@ function TUDataset(name; dir=nothing)
     create_default_dir("TUDataset")
     d = tudataset_datadir(name, dir)
     # See here for the file format: https://chrsmrrs.github.io/datasets/docs/format/
-    
+
     st = readdlm(joinpath(d, "$(name)_A.txt"), ',', Int)
     # Check that the first node is labeled 1.
     # TODO this will fail if the first node is isolated
     @assert minimum(st) == 1
     source, target = st[:,1], st[:,2]
 
-    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
+    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec
     @assert all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
 
     num_nodes = length(graph_indicator)
@@ -70,7 +75,7 @@ function TUDataset(name; dir=nothing)
     num_graphs = length(unique(graph_indicator))
 
     # LOAD OPTIONAL FILES IF EXIST
-    
+
     node_labels = isfile(joinpath(d, "$(name)_node_labels.txt")) ?
                     readdlm(joinpath(d, "$(name)_node_labels.txt"), Int) |> vec :
                     nothing
@@ -104,14 +109,13 @@ function TUDataset(name; dir=nothing)
         end
     end
 
-
     full_dataset = (; num_nodes, num_edges, num_graphs,
-                        source, target, 
+                        source, target,
                         graph_indicator,
                         node_labels,
-                        edge_labels,            
+                        edge_labels,
                         graph_labels,
-                        node_attributes, 
+                        node_attributes,
                         edge_attributes,
                         graph_attributes)
 
@@ -136,14 +140,13 @@ function tudataset_datadir(name, dir = nothing)
     return d
 end
 
-
 function tudataset_getgraph(data::NamedTuple, i::Int)
     vmin = searchsortedfirst(data.graph_indicator, i)
     vmax = searchsortedlast(data.graph_indicator, i)
     nodes = vmin:vmax
     node_labels = isnothing(data.node_labels) ? nothing : getobs(data.node_labels, nodes)
     node_attributes = isnothing(data.node_attributes) ? nothing : getobs(data.node_attributes, nodes)
-    
+
     emin = searchsortedfirst(data.source, vmin)
     emax = searchsortedlast(data.source, vmax)
     edges = emin:emax
@@ -156,18 +159,16 @@ function tudataset_getgraph(data::NamedTuple, i::Int)
     num_edges = length(source)
     node_data = (features = node_attributes, targets = node_labels)
     edge_data = (features = edge_attributes, targets = edge_labels)
-    
+
     return Graph(; num_nodes,
-                edge_index = (source, target), 
+                edge_index = (source, target),
                 node_data = node_data |> clean_nt,
                 edge_data = edge_data |> clean_nt,
                 )
 end
 
 
-Base.length(data::TUDataset) = length(data.graphs)
-
-function Base.getindex(data::TUDataset, ::Colon) 
+function Base.getindex(data::TUDataset, ::Colon)
     if data.graph_data === nothing
         return data.graphs
     else
@@ -175,10 +176,10 @@ function Base.getindex(data::TUDataset, ::Colon)
     end
 end
 
-function Base.getindex(data::TUDataset, i) 
+function Base.getindex(data::TUDataset, i)
     if data.graph_data === nothing
         return getobs(data.graphs, i)
     else
-        return getobs((; data.graphs, data.graph_data...), i)    
+        return getobs((; data.graphs, data.graph_data...), i)
     end
 end
