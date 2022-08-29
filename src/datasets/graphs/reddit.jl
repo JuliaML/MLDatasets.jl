@@ -104,7 +104,7 @@ function Reddit(; full=true, dir=nothing)
               val = val_mask,
               test = test_mask)
 
-    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph,
+    metadata = Dict{String, Any}("directed" => directed,
                 "num_edges" => num_edges, "num_nodes" => num_nodes, "node" => (; split=[split]))
     g = Graph(; num_nodes,
         edge_index=(s, t),
