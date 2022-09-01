@@ -67,8 +67,6 @@ function read_planetoid_data(DEPNAME; dir=nothing, reverse_edges=true)
         "num_classes" => length(unique(y)),
         "classes" => sort(unique(y)),
         "node" => (; split=[split]),
-        "edge" => nothing,
-        "graph" => nothing
     )
 
     edge_index = adjlist2edgeindex(adj_list)

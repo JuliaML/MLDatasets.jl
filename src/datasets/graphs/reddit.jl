@@ -66,7 +66,6 @@ function Reddit(; full=true, dir=nothing)
 
     # Metadata
     directed = graph["directed"]
-    multigraph = graph["multigraph"]
     links = graph["links"]
     nodes = graph["nodes"]
     num_edges = directed ? length(links) : length(links) * 2
