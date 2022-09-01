@@ -247,13 +247,21 @@ end
     @test g.num_nodes == 169343
     @test g.num_edges == 1166243
 
-    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
+    train_mask = d.metadata["node"].split["time"][1].train
+    test_mask = d.metadata["node"].split["time"][1].test
+    val_mask = d.metadata["node"].split["time"][1].val
+
+    @test sum(count.([train_mask, test_mask, val_mask])) == g.num_nodes
 end
 
 @testset "OGBDataset - ogbg-molhiv" begin
     d = OGBDataset("ogbg-molhiv")
 
-    @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+    train_mask = d.metadata["graph"].split["scaffold"].train
+    test_mask = d.metadata["graph"].split["scaffold"].test
+    val_mask = d.metadata["graph"].split["scaffold"].val
+
+    @test sum(count.([train_mask, test_mask, val_mask])) == length(d)
 end
 
 @testset "Reddit_full" begin
@@ -264,9 +272,10 @@ end
     @test g.num_edges == 114615892
     @test size(g.node_data.features) == (602, g.num_nodes)
     @test size(g.node_data.labels) == (g.num_nodes,)
-    @test count(g.node_data.train_mask) == 153431
-    @test count(g.node_data.val_mask) == 23831
-    @test count(g.node_data.test_mask) == 55703
+    split = data.metadata["node"].split[1]
+    @test count(split.train) == 153431
+    @test count(split.val) == 23831
+    @test count(split.test) == 55703
     s, t = g.edge_index
     @test length(s) == length(t) == g.num_edges
     @test minimum(s) == minimum(t) == 1
@@ -281,9 +290,10 @@ end
     @test g.num_edges == 23213838
     @test size(g.node_data.features) == (602, g.num_nodes)
     @test size(g.node_data.labels) == (g.num_nodes,)
-    @test count(g.node_data.train_mask) == 152410
-    @test count(g.node_data.val_mask) == 23699
-    @test count(g.node_data.test_mask) == 55334
+    split = data.metadata["node"].split[1]
+    @test count(split.train) == 152410
+    @test count(split.val) == 23699
+    @test count(split.test) == 55334
     s, t = g.edge_index
     @test length(s) == length(t) == g.num_edges
     @test minimum(s) == minimum(t) == 1

@@ -11,9 +11,9 @@
     @test g.num_edges == 9104
     @test size(g.node_data.features) == (3703, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test sum(g.node_data.train_mask) == 120
-    @test sum(g.node_data.val_mask) == 500
-    @test sum(g.node_data.test_mask) == 1015
+    @test sum(data.metadata["node"].split[1].train) == 120
+    @test sum(data.metadata["node"].split[1].val) == 500
+    @test sum(data.metadata["node"].split[1].test) == 1015
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
@@ -36,9 +36,9 @@ end
     @test g.num_edges == 10556
     @test size(g.node_data.features) == (1433, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test sum(g.node_data.train_mask) == 140
-    @test sum(g.node_data.val_mask) == 500
-    @test sum(g.node_data.test_mask) == 1000
+    @test sum(data.metadata["node"].split[1].train) == 140
+    @test sum(data.metadata["node"].split[1].val) == 500
+    @test sum(data.metadata["node"].split[1].test) == 1000
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
@@ -109,9 +109,9 @@ end
     @test g.num_edges == 88648
     @test size(g.node_data.features) == (500, g.num_nodes)
     @test size(g.node_data.targets) == (g.num_nodes,)
-    @test sum(g.node_data.train_mask) == 60
-    @test sum(g.node_data.val_mask) == 500
-    @test sum(g.node_data.test_mask) == 1000
+    @test sum(data.metadata["node"].split[1].train) == 60
+    @test sum(data.metadata["node"].split[1].val) == 500
+    @test sum(data.metadata["node"].split[1].test) == 1000
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index
     for a in (s, t)
