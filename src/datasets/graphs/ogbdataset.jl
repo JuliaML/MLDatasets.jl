@@ -144,6 +144,14 @@ function OGBDataset(fullname; dir = nothing)
         graph_dicts, graph_data = read_ogb_graph(path, metadata)
         graphs = ogbdict2graph.(graph_dicts)
     end
+    split = read_ogb_split(path, graphs, metadata)
+    for key in keys(split)
+        if get(metadata, key, nothing) != nothing
+            metadata[key] = merge(split[key], metadata[key])
+        else
+            metadata[key] = split[key]
+        end
+    end
     return OGBDataset(fullname, metadata, graphs, graph_data)
 end
 
@@ -304,62 +312,57 @@ function read_ogb_graph(path, metadata)
     labels = isempty(dlabels) ? nothing :
                 length(dlabels) == 1 ? first(dlabels)[2] : dlabels
 
+    graph_data = nothing
+
+    return graphs, graph_data
+end
+
+function read_ogb_split(path::String, graphs, metadata::Dict)
     splits = readdir(joinpath(path, "split"))
     @assert length(splits) == 1 # TODO check if datasets with multiple splits existin in OGB
 
     # TODO sometimes splits are given in .pt format
     # Use read_pytorch in src/io.jl to load them.
-    split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true),
-                val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true),
-                test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true))
-
-    if split_idx.train !== nothing
-        split_idx.train .+= 1
-    end
-    if split_idx.val !== nothing
-        split_idx.val .+= 1
-    end
-    if split_idx.test !== nothing
-        split_idx.test .+= 1
+    if metadata["task level"] in ["node", "graph"]
+        split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true),
+                    val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true),
+                    test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true))
+    else
+        split_idx = (train = read_pytorch(joinpath(path, "split", splits[1], "train.pt")),
+                    val = read_pytorch(joinpath(path, "split", splits[1], "train.pt")),
+                    test = read_pytorch(joinpath(path, "split", splits[1], "train.pt")))
     end
 
+    split_dict = Dict()
 
-    graph_data = nothing
     if metadata["task level"] == "node"
         @assert length(graphs) == 1
-        g = graphs[1]
-        if split_idx.train !== nothing
-            g["node_train_mask"] = indexes2mask(split_idx.train, g["num_nodes"])
-        end
-        if split_idx.val !== nothing
-            g["node_val_mask"] = indexes2mask(split_idx.val, g["num_nodes"])
-        end
-        if split_idx.test !== nothing
-            g["node_test_mask"] = indexes2mask(split_idx.test, g["num_nodes"])
-        end
+        num_nodes = graphs[1].num_nodes
 
-    end
-    if metadata["task level"] == "link"
+        train_mask = split_idx.train == nothing ? nothing : indexes2mask(split_idx.train .+ 1, num_nodes)
+        val_mask = split_idx.val == nothing ? nothing : indexes2mask(split_idx.val .+ 1, num_nodes)
+        test_mask = split_idx.test == nothing ? nothing : indexes2mask(split_idx.test .+ 1, num_nodes)
+
+        split_dict["node"] = (; split = Dict(splits[1] => [(; train=train_mask, val=val_mask, test=test_mask)]))
+
+    elseif metadata["task level"] == "link"
         @assert length(graphs) == 1
-        g = graphs[1]
-        if split_idx.train !== nothing
-            g["edge_train_mask"] = indexes2mask(split_idx.train, g["num_edges"])
-        end
-        if split_idx.val !== nothing
-            g["edge_val_mask"] = indexes2mask(split_idx.val, g["num_edges"])
-        end
-        if split_idx.test !== nothing
-            g["edge_test_mask"] = indexes2mask(split_idx.test, g["num_edges"])
-        end
-    end
-    if metadata["task level"] == "graph"
-        train_mask = split_idx.train !== nothing ? indexes2mask(split_idx.train, num_graphs) : nothing
-        val_mask = split_idx.val !== nothing ? indexes2mask(split_idx.val, num_graphs) : nothing
-        test_mask = split_idx.test !== nothing ? indexes2mask(split_idx.test, num_graphs) : nothing
 
-        graph_data = clean_nt((; labels=maybesqueeze(labels), train_mask, val_mask, test_mask))
+        for key in keys(split_idx)
+            split_idx[key]["edge"] .+= 1
+        end
+
+        split_dict["edge"] = (; split = Dict(splits[1] => [(; train=split_idx.train, val=split_idx.val, test=split_idx.test)]))
+
+    elseif metadata["task level"] == "graph"
+        num_graphs = length(graphs)
+        train_mask = split_idx.train == nothing ? nothing : indexes2mask(split_idx.train .+ 1, num_graphs)
+        val_mask = split_idx.val == nothing ? nothing : indexes2mask(split_idx.val .+ 1, num_graphs)
+        test_mask = split_idx.test == nothing ? nothing : indexes2mask(split_idx.test .+ 1, num_graphs)
+
+        split_dict["graph"] = (; split = Dict(splits[1] => (; train=train_mask, val=val_mask, test=test_mask)))
     end
-    return graphs, graph_data
+    return split_dict
 end
 
 function read_ogb_hetero_graph(path, metadata)
@@ -501,6 +504,7 @@ function read_ogb_hetero_graph(path, metadata)
 
         push!(graphs, graph)
     end
+    graph_data = nothing
     return graphs, graph_data
 end
 
