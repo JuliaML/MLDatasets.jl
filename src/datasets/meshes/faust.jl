@@ -33,14 +33,9 @@ and extracted in the correct location. For information about where to place the 
 # Dataset Variables
 
 - `scans`: Vector of non-watertight scans in the form of `Mesh`.
-- `registrations`: Vector of registrations corresponding to each scan in `scans`. \
-`registrations` like `scans` are also in the form of `Mesh`.
-- `labels`: For each scan in the training set, we provide the boolean Vector of length equal to the \
-number of vertices in the corresponding scan. \
-It represents which vertices were reliably registered by the corresponding registration.
-- `metadata`: A dictionary containing additional information on the dataset. \
-Currently only `:test` split has metadata containing information about the registrations required \
-for the inter and intra challenge proposed by the author.
+- `registrations`: Vector of registrations corresponding to each scan in `scans`. `registrations` like `scans` are also in the form of `Mesh`.
+- `labels`: For each scan in the training set, we provide the boolean Vector of length equal to the number of vertices in the corresponding scan. It represents which vertices were reliably registered by the corresponding registration.
+- `metadata`: A dictionary containing additional information on the dataset. Currently only `:test` split has metadata containing information about the registrations required for the inter and intra challenge proposed by the author.
 
 # Examples
 
