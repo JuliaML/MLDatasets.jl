@@ -9,6 +9,7 @@ using MLUtils: getobs, numobs, AbstractDataContainer
 using Glob
 using DelimitedFiles: readdlm
 using FileIO
+import CSV
 using LazyModules: @lazy
 
 include("require.jl") # export @require
@@ -23,9 +24,8 @@ include("require.jl") # export @require
 @require import DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 @require import ImageShow="4e3cecfd-b093-5904-9786-8bbb286a6a31"
 # @lazy import NPZ # lazy imported by FileIO
-@lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
+@require import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
 @lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
-import CSV
 @lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
