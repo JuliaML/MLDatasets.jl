@@ -535,7 +535,7 @@ function read_ogb_hetero_graph(path, metadata)
           end
 
           for key in keys(split_idx_dict)
-            g["node_$(key)_mask_dict"] = Dict()
+            g["node_$(key)_mask"] = Dict()
             for node_type in keys(split_idx_dict[key])
               num_nodes = dict["num_nodes"][node_type][1]
               g["node_$(key)_mask"][node_type] = indexes2mask(split_idx_dict[key][node_type] .+ 1, num_nodes)
