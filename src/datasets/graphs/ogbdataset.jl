@@ -494,7 +494,81 @@ function read_ogb_hetero_graph(path, metadata)
         end
 
         push!(graphs, graph)
-    end
+      end
+
+      dlabels = Dict{String, Any}()
+      for k in keys(dict)
+          if contains(k, "label")
+              if k ∉ [node_keys; edge_keys]
+                  dlabels[k] = dict[k]
+              end
+          end
+      end
+      labels = isempty(dlabels) ? nothing :
+      length(dlabels) == 1 ? first(dlabels)[2] : dlabels
+
+      # Similar to OGB Graphs
+      # Also see split implementation for normal ogb graphs
+      # for any possible issues
+      splits = readdir(joinpath(path, "split"))
+      @assert length(splits) == 1 "Current implementation supports only 1 split"
+
+      graph_data = nothing
+      split_dir = joinpath(path, "split", splits[1])
+      if metadata["task level"] == "node"
+          @assert length(graphs) == 1
+          g = graphs[1]
+          split_idx_dict = Dict{String, Dict{String, Vector{Int}}}()
+          split_idx_dict["train"] = Dict()
+          split_idx_dict["test"] = Dict()
+          split_idx_dict["val"] = Dict()
+
+          nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw", "nodetype-has-label.csv"))
+          nodetype_has_label = Dict(String(node) => num[1] for (node, num) in pairs(eachcol(nodetype_has_label_df)))
+          for (node_type, has_label) in nodetype_has_label
+              @assert node_type ∈ node_types
+              if has_label
+                  split_idx_dict["train"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "train.csv"), Int; tovec=true)
+                  split_idx_dict["test"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "test.csv"), Int; tovec=true)
+                  split_idx_dict["val"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "valid.csv"), Int; tovec=true)
+              end
+          end
+
+          for key in keys(split_idx_dict)
+            g["node_$(key)_mask_dict"] = Dict()
+            for node_type in keys(split_idx_dict[key])
+              num_nodes = dict["num_nodes"][node_type][1]
+              g["node_$(key)_mask"][node_type] = indexes2mask(split_idx_dict[key][node_type] .+ 1, num_nodes)
+            end
+          end
+      elseif metadata["task level"] == "graph"
+          split_mask = Dict()
+          for key in keys(split_idx)
+            if !isnothing(split_idx[key])
+              split_mask[Symbol("$(key)_mask")] = indexes2mask(split_idx[key] .+ 1, num_graphs)
+            end
+          end
+          graph_data = clean_nt((; labels=maybesqueeze(labels), split_mask...))
+      elseif metadata["task level"] == "link"
+        @assert length(graphs) == 1
+        g = graphs[1]
+
+        split_dict = (train = read_pytorch(joinpath(split_dir, "train.pt")),
+                      val = read_pytorch(joinpath(split_dir, "valid.pt")),
+                      test = read_pytorch(joinpath(split_dir, "test.pt")))
+
+        for key in keys(split_dict)
+
+          if !isnothing(split_dict[key])
+            for k in ["head", "tail", "head_neg", "tail_neg"]
+              if haskey(split_dict[key], k)
+                split_dict[key][k] .+= 1
+              end
+            end
+            g["edge_split_$(key)_dict"] = split_dict[key]
+          end
+        end
+      end
     return graphs, graph_data
 end
 
@@ -529,11 +603,13 @@ function ogbdict2heterograph(d::Dict)
     edge_indices = Dict(triplet => (ei[:, 1], ei[:, 2])
                         for (triplet, ei) in d["edge_indices"])
 
-    edge_data = Dict(k => Dict{Symbol, Any}() for k in keys(edge_indices))
+    edge_data = Dict{Union{String, Tuple{String, String, String}}, Dict}(k => Dict{Symbol, Any}() for k in keys(edge_indices))
     for (feature_name, v) in d
         # v is a dict
         # the number of nothing values should not be equal to total number of values
-        if startswith(feature_name, "edge_") && feature_name != "edge_indices" && sum(isnothing.(values(v))) < length(v)
+        if startswith(feature_name, "edge_split_")
+            edge_data[feature_name[12:end]] = v
+        elseif startswith(feature_name, "edge_") && feature_name != "edge_indices" && sum(isnothing.(values(v))) < length(v)
             for (edge_key, edge_value) in v
                 if !isnothing(edge_value)
                     edge_data[edge_key][Symbol(feature_name[6:end])] = maybesqueeze(edge_value)
