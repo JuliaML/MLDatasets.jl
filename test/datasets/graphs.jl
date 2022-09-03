@@ -150,7 +150,7 @@ Sys.iswindows() || @testset "OGBn-mag" begin
         @test g.num_nodes[type] == num_nodes[type]
         node_data = get(g.node_data, type, nothing)
         isnothing(node_data) || for (key, val) in node_data
-            @test key ∈ [:year, :features, :label]
+            @test key ∈ [:year, :features, :label, :train_mask, :test_mask, :val_mask]
             if key == :features
                 @test size(val)[1] == 128
             end
