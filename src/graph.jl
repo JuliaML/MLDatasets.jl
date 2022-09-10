@@ -151,7 +151,7 @@ struct HeteroGraph <: AbstractGraph
     num_edges::Dict{Tuple{String, String, String}, Int}
     edge_indices::Dict{Tuple{String, String, String}, Tuple{Vector{Int}, Vector{Int}}}
     node_data::Dict{String, Dict}
-    edge_data::Dict{Union{Tuple{String, String, String}, String}, Dict}
+    edge_data::Dict{Tuple{String, String, String}, Dict}
 end
 
 function HeteroGraph(;
