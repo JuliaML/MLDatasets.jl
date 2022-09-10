@@ -345,9 +345,22 @@ function read_ogb_graph(path, metadata)
 
         for key in keys(split_dict)
           if !isnothing(split_dict[key])
-            split_dict[key]["edge"] .+= 1
-            if haskey(split_dict[key], "edge_neg")
-              split_dict[key]["edge_neg"] .+= 1
+            for k in keys(split_dict[key])
+              if k in ["edge", "edge_neg"]
+                split_dict[key][k] .+= 1
+                ei = split_dict[key][k]
+                s, t = ei[:,1], ei[:,2]
+                if metadata["add_inverse_edge"]
+                  split_dict[key][k] = ([s;t], [t;s])
+                else
+                  split_dict[key][k] = (s, t)
+                end
+              else
+                if metadata["add_inverse_edge"]
+                  v = split_dict[key][k]
+                  split_dict[key][k] = [v; v]
+                end
+              end
             end
             g["edge_$(key)_dict"] = split_dict[key]
           end
