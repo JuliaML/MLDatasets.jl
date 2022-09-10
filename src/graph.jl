@@ -227,3 +227,33 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
     end
     return adj
 end
+
+"""
+    GraphDataset{<:AbstractGraph} <: AbstractDataset
+
+GraphDataset
+"""
+struct GraphDataset{T<:AbstractGraph} <: AbstractDataset
+    metadata::Dict{String, Any}
+    graphs::Vector{T}
+    graphs_data::NamedTuple
+end
+
+Base.length(data::GraphDataset) = length(data.graphs)
+
+function Base.getindex(data::GraphDataset, ::Colon)
+    if isempty(graph_data)
+        return length(data.graphs) == 1 ? data.graphs[1] : data.graphs
+    else
+        return (; data.graphs, data.graph_data)
+    end
+end
+
+function Base.getindex(data::GraphDataset, i::Int)
+    if isempty(graph_data)
+        return getobs(data.graphs, i)
+    else
+        return getobs((; data.graphs, data.graph_data.labels), i)
+    end
+end
+
