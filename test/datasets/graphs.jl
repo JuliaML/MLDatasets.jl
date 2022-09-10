@@ -172,3 +172,41 @@ Sys.iswindows() || @testset "OGBn-mag" begin
     end
 end
 
+@testset "OGBl-ddi" begin
+    data = OGBDataset("ogbl-ddi")
+    # @test data isa AbstractDataset
+    @test length(data) == 1
+
+    g = data[1]
+    @test g == data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 4267
+    @test g.num_edges == 2135822
+    @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
+    s, t = g.edge_index
+    for a in (s, t)
+        @test a isa Vector{Int}
+        @test length(a) == g.num_edges
+        @test minimum(a) == 1
+        @test maximum(a) == g.num_nodes
+    end
+    for key in keys(g.edge_data)
+        @assert key ∈ [:train_dict, :val_dict, :test_dict]
+        s, t = g.edge_data[key]["edge"]
+        for a in (s, t)
+            @test a isa Vector{Int}
+            @test minimum(a) >= 1
+            @test maximum(a) <= g.num_nodes
+        end
+        if haskey(g.edge_data[key], "edge_neg")
+          s, t = g.edge_data[key]["edge_neg"]
+          for a in (s, t)
+              @test a isa Vector{Int}
+              @test minimum(a) >= 1
+              @test maximum(a) <= g.num_nodes
+          end
+        end
+    end
+end
+
