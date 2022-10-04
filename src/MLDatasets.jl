@@ -10,6 +10,7 @@ using Printf
 using Glob
 using DelimitedFiles: readdlm
 using FileIO
+import CSV
 using LazyModules: @lazy
 
 include("require.jl") # export @require
@@ -26,7 +27,6 @@ include("require.jl") # export @require
 # @lazy import NPZ # lazy imported by FileIO
 @lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
 @lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
-import CSV
 @lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
