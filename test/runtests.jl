@@ -7,6 +7,7 @@ using ImageShow
 using ColorTypes
 using FixedPointNumbers
 using JSON3
+using Pickle
 
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 
