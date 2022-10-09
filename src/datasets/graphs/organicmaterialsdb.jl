@@ -106,3 +106,13 @@ function process_data(::Type{<:OrganicMaterialsDB}, rawfiles, procfiles)
     test_dataset = OrganicMaterialsDB(test_metadata, test_graphs, (; bandgaps=test_bandgaps))
     FileIO.save(procfiles[2], Dict("dataset" => test_dataset))
 end
+
+Base.length(data::OrganicMaterialsDB) = length(data.graphs)
+
+function Base.getindex(data::OrganicMaterialsDB, ::Colon) 
+    return (; data.graphs, data.graph_data.bandgaps)
+end
+
+function Base.getindex(data::OrganicMaterialsDB, i) 
+    return getobs((; data.graphs, data.graph_data...), i)    
+end

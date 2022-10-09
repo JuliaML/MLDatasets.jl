@@ -355,7 +355,13 @@ end
 
 @testset "OrganicMaterialsDB" begin
     data = OrganicMaterialsDB(split=:train)
+    @test length(data) == 10000
+    @test data[1].graphs isa MLDatasets.Graph
+    @test data[1].bandgaps isa Number
+    @test data[:].graphs isa Vector{MLDatasets.Graph}
+    @test data[:].bandgaps isa Vector{<:Number}
     
     data = OrganicMaterialsDB(split=:test)
+    @test length(data) == 2500
 end
 
