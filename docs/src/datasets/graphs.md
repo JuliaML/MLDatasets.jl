@@ -25,6 +25,7 @@ Cora
 KarateClub
 MovieLens
 OGBDataset
+OrganicMaterialsDB
 PolBlogs
 PubMed
 Reddit

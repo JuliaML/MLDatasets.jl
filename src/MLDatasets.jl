@@ -24,6 +24,8 @@ include("require.jl") # export @require
 @require import JSON3="0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 @require import DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 @require import ImageShow="4e3cecfd-b093-5904-9786-8bbb286a6a31"
+@require import Chemfiles="46823bd8-5fb3-5f92-9aa0-96921f3dd015"
+
 # @lazy import NPZ # lazy imported by FileIO
 @lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
 @lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
@@ -116,6 +118,8 @@ include("datasets/graphs/movielens.jl")
 export MovieLens
 include("datasets/graphs/ogbdataset.jl")
 export OGBDataset
+include("datasets/graphs/organicmaterialsdb.jl")
+export OrganicMaterialsDB
 include("datasets/graphs/polblogs.jl")
 export PolBlogs
 include("datasets/graphs/pubmed.jl")
@@ -138,6 +142,7 @@ function __init__()
     __init__cora()
     __init__movielens()
     __init__ogbdataset()
+    __init__omdb()
     __init__polblogs()
     __init__pubmed()
     __init__reddit()
