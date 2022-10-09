@@ -66,6 +66,8 @@ include("datasets/misc/boston_housing.jl")
 export BostonHousing
 include("datasets/misc/iris.jl")
 export Iris
+include("datasets/misc/matminer.jl")
+export MatMiner
 include("datasets/misc/mutagenesis.jl")
 export Mutagenesis
 include("datasets/misc/titanic.jl")
@@ -150,6 +152,7 @@ function __init__()
 
     # misc
     __init__iris()
+    __init__matminer()
     __init__mutagenesis()
 
     #text
