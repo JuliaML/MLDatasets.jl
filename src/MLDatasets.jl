@@ -118,7 +118,7 @@ include("datasets/graphs/movielens.jl")
 export MovieLens
 include("datasets/graphs/ogbdataset.jl")
 export OGBDataset
-include("datasets/graphs/omdb.jl")
+include("datasets/graphs/organicmaterialsdb.jl")
 export OrganicMaterialsDB
 include("datasets/graphs/polblogs.jl")
 export PolBlogs

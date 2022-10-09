@@ -352,3 +352,10 @@ end
     # edge data
     @test size(g.edge_data.features) == (4, g.num_edges)
 end
+
+@testset "OrganicMaterialsDB" begin
+    data = OrganicMaterialsDB(split=:train)
+    
+    data = OrganicMaterialsDB(split=:test)
+end
+
