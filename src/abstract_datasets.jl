@@ -99,9 +99,9 @@ const ARGUMENTS_SUPERVISED_TABLE = """
 
 const FIELDS_SUPERVISED_TABLE = """
 - `metadata`: A dictionary containing additional information on the dataset.
-- `features`: The data features. An array if `as_df=true`, otherwise a dataframe.
-- `targets`: The targets for supervised learning. An array if `as_df=true`, otherwise a dataframe.
-- `dataframe`: A dataframe containing both `features` and `targets`. It is `nothing` if `as_df=false`.
+- `features`: The data features. An array if `as_df=false`, otherwise a dataframe.
+- `targets`: The targets for supervised learning. An array if `as_df=false`, otherwise a dataframe.
+- `dataframe`: A dataframe containing both `features` and `targets`. It is `nothing` if `as_df=false`, otherwise a dataframed.
 """
 
 const METHODS_SUPERVISED_TABLE = """
