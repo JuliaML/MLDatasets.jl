@@ -21,6 +21,31 @@ function restrict_array_type(res::AbstractArray)
     end
 end
 
+function table_to_matrix(t; select = nothing)
+    if select === nothing
+        cnames = Tables.columnnames(cols)
+    else
+        cnames = select
+    end
+    return hcat((Tables.getcolumn(t, n) for n in cnames)...)
+end
+
+function table_to_df(t; names = nothing)
+    df = DataFrames.DataFrame(t)
+    if names !== nothing
+        DataFrames.rename!(df, names)
+    end
+    return df
+end
+
+function matrix_to_df(a::AbstractMatrix; names = nothing)
+    df = DataFrames.DataFrame(a, :auto)
+    if names !== nothing
+        DataFrames.rename!(df, names)
+    end
+    return df
+end
+
 function df_to_matrix(df)
     x = Matrix(df)
     if size(x, 2) == 1

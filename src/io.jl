@@ -3,13 +3,12 @@ function read_csv(path; kws...)
     return read_csv_asdf(path; kws...)
 end
 
-# function read_csv(path, sink::Type{<:AbstractMatrix{T}}; delim=nothing, kws...) where T
-#     x = delim === nothing ? readdlm(path, T; kws...) : readdlm(path, delim, T; kws...)
-#     return x
-# end
-
 function read_csv(path, sink::Type{A}; kws...) where A <: AbstractMatrix
-    return A(read_csv(path; kws...))
+    return table_to_matrix(read_csv(path, CSV.File; kws...))
+end
+
+function read_csv(path, sink::Type{CSV.File}; kws...)
+    return CSV.File(path; kws...)
 end
 
 function read_csv_asdf(path; kws...)
