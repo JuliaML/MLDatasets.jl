@@ -23,7 +23,7 @@ end
 
 function table_to_matrix(t; select = nothing)
     if select === nothing
-        cnames = Tables.columnnames(cols)
+        cnames = Tables.columnnames(t)
     else
         cnames = select
     end
