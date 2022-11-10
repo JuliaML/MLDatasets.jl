@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Meshes · MLDatasets.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://juliadata.github.io/MLDatasets.jl/stable/datasets/meshes/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="MLDatasets.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">MLDatasets.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Datasets</span><ul><li><a class="tocitem" href="../graphs/">Graphs</a></li><li class="is-active"><a class="tocitem" href>Meshes</a><ul class="internal"><li><a class="tocitem" href="#Index"><span>Index</span></a></li><li><a class="tocitem" href="#Documentation"><span>Documentation</span></a></li></ul></li><li><a class="tocitem" href="../misc/">Miscellaneous</a></li><li><a class="tocitem" href="../text/">Text</a></li><li><a class="tocitem" href="../vision/">Vision</a></li></ul></li><li><span class="tocitem">Creating Datasets</span><ul><li><a class="tocitem" href="../../containers/overview/">Dataset Containers</a></li></ul></li><li><a class="tocitem" href="../../LICENSE/">LICENSE</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Datasets</a></li><li class="is-active"><a href>Meshes</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Meshes</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaML/MLDatasets.jl/blob/master/docs/src/datasets/meshes.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Mesh-Datasets"><a class="docs-heading-anchor" href="#Mesh-Datasets">Mesh Datasets</a><a id="Mesh-Datasets-1"></a><a class="docs-heading-anchor-permalink" href="#Mesh-Datasets" title="Permalink"></a></h1><p>Mesh datasets contains data in the form of <code>Meshes.Mesh</code>. See <a href="https://juliageometry.github.io/Meshes.jl/stable/">Meshes.jl</a> for a better understanding of Meshes.</p><h2 id="Index"><a class="docs-heading-anchor" href="#Index">Index</a><a id="Index-1"></a><a class="docs-heading-anchor-permalink" href="#Index" title="Permalink"></a></h2><ul><li><a href="#MLDatasets.FAUST"><code>MLDatasets.FAUST</code></a></li></ul><h2 id="Documentation"><a class="docs-heading-anchor" href="#Documentation">Documentation</a><a id="Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#Documentation" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="MLDatasets.FAUST" href="#MLDatasets.FAUST"><code>MLDatasets.FAUST</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">FAUST(split=:train; dir=nothing)</code></pre><p>The MPI FAUST dataset (2014).</p><p>FAUST contains 300 real, high-resolution human scans of 10 different subjects in 30 different poses, with automatically computed ground-truth correspondences.</p><p>Each scan is a high-resolution, triangulated, non-watertight mesh acquired with a 3D multi-stereo system.</p><p>FAUST is subdivided into a training and a test set. The training set includes 100 scans (10 per subject) with their corresponding ground-truth alignments. The test set includes 200 scans. The FAUST benchmark defines 100 preselected scan pairs, partitioned into two classes – 60 requiring intra-subject matching, 40 requiring inter-subject matching.</p><p>The dataset required to be downloaded manually from the <a href="http://faust.is.tue.mpg.de/">website</a> and extracted in the correct location. For information about where to place the dataset, refer to the example section.</p><p><strong>Dataset Variables</strong></p><ul><li><code>scans</code>: Vector of non-watertight scans in the form of <code>Mesh</code>.</li><li><code>registrations</code>: Vector of registrations corresponding to each scan in <code>scans</code>. <code>registrations</code> like <code>scans</code> are also in the form of <code>Mesh</code>.</li><li><code>labels</code>: For each scan in the training set, we provide the boolean Vector of length equal to the number of vertices in the corresponding scan. It represents which vertices were reliably registered by the corresponding registration.</li><li><code>metadata</code>: A dictionary containing additional information on the dataset. Currently only <code>:test</code> split has metadata containing information about the registrations required for the inter and intra challenge proposed by the author.</li></ul><p><strong>Examples</strong></p><p><strong>Loading the dataset</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets
+
+julia&gt; dataset = FAUST()
+[ Info: This program requested access to the data dependency MPI-FAUST
+[ Info: It could not be found on your system. It requires manual installation.
+┌ Info: Please install it to one of the directories in the DataDeps load path: /home/user/.julia/packages/DataDeps/EDWdQ/deps/data/MPI-FAUST,
+│ /home/user/.julia/datadeps/MPI-FAUST,
+│ /home/user/.julia/juliaup/julia-1.7.3+0.x86/local/share/julia/datadeps/MPI-FAUST,
+│ /home/user/.julia/juliaup/julia-1.7.3+0.x86/share/julia/datadeps/MPI-FAUST,
+│ /home/user/datadeps/MPI-FAUST,
+│ /scratch/datadeps/MPI-FAUST,
+│ /staging/datadeps/MPI-FAUST,
+│ /usr/share/datadeps/MPI-FAUST,
+└ or /usr/local/share/datadeps/MPI-FAUST
+[ Info: by following the instructions:
+┌ Info: Dataset: MPI-FAUST.
+└ Website: http://faust.is.tue.mpg.de/
+Once installed please enter &#39;y&#39; reattempt loading, or &#39;a&#39; to abort
+[y/a]</code></pre><p>Now download and extract the dataset into one of the given locations. For unix link systems, an example command can be</p><pre><code class="language-bash hljs">unzip -q &lt;path-to-filename&lt;/filename.zip ~/.julia/datadeps</code></pre><p>The corresponding folder tree should look like</p><pre><code class="nohighlight hljs">├── test
+│   ├── challenge_pairs
+│   └── scans
+└── training
+    ├── ground_truth_vertices
+    ├── registrations
+    └── scans</code></pre><p>Press <code>y</code> to re-attept loading.</p><pre><code class="language-julia-repl hljs">dataset FAUST:
+  scans          =&gt;    100-element Vector{Any}
+  registrations  =&gt;    100-element Vector{Any}
+  labels         =&gt;    100-element Vector{Vector{Bool}}
+  metadata       =&gt;    Dict{String, Any} with 0 entries</code></pre><p><strong>Load train and test split</strong></p><pre><code class="language-julia-repl hljs">julia&gt; train_faust = FAUST(:train)
+dataset FAUST:
+  scans          =&gt;    100-element Vector{Any}
+  registrations  =&gt;    100-element Vector{Any}
+  labels         =&gt;    100-element Vector{Vector{Bool}}
+  metadata       =&gt;    Dict{String, Any} with 0 entries
+
+julia&gt; test_faust = FAUST(:test)
+dataset FAUST:
+  scans          =&gt;    200-element Vector{Any}
+  registrations  =&gt;    0-element Vector{Any}
+  labels         =&gt;    0-element Vector{Vector{Bool}}
+  metadata       =&gt;    Dict{String, Any} with 2 entries</code></pre><p><strong>Scan, registrations and ground-truth</strong></p><pre><code class="language-julia-repl hljs">julia&gt; dataset = FAUST(); # defaults to train split
+
+julia&gt; scan = dataset.scans[1] # pick one scan
+Mesh{3, Float32, Triangle}:
+ Triangle(Float32[-0.0045452323, 0.08537669, 0.22134435], Float32[-0.0030340434, 0.08542955, 0.22206494],
+Float32[-0.0042151767, 0.08697654, 0.22171047])
+ Triangle(Float32[-0.05358432, 0.08490027, 0.17748278], Float32[-0.05379858, 0.083174236, 0.17670263],
+Float32[-0.052645437, 0.08346437, 0.17816517])
+.
+.
+.
+ Triangle(Float32[-0.07851, -1.0956081, 0.07093428], Float32[-0.06905176, -1.0986279, 0.07775441],
+Float32[-0.069199145, -1.0928112, 0.06812464])
+
+julia&gt; registration = dataset.registrations[1] # The corresponding registration
+Mesh{3, Float32, Triangle}:
+ Triangle(Float32[0.12491254, 0.51199615, 0.29041073], Float32[0.11376736, 0.5156298, 0.3007352],
+Float32[0.119374536, 0.50043654, 0.29687837])
+ Triangle(Float32[0.119374536, 0.50043654, 0.29687837], Float32[0.11376736, 0.5156298, 0.3007352],
+Float32[0.10888693, 0.5008964, 0.30557302])
+.
+.
+.
+ Triangle(Float32[0.033744745, 0.030968456, 0.2359996], Float32[0.058017172, 0.044458304, 0.23422624],
+Float32[0.03615713, 0.04858183, 0.23596591])
+
+julia&gt; label = dataset.labels[1] # The ground-truth/labels for each vertices in scan
+176387-element Vector{Bool}:
+ 1
+ 1
+ 1
+ .
+ .
+ .
+ 0
+ 0
+ 0</code></pre><p><strong>Refereneces</strong></p><ol><li><p><a href="http://faust.is.tue.mpg.de/">MPI Faust Website</a></p></li><li><p>Bogo, Federica &amp; Romero, Javier &amp; Loper, Matthew &amp; Black, Michael. (2014). FAUST: Dataset</p></li></ol><p>and evaluation for 3D mesh registration. Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition. 10.1109/CVPR.2014.491.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/de1ceb6c5813070f6a7f43cf797178b25d7eeef3/src/datasets/meshes/faust.jl#L14-L155">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../graphs/">« Graphs</a><a class="docs-footer-nextpage" href="../misc/">Miscellaneous »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Thursday 10 November 2022 08:05">Thursday 10 November 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
