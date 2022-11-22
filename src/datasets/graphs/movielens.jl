@@ -16,11 +16,11 @@ end
 
 Datasets from the [MovieLens website](https://movielens.org) collected and maintained by [GroupLens](https://grouplens.org/datasets/movielens/). 
 The MovieLens datasets are presented in a Graph format. 
-For license and usage resitrictions please refer to the Readme.md of the datasets.
+For license and usage restrictions please refer to the Readme.md of the datasets.
 
-There are 6 versions of movielens datasets currently supported: "100k",  "1m",  "10m", "20m", "25m", "latest-small". 
+There are 6 versions of MovieLens datasets currently supported: "100k",  "1m",  "10m", "20m", "25m", "latest-small". 
 The 100k and 1k datasets contain movie data and rating data along with demographic data.
-Starting from the 10m dataset, Movielens datasets no longer contain the demographic data. 
+Starting from the 10m dataset, MovieLens datasets no longer contain the demographic data. 
 These datasets contain movie data, rating data, and tag information. 
 
 The 20m and 25m datasets additionally contain [genome tag scores](http://files.grouplens.org/papers/tag_genome.pdf). 
@@ -56,7 +56,7 @@ julia> g = data[:]
     node_data     =>    Dict{String, Dict} with 2 entries
     edge_data     =>    Dict{Tuple{String, String, String}, Dict} with 1 entry
 
-# Acess the user information
+# Access the user information
 julia> user_data = g.node_data["user"]
 Dict{Symbol, AbstractVector} with 4 entries:
   :age        => [24, 53, 23, 24, 33, 42, 57, 36, 29, 53  …  61, 42, 24, 48, 38, 26, 32, 20, 48, 22]
@@ -71,7 +71,7 @@ Dict{Symbol, Vector} with 2 entries:
   :rating    => Float16[3.0, 3.0, 1.0, 2.0, 1.0, 4.0, 2.0, 5.0, 3.0, 3.0  …  4.0, 4.0, 3.0, 2.0, 3.0, 3.0, 5.0, 1.0, 2.0, 3.0]
 ```
 
-## MovieLens 100K dataset
+## MovieLens 20m dataset
 
 ```julia-repl
 julia> data = MovieLens("20m")
