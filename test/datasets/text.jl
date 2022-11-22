@@ -17,7 +17,7 @@ end
 @testset "UD_English" begin
     n_features = ()
     Tx = Vector{Vector{String}}
-    for (n_obs, split) in [(12543, :train), (2077, :test), (2001, :dev)] 
+    for (n_obs, split) in [(12544, :train), (2077, :test), (2001, :dev)] 
         d = UD_English(split)
 
         test_unsupervised_array_dataset(d;

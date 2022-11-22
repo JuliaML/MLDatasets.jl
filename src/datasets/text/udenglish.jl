@@ -95,29 +95,3 @@ function UD_English(split::Symbol; dir=nothing)
     metadata = Dict{String,Any}("n_observations" => length(features))
     return UD_English(metadata, split, features)
 end
-
-
-# DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
-function Base.getproperty(::Type{UD_English}, s::Symbol)
-    if s === :traindata
-        @warn "UD_English.traindata() is deprecated, use `UD_English(split=:train)[:]` instead."
-        function traindata(; dir=nothing)
-            UD_English(; split=:train, dir)[:]
-        end
-        return traindata
-    elseif s === :testdata
-        @warn "UD_English.testdata() is deprecated, use `UD_English(split=:test)[:]` instead."
-        function testdata(; dir=nothing)
-            UD_English(; split=:test, dir)[:]
-        end
-        return testdata
-    elseif s === :devdata
-        @warn "UD_English.devdata() is deprecated, use `UD_English(split=:dev)[:]` instead."
-        function devdata(; dir=nothing)
-            UD_English(; split=:dev, dir)[:]
-        end
-        return devdata
-    else
-        return getfield(UD_English, s)
-    end
-end
