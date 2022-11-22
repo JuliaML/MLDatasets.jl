@@ -86,6 +86,8 @@ end
     @test g.num_edges == 19025
     @test size(g.node_data.labels) == (g.num_nodes,)
     @test sort(unique(g.node_data.labels)) == [0, 1]
+    @test g.node_data.names isa Vector{String}
+    @test size(g.node_data.names) == (g.num_nodes,)
 
     @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
     s, t = g.edge_index

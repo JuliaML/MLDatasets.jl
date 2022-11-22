@@ -33,19 +33,22 @@ end
 
 function PolBlogs(; dir=nothing)
     DEPNAME = "PolBlogs"
-    DATA = ["adjacency.csv", "labels.csv"]
+    DATA = ["adjacency.tsv", "labels.tsv", "names.tsv"]
 
     path = datafile(DEPNAME, DATA[1], dir)
-    adj = 1 .+ Matrix{Int64}(readdlm(path, ','))
+    adj = 1 .+ Matrix{Int64}(readdlm(path, '\t')[:,1:2])
     s, t = adj[:,1], adj[:,2]
 
     path = datafile(DEPNAME, DATA[2], dir)
-    labels = Matrix{Int64}(readdlm(path, ',')) |> vec
+    labels = Matrix{Int}(readdlm(path, '\t')) |> vec
+
+    path = datafile(DEPNAME, DATA[3], dir)
+    names = Matrix{String}(readdlm(path, '\t')) |> vec
 
     metadata = Dict{String, Any}()
     g = Graph(; num_nodes = 1490,
             edge_index = (s, t), 
-            node_data = (; labels))
+            node_data = (; labels, names))
 
     return PolBlogs(metadata, [g])
 end
