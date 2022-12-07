@@ -429,9 +429,9 @@ function generate_movielens_graph(user_data::Dict, movie_data::Dict, rating_data
 
     user_rates_movie = rating_data["user_movie"]
     user_ids, movie_ids = user_rates_movie[:, 1], user_rates_movie[:, 2]
-    edge_indices = Dict(("user", "rating", "movie") => ([user_ids; movie_ids], [movie_ids; user_ids]))
+    edge_indices = Dict(("user", "rating", "movie") => (user_ids, movie_ids))
 
-    edge_data = Dict(("user", "rating", "movie") => Dict(Symbol(k) => maybesqueeze([v;v]) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"]))
+    edge_data = Dict(("user", "rating", "movie") => Dict(Symbol(k) => maybesqueeze(v) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"]))
 
     return HeteroGraph(; num_nodes, edge_indices, node_data, edge_data)
 end
@@ -442,17 +442,17 @@ function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_
     user_rates_movie = rating_data["user_movie"]
     user_ids, movie_ids = user_rates_movie[:, 1], user_rates_movie[:, 2]
     num_users = user_ids |> unique |> length # Calculate the number of users
-    edge_indices[("user", "rating", "movie")] = ([user_ids; movie_ids], [movie_ids; user_ids])
+    edge_indices[("user", "rating", "movie")] = (user_ids, movie_ids)
 
     user_tags_movie = user_tag_data["user_movie"]
     user_ids, movie_ids = user_tags_movie[:, 1], user_tags_movie[:, 2]
     num_users = max(num_users, user_ids |> unique |> length)
-    edge_indices[("user", "tag", "movie")] = ([user_ids; movie_ids], [movie_ids; user_ids])
+    edge_indices[("user", "tag", "movie")] = (user_ids, movie_ids)
 
     if !isempty(genome_tag_data)
         movie_score_tag = genome_tag_data["movie_tag"]
         movie_ids, tag_ids = movie_score_tag[:, 1], movie_score_tag[:, 1]
-        edge_indices[("movie", "score", "tag")] = ([movie_ids; tag_ids], [movie_ids; tag_ids])
+        edge_indices[("movie", "score", "tag")] = (movie_ids, tag_ids)
     end
 
     # ideally the HeteroGraph function should be able to compute the number of egdes,
@@ -462,11 +462,11 @@ function generate_movielens_graph(movie_data::Dict, rating_data::Dict, user_tag_
 
     _edge_data = Dict()
     _edge_data[("user", "rating", "movie")] = Dict(
-        Symbol(k) => maybesqueeze([v;v]) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"])
+        Symbol(k) => maybesqueeze(v) for (k, v) in rating_data if  k ∉ ["user_movie", "metadata"])
     _edge_data[("user", "tag", "movie")] = Dict(
-        Symbol(k) => maybesqueeze([v;v]) for (k, v) in user_tag_data if  k ∉ ["user_movie", "metadata"])
+        Symbol(k) => maybesqueeze(v) for (k, v) in user_tag_data if  k ∉ ["user_movie", "metadata"])
     isempty(genome_tag_data) || (_edge_data[("movie", "score", "tag")] = Dict(
-        Symbol(k) => maybesqueeze([v;v]) for (k, v) in genome_tag_data if  k ∉ ["movie_tag", "metadata", "num_tags"]))
+        Symbol(k) => maybesqueeze(v) for (k, v) in genome_tag_data if  k ∉ ["movie_tag", "metadata", "num_tags"]))
 
     edge_data = Dict(k=>v for (k,v) in _edge_data if !isempty(v))
 

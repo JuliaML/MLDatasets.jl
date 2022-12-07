@@ -1,44 +1,4 @@
 
-@testset "ml-latest-small" begin
-    data = MovieLens("latest-small")
-    @test length(data) == 1
-
-    g = data[1]
-    @test g == data[:]
-    @test g isa MLDatasets.HeteroGraph
-
-    num_nodes = Dict(
-        "tag"   => 3683,
-        "movie" => 9742,
-        "user"  => 610
-        )
-    num_edges = Dict(
-        ("user", "rating", "movie") => 201672,
-        ("user", "tag", "movie")    => 7366
-    )
-
-    for type in keys(num_nodes)
-        @test type ∈ g.node_types
-        @test g.num_nodes[type] == num_nodes[type]
-        node_data = get(g.node_data, type, nothing)
-        isnothing(node_data) || for (key, val) in node_data
-            @test size(val)[end] == num_nodes[type]
-        end
-    end
-
-    for type in keys(num_edges)
-        @test type ∈ g.edge_types
-        @test g.num_edges[type] == num_edges[type]
-        @test length(g.edge_indices[type][1]) == num_edges[type]
-        @test length(g.edge_indices[type][2]) == num_edges[type]
-        edge_data = g.edge_data[type]
-        for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating]
-            @test ndims(val) == 1
-            @test size(val)[end] == num_edges[type]
-        end
-    end
-end
 
 @testset "ml-100k" begin
     data = MovieLens("100k")
@@ -53,7 +13,7 @@ end
         "user"   => 943,
         )
     num_edges = Dict(
-        ("user", "rating", "movie") => 200000
+        ("user", "rating", "movie") => 100000
     )
 
     for type in keys(num_nodes)
@@ -94,7 +54,7 @@ end
             "user"  => 6040
         )
     num_edges = Dict(
-        ("user", "rating", "movie") => 2000418
+        ("user", "rating", "movie") => 1000209
     )
 
     for type in keys(num_nodes)
@@ -136,8 +96,8 @@ end
         "user"  => 69878
         )
     num_edges = Dict(
-        ("user", "tag", "movie")    => 191160,
-        ("user", "rating", "movie") => 20000108
+        ("user", "tag", "movie")    => 95580,
+        ("user", "rating", "movie") => 10000054
     )
 
     for type in keys(num_nodes)
@@ -177,9 +137,9 @@ end
         "user"  => 138493
         )
     num_edges = Dict(
-        ("movie", "score", "tag")    => 23419536,
-        ("user", "tag", "movie")     => 931128,
-        ("user", "rating", "movie")  => 40000526
+        ("movie", "score", "tag")    => 11709768,
+        ("user", "tag", "movie")     => 465564,
+        ("user", "rating", "movie")  => 20000263
     )
 
     for type in keys(num_nodes)
@@ -216,9 +176,9 @@ end
         "user"  => 162541
         )
     num_edges = Dict(
-        ("movie", "score", "tag")   => 31168896,
-        ("user", "tag", "movie")    => 2186720,
-        ("user", "rating", "movie") => 50000190
+        ("movie", "score", "tag")   => 15584448,
+        ("user", "tag", "movie")    => 1093360,
+        ("user", "rating", "movie") => 25000095
     )
 
     for type in keys(num_nodes)
