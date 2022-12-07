@@ -15,21 +15,21 @@ include("test_utils.jl")
 
 dataset_tests = [
     "datasets/graphs.jl",
-    # "datasets/misc.jl",
-    # "datasets/text.jl",
-    # "datasets/vision/fashion_mnist.jl",
-    # "datasets/vision/mnist.jl",
+    "datasets/misc.jl",
+    "datasets/text.jl",
+    "datasets/vision/fashion_mnist.jl",
+    "datasets/vision/mnist.jl",
 ]
 
 no_ci_dataset_tests = [
     "datasets/graphs_no_ci.jl",
-    # "datasets/text_no_ci.jl",
-    # "datasets/vision/cifar10.jl",
-    # "datasets/vision/cifar100.jl",
-    # "datasets/vision/emnist.jl",
-    # "datasets/vision/omniglot.jl",
-    # "datasets/vision/svhn2.jl",
-    # "datasets/meshes.jl"
+    "datasets/text_no_ci.jl",
+    "datasets/vision/cifar10.jl",
+    "datasets/vision/cifar100.jl",
+    "datasets/vision/emnist.jl",
+    "datasets/vision/omniglot.jl",
+    "datasets/vision/svhn2.jl",
+    "datasets/meshes.jl"
     ]
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
