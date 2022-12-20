@@ -72,13 +72,13 @@ function TUDataset(name; dir=nothing)
     # LOAD OPTIONAL FILES IF EXIST
     
     node_labels = isfile(joinpath(d, "$(name)_node_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_node_labels.txt"), Int) |> vec :
+                    readdlm(joinpath(d, "$(name)_node_labels.txt"), ',', Int) |> vec :
                     nothing
     edge_labels = isfile(joinpath(d, "$(name)_edge_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_edge_labels.txt"), Int) |> vec :
+                    readdlm(joinpath(d, "$(name)_edge_labels.txt"), ',', Int) |> vec :
                     nothing
     graph_labels = isfile(joinpath(d, "$(name)_graph_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_graph_labels.txt"), Int) |> vec :
+                    readdlm(joinpath(d, "$(name)_graph_labels.txt"), ',', Int) |> vec :
                     nothing
 
     node_attributes = isfile(joinpath(d, "$(name)_node_attributes.txt")) ?
