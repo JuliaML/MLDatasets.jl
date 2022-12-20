@@ -29,12 +29,11 @@ function test_inmemory_supervised_table_dataset(d::D;
         @test size(d.features) == (n_obs, n_features)
         @test size(d.targets) == (n_obs, n_targets)
         
-        # check that dataframe shares the same storage of features and targets
         for c in names(d.dataframe)
             if c in names(d.targets)
-                @test d.dataframe[!, c] === d.targets[!,c] 
+                @test d.dataframe[!, c] == d.targets[!,c] 
             else
-                @test d.dataframe[!, c] === d.features[!,c]
+                @test d.dataframe[!, c] == d.features[!,c]
             end
         end
 

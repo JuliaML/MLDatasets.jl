@@ -79,22 +79,23 @@ end
 
 function Iris(; dir = nothing, as_df = true)
     path = datafile("Iris", "iris.data", dir)
-    df = read_csv(path, header=0)
-    DataFrames.rename!(df, ["sepallength", "sepalwidth", "petallength", "petalwidth", "class"])
-
-    features = df[!, DataFrames.Not(:class)]
-    targets = df[!, [:class]]
-
+    t = read_csv(path, CSV.File, header=0)
+    colnames = Tables.columnnames(t)
+    truecolnames = ["sepallength", "sepalwidth", "petallength", "petalwidth", "class"]
+    features = table_to_matrix(t, select = colnames[1:end-1])
+    targets = table_to_matrix(t, select = colnames[end:end])
+    
     metadata = Dict{String, Any}()
     metadata["path"] = path
-    metadata["n_observations"] = size(df, 1)
-    metadata["feature_names"] = names(features)
-    metadata["target_names"] = names(targets)
+    metadata["n_observations"] = size(features, 1)
+    metadata["feature_names"] = truecolnames[1:end-1]
+    metadata["target_names"] = truecolnames[end:end]
 
-    if !as_df
-        features = df_to_matrix(features)
-        targets = df_to_matrix(targets)
-        df = nothing
+    df = nothing
+    if as_df
+        df = table_to_df(t, names = truecolnames)
+        features = matrix_to_df(features, names = truecolnames[1:end-1])
+        targets = matrix_to_df(targets, names = truecolnames[end:end])
     end
 
     return Iris(metadata, features, targets, df)

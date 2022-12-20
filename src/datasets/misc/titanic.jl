@@ -61,22 +61,25 @@ end
 function Titanic(; as_df = true, dir = nothing)
     @assert dir === nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "titanic.csv")
-    df = read_csv(path)
-
-    features = df[!, DataFrames.Not(:Survived)]
-    targets = df[!, [:Survived]]
+    t = read_csv(path, CSV.File)
+    colnames = Tables.columnnames(t)
+    ncols = length(colnames)
+    # :Sruvived is the second column
+    features = table_to_matrix(t, select = colnames[[1; 3:ncols]])
+    targets = table_to_matrix(t, select = colnames[2:2])
     
     metadata = Dict{String, Any}()
     metadata["path"] = path
-    metadata["feature_names"] = names(features)
-    metadata["target_names"] = names(targets)
-    metadata["n_observations"] = size(df, 1)
+    metadata["feature_names"] = colnames[[1; 3:ncols]]
+    metadata["target_names"] = colnames[2:2]
+    metadata["n_observations"] = size(features, 1)
     metadata["description"] = TITANIC_DESCR
 
-    if !as_df
-        features = df_to_matrix(features)
-        targets = df_to_matrix(targets)
-        df = nothing
+    df = nothing
+    if as_df
+        df = table_to_df(t, names = colnames)
+        features = matrix_to_df(features, names = colnames[[1; 3:ncols]])
+        targets = matrix_to_df(targets, names = colnames[2:2])
     end
 
     return Titanic(metadata, features, targets, df)

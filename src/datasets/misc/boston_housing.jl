@@ -77,21 +77,24 @@ end
 function BostonHousing(; as_df = true, dir = nothing)
     @assert dir === nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "boston_housing.csv")
-    df = read_csv(path)
-    features = df[!, DataFrames.Not(:MEDV)]
-    targets = df[!, [:MEDV]]
+    t = read_csv(path, CSV.File)
+    colnames = Tables.columnnames(t)
+    features = table_to_matrix(t, select = colnames[1:end-1])
+    targets = table_to_matrix(t, select = colnames[end:end])
+    
     
     metadata = Dict{String, Any}()
     metadata["path"] = path
-    metadata["feature_names"] = names(features)
-    metadata["target_names"] = names(targets)
-    metadata["n_observations"] = size(targets, 1)
+    metadata["feature_names"] = colnames[1:end-1]
+    metadata["target_names"] = colnames[end:end]
+    metadata["n_observations"] = size(features, 1)
     metadata["description"] = BOSTONHOUSING_DESCR
     
-    if !as_df 
-        features = df_to_matrix(features) 
-        targets = df_to_matrix(targets)
-        df = nothing
+    df = nothing
+    if as_df
+        df = table_to_df(t, names = colnames)
+        features = matrix_to_df(features, names = colnames[1:end-1])
+        targets = matrix_to_df(targets, names = colnames[end:end])
     end
     
     return BostonHousing(metadata, features, targets, df)
