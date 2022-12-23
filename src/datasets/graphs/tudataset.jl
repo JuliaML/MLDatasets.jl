@@ -95,7 +95,7 @@ function TUDataset(name; dir=nothing)
     @assert issorted(graph_indicator)
     if !issorted(source)
         p = sortperm(source)
-        source, target[p] = source[p], target[p]
+        source, target = source[p], target[p]
         if edge_labels !== nothing
             edge_labels = edge_labels[p]
         end
