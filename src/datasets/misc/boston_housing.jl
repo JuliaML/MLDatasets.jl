@@ -69,31 +69,31 @@ julia> X, y = BostonHousing(as_df=false)[:]
 """
 struct BostonHousing <: SupervisedDataset
     metadata::Dict{String, Any}
-    features
-    targets
-    dataframe
+    features::Any
+    targets::Any
+    dataframe::Any
 end
 
 function BostonHousing(; as_df = true, dir = nothing)
-    @assert dir === nothing "custom `dir` is not supported at the moment."
+    @assert dir===nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "boston_housing.csv")
     df = read_csv(path)
     features = df[!, DataFrames.Not(:MEDV)]
     targets = df[!, [:MEDV]]
-    
+
     metadata = Dict{String, Any}()
     metadata["path"] = path
     metadata["feature_names"] = names(features)
     metadata["target_names"] = names(targets)
     metadata["n_observations"] = size(targets, 1)
     metadata["description"] = BOSTONHOUSING_DESCR
-    
-    if !as_df 
-        features = df_to_matrix(features) 
+
+    if !as_df
+        features = df_to_matrix(features)
         targets = df_to_matrix(targets)
         df = nothing
     end
-    
+
     return BostonHousing(metadata, features, targets, df)
 end
 
@@ -146,10 +146,10 @@ https://archive.ics.uci.edu/ml/machine-learning-databases/housing/
 function Base.getproperty(::Type{BostonHousing}, s::Symbol)
     if s == :features
         @warn "BostonHousing.features() is deprecated, use `BostonHousing().features` instead."
-        return () -> BostonHousing(as_df=false).features
+        return () -> BostonHousing(as_df = false).features
     elseif s == :targets
         @warn "BostonHousing.targets() is deprecated, use `BostonHousing().targets` instead."
-        return () -> BostonHousing(as_df=false).targets
+        return () -> BostonHousing(as_df = false).targets
     elseif s == :feature_names
         @warn "BostonHousing.feature_names() is deprecated, use `BostonHousing().feature_names` instead."
         return () -> lowercase.(BostonHousing().metadata["feature_names"])

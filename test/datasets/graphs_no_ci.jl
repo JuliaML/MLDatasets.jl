@@ -1,5 +1,4 @@
 
-
 @testset "ml-100k" begin
     data = MovieLens("100k")
     @test length(data) == 1
@@ -8,13 +7,9 @@
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "movie"  => 1682,
-        "user"   => 943,
-        )
-    num_edges = Dict(
-        ("user", "rating", "movie") => 100000
-    )
+    num_nodes = Dict("movie" => 1682,
+                     "user" => 943)
+    num_edges = Dict(("user", "rating", "movie") => 100000)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -34,7 +29,7 @@
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :rating]
+            @test key in [:timestamp, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -49,13 +44,9 @@ end
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-            "movie" => 3883,
-            "user"  => 6040
-        )
-    num_edges = Dict(
-        ("user", "rating", "movie") => 1000209
-    )
+    num_nodes = Dict("movie" => 3883,
+                     "user" => 6040)
+    num_edges = Dict(("user", "rating", "movie") => 1000209)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -75,7 +66,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :rating]
+            @test key in [:timestamp, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -90,15 +81,11 @@ end
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "tag"   => 95580,
-        "movie" => 10681,
-        "user"  => 69878
-        )
-    num_edges = Dict(
-        ("user", "tag", "movie")    => 95580,
-        ("user", "rating", "movie") => 10000054
-    )
+    num_nodes = Dict("tag" => 95580,
+                     "movie" => 10681,
+                     "user" => 69878)
+    num_edges = Dict(("user", "tag", "movie") => 95580,
+                     ("user", "rating", "movie") => 10000054)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -116,7 +103,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating]
+            @test key in [:timestamp, :tag_name, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -131,16 +118,12 @@ end
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "tag"   => 465564,
-        "movie" => 27278,
-        "user"  => 138493
-        )
-    num_edges = Dict(
-        ("movie", "score", "tag")    => 11709768,
-        ("user", "tag", "movie")     => 465564,
-        ("user", "rating", "movie")  => 20000263
-    )
+    num_nodes = Dict("tag" => 465564,
+                     "movie" => 27278,
+                     "user" => 138493)
+    num_edges = Dict(("movie", "score", "tag") => 11709768,
+                     ("user", "tag", "movie") => 465564,
+                     ("user", "rating", "movie") => 20000263)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -155,7 +138,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating, :score]
+            @test key in [:timestamp, :tag_name, :rating, :score]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -170,16 +153,12 @@ end
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "tag"   => 1093360,
-        "movie" => 62423,
-        "user"  => 162541
-        )
-    num_edges = Dict(
-        ("movie", "score", "tag")   => 15584448,
-        ("user", "tag", "movie")    => 1093360,
-        ("user", "rating", "movie") => 25000095
-    )
+    num_nodes = Dict("tag" => 1093360,
+                     "movie" => 62423,
+                     "user" => 162541)
+    num_edges = Dict(("movie", "score", "tag") => 15584448,
+                     ("user", "tag", "movie") => 1093360,
+                     ("user", "rating", "movie") => 25000095)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -194,7 +173,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating, :score]
+            @test key in [:timestamp, :tag_name, :rating, :score]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -207,17 +186,22 @@ end
     @test g.num_nodes == 169343
     @test g.num_edges == 1166243
 
-    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) == g.num_nodes
+    @test sum(count.([g.node_data.train_mask, g.node_data.test_mask, g.node_data.val_mask])) ==
+          g.num_nodes
 end
 
 @testset "OGBDataset - ogbg-molhiv" begin
     d = OGBDataset("ogbg-molhiv")
 
-    @test sum(count.([d.graph_data.train_mask, d.graph_data.test_mask, d.graph_data.val_mask])) == length(d)
+    @test sum(count.([
+                         d.graph_data.train_mask,
+                         d.graph_data.test_mask,
+                         d.graph_data.val_mask,
+                     ])) == length(d)
 end
 
 @testset "Reddit_full" begin
-    data  = Reddit(full=true)
+    data = Reddit(full = true)
     @test length(data) == 1
     g = data[1]
     @test g.num_nodes == 232965
@@ -234,7 +218,7 @@ end
 end
 
 @testset "Reddit_subset" begin
-    data  = Reddit(full=false)
+    data = Reddit(full = false)
     @test length(data) == 1
     g = data[1]
     @test g.num_nodes == 231443
@@ -250,18 +234,17 @@ end
     @test maximum(s) == maximum(t) == g.num_nodes
 end
 
-
 @testset "TUDataset - PROTEINS" begin
-    data  = TUDataset("PROTEINS")
+    data = TUDataset("PROTEINS")
 
     @test data.num_nodes == 43471
     @test data.num_edges == 162088
     @test data.num_graphs == 1113
 
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_nodes == sum(g -> g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g -> g.num_edges, data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
 
     i = rand(1:length(data))
@@ -285,16 +268,16 @@ end
 end
 
 @testset "TUDataset - QM9" begin
-    data  = TUDataset("QM9")
+    data = TUDataset("QM9")
 
     @test data.num_nodes == 2333625
     @test data.num_edges == 4823498
     @test data.num_graphs == 129433
 
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_nodes == sum(g -> g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g -> g.num_edges, data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
 
     i = rand(1:length(data))
@@ -314,14 +297,13 @@ end
 end
 
 @testset "OrganicMaterialsDB" begin
-    data = OrganicMaterialsDB(split=:train)
+    data = OrganicMaterialsDB(split = :train)
     @test length(data) == 10000
     @test data[1].graphs isa MLDatasets.Graph
     @test data[1].bandgaps isa Number
     @test data[:].graphs isa Vector{MLDatasets.Graph}
     @test data[:].bandgaps isa Vector{<:Number}
-    
-    data = OrganicMaterialsDB(split=:test)
+
+    data = OrganicMaterialsDB(split = :test)
     @test length(data) == 2500
 end
-

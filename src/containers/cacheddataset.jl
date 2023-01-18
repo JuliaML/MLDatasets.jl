@@ -28,8 +28,9 @@ end
 
 CachedDataset(source, cachesize::Int) = CachedDataset(source, 1:cachesize)
 
-CachedDataset(source, cacheidx::AbstractVector{<:Integer} = 1:numobs(source)) =
+function CachedDataset(source, cacheidx::AbstractVector{<:Integer} = 1:numobs(source))
     CachedDataset(source, collect(cacheidx), make_cache(source, cacheidx))
+end
 
 function Base.getindex(dataset::CachedDataset, i::Integer)
     _i = findfirst(==(i), dataset.cacheidx)

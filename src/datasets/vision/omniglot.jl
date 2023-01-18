@@ -1,34 +1,32 @@
 function __init__omniglot()
     DEPNAME = "Omniglot"
-    TRAIN   = "data_background.mat"
-    TEST    = "data_evaluation.mat"
-    SMALL1  = "data_background_small1.mat"
-    SMALL2  = "data_background_small2.mat"
+    TRAIN = "data_background.mat"
+    TEST = "data_evaluation.mat"
+    SMALL1 = "data_background_small1.mat"
+    SMALL2 = "data_background_small2.mat"
 
-    register(DataDep(
-            DEPNAME,
-            """
-            Dataset: Omniglot data set for one-shot learning
-            Authors: Brenden M. Lake, Ruslan Salakhutdinov, Joshua B. Tenenbaum
-            Website: https://github.com/brendenlake/omniglot
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: Omniglot data set for one-shot learning
+                     Authors: Brenden M. Lake, Ruslan Salakhutdinov, Joshua B. Tenenbaum
+                     Website: https://github.com/brendenlake/omniglot
 
-            [Lake et al., 2015]
-                Lake, B. M., Salakhutdinov, R., and Tenenbaum, J. B. (2015).
-                Human-level concept learning through probabilistic program induction.
-                Science, 350(6266), 1332-1338.
+                     [Lake et al., 2015]
+                         Lake, B. M., Salakhutdinov, R., and Tenenbaum, J. B. (2015).
+                         Human-level concept learning through probabilistic program induction.
+                         Science, 350(6266), 1332-1338.
 
-            The files are available for download at the official
-            github repository linked above. Note that using the data
-            responsibly and respecting copyright remains your
-            responsibility. The authors of Omniglot aren't really
-            explicit about any terms of use, so please read the
-            website to make sure you want to download the dataset.
-            """,
-            "https://github.com/brendenlake/omniglot/raw/master/matlab/" .* [TRAIN, TEST, SMALL1, SMALL2],
-            "1cfb52d931d794a3dd2717da6c80ddb8f48b0a6f559916c60fcdcd908b65d3d8", #matlab links
-        ))
+                     The files are available for download at the official
+                     github repository linked above. Note that using the data
+                     responsibly and respecting copyright remains your
+                     responsibility. The authors of Omniglot aren't really
+                     explicit about any terms of use, so please read the
+                     website to make sure you want to download the dataset.
+                     """,
+                     "https://github.com/brendenlake/omniglot/raw/master/matlab/" .*
+                     [TRAIN, TEST, SMALL1, SMALL2],
+                     "1cfb52d931d794a3dd2717da6c80ddb8f48b0a6f559916c60fcdcd908b65d3d8"))
 end
-
 
 """
     Omniglot(; Tx=Float32, split=:train, dir=nothing)
@@ -98,17 +96,17 @@ Omniglot:
 struct Omniglot <: SupervisedDataset
     metadata::Dict{String, Any}
     split::Symbol
-    features::Array{<:Any,3}
+    features::Array{<:Any, 3}
     targets::Vector{String}
 end
 
-Omniglot(; split=:train, Tx=Float32, dir=nothing) = Omniglot(Tx, split; dir)
+Omniglot(; split = :train, Tx = Float32, dir = nothing) = Omniglot(Tx, split; dir)
 Omniglot(split::Symbol; kws...) = Omniglot(; split, kws...)
 Omniglot(Tx::Type; kws...) = Omniglot(; Tx, kws...)
 
-function Omniglot(Tx::Type, split::Symbol; dir=nothing)
+function Omniglot(Tx::Type, split::Symbol; dir = nothing)
     @assert split ∈ [:train, :test, :small1, :small2]
-    if split === :train 
+    if split === :train
         IMAGESPATH = "data_background.mat"
     elseif split === :test
         IMAGESPATH = "data_evaluation.mat"
@@ -122,7 +120,7 @@ function Omniglot(Tx::Type, split::Symbol; dir=nothing)
 
     file = MAT.matopen(filename)
     images = MAT.read(file, "images")
-    names  = MAT.read(file, "names")
+    names = MAT.read(file, "names")
     MAT.close(file)
 
     image_count = 0
@@ -133,7 +131,7 @@ function Omniglot(Tx::Type, split::Symbol; dir=nothing)
     end
 
     features = Array{Tx}(undef, 105, 105, image_count)
-    targets  = Vector{String}(undef, image_count)    
+    targets = Vector{String}(undef, image_count)
 
     curr_idx = 1
     for i in range(1, length(images))
@@ -141,13 +139,13 @@ function Omniglot(Tx::Type, split::Symbol; dir=nothing)
         for character in alphabet
             for variation in character
                 targets[curr_idx] = names[i]
-                features[:,:,curr_idx] = variation
+                features[:, :, curr_idx] = variation
                 curr_idx += 1
             end
         end
     end
-    
-    metadata = Dict{String,Any}()
+
+    metadata = Dict{String, Any}()
     metadata["n_observations"] = size(features)[end]
     metadata["features_path"] = IMAGESPATH
     metadata["targets_path"] = IMAGESPATH
@@ -155,12 +153,11 @@ function Omniglot(Tx::Type, split::Symbol; dir=nothing)
     return Omniglot(metadata, split, features, targets)
 end
 
-
-
-convert2image(::Type{<:Omniglot}, x::AbstractArray{<:Integer}) =
+function convert2image(::Type{<:Omniglot}, x::AbstractArray{<:Integer})
     convert2image(Omniglot, reinterpret(N0f8, convert(Array{UInt8}, x)))
+end
 
-function convert2image(::Type{<:Omniglot}, x::AbstractArray{T,N}) where {T,N}
+function convert2image(::Type{<:Omniglot}, x::AbstractArray{T, N}) where {T, N}
     @assert N == 2 || N == 3
     x = permutedims(x, (2, 1, 3:N...))
     ImageCore = ImageShow.ImageCore

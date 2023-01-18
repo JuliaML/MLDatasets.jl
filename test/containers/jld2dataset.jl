@@ -3,7 +3,7 @@ function setup_jld2dataset_test()
         ("d1", rand(2, 10)),
         ("g1/d1", rand(10)),
         ("g1/d2", string.('a':'j')),
-        ("g2/g1/d1", rand(Bool, 3, 3, 10))
+        ("g2/g1/d1", rand(Bool, 3, 3, 10)),
     ]
 
     fid = jldopen("test.jld2", "w")

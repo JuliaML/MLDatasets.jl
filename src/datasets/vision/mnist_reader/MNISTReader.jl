@@ -1,18 +1,18 @@
 module MNISTReader
-    using GZip
+using GZip
 
-    export
-        readimages,
-        readlabels
+export
+       readimages,
+       readlabels
 
-    # Constants
+# Constants
 
-    const IMAGEOFFSET = 16
-    const LABELOFFSET = 8
+const IMAGEOFFSET = 16
+const LABELOFFSET = 8
 
-    # Includes
+# Includes
 
-    include("readheader.jl")
-    include("readimages.jl")
-    include("readlabels.jl")
+include("readheader.jl")
+include("readimages.jl")
+include("readlabels.jl")
 end

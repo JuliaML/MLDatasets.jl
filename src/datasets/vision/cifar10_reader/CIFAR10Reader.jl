@@ -1,9 +1,8 @@
 module CIFAR10Reader
 
 export
-
-    readdata!,
-    readdata
+       readdata!,
+       readdata
 
 const NROW = 32
 const NCOL = 32
@@ -33,7 +32,7 @@ function readdata(io::IO)
     buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     @inbounds for index in 1:CHUNK_SIZE
         _, ty = readnext!(buffer, io)
-        copyto!(view(X,:,:,:,index), buffer)
+        copyto!(view(X, :, :, :, index), buffer)
         Y[index] = ty
     end
     X, Y
@@ -42,13 +41,13 @@ end
 function readdata(file::AbstractString, index::Integer)
     open(file, "r") do io
         readdata(io, index)
-    end::Tuple{Array{UInt8,3},Int}
+    end::Tuple{Array{UInt8, 3}, Int}
 end
 
 function readdata(file::AbstractString)
     open(file, "r") do io
         readdata(io)
-    end::Tuple{Array{UInt8,4},Vector{Int}}
+    end::Tuple{Array{UInt8, 4}, Vector{Int}}
 end
 
 end

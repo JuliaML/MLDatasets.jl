@@ -1,9 +1,8 @@
 module CIFAR100Reader
 
 export
-
-    readdata!,
-    readdata
+       readdata!,
+       readdata
 
 const NROW = 32
 const NCOL = 32
@@ -34,7 +33,7 @@ function readdata(io::IO, nobs::Int)
     buffer = Array{UInt8}(undef, NROW, NCOL, NCHAN)
     @inbounds for index in 1:nobs
         _, tc, tf = readnext!(buffer, io)
-        copyto!(view(X,:,:,:,index), buffer)
+        copyto!(view(X, :, :, :, index), buffer)
         C[index] = tc
         F[index] = tf
     end
@@ -44,13 +43,13 @@ end
 function readdata(file::AbstractString, nobs::Int, index::Integer)
     open(file, "r") do io
         readdata(io, nobs, index)
-    end::Tuple{Array{UInt8,3},Int,Int}
+    end::Tuple{Array{UInt8, 3}, Int, Int}
 end
 
 function readdata(file::AbstractString, nobs::Int)
     open(file, "r") do io
         readdata(io, nobs)
-    end::Tuple{Array{UInt8,4},Vector{Int},Vector{Int}}
+    end::Tuple{Array{UInt8, 4}, Vector{Int}, Vector{Int}}
 end
 
 end

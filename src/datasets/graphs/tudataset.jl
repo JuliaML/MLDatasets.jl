@@ -2,13 +2,11 @@ function __init__tudataset()
     DEPNAME = "TUDataset"
     DOCS = "https://chrsmrrs.github.io/datasets/docs/home/"
 
-    register(ManualDataDep(
-        DEPNAME,
-        """
-        Datahub: $DEPNAME.
-        Website: $DOCS
-        """,
-    ))
+    register(ManualDataDep(DEPNAME,
+                           """
+                           Datahub: $DEPNAME.
+                           Website: $DOCS
+                           """))
 end
 
 """
@@ -45,24 +43,24 @@ struct TUDataset <: AbstractDataset
     name::String
     metadata::Dict{String, Any}
     graphs::Vector{Graph}
-    graph_data::Union{Nothing,NamedTuple}
+    graph_data::Union{Nothing, NamedTuple}
     num_nodes::Int
     num_edges::Int
     num_graphs::Int
 end
 
-function TUDataset(name; dir=nothing)
+function TUDataset(name; dir = nothing)
     create_default_dir("TUDataset")
     d = tudataset_datadir(name, dir)
     # See here for the file format: https://chrsmrrs.github.io/datasets/docs/format/
-    
+
     st = readdlm(joinpath(d, "$(name)_A.txt"), ',', Int)
     # Check that the first node is labeled 1.
     # TODO this will fail if the first node is isolated
     @assert minimum(st) == 1
-    source, target = st[:,1], st[:,2]
+    source, target = st[:, 1], st[:, 2]
 
-    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
+    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec
     @assert all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
 
     num_nodes = length(graph_indicator)
@@ -70,26 +68,32 @@ function TUDataset(name; dir=nothing)
     num_graphs = length(unique(graph_indicator))
 
     # LOAD OPTIONAL FILES IF EXIST
-    
+
     node_labels = isfile(joinpath(d, "$(name)_node_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_node_labels.txt"), ',', Int)' |> collect |> maybesqueeze :
-                    nothing
+                  readdlm(joinpath(d, "$(name)_node_labels.txt"), ',', Int)' |> collect |>
+                  maybesqueeze :
+                  nothing
     edge_labels = isfile(joinpath(d, "$(name)_edge_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_edge_labels.txt"), ',', Int)' |> collect |> maybesqueeze :
-                    nothing
+                  readdlm(joinpath(d, "$(name)_edge_labels.txt"), ',', Int)' |> collect |>
+                  maybesqueeze :
+                  nothing
     graph_labels = isfile(joinpath(d, "$(name)_graph_labels.txt")) ?
-                    readdlm(joinpath(d, "$(name)_graph_labels.txt"), ',', Int)' |> collect |> maybesqueeze :
-                    nothing
+                   readdlm(joinpath(d, "$(name)_graph_labels.txt"), ',', Int)' |> collect |>
+                   maybesqueeze :
+                   nothing
 
     node_attributes = isfile(joinpath(d, "$(name)_node_attributes.txt")) ?
-                        readdlm(joinpath(d, "$(name)_node_attributes.txt"), ',', Float32)' |> collect :
-                        nothing
+                      readdlm(joinpath(d, "$(name)_node_attributes.txt"), ',', Float32)' |>
+                      collect :
+                      nothing
     edge_attributes = isfile(joinpath(d, "$(name)_edge_attributes.txt")) ?
-                        readdlm(joinpath(d, "$(name)_edge_attributes.txt"), ',', Float32)' |> collect :
-                        nothing
+                      readdlm(joinpath(d, "$(name)_edge_attributes.txt"), ',', Float32)' |>
+                      collect :
+                      nothing
     graph_attributes = isfile(joinpath(d, "$(name)_graph_attributes.txt")) ?
-                        readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',', Float32)' |> collect :
-                        nothing
+                       readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',',
+                               Float32)' |> collect :
+                       nothing
 
     # We need this two vectors sorted for efficiency in tudataset_getgraph(full_dataset, i)
     @assert issorted(graph_indicator)
@@ -100,20 +104,19 @@ function TUDataset(name; dir=nothing)
             edge_labels = edge_labels[p]
         end
         if edge_attributes !== nothing
-            edge_attributes = edge_attributes[:,p]
+            edge_attributes = edge_attributes[:, p]
         end
     end
 
-
     full_dataset = (; num_nodes, num_edges, num_graphs,
-                        source, target, 
-                        graph_indicator,
-                        node_labels,
-                        edge_labels,            
-                        graph_labels,
-                        node_attributes, 
-                        edge_attributes,
-                        graph_attributes)
+                    source, target,
+                    graph_indicator,
+                    node_labels,
+                    edge_labels,
+                    graph_labels,
+                    node_attributes,
+                    edge_attributes,
+                    graph_attributes)
 
     graphs = [tudataset_getgraph(full_dataset, i) for i in 1:num_graphs]
     graph_data = (; features = graph_attributes, targets = graph_labels) |> clean_nt
@@ -124,7 +127,7 @@ end
 function tudataset_datadir(name, dir = nothing)
     dir = isnothing(dir) ? datadep"TUDataset" : dir
     LINK = "https://www.chrsmrrs.com/graphkerneldatasets/$name.zip"
-    d  = joinpath(dir, name)
+    d = joinpath(dir, name)
     if !isdir(d)
         DataDeps.fetch_default(LINK, dir)
         currdir = pwd()
@@ -136,38 +139,37 @@ function tudataset_datadir(name, dir = nothing)
     return d
 end
 
-
 function tudataset_getgraph(data::NamedTuple, i::Int)
     vmin = searchsortedfirst(data.graph_indicator, i)
     vmax = searchsortedlast(data.graph_indicator, i)
     nodes = vmin:vmax
     node_labels = isnothing(data.node_labels) ? nothing : getobs(data.node_labels, nodes)
-    node_attributes = isnothing(data.node_attributes) ? nothing : getobs(data.node_attributes, nodes)
-    
+    node_attributes = isnothing(data.node_attributes) ? nothing :
+                      getobs(data.node_attributes, nodes)
+
     emin = searchsortedfirst(data.source, vmin)
     emax = searchsortedlast(data.source, vmax)
     edges = emin:emax
     source = data.source[edges] .- vmin .+ 1
     target = data.target[edges] .- vmin .+ 1
     edge_labels = isnothing(data.edge_labels) ? nothing : getobs(data.edge_labels, edges)
-    edge_attributes = isnothing(data.edge_attributes) ? nothing : getobs(data.edge_attributes, edges)
+    edge_attributes = isnothing(data.edge_attributes) ? nothing :
+                      getobs(data.edge_attributes, edges)
 
     num_nodes = length(nodes)
     num_edges = length(source)
     node_data = (features = node_attributes, targets = node_labels)
     edge_data = (features = edge_attributes, targets = edge_labels)
-    
-    return Graph(; num_nodes,
-                edge_index = (source, target), 
-                node_data = node_data |> clean_nt,
-                edge_data = edge_data |> clean_nt,
-                )
-end
 
+    return Graph(; num_nodes,
+                 edge_index = (source, target),
+                 node_data = node_data |> clean_nt,
+                 edge_data = edge_data |> clean_nt)
+end
 
 Base.length(data::TUDataset) = length(data.graphs)
 
-function Base.getindex(data::TUDataset, ::Colon) 
+function Base.getindex(data::TUDataset, ::Colon)
     if data.graph_data === nothing
         return data.graphs
     else
@@ -175,10 +177,10 @@ function Base.getindex(data::TUDataset, ::Colon)
     end
 end
 
-function Base.getindex(data::TUDataset, i) 
+function Base.getindex(data::TUDataset, i)
     if data.graph_data === nothing
         return getobs(data.graphs, i)
     else
-        return getobs((; data.graphs, data.graph_data...), i)    
+        return getobs((; data.graphs, data.graph_data...), i)
     end
 end

@@ -2,13 +2,11 @@ function __init__faust()
     DEPNAME = "MPI-FAUST"
     DOCS = "http://faust.is.tue.mpg.de/"
 
-    register(ManualDataDep(
-        DEPNAME,
-        """
-        Dataset: $DEPNAME.
-        Website: $DOCS
-        """,
-    ))
+    register(ManualDataDep(DEPNAME,
+                           """
+                           Dataset: $DEPNAME.
+                           Website: $DOCS
+                           """))
 end
 
 """
@@ -160,7 +158,7 @@ struct FAUST <: AbstractDataset
     metadata::Dict{String, Any}
 end
 
-function FAUST(split=:train; dir=nothing)
+function FAUST(split = :train; dir = nothing)
     isnothing(dir) && (dir = datadep"MPI-FAUST")
 
     @assert split ∈ [:train, :test] "Only train and test splits are present in the dataset."
@@ -181,7 +179,7 @@ function FAUST(split=:train; dir=nothing)
             registration = load(joinpath(reg_dir, reg_file))
             gt = open(joinpath(gt_dir, gt_file)) do file
                 s = readlines(file)
-                map(x-> x == "1", s)
+                map(x -> x == "1", s)
             end
             push!(scans, scan)
             push!(registrations, registration)

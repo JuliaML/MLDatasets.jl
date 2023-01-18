@@ -2,40 +2,38 @@
 function __init__svhn2()
     DEPNAME = "SVHN2"
     TRAINDATA = "train_32x32.mat"
-    TESTDATA  = "test_32x32.mat"
+    TESTDATA = "test_32x32.mat"
     EXTRADATA = "extra_32x32.mat"
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The Street View House Numbers (SVHN) Dataset
-        Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
-        Website: http://ufldl.stanford.edu/housenumbers
-        Format: Cropped Digits (Format 2 on the website)
-        Note: for non-commercial use only
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The Street View House Numbers (SVHN) Dataset
+                     Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
+                     Website: http://ufldl.stanford.edu/housenumbers
+                     Format: Cropped Digits (Format 2 on the website)
+                     Note: for non-commercial use only
 
-        [Netzer et al., 2011]
-            Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
-            "Reading Digits in Natural Images with Unsupervised Feature Learning"
-            NIPS Workshop on Deep Learning and Unsupervised Feature Learning 2011
+                     [Netzer et al., 2011]
+                         Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng
+                         "Reading Digits in Natural Images with Unsupervised Feature Learning"
+                         NIPS Workshop on Deep Learning and Unsupervised Feature Learning 2011
 
-        The dataset is split up into three subsets: 73257
-        digits for training, 26032 digits for testing, and
-        531131 additional to use as extra training data.
+                     The dataset is split up into three subsets: 73257
+                     digits for training, 26032 digits for testing, and
+                     531131 additional to use as extra training data.
 
-        The files are available for download at the official
-        website linked above. Note that using the data
-        responsibly and respecting copyright remains your
-        responsibility. For example the website mentions that
-        the data is for non-commercial use only. Please read
-        the website to make sure you want to download the
-        dataset.
-        """,
-        "http://ufldl.stanford.edu/housenumbers/" .* [TRAINDATA, TESTDATA, EXTRADATA],
-        "2fa3b0b79baf39de36ed7579e6947760e6241f4c52b6b406cabc44d654c13a50"
-    ))
+                     The files are available for download at the official
+                     website linked above. Note that using the data
+                     responsibly and respecting copyright remains your
+                     responsibility. For example the website mentions that
+                     the data is for non-commercial use only. Please read
+                     the website to make sure you want to download the
+                     dataset.
+                     """,
+                     "http://ufldl.stanford.edu/housenumbers/" .*
+                     [TRAINDATA, TESTDATA, EXTRADATA],
+                     "2fa3b0b79baf39de36ed7579e6947760e6241f4c52b6b406cabc44d654c13a50"))
 end
-
 
 """
     SVHN2(; Tx=Float32, split=:train, dir=nothing)
@@ -105,14 +103,14 @@ struct SVHN2 <: SupervisedDataset
     targets::Vector{Int}
 end
 
-SVHN2(; split=:train, Tx=Float32, dir=nothing) = SVHN2(Tx, split; dir)
+SVHN2(; split = :train, Tx = Float32, dir = nothing) = SVHN2(Tx, split; dir)
 SVHN2(split::Symbol; kws...) = SVHN2(; split, kws...)
 SVHN2(Tx::Type; kws...) = SVHN2(; Tx, kws...)
 
-function SVHN2(Tx::Type, split::Symbol; dir=nothing)
+function SVHN2(Tx::Type, split::Symbol; dir = nothing)
     DEPNAME = "SVHN2"
     TRAINDATA = "train_32x32.mat"
-    TESTDATA  = "test_32x32.mat"
+    TESTDATA = "test_32x32.mat"
     EXTRADATA = "extra_32x32.mat"
     CLASSES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
     @assert split ∈ [:train, :test, :extra]
@@ -126,7 +124,7 @@ function SVHN2(Tx::Type, split::Symbol; dir=nothing)
 
     path = datafile(DEPNAME, PATH, dir)
     vars = read_mat(path)
-    images = vars["X"]::Array{UInt8,4}
+    images = vars["X"]::Array{UInt8, 4}
     labels = vars["y"]
     images = permutedims(images, (2, 1, 3, 4))
     features = bytes_to_type(Tx, images)
@@ -141,84 +139,82 @@ end
 
 convert2image(::Type{<:SVHN2}, x) = convert2image(CIFAR10, x)
 
-      
-
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{SVHN2}, s::Symbol)
     if s == :traintensor
         @warn "SVHN2.traintensor() is deprecated, use `SVHN2(split=:train).features` instead."
-        traintensor(T::Type=N0f8; kws...) = traintensor(T, :; kws...)
+        traintensor(T::Type = N0f8; kws...) = traintensor(T, :; kws...)
         traintensor(i; kws...) = traintensor(N0f8, i; kws...)
-        function traintensor(T::Type, i; dir=nothing)
-            SVHN2(; split=:train, Tx=T, dir)[i][1]
+        function traintensor(T::Type, i; dir = nothing)
+            SVHN2(; split = :train, Tx = T, dir)[i][1]
         end
         return traintensor
     elseif s == :testtensor
-        @warn "SVHN2.testtensor() is deprecated, use `SVHN2(split=:test).features` instead." 
-        testtensor(T::Type=N0f8; kws...) = testtensor(T, :; kws...)
+        @warn "SVHN2.testtensor() is deprecated, use `SVHN2(split=:test).features` instead."
+        testtensor(T::Type = N0f8; kws...) = testtensor(T, :; kws...)
         testtensor(i; kws...) = testtensor(N0f8, i; kws...)
-        function testtensor(T::Type, i; dir=nothing)
-            SVHN2(; split=:test, Tx=T, dir)[i][1]
+        function testtensor(T::Type, i; dir = nothing)
+            SVHN2(; split = :test, Tx = T, dir)[i][1]
         end
-        return testtensor   
+        return testtensor
     elseif s == :extratensor
-        @warn "SVHN2.extratensor() is deprecated, use `SVHN2(split=:test)[:]` instead." 
-        extratensor(T::Type=N0f8; kws...) = extratensor(T, :; kws...)
+        @warn "SVHN2.extratensor() is deprecated, use `SVHN2(split=:test)[:]` instead."
+        extratensor(T::Type = N0f8; kws...) = extratensor(T, :; kws...)
         extratensor(i; kws...) = extratensor(N0f8, i; kws...)
-        function extratensor(T::Type, i; dir=nothing)
-            SVHN2(; split=:extra, Tx=T, dir)[i][1]
+        function extratensor(T::Type, i; dir = nothing)
+            SVHN2(; split = :extra, Tx = T, dir)[i][1]
         end
         return extratensor
     elseif s == :trainlabels
-        @warn "SVHN2.trainlabels() is deprecated, use `SVHN2(split=:train).targets` instead." 
+        @warn "SVHN2.trainlabels() is deprecated, use `SVHN2(split=:train).targets` instead."
         trainlabels(; kws...) = trainlabels(:; kws...)
-        function trainlabels(i; dir=nothing)
-            SVHN2(; split=:train, dir)[i][2]
+        function trainlabels(i; dir = nothing)
+            SVHN2(; split = :train, dir)[i][2]
         end
         return trainlabels
     elseif s == :testlabels
         @warn "SVHN2.testlabels() is deprecated, use `SVHN2(split=:test).targets` instead."
         testlabels(; kws...) = testlabels(:; kws...)
-        function testlabels(i; dir=nothing)
-            SVHN2(; split=:test, dir)[i][2]
+        function testlabels(i; dir = nothing)
+            SVHN2(; split = :test, dir)[i][2]
         end
         return testlabels
     elseif s == :extralabels
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
-        extralabels(T::Type=N0f8; kws...) = extralabels(T, :; kws...)
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead."
+        extralabels(T::Type = N0f8; kws...) = extralabels(T, :; kws...)
         extralabels(i; kws...) = extralabels(N0f8, i; kws...)
-        function extralabels(T::Type, i; dir=nothing)
-            SVHN2(; split=:extra, Tx=T, dir)[i][2]
+        function extralabels(T::Type, i; dir = nothing)
+            SVHN2(; split = :extra, Tx = T, dir)[i][2]
         end
         return extralabels
     elseif s == :traindata
         @warn "SVHN2.traindata() is deprecated, use `SVHN2(split=:train)[:]` instead."
-        traindata(T::Type=N0f8; kws...) = traindata(T, :; kws...)
+        traindata(T::Type = N0f8; kws...) = traindata(T, :; kws...)
         traindata(i; kws...) = traindata(N0f8, i; kws...)
-        function traindata(T::Type, i; dir=nothing)
-            SVHN2(; split=:train, Tx=T, dir)[i]
+        function traindata(T::Type, i; dir = nothing)
+            SVHN2(; split = :train, Tx = T, dir)[i]
         end
         return traindata
     elseif s == :testdata
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
-        testdata(T::Type=N0f8; kws...) = testdata(T, :; kws...)
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead."
+        testdata(T::Type = N0f8; kws...) = testdata(T, :; kws...)
         testdata(i; kws...) = testdata(N0f8, i; kws...)
-        function testdata(T::Type, i; dir=nothing)
-            SVHN2(; split=:test, Tx=T, dir)[i]
+        function testdata(T::Type, i; dir = nothing)
+            SVHN2(; split = :test, Tx = T, dir)[i]
         end
         return testdata
     elseif s == :extradata
-        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead." 
-        extradata(T::Type=N0f8; kws...) = extradata(T, :; kws...)
+        @warn "SVHN2.testdata() is deprecated, use `SVHN2(split=:test)[:]` instead."
+        extradata(T::Type = N0f8; kws...) = extradata(T, :; kws...)
         extradata(i; kws...) = extradata(N0f8, i; kws...)
-        function extradata(T::Type, i; dir=nothing)
-            SVHN2(; split=:extra, Tx=T, dir)[i]
+        function extradata(T::Type, i; dir = nothing)
+            SVHN2(; split = :extra, Tx = T, dir)[i]
         end
         return extradata
     elseif s == :convert2image
         @warn "SVHN2.convert2image(x) is deprecated, use `convert2image(SVHN2, x)` instead"
         return x -> convert2image(SVHN2, x)
-    elseif  s == :classnames
+    elseif s == :classnames
         @warn "SVHN2.classnames() is deprecated, use `SVHN2().metadata[\"class_names\"]` instead"
         return () -> parse.(Int, SVHN2().metadata["class_names"])
 

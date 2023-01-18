@@ -19,12 +19,15 @@ See [`close(::HDF5Dataset)`](@ref) for closing the underlying HDF5 file pointer.
 For array datasets, the last dimension is assumed to be the observation dimension.
 For scalar datasets, the stored value is returned by `getobs` for any index.
 """
-struct HDF5Dataset{T<:Union{HDF5.Dataset, Vector{HDF5.Dataset}}} <: AbstractDataContainer
+struct HDF5Dataset{T <: Union{HDF5.Dataset, Vector{HDF5.Dataset}}} <: AbstractDataContainer
     fid::HDF5.File
     paths::T
     shapes::Vector{Tuple}
 
-    function HDF5Dataset(fid::HDF5.File, paths::T, shapes::Vector) where T<:Union{HDF5.Dataset, Vector{HDF5.Dataset}}
+    function HDF5Dataset(fid::HDF5.File, paths::T,
+                         shapes::Vector) where {
+                                                T <:
+                                                Union{HDF5.Dataset, Vector{HDF5.Dataset}}}
         _check_hdf5_shapes(shapes) ||
             throw(ArgumentError("Cannot create HDF5Dataset for datasets with mismatched number of observations."))
 
@@ -33,11 +36,13 @@ struct HDF5Dataset{T<:Union{HDF5.Dataset, Vector{HDF5.Dataset}}} <: AbstractData
 end
 
 HDF5Dataset(fid::HDF5.File, path::HDF5.Dataset) = HDF5Dataset(fid, path, [size(path)])
-HDF5Dataset(fid::HDF5.File, paths::Vector{HDF5.Dataset}) =
+function HDF5Dataset(fid::HDF5.File, paths::Vector{HDF5.Dataset})
     HDF5Dataset(fid, paths, map(size, paths))
+end
 HDF5Dataset(fid::HDF5.File, path::AbstractString) = HDF5Dataset(fid, fid[path])
-HDF5Dataset(fid::HDF5.File, paths::Vector{<:AbstractString}) =
+function HDF5Dataset(fid::HDF5.File, paths::Vector{<:AbstractString})
     HDF5Dataset(fid, map(p -> fid[p], paths))
+end
 HDF5Dataset(file::AbstractString, paths) = HDF5Dataset(h5open(file, "r"), paths)
 
 _getobs_hdf5(dataset::HDF5.Dataset, ::Tuple{}, i) = read(dataset)
@@ -46,10 +51,12 @@ function _getobs_hdf5(dataset::HDF5.Dataset, shape, i)
 
     return dataset[I..., i]
 end
-Base.getindex(dataset::HDF5Dataset{HDF5.Dataset}, i) =
+function Base.getindex(dataset::HDF5Dataset{HDF5.Dataset}, i)
     _getobs_hdf5(dataset.paths, only(dataset.shapes), i)
-Base.getindex(dataset::HDF5Dataset{<:Vector}, i) =
+end
+function Base.getindex(dataset::HDF5Dataset{<:Vector}, i)
     Tuple(map((p, s) -> _getobs_hdf5(p, s, i), dataset.paths, dataset.shapes))
+end
 Base.length(dataset::HDF5Dataset) = last(first(filter(!isempty, dataset.shapes)))
 
 """

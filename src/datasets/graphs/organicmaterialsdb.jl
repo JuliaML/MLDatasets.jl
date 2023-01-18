@@ -4,13 +4,13 @@ function __init__omdb()
     FILE = "https://omdb.mathub.io/dataset/download/gap1_v1.1"
 
     register(DataDep(DEPNAME,
-    """
-    Dataset : The Organic Materials Database (OMDB)
-    Website : $LINK
-    """,
-    [],
-    # post_fetch_method = unpack
-    ))
+                     """
+                     Dataset : The Organic Materials Database (OMDB)
+                     Website : $LINK
+                     """,
+                     []
+                     # post_fetch_method = unpack
+                     ))
 end
 
 """
@@ -37,7 +37,7 @@ struct OrganicMaterialsDB <: AbstractDataset
     graph_data::NamedTuple
 end
 
-function OrganicMaterialsDB(; split=:train, dir=nothing)
+function OrganicMaterialsDB(; split = :train, dir = nothing)
     @assert split in [:train, :test]
     procfiles = process_data_if_needed(OrganicMaterialsDB; dir)
     if split == :train
@@ -50,7 +50,7 @@ end
 processed_files(::Type{<:OrganicMaterialsDB}) = ["train.jld2", "test.jld2"]
 raw_files(::Type{<:OrganicMaterialsDB}) = ["structures.xyz", "bandgaps.csv"]
 
-function process_data_if_needed(::Type{<:OrganicMaterialsDB}; dir=nothing)
+function process_data_if_needed(::Type{<:OrganicMaterialsDB}; dir = nothing)
     DEPNAME = "OrganicMaterialsDB"
     ddir = datadir(DEPNAME, dir)
 
@@ -58,7 +58,8 @@ function process_data_if_needed(::Type{<:OrganicMaterialsDB}; dir=nothing)
         mkpath(joinpath(ddir, "processed"))
     end
 
-    procfiles = [joinpath(ddir, "processed", f) for f in processed_files(OrganicMaterialsDB)]
+    procfiles = [joinpath(ddir, "processed", f)
+                 for f in processed_files(OrganicMaterialsDB)]
     rawfiles = [joinpath(ddir, f) for f in raw_files(OrganicMaterialsDB)]
 
     for f in rawfiles
@@ -83,36 +84,33 @@ function process_data(::Type{<:OrganicMaterialsDB}, rawfiles, procfiles)
     for frame in structures
         pos = Float32.(Chemfiles.positions(frame))
         z = Int.(Chemfiles.atomic_number.(frame))
-        g = Graph(num_nodes=length(z), node_data=(; pos, z))
+        g = Graph(num_nodes = length(z), node_data = (; pos, z))
         push!(graphs, g)
     end
 
-
     train_graphs = graphs[1:10000]
     train_bandgaps = bandgaps[1:10000]
-    train_metadata = Dict{String, Any}(
-        "split" => :train,
-        "size" => length(graphs),
-    )
-    train_dataset = OrganicMaterialsDB(train_metadata, train_graphs, (; bandgaps=train_bandgaps))
+    train_metadata = Dict{String, Any}("split" => :train,
+                                       "size" => length(graphs))
+    train_dataset = OrganicMaterialsDB(train_metadata, train_graphs,
+                                       (; bandgaps = train_bandgaps))
     FileIO.save(procfiles[1], Dict("dataset" => train_dataset))
 
     test_graphs = graphs[10001:end]
     test_bandgaps = bandgaps[10001:end]
-    test_metadata = Dict{String, Any}(
-        "split" => :test,
-        "size" => length(graphs),
-    )
-    test_dataset = OrganicMaterialsDB(test_metadata, test_graphs, (; bandgaps=test_bandgaps))
+    test_metadata = Dict{String, Any}("split" => :test,
+                                      "size" => length(graphs))
+    test_dataset = OrganicMaterialsDB(test_metadata, test_graphs,
+                                      (; bandgaps = test_bandgaps))
     FileIO.save(procfiles[2], Dict("dataset" => test_dataset))
 end
 
 Base.length(data::OrganicMaterialsDB) = length(data.graphs)
 
-function Base.getindex(data::OrganicMaterialsDB, ::Colon) 
+function Base.getindex(data::OrganicMaterialsDB, ::Colon)
     return (; data.graphs, data.graph_data.bandgaps)
 end
 
-function Base.getindex(data::OrganicMaterialsDB, i) 
-    return getobs((; data.graphs, data.graph_data...), i)    
+function Base.getindex(data::OrganicMaterialsDB, i)
+    return getobs((; data.graphs, data.graph_data...), i)
 end

@@ -3,7 +3,7 @@ function setup_filedataset_test()
         "root/p1/f1.csv",
         "root/p2/f2.csv",
         "root/p2/p2p1/f2.csv",
-        "root/p3/p3p1/f1.csv"
+        "root/p3/p3p1/f1.csv",
     ]
 
     for (i, file) in enumerate(files)

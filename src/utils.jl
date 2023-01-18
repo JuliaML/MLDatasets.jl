@@ -3,8 +3,14 @@ function parse_pystring(s::AbstractString)
     s == "False" && return false
     s == "True" && return true
     s == "None" && return nothing
-    try return parse(Int, s); catch; end
-    try return parse(Float64, s); catch; end 
+    try
+        return parse(Int, s)
+    catch
+    end
+    try
+        return parse(Float64, s)
+    catch
+    end
     return s
 end
 
@@ -16,7 +22,7 @@ function restrict_array_type(res::AbstractArray)
         return Float32.(res)
     elseif all(x -> x isa String, res)
         return String.(res)
-    else 
+    else
         return res
     end
 end
@@ -32,13 +38,14 @@ end
 
 bytes_to_type(::Type{UInt8}, A::Array{UInt8}) = A
 bytes_to_type(::Type{N0f8}, A::Array{UInt8}) = reinterpret(N0f8, A)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Integer = convert(Array{T}, A)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:AbstractFloat = A ./ T(255)
-bytes_to_type(::Type{T}, A::Array{UInt8}) where T<:Number  = convert(Array{T}, reinterpret(N0f8, A))
-
+bytes_to_type(::Type{T}, A::Array{UInt8}) where {T <: Integer} = convert(Array{T}, A)
+bytes_to_type(::Type{T}, A::Array{UInt8}) where {T <: AbstractFloat} = A ./ T(255)
+function bytes_to_type(::Type{T}, A::Array{UInt8}) where {T <: Number}
+    convert(Array{T}, reinterpret(N0f8, A))
+end
 
 function clean_nt(nt::NamedTuple)
-    res = (; (p for p in  pairs(nt) if p[2] !== nothing)...)
+    res = (; (p for p in pairs(nt) if p[2] !== nothing)...)
     if isempty(res)
         return nothing
     else
@@ -65,7 +72,6 @@ maybesqueeze(x::AbstractMatrix) = size(x, 1) == 1 ? vec(x) : x
 getobs_table(table) = table
 getobs_table(table, i) = table[i, :]
 numobs_table(table) = size(table, 1)
-
 
 """
     convert2image(d, i)
@@ -95,13 +101,11 @@ julia> convert2image(MNIST, x) # or convert2image(d, x)
 """
 function convert2image end
 
-
-convert2image(d::SupervisedDataset, i::Integer) =
+convert2image(d::SupervisedDataset, i::Integer) = convert2image(typeof(d), d[i].features)
+function convert2image(d::SupervisedDataset, i::AbstractVector)
     convert2image(typeof(d), d[i].features)
-convert2image(d::SupervisedDataset, i::AbstractVector) =
-    convert2image(typeof(d), d[i].features)
-convert2image(d::SupervisedDataset, x::AbstractArray) =
-    convert2image(typeof(d), x)
+end
+convert2image(d::SupervisedDataset, x::AbstractArray) = convert2image(typeof(d), x)
 
 """
     creates_default_dir(data_name)

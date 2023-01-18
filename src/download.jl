@@ -17,7 +17,8 @@ function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)
             if isdir(dir)
                 dir
             else
-                DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") && error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
+                DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") &&
+                    error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
                 DataDeps.download(DataDeps.registry[depname], dir)
                 dir
             end

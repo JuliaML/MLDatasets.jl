@@ -3,17 +3,15 @@ function __init__reddit()
     LINK = "http://snap.stanford.edu/graphsage/reddit.zip"
     DOCS = "http://snap.stanford.edu/graphsage/"
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The $DEPNAME Dataset
-        Website: $DOCS
-        Download Link: $LINK
-        """,
-        LINK,
-        "25337a21540cd373e4cee3751e6600324ab6a7377ef3966bb49f57412a17ed02",
-        post_fetch_method=unpack
-    ))
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The $DEPNAME Dataset
+                     Website: $DOCS
+                     Download Link: $LINK
+                     """,
+                     LINK,
+                     "25337a21540cd373e4cee3751e6600324ab6a7377ef3966bb49f57412a17ed02",
+                     post_fetch_method = unpack))
 end
 
 """
@@ -40,15 +38,13 @@ struct Reddit <: AbstractDataset
     graphs::Vector{Graph}
 end
 
-
-function Reddit(; full=true, dir=nothing)
-    DATAFILES =  [
+function Reddit(; full = true, dir = nothing)
+    DATAFILES = [
         "reddit-G.json", "reddit-G_full.json", "reddit-adjlist.txt",
-        "reddit-class_map.json", "reddit-feats.npy", "reddit-id_map.json"
-        ]
+        "reddit-class_map.json", "reddit-feats.npy", "reddit-id_map.json",
+    ]
     DATA = joinpath.("reddit", DATAFILES)
     DEPNAME = "Reddit"
-
 
     if full
         graph_json = datafile(DEPNAME, DATA[2], dir)
@@ -87,7 +83,7 @@ function Reddit(; full=true, dir=nothing)
 
     sort_order = sortperm(node_idx)
     node_idx = node_idx[sort_order]
-    labels = [class_map[key] for key in  node_keys][sort_order]
+    labels = [class_map[key] for key in node_keys][sort_order]
     @assert length(node_idx) == length(labels)
 
     # features
@@ -95,21 +91,20 @@ function Reddit(; full=true, dir=nothing)
     features = permutedims(features, (2, 1))
 
     # split
-    test_mask =  get.(nodes, "test", nothing)[sort_order]
+    test_mask = get.(nodes, "test", nothing)[sort_order]
     val_mask = get.(nodes, "val", nothing)[sort_order]
     # A node should not be both test and validation
     @assert sum(val_mask .& test_mask) == 0
     train_mask = nor.(test_mask, val_mask)
 
-    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph, 
-                "num_edges" => num_edges, "num_nodes" => num_nodes)
-    g = Graph(; num_nodes, 
-        edge_index=(s, t), 
-        node_data= (; labels, features, train_mask, val_mask, test_mask)
-    )
+    metadata = Dict{String, Any}("directed" => directed, "multigraph" => multigraph,
+                                 "num_edges" => num_edges, "num_nodes" => num_nodes)
+    g = Graph(; num_nodes,
+              edge_index = (s, t),
+              node_data = (; labels, features, train_mask, val_mask, test_mask))
     return Reddit(metadata, [g])
 end
 
-Base.length(d::Reddit) = length(d.graphs) 
+Base.length(d::Reddit) = length(d.graphs)
 Base.getindex(d::Reddit, ::Colon) = d.graphs
 Base.getindex(d::Reddit, i) = getindex(d.graphs, i)

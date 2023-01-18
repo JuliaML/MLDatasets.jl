@@ -2,19 +2,33 @@
     n_obs = 506
     n_features = 13
     n_targets = 1
-    feature_names = ["CRIM", "ZN", "INDUS", "CHAS", "NOX", "RM", "AGE", "DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT"]
+    feature_names = [
+        "CRIM",
+        "ZN",
+        "INDUS",
+        "CHAS",
+        "NOX",
+        "RM",
+        "AGE",
+        "DIS",
+        "RAD",
+        "TAX",
+        "PTRATIO",
+        "B",
+        "LSTAT",
+    ]
     target_names = ["MEDV"]
 
     d = BostonHousing()
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets, 
-        feature_names, target_names)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names)
 
-    d = BostonHousing(as_df=false)
+    d = BostonHousing(as_df = false)
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets,
-        feature_names, target_names, 
-        Tx=Float64, Ty=Float64)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names,
+                                           Tx = Float64, Ty = Float64)
 end
 
 @testset "Iris" begin
@@ -27,21 +41,21 @@ end
 
     d = Iris()
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets,
-        feature_names, target_names)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names)
 
-    d = Iris(as_df=false)
+    d = Iris(as_df = false)
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets,
-        feature_names, target_names,
-        Tx=Float64, Ty=AbstractString)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names,
+                                           Tx = Float64, Ty = AbstractString)
 end
 
 @testset "Mutagenesis" begin
-    dtrain = Mutagenesis(split=:train)
-    dtest = Mutagenesis(split=:test)
-    dval = Mutagenesis(split=:val)
-    dall = Mutagenesis(split=:all)
+    dtrain = Mutagenesis(split = :train)
+    dtest = Mutagenesis(split = :test)
+    dval = Mutagenesis(split = :val)
+    dall = Mutagenesis(split = :all)
 
     train_x, train_y = dtrain[:]
     test_x, test_y = dtest[:]
@@ -73,20 +87,44 @@ end
     n_obs = 891
     n_features = 11
     n_targets = 1
-    feature_names = ["PassengerId","Pclass", "Name", "Sex", "Age", "SibSp", "Parch", "Ticket", "Fare", "Cabin", "Embarked"]
+    feature_names = [
+        "PassengerId",
+        "Pclass",
+        "Name",
+        "Sex",
+        "Age",
+        "SibSp",
+        "Parch",
+        "Ticket",
+        "Fare",
+        "Cabin",
+        "Embarked",
+    ]
     target_names = ["Survived"]
 
     d = Titanic()
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets,
-        feature_names, target_names)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names)
 
-    
-    d = Titanic(as_df=false)
+    d = Titanic(as_df = false)
     test_inmemory_supervised_table_dataset(d;
-        n_obs, n_features, n_targets,
-        feature_names, target_names, 
-        Tx=Any, Ty=Int)
+                                           n_obs, n_features, n_targets,
+                                           feature_names, target_names,
+                                           Tx = Any, Ty = Int)
 
-    @test isequal(d[1].features, [1, 3, "Braund, Mr. Owen Harris", "male", 22, 1, 0, "A/5 21171", 7.25, missing, "S"])
+    @test isequal(d[1].features,
+                  [
+                      1,
+                      3,
+                      "Braund, Mr. Owen Harris",
+                      "male",
+                      22,
+                      1,
+                      0,
+                      "A/5 21171",
+                      7.25,
+                      missing,
+                      "S",
+                  ])
 end

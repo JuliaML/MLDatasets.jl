@@ -2,22 +2,21 @@
 function __init__ptblm()
     DEPNAME = "PTBLM"
     TRAINFILE = "ptb.train.txt"
-    TESTFILE  = "ptb.test.txt"
+    TESTFILE = "ptb.test.txt"
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: Penn Treebank sentences for language modeling
-        Website: https://github.com/tomsercu/lstm
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: Penn Treebank sentences for language modeling
+                     Website: https://github.com/tomsercu/lstm
 
-        The files are available for download at the github
-        repository linked above. Note that using the data
-        responsibly and respecting copyright remains your
-        responsibility.
-        """,
-        "https://raw.githubusercontent.com/tomsercu/lstm/master/data/" .* [TRAINFILE, TESTFILE],
-        "218f4e6c7288bb5efeb03cc4cb8ae9c04ecd8462ebfba8e13e3549fab69dc25f",
-    ))
+                     The files are available for download at the github
+                     repository linked above. Note that using the data
+                     responsibly and respecting copyright remains your
+                     responsibility.
+                     """,
+                     "https://raw.githubusercontent.com/tomsercu/lstm/master/data/" .*
+                     [TRAINFILE, TESTFILE],
+                     "218f4e6c7288bb5efeb03cc4cb8ae9c04ecd8462ebfba8e13e3549fab69dc25f"))
 end
 
 """
@@ -36,9 +35,9 @@ struct PTBLM <: SupervisedDataset
     targets::Vector{Vector{String}}
 end
 
-PTBLM(; split=:train, dir=nothing) = PTBLM(split; dir)
+PTBLM(; split = :train, dir = nothing) = PTBLM(split; dir)
 
-function PTBLM(split::Symbol; dir=nothing)
+function PTBLM(split::Symbol; dir = nothing)
     DEPNAME = "PTBLM"
     @assert split ∈ [:train, :test]
     FILE = split == :train ? "ptb.train.txt" : "ptb.test.txt"
@@ -54,23 +53,22 @@ function PTBLM(split::Symbol; dir=nothing)
         push!(y, "<eos>")
     end
 
-    metadata = Dict{String,Any}("n_observations" => length(features))
+    metadata = Dict{String, Any}("n_observations" => length(features))
     return PTBLM(metadata, split, features, targets)
 end
-
 
 # DEPRECATED INTERFACE, REMOVE IN v0.7 (or 0.6.x)
 function Base.getproperty(::Type{PTBLM}, s::Symbol)
     if s === :traindata
         @warn "PTBLM.traindata() is deprecated, use `PTBLM(:train)[:]` instead."
-        function traindata(; dir=nothing)
-            PTBLM(; split=:train, dir)[:]
+        function traindata(; dir = nothing)
+            PTBLM(; split = :train, dir)[:]
         end
         return traindata
     elseif s === :testdata
-        @warn "PTBLM.testdata() is deprecated, use `PTBLM(:test)[:]` instead." 
-        function testdata(; dir=nothing)
-            PTBLM(; split=:test, dir)[:]
+        @warn "PTBLM.testdata() is deprecated, use `PTBLM(:test)[:]` instead."
+        function testdata(; dir = nothing)
+            PTBLM(; split = :test, dir)[:]
         end
         return testdata
     else

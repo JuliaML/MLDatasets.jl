@@ -4,17 +4,15 @@ function __init__mutagenesis()
     DEPNAME = "Mutagenesis"
     DATA = "data.json"
     METADATA = "meta.json"
-    
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The $DEPNAME dataset.
-        Website: $ORIGINAL_LINK
-        License: CC0
-        """,
-        "$DATA_LINK/" .* [DATA, METADATA],
-        "80ec1716217135e1f2e0b5a61876c65184e2014e64551103c41e174775ca207c"
-    ))
+
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The $DEPNAME dataset.
+                     Website: $ORIGINAL_LINK
+                     License: CC0
+                     """,
+                     "$DATA_LINK/" .* [DATA, METADATA],
+                     "80ec1716217135e1f2e0b5a61876c65184e2014e64551103c41e174775ca207c"))
 end
 
 """
@@ -70,15 +68,15 @@ struct Mutagenesis <: SupervisedDataset
     targets::Vector{Int}
 end
 
-Mutagenesis(; split=:train, dir=nothing) = Mutagenesis(split; dir)
+Mutagenesis(; split = :train, dir = nothing) = Mutagenesis(split; dir)
 
-function Mutagenesis(split::Symbol; dir=nothing)
+function Mutagenesis(split::Symbol; dir = nothing)
     DEPNAME = "Mutagenesis"
     DATA = "data.json"
     METADATA = "meta.json"
 
     @assert split ∈ [:train, :val, :test, :all]
-    
+
     data_path = datafile(DEPNAME, DATA, dir)
     metadata_path = datafile(DEPNAME, METADATA, dir)
     samples = read_json(data_path)
@@ -88,12 +86,12 @@ function Mutagenesis(split::Symbol; dir=nothing)
     features = map(x -> delete!(copy(x), Symbol(labelkey)), samples)
     val_num = metadata["val_samples"]
     test_num = metadata["test_samples"]
-    train_idxs = 1:length(samples)-val_num-test_num
-    val_idxs = length(samples)-val_num-test_num+1:length(samples)-test_num
-    test_idxs = length(samples)-test_num+1:length(samples)
+    train_idxs = 1:(length(samples) - val_num - test_num)
+    val_idxs = (length(samples) - val_num - test_num + 1):(length(samples) - test_num)
+    test_idxs = (length(samples) - test_num + 1):length(samples)
     indexes = split == :train ? train_idxs :
-              split == :val ? val_idxs : 
-              split == :test ? test_idxs : 1:length(samples) 
+              split == :val ? val_idxs :
+              split == :test ? test_idxs : 1:length(samples)
     metadata = Dict(metadata)
     metadata[:data_path] = data_path
     metadata[:metadata_path] = metadata_path
@@ -109,23 +107,23 @@ Base.getindex(d::Mutagenesis, i) = getobs((; d.features, d.targets), i)
 function Base.getproperty(::Type{Mutagenesis}, s::Symbol)
     if s == :traindata
         @warn "Mutagenesis.traindata() is deprecated, use `Mutagenesis(split=:train)` instead."
-        return (; dir=nothing) -> begin
-                    d = Mutagenesis(; split=:train, dir)
-                    d.features, d.targets    
-                end
+        return (; dir = nothing) -> begin
+            d = Mutagenesis(; split = :train, dir)
+            d.features, d.targets
+        end
     elseif s == :valdata
         @warn "Mutagenesis.valdata() is deprecated, use `Mutagenesis(split=:val)` instead."
-        return (; dir=nothing) -> begin
-                    d = Mutagenesis(; split=:val, dir)
-                    d.features, d.targets    
-                end
+        return (; dir = nothing) -> begin
+            d = Mutagenesis(; split = :val, dir)
+            d.features, d.targets
+        end
     elseif s == :testdata
         @warn "Mutagenesis.testdata() is deprecated, use `Mutagenesis(split=:test)` instead."
-        return (; dir=nothing) -> begin
-                    d = Mutagenesis(; split=:test, dir)
-                    d.features, d.targets    
-                end
-    else 
+        return (; dir = nothing) -> begin
+            d = Mutagenesis(; split = :test, dir)
+            d.features, d.targets
+        end
+    else
         return getfield(Mutagenesis, s)
     end
 end

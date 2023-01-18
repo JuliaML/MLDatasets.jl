@@ -21,15 +21,15 @@ include("require.jl") # export @require
 # In the other case instead, use `require import SomePkg` to force
 # the use to manually import.
 
-@require import JSON3="0f8b85d8-7281-11e9-16c2-39a750bddbf1"
-@require import DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-@require import ImageShow="4e3cecfd-b093-5904-9786-8bbb286a6a31"
-@require import Chemfiles="46823bd8-5fb3-5f92-9aa0-96921f3dd015"
+@require import JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+@require import DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+@require import ImageShow = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
+@require import Chemfiles = "46823bd8-5fb3-5f92-9aa0-96921f3dd015"
 
 # @lazy import NPZ # lazy imported by FileIO
-@lazy import Pickle="fbb45041-c46e-462f-888f-7c521cafbc2c"
-@lazy import MAT="23992714-dd62-5051-b70f-ba57cb901cac"
-@lazy import HDF5="f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+@lazy import Pickle = "fbb45041-c46e-462f-888f-7c521cafbc2c"
+@lazy import MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
+@lazy import HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
 export getobs, numobs # From MLUtils.jl
@@ -71,7 +71,6 @@ export Mutagenesis
 include("datasets/misc/titanic.jl")
 export Titanic
 
-
 ## Vision
 
 include("datasets/vision/cifar10_reader/CIFAR10Reader.jl")
@@ -91,7 +90,6 @@ include("datasets/vision/omniglot.jl")
 export Omniglot
 include("datasets/vision/svhn2.jl")
 export SVHN2
-
 
 ## Text
 

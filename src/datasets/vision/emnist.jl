@@ -2,39 +2,36 @@
 function __init__emnist()
     DEPNAME = "EMNIST"
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The EMNIST Dataset
-        Authors: Gregory Cohen, Saeed Afshar, Jonathan Tapson, and Andre van Schaik
-        Website: https://www.nist.gov/itl/products-and-services/emnist-dataset
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The EMNIST Dataset
+                     Authors: Gregory Cohen, Saeed Afshar, Jonathan Tapson, and Andre van Schaik
+                     Website: https://www.nist.gov/itl/products-and-services/emnist-dataset
 
-        [Cohen et al., 2017]
-            Cohen, G., Afshar, S., Tapson, J., & van Schaik, A. (2017).
-            EMNIST: an extension of MNIST to handwritten letters.
-            Retrieved from http://arxiv.org/abs/1702.05373
+                     [Cohen et al., 2017]
+                         Cohen, G., Afshar, S., Tapson, J., & van Schaik, A. (2017).
+                         EMNIST: an extension of MNIST to handwritten letters.
+                         Retrieved from http://arxiv.org/abs/1702.05373
 
-        The EMNIST dataset is a set of handwritten character digits derived from the
-        NIST Special Database 19 (https://www.nist.gov/srd/nist-special-database-19)
-        and converted to a 28x28 pixel image format and dataset structure that directly
-        matches the MNIST dataset (http://yann.lecun.com/exdb/mnist/). Further information
-        on the dataset contents and conversion process can be found in the paper available
-        at https://arxiv.org/abs/1702.05373v1.
+                     The EMNIST dataset is a set of handwritten character digits derived from the
+                     NIST Special Database 19 (https://www.nist.gov/srd/nist-special-database-19)
+                     and converted to a 28x28 pixel image format and dataset structure that directly
+                     matches the MNIST dataset (http://yann.lecun.com/exdb/mnist/). Further information
+                     on the dataset contents and conversion process can be found in the paper available
+                     at https://arxiv.org/abs/1702.05373v1.
 
-        The files are available for download at the official
-        website linked above. Note that using the data
-        responsibly and respecting copyright remains your
-        responsibility. For example the website mentions that
-        the data is for non-commercial use only. Please read
-        the website to make sure you want to download the
-        dataset.
-        """,
-        "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip",
-        "e1fa805cdeae699a52da0b77c2db17f6feb77eed125f9b45c022e7990444df95",
-        post_fetch_method = DataDeps.unpack
-    ))
+                     The files are available for download at the official
+                     website linked above. Note that using the data
+                     responsibly and respecting copyright remains your
+                     responsibility. For example the website mentions that
+                     the data is for non-commercial use only. Please read
+                     the website to make sure you want to download the
+                     dataset.
+                     """,
+                     "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip",
+                     "e1fa805cdeae699a52da0b77c2db17f6feb77eed125f9b45c022e7990444df95",
+                     post_fetch_method = DataDeps.unpack))
 end
-
 
 """
     EMNIST(name; Tx=Float32, split=:train, dir=nothing)
@@ -105,29 +102,29 @@ struct EMNIST <: SupervisedDataset
     metadata::Dict{String, Any}
     name::Symbol
     split::Symbol
-    features::Array{<:Any,3}
+    features::Array{<:Any, 3}
     targets::Vector{Int}
 end
 
-EMNIST(name; split=:train, Tx=Float32, dir=nothing) = EMNIST(name, Tx, split; dir)
+EMNIST(name; split = :train, Tx = Float32, dir = nothing) = EMNIST(name, Tx, split; dir)
 EMNIST(name, split::Symbol; kws...) = EMNIST(name; split, kws...)
 EMNIST(name, Tx::Type; kws...) = EMNIST(name; Tx, kws...)
 
-function EMNIST(name, Tx::Type, split::Symbol; dir=nothing)
+function EMNIST(name, Tx::Type, split::Symbol; dir = nothing)
     @assert split ∈ [:train, :test]
     @assert name ∈ [:balanced, :byclass, :bymerge, :digits, :letters, :mnist]
     path = "matlab/emnist-$name.mat"
-    
+
     path = datafile("EMNIST", path, dir)
     vars = read_mat(path)
     features = reshape(vars["dataset"]["$split"]["images"], :, 28, 28)
     features = permutedims(features, (3, 2, 1))
     targets = Int.(vars["dataset"]["$split"]["labels"] |> vec)
     features = bytes_to_type(Tx, features)
-    
-    metadata = Dict{String,Any}()
+
+    metadata = Dict{String, Any}()
     metadata["n_observations"] = size(features)[end]
-    
+
     return EMNIST(metadata, name, split, features, targets)
 end
 

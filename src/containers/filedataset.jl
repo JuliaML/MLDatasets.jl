@@ -17,19 +17,24 @@ Wrap a set of file `paths` as a dataset (traversed in the same order as `paths`)
 Alternatively, specify a `dir` and collect all paths that match a glob `pattern`
 (recursively globbing by `depth`). The glob order determines the traversal order.
 """
-struct FileDataset{F, T<:AbstractString} <: AbstractDataContainer
+struct FileDataset{F, T <: AbstractString} <: AbstractDataContainer
     loadfn::F
     paths::Vector{T}
 end
 
 FileDataset(paths) = FileDataset(FileIO.load, paths)
-FileDataset(loadfn,
-            dir::AbstractString,
-            pattern::AbstractString = "*",
-            depth = 4) = FileDataset(loadfn, rglob(pattern, string(dir), depth))
-FileDataset(dir::AbstractString, pattern::AbstractString = "*", depth = 4) =
+function FileDataset(loadfn,
+                     dir::AbstractString,
+                     pattern::AbstractString = "*",
+                     depth = 4)
+    FileDataset(loadfn, rglob(pattern, string(dir), depth))
+end
+function FileDataset(dir::AbstractString, pattern::AbstractString = "*", depth = 4)
     FileDataset(FileIO.load, dir, pattern, depth)
+end
 
 Base.getindex(dataset::FileDataset, i::Integer) = dataset.loadfn(dataset.paths[i])
-Base.getindex(dataset::FileDataset, is::AbstractVector) = map(Base.Fix1(getobs, dataset), is)
+function Base.getindex(dataset::FileDataset, is::AbstractVector)
+    map(Base.Fix1(getobs, dataset), is)
+end
 Base.length(dataset::FileDataset) = length(dataset.paths)
