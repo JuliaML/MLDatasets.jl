@@ -63,7 +63,9 @@ function TUDataset(name; dir=nothing)
     source, target = st[:,1], st[:,2]
 
     graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
-    @assert all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
+    if !all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
+      @warn "Some graph indicators are not present in graph_indicator.txt. Ordering of graph and graph labels may not be consistent. Base.getindex might produce unexpected behavior for unaltered data."
+    end
 
     num_nodes = length(graph_indicator)
     num_edges = length(source)
@@ -91,6 +93,8 @@ function TUDataset(name; dir=nothing)
                         readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',', Float32)' |> collect :
                         nothing
 
+    # TODO: maybe introduce consistency in graph labels and attributes if possible
+
     # We need this two vectors sorted for efficiency in tudataset_getgraph(full_dataset, i)
     @assert issorted(graph_indicator)
     if !issorted(source)
@@ -115,7 +119,7 @@ function TUDataset(name; dir=nothing)
                         edge_attributes,
                         graph_attributes)
 
-    graphs = [tudataset_getgraph(full_dataset, i) for i in 1:num_graphs]
+    graphs = [tudataset_getgraph(full_dataset, i) for i in sort(unique(graph_indicator))]
     graph_data = (; features = graph_attributes, targets = graph_labels) |> clean_nt
     metadata = Dict{String, Any}("name" => name)
     return TUDataset(name, metadata, graphs, graph_data, num_nodes, num_edges, num_graphs)
