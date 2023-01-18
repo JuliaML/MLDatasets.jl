@@ -157,7 +157,7 @@ function read_ogb_metadata(fullname, dir = nothing)
     end
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
-    metadata = Dict{String, Any}(String(r[1]) => parse_pystring(r[2]) for r in eachrow(df[!,[names(df)[1], fullname]]))
+    metadata = Dict{String, Any}(String(r[1]) => r[2] isa AbstractString ? parse_pystring(r[2]) : r[2] for r in eachrow(df[!,[names(df)[1], fullname]]))
     # edge cases for additional node and edge files
     for additional_key in ["additional edge files", "additional node files"]
         if !isnothing(metadata[additional_key])
