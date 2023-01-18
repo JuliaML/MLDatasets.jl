@@ -83,11 +83,6 @@ function TUDataset(name; dir=nothing)
                     readdlm(joinpath(d, "$(name)_graph_labels.txt"), ',', Int)' |> collect |> maybesqueeze :
                     nothing
 
-    # Introduce forced consistency
-    if length(graph_labels) != length(graph_indicator) && (graph_labels) == maximum(graph_indicator)
-      graph_labels = getindex(graph_labels, sort(unique(graph_indicator)))
-    end
-
     node_attributes = isfile(joinpath(d, "$(name)_node_attributes.txt")) ?
                         readdlm(joinpath(d, "$(name)_node_attributes.txt"), ',', Float32)' |> collect :
                         nothing
@@ -97,6 +92,8 @@ function TUDataset(name; dir=nothing)
     graph_attributes = isfile(joinpath(d, "$(name)_graph_attributes.txt")) ?
                         readdlm(joinpath(d, "$(name)_graph_attributes.txt"), ',', Float32)' |> collect :
                         nothing
+
+    # TODO: maybe introduce consitency in graph labels and attributes if possible
 
     # We need this two vectors sorted for efficiency in tudataset_getgraph(full_dataset, i)
     @assert issorted(graph_indicator)
