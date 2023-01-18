@@ -63,7 +63,9 @@ function TUDataset(name; dir=nothing)
     source, target = st[:,1], st[:,2]
 
     graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
-    @assert all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
+    if !all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
+      @warn "Some graph indicators are not present in graph_indicator.txt. Ordering of graph and graph labels may not be consistent."
+    end
 
     num_nodes = length(graph_indicator)
     num_edges = length(source)
@@ -80,6 +82,11 @@ function TUDataset(name; dir=nothing)
     graph_labels = isfile(joinpath(d, "$(name)_graph_labels.txt")) ?
                     readdlm(joinpath(d, "$(name)_graph_labels.txt"), ',', Int)' |> collect |> maybesqueeze :
                     nothing
+
+    # Introduce forced consistency
+    if length(graph_labels) != length(graph_indicator) && (graph_labels) == maximum(graph_indicator)
+      graph_labels = getindex(graph_labels, sort(unique(graph_indicator)))
+    end
 
     node_attributes = isfile(joinpath(d, "$(name)_node_attributes.txt")) ?
                         readdlm(joinpath(d, "$(name)_node_attributes.txt"), ',', Float32)' |> collect :
