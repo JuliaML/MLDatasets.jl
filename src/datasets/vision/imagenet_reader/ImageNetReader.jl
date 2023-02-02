@@ -21,22 +21,28 @@ function get_file_dataset(Tx::Type{<:Real}, preprocess::Function, dir::AbstractS
     end
     return FileDataset(load_image, dir, "*.JPEG")
 end
+
 function read_metadata(file::AbstractString)
     meta = read_mat(file)["synsets"]
+
+    # Only leaf nodes in WordNet metadata correspond to classes
     is_child = iszero.(meta["num_children"])
     @assert meta["ILSVRC2012_ID"][is_child] == 1:NCLASSES
 
+    # Sort classes by WNID for Metalhead compatibility
+    I = sortperm(meta["WNID"][is_child])
+
     metadata = Dict{String,Any}()
-    metadata["class_WNIDs"] = Vector{String}(meta["WNID"][is_child]) # WordNet IDs
-    metadata["class_names"] = split.(meta["words"][is_child], ", ")
-    metadata["class_description"] = Vector{String}(meta["gloss"][is_child])
+    metadata["class_WNIDs"] = Vector{String}(meta["WNID"][is_child][I]) # WordNet IDs
+    metadata["class_names"] = split.(meta["words"][is_child][I], ", ")
+    metadata["class_description"] = Vector{String}(meta["gloss"][is_child][I])
     metadata["wnid_to_label"] = Dict(metadata["class_WNIDs"] .=> 1:NCLASSES)
     return metadata
 end
 
-
 # Get WordNet ID from path
-load_wnids(d::FileDataset) = load_wnids(d.paths)
-load_wnids(fs::AbstractVector{<:AbstractString}) = [split(f, "/")[end - 1] for f in fs]
+get_wnids(d::FileDataset) = get_wnids(d.paths)
+get_wnids(paths::AbstractVector{<:AbstractString}) = path_to_wnid.(paths)
+path_to_wnid(path::AbstractString) = split(path, "/")[end - 1]
 
 end # ImageNetReader module

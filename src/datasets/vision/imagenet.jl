@@ -126,7 +126,7 @@ function ImageNet(
         @assert length(dataset) == TESTSET_SIZE
     end
     targets = [
-        metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.load_wnids(dataset)
+        metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.get_wnids(dataset)
     ]
     return ImageNet(metadata, split, dataset, targets, inverse_preprocess)
 end
