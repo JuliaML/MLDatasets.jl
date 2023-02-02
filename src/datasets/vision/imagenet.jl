@@ -60,12 +60,22 @@ julia> X, y = dataset[1:5];
 julia> size(X)
 (224, 224, 3, 5)
 
+julia> X, y = dataset[2000];
+
+julia> convert2image(dataset, X)
+
 julia> dataset.metadata
 Dict{String, Any} with 4 entries:
-  "class_WNIDs"       => ["n02119789", "n02100735", "n02110185", "n02096294", "n02102040", "n02066245", "n02509815", "n02124075", "n02417914", "n02123394"  …  "n02815834", "n09229709", "n07697313", "n03888605", "n03355925", "n03…
-  "class_description" => ["small grey fox of southwestern United States; may be a subspecies of Vulpes velox", "an English breed having a plumed tail and a soft silky coat that is chiefly white", "breed of sled dog developed in …
-  "class_names"       => Vector{SubString{String}}[["kit fox", "Vulpes macrotis"], ["English setter"], ["Siberian husky"], ["Australian terrier"], ["English springer", "English springer spaniel"], ["grey whale", "gray whale", "d…
-  "wnid_to_label"     => Dict("n07693725"=>768, "n03775546"=>829, "n01689811"=>469, "n02100877"=>192, "n02441942"=>48, "n04371774"=>569, "n07717410"=>741, "n03347037"=>919, "n04355338"=>526, "n02097474"=>158…)
+  "class_WNIDs"       => ["n01440764", "n01443537", "n01484850", "n01491361", "n01494475", …
+  "class_description" => ["freshwater dace-like game fish of Europe and western Asia noted …
+  "class_names"       => Vector{SubString{String}}[["tench", "Tinca tinca"], ["goldfish", "…
+  "wnid_to_label"     => Dict("n07693725"=>932, "n03775546"=>660, "n01689811"=>45, "n021008…
+
+julia> dataset.metadata["class_names"][y]
+  3-element Vector{SubString{String}}:
+   "common iguana"
+   "iguana"
+   "Iguana iguana"
 ```
 
 # References
