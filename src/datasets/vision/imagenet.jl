@@ -17,7 +17,7 @@ function __init__imagenet()
 end
 
 """
-    ImageNet(; Tx=Float32, split=:train, dir=nothing)
+    ImageNet(; Tx=Float32, split=:train, dir=nothing, kwargs...)
     ImageNet([Tx, split])
 
 The ImageNet 2012 Classification Dataset (ILSVRC 2012-2017).
@@ -28,12 +28,28 @@ Each image is in 224x224x3 format using RGB color space.
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:` or `:test`.
+- `train_dir`, `val_dir`, `test_dir`, `devkit_dir`: optional subdirectory names of `dir`.
+    Default to `"train"`, `"val"`, `"test"` and `"devkit"`.
+- `split`: selects the data partition. Can take the values `:train:`, `:val` and `:test`.
+    Defaults to `:train`.
+- `Tx`: datatype used to load data. Defaults to `Float32`.
+- `preprocess`: preprocessing steps applied to an image to convert it to an array.
+    Assumes an RGB image in CHW format as input and an array in WHC format as output.
+    Defaults to `ImageNetReader.default_preprocess`, which applies a center-crop
+    and normalization using coefficients from PyTorch's vision models.
+- `inverse_preprocess`: inverse function of `preprocess` used in `convert2image`.
+    Defaults to `ImageNetReader.default_inverse_preprocess`.
+
+**Note:** When providing custom preprocessing functions, make sure both match.
 
 # Fields
 
-$FIELDS_SUPERVISED_ARRAY
-- `split`.
+- `metadata`: A dictionary containing additional information on the dataset.
+- `split`: Symbol indicating the selected data partition
+- `dataset`: A `FileDataset` containing paths to ImageNet images as well as a `loadfn`
+    used to load images, which applies `preprocess`.
+- `targets`: An array storing the targets for supervised learning.
+- `inverse_preprocess`: inverse function of `preprocess` used in `convert2image`.
 
 # Methods
 
