@@ -47,8 +47,8 @@ end
 
 The CIFAR100 dataset is a labeled subsets of the 80
 million tiny images dataset. It consists of 60000
-32x32 colour images in 10 classes, with 6000 images
-per class.
+32x32 colour images in 100 classes and 20 superclasses,
+with 600 images per class.
 
 Return the CIFAR-100 **trainset** labels (coarse and fine)
 corresponding to the given `indices` as a tuple of two `Int` or
@@ -58,7 +58,7 @@ two `Vector{Int}`. The variables returned are the coarse label(s)
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+- `split`: selects the data partition. Can take the values `:train` or `:test`. 
 
 # Fields
 

@@ -75,7 +75,7 @@ function Base.getproperty(::Type{SMSSpamCollection}, s::Symbol)
         @warn "SMSSpamCollection.targets() is deprecated, use `SMSSpamCollection().targets` instead."
         return () -> SMSSpamCollection().targets
     else 
-        return getfield(Titanic, s)
+        return getfield(SMSSpamCollection, s)
     end
 end
 

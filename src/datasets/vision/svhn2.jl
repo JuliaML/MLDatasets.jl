@@ -58,7 +58,7 @@ additional to use as extra training data.
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:`, `:test` or `:extra`. 
+- `split`: selects the data partition. Can take the values `:train`, `:test` or `:extra`. 
 
 # Fields
 

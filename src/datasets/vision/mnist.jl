@@ -50,7 +50,7 @@ the 10 possible digits (0-9).
 # Arguments
 
 $ARGUMENTS_SUPERVISED_ARRAY
-- `split`: selects the data partition. Can take the values `:train:` or `:test`. 
+- `split`: selects the data partition. Can take the values `:train` or `:test`. 
 
 # Fields
 

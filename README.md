@@ -47,6 +47,7 @@ Moreover, you can check out these other packages to find what you need:
 - [ForecastData.jl](https://github.com/viraltux/ForecastData.jl)
 - [RDatasets.jl](https://github.com/JuliaStats/RDatasets.jl)
 - [CDSAPI.jl](https://github.com/JuliaClimate/CDSAPI.jl)
+- [HuggingFaceDatasets.jl](https://github.com/CarloLucibello/HuggingFaceDatasets.jl)
 
 ## License
 

@@ -23,7 +23,9 @@ MLDatasets.HeteroGraph
 CiteSeer
 Cora
 KarateClub
+MovieLens
 OGBDataset
+OrganicMaterialsDB
 PolBlogs
 PubMed
 Reddit

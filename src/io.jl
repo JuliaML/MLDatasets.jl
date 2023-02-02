@@ -25,6 +25,7 @@ function read_npz(path)
 end
 
 function read_pytorch(path)
+    assert_imported(Pickle._lazy_pkgid)
     return Pickle.Torch.THload(path)
 end
 
@@ -38,4 +39,8 @@ end
 
 function read_json(path)
     return open(JSON3.read, path)
+end
+
+function read_chemfile(path)
+    return Chemfiles.Trajectory(path)
 end

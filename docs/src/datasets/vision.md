@@ -26,5 +26,6 @@ EMNIST
 FashionMNIST
 ImageNet
 MNIST
+Omniglot
 SVHN2
 ```

@@ -7,13 +7,3 @@ FileDataset
 CachedDataset
 MLDatasets.make_cache
 ```
-
-<!-- 
-# TODO add back to docs when included again in the pkg
-HDF5Dataset
-Base.close(::HDF5Dataset)
-TableDataset
-JLD2Dataset
-Base.close(::JLD2Dataset) 
--->
-
