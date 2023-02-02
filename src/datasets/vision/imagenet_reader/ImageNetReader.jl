@@ -12,6 +12,15 @@ const IMGSIZE = (224, 224)
 
 include("preprocess.jl")
 
+function get_file_dataset(Tx::Type{<:Real}, preprocess::Function, dir::AbstractString)
+    # Construct a function that loads images from FileDataset path,
+    # applies preprocessing and converts to type Tx.
+    function load_image(file::AbstractString)
+        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=IMGSIZE)
+        return Tx.(preprocess(im))
+    end
+    return FileDataset(load_image, dir, "*.JPEG")
+end
 function read_metadata(file::AbstractString)
     meta = read_mat(file)["synsets"]
     is_child = iszero.(meta["num_children"])
@@ -25,23 +34,9 @@ function read_metadata(file::AbstractString)
     return metadata
 end
 
-# The full ImageNet dataset doesn't fit into memory, so we only save filenames
-function readdata(Tx::Type{<:Real}, dir::AbstractString)
-    return FileDataset(image_loader(Tx), dir, "*.JPEG")
-end
 
 # Get WordNet ID from path
 load_wnids(d::FileDataset) = load_wnids(d.paths)
 load_wnids(fs::AbstractVector{<:AbstractString}) = [split(f, "/")[end - 1] for f in fs]
 
-# Construct a function that loads images from FileDataset path
-# and preprocess it to normalized 224x224x3 Array{Tx,3}
-function image_loader(Tx::Type{<:Real})
-    function load_image(file::AbstractString)::AbstractArray{Tx,3}
-        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=IMGSIZE)
-        return preprocess(Tx, im)
-    end
-    return load_image
-end
-
-end # module
+end # ImageNetReader module

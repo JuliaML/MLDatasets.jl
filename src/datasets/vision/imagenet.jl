@@ -77,15 +77,18 @@ struct ImageNet <: SupervisedDataset
     split::Symbol
     dataset::FileDataset
     targets::Vector{Int}
+    inverse_preprocess::Function
 end
 
-ImageNet(; split=:train, Tx=Float32, dir=nothing) = ImageNet(Tx, split; dir)
+ImageNet(; split=:train, Tx=Float32, kws...) = ImageNet(Tx, split; kws...)
 ImageNet(split::Symbol; kws...) = ImageNet(; split, kws...)
 ImageNet(Tx::Type; kws...) = ImageNet(; Tx, kws...)
 
 function ImageNet(
     Tx::Type,
     split::Symbol;
+    preprocess=ImageNetReader.default_preprocess,
+    inverse_preprocess=ImageNetReader.default_inverse_preprocess,
     dir=nothing,
     train_dir="train",
     val_dir="val",
@@ -107,22 +110,28 @@ function ImageNet(
 
     root_dir = @datadep_str DEPNAME
     if split == :train
-        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, train_dir))
+        dataset = ImageNetReader.get_file_dataset(
+            Tx, preprocess, joinpath(root_dir, train_dir)
+        )
         @assert length(dataset) == TRAINSET_SIZE
     elseif split == :val
-        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, val_dir))
+        dataset = ImageNetReader.get_file_dataset(
+            Tx, preprocess, joinpath(root_dir, val_dir)
+        )
         @assert length(dataset) == VALSET_SIZE
     else
-        dataset = ImageNetReader.readdata(Tx, joinpath(root_dir, test_dir))
+        dataset = ImageNetReader.get_file_dataset(
+            Tx, preprocess, joinpath(root_dir, test_dir)
+        )
         @assert length(dataset) == TESTSET_SIZE
     end
     targets = [
         metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.load_wnids(dataset)
     ]
-    return ImageNet(metadata, split, dataset, targets)
+    return ImageNet(metadata, split, dataset, targets, inverse_preprocess)
 end
 
-convert2image(::Type{<:ImageNet}, x) = ImageNetReader.inverse_preprocess(x)
+convert2image(d::ImageNet, x::AbstractArray) = d.inverse_preprocess(x)
 
 Base.length(d::ImageNet) = length(d.dataset)
 
