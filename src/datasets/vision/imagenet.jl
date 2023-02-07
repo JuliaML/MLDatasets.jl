@@ -74,18 +74,25 @@ julia> dataset[1:5].targets
 julia> X, y = dataset[1:5];
 
 julia> size(X)
-(224, 224, 3, 5)
+(5,)
+
+julia> size(X[1])
+(224, 224, 3)
 
 julia> X, y = dataset[2000];
 
 julia> convert2image(dataset, X)
 
 julia> dataset.metadata
-Dict{String, Any} with 4 entries:
-  "class_WNIDs"       => ["n01440764", "n01443537", "n01484850", "n01491361", "n01494475", …
-  "class_description" => ["freshwater dace-like game fish of Europe and western Asia noted …
-  "class_names"       => Vector{SubString{String}}[["tench", "Tinca tinca"], ["goldfish", "…
-  "wnid_to_label"     => Dict("n07693725"=>932, "n03775546"=>660, "n01689811"=>45, "n021008…
+Dict{String, Any} with 8 entries:
+  "features_dir"      => "/Users/funks/.julia/datadeps/ImageNet/val"
+  "class_WNIDs"       => ["n01440764", "n01443537", "n01484850", "n01491361", "n01494475", "
+  "class_description" => ["freshwater dace-like game fish of Europe and western Asia noted f
+  "n_observations"    => 50000
+  "class_names"       => Vector{SubString{String}}[["tench", "Tinca tinca"], ["goldfish", "C
+  "metadata_path"     => "/Users/funks/.julia/datadeps/ImageNet/devkit/data/meta.mat"
+  "n_classes"         => 1000
+  "wnid_to_label"     => Dict("n07693725"=>932, "n03775546"=>660, "n01689811"=>45, "n0210087
 
 julia> dataset.metadata["class_names"][y]
   3-element Vector{SubString{String}}:
@@ -130,30 +137,35 @@ function ImageNet(
     VALSET_SIZE = 50_000
     TESTSET_SIZE = 100_000
 
-    # Load metadata
-    file_path = datafile(DEPNAME, METADATA_FILENAME, dir)
-    metadata = ImageNetReader.read_metadata(file_path)
-
     root_dir = @datadep_str DEPNAME
     if split == :train
-        dataset = ImageNetReader.get_file_dataset(
-            Tx, preprocess, joinpath(root_dir, train_dir)
-        )
-        @assert length(dataset) == TRAINSET_SIZE
+        split_dir = train_dir
+        n_observations = TRAINSET_SIZE
     elseif split == :val
-        dataset = ImageNetReader.get_file_dataset(
-            Tx, preprocess, joinpath(root_dir, val_dir)
-        )
-        @assert length(dataset) == VALSET_SIZE
-    else
-        dataset = ImageNetReader.get_file_dataset(
-            Tx, preprocess, joinpath(root_dir, test_dir)
-        )
-        @assert length(dataset) == TESTSET_SIZE
+        split_dir = val_dir
+        n_observations = VALSET_SIZE
+    else # :test
+        split_dir == test_dir
+        n_observations = TESTSET_SIZE
     end
+    features_dir = joinpath(root_dir, split_dir)
+
+    # Load metadata
+    metadata_path = datafile(DEPNAME, METADATA_FILENAME, dir)
+    metadata = ImageNetReader.read_wordnet_metadata(metadata_path)
+    metadata["metadata_path"] = metadata_path
+    metadata["features_dir"] = features_dir
+    metadata["n_observations"] = n_observations
+    metadata["n_classes"] = ImageNetReader.NCLASSES
+
+    # Create FileDataset
+    dataset = ImageNetReader.get_file_dataset(Tx, preprocess, features_dir)
+    @assert length(dataset) == n_observations
+
     targets = [
         metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.get_wnids(dataset)
     ]
+    @assert length(targets) == n_observations
     return ImageNet(metadata, split, dataset, targets, inverse_preprocess)
 end
 

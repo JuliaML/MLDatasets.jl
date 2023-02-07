@@ -22,7 +22,7 @@ function get_file_dataset(Tx::Type{<:Real}, preprocess::Function, dir::AbstractS
     return FileDataset(load_image, dir, "*.JPEG")
 end
 
-function read_metadata(file::AbstractString)
+function read_wordnet_metadata(file::AbstractString)
     meta = read_mat(file)["synsets"]
 
     # Only leaf nodes in WordNet metadata correspond to classes
