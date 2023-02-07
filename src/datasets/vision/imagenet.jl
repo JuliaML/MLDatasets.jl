@@ -167,5 +167,5 @@ const IMAGENET_MEM_WARNING = """Loading the entire ImageNet dataset into memory 
 Base.getindex(::ImageNet, ::Colon) = throw(ArgumentError(IMAGENET_MEM_WARNING))
 Base.getindex(d::ImageNet, i::Integer) = (features=d.dataset[i], targets=d.targets[i])
 function Base.getindex(d::ImageNet, is::AbstractVector)
-    return (features=StackView(d.dataset[is]), targets=d.targets[is])
+    return (features=d.dataset[is], targets=d.targets[is])
 end
