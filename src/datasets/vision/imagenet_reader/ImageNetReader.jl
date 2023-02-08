@@ -8,16 +8,17 @@ import ..@lazy
 @lazy import JpegTurbo = "b835a17e-a41a-41e7-81f0-2f016b05efe0"
 
 const NCLASSES = 1000
-const IMGSIZE = (224, 224)
 
 include("preprocess.jl")
 
-function get_file_dataset(Tx::Type{<:Real}, preprocess::Function, dir::AbstractString)
+function get_file_dataset(
+    Tx::Type{<:Real}, img_size::Tuple{Int,Int}, preprocess::Function, dir::AbstractString
+)
     # Construct a function that loads images from FileDataset path,
     # applies preprocessing and converts to type Tx.
     function load_image(file::AbstractString)
-        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=IMGSIZE)
-        return Tx.(preprocess(im))
+        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=img_size)
+        return preprocess(im, img_size)
     end
     return FileDataset(load_image, dir, "*.JPEG")
 end

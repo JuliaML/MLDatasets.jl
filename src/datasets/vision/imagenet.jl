@@ -92,6 +92,7 @@ Dict{String, Any} with 8 entries:
   "class_names"       => Vector{SubString{String}}[["tench", "Tinca tinca"], ["goldfish", "C
   "metadata_path"     => "/Users/funks/.julia/datadeps/ImageNet/devkit/data/meta.mat"
   "n_classes"         => 1000
+  "img_size"          => (224, 224)
   "wnid_to_label"     => Dict("n07693725"=>932, "n03775546"=>660, "n01689811"=>45, "n0210087
 
 julia> dataset.metadata["class_names"][y]
@@ -120,6 +121,7 @@ ImageNet(Tx::Type; kws...) = ImageNet(; Tx, kws...)
 function ImageNet(
     Tx::Type,
     split::Symbol;
+    img_size::Tuple{Int,Int}=(224, 224),
     preprocess=ImageNetReader.default_preprocess,
     inverse_preprocess=ImageNetReader.default_inverse_preprocess,
     dir=nothing,
@@ -157,9 +159,10 @@ function ImageNet(
     metadata["features_dir"] = features_dir
     metadata["n_observations"] = n_observations
     metadata["n_classes"] = ImageNetReader.NCLASSES
+    metadata["img_size"] = img_size
 
     # Create FileDataset
-    dataset = ImageNetReader.get_file_dataset(Tx, preprocess, features_dir)
+    dataset = ImageNetReader.get_file_dataset(Tx, img_size, preprocess, features_dir)
     @assert length(dataset) == n_observations
 
     targets = [

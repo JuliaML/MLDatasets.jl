@@ -1,7 +1,7 @@
 # Image preprocessing defaults for ImageNet models.
 
-function default_preprocess(im::AbstractMatrix{<:AbstractRGB})
-    im = channelview(center_crop(im))
+function default_preprocess(im::AbstractMatrix{<:AbstractRGB}, outsize)
+    im = channelview(center_crop(im, outsize))
     return PermutedDimsArray(im, (3, 2, 1)) # Convert from Image.jl's CHW to Flux's WHC
 end
 
@@ -12,7 +12,7 @@ function default_inverse_preprocess(x::AbstractArray{T,N}) where {T,N}
 end
 
 # Take rectangle of pixels of shape `outsize` at the center of image `im`
-function center_crop(im::AbstractMatrix, outsize=IMGSIZE)
+function center_crop(im::AbstractMatrix, outsize)
     h2, w2 = div.(outsize, 2) # half height, half width of view
     h_adjust, w_adjust = _adjust.(outsize)
     return @view im[
