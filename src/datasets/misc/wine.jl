@@ -4,8 +4,11 @@ export Wine
     Wine(; as_df = true, dir = nothing)
 
 The UCI Wine dataset.
+
 These data are the results of a chemical analysis of wines grown in the same region in Italy but derived from three different cultivars.
-The analysis determined the quantities of 13 constituents found in each of the three types of wines. 
+The analysis determined the quantities of 13 constituents found in each of the three types of wines.
+
+Data source is the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/wine) where further details can be retrieved.
 
 # Arguments
 
