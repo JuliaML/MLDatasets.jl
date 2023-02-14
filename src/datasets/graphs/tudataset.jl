@@ -60,9 +60,9 @@ function TUDataset(name; dir = nothing)
     @assert minimum(st) == 1
     source, target = st[:, 1], st[:, 2]
 
-    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec      
+    graph_indicator = readdlm(joinpath(d, "$(name)_graph_indicator.txt"), Int) |> vec
     if !all(sort(unique(graph_indicator)) .== 1:length(unique(graph_indicator)))
-      @warn "Some graph indicators are not present in graph_indicator.txt. Ordering of graph and graph labels may not be consistent. Base.getindex might produce unexpected behavior for unaltered data."
+        @warn "Some graph indicators are not present in graph_indicator.txt. Ordering of graph and graph labels may not be consistent. Base.getindex might produce unexpected behavior for unaltered data."
     end
 
     num_nodes = length(graph_indicator)

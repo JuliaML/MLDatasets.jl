@@ -304,10 +304,10 @@ end
     @test data.num_edges == 24756
     @test data.num_graphs == 2149
 
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_nodes == sum(g -> g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g -> g.num_edges, data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
 
     i = rand(1:length(data))
@@ -318,7 +318,7 @@ end
     @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
 
     # graph data
-    @test size(data.graph_data.targets) == (2800, )
+    @test size(data.graph_data.targets) == (2800,)
 
     # node data
     @test size(g.node_data.features) == (2, g.num_nodes)
