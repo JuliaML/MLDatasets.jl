@@ -70,6 +70,8 @@ include("datasets/misc/mutagenesis.jl")
 export Mutagenesis
 include("datasets/misc/titanic.jl")
 export Titanic
+include("datasets/misc/wine.jl")
+export Wine
 
 ## Vision
 

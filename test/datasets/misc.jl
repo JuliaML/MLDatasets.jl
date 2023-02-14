@@ -128,3 +128,25 @@ end
                       "S",
                   ])
 end
+
+@testset "Wine" begin
+    n_obs = 178
+    n_features = 13
+    n_targets = 1
+    feature_names = ["Alcohol", "Malic.acid", "Ash", "Acl", "Mg", "Phenols", "Flavanoids", "Nonflavanoid.phenols", "Proanth", "Color.int", "Hue", "OD", "Proline"]
+    target_names = ["Wine"]
+
+    d = Wine()
+    test_inmemory_supervised_table_dataset(d;
+        n_obs, n_features, n_targets,
+        feature_names, target_names)
+
+    
+    d = Wine(as_df=false)
+    test_inmemory_supervised_table_dataset(d;
+        n_obs, n_features, n_targets,
+        feature_names, target_names, 
+        Tx=Any, Ty=Int)
+
+    @test isequal(d[1].features, [14.23, 1.71, 2.43, 15.6, 127, 2.8, 3.06, 0.28, 2.29, 5.64, 1.04, 3.92, 1065])
+end
