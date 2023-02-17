@@ -1,6 +1,6 @@
 
 @testset "CiteSeer" begin
-    data  = CiteSeer()
+    data = CiteSeer()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
@@ -25,7 +25,7 @@
 end
 
 @testset "Cora" begin
-    data  = Cora()
+    data = Cora()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
@@ -50,7 +50,7 @@ end
 end
 
 @testset "KarateClub" begin
-    data  = KarateClub()
+    data = KarateClub()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
@@ -75,7 +75,7 @@ end
 end
 
 @testset "PolBlogs" begin
-    data  = PolBlogs()
+    data = PolBlogs()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
@@ -100,7 +100,7 @@ end
 end
 
 @testset "PubMed" begin
-    data  = PubMed()
+    data = PubMed()
     @test data isa AbstractDataset
     @test length(data) == 1
     g = data[1]
@@ -134,18 +134,14 @@ Sys.iswindows() || @testset "OGBn-mag" begin
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "paper"          => 736389,
-        "author"         => 1134649,
-        "institution"    => 8740,
-        "field_of_study" => 59965
-        )
-    num_edges = Dict(
-        ("author", "affiliated_with", "institution") => 1043998,
-        ("author", "writes", "paper")                => 7145660,
-        ("paper", "cites", "paper")                  => 5416271,
-        ("paper", "has_topic", "field_of_study")     => 7505078
-    )
+    num_nodes = Dict("paper" => 736389,
+                     "author" => 1134649,
+                     "institution" => 8740,
+                     "field_of_study" => 59965)
+    num_edges = Dict(("author", "affiliated_with", "institution") => 1043998,
+                     ("author", "writes", "paper") => 7145660,
+                     ("paper", "cites", "paper") => 5416271,
+                     ("paper", "has_topic", "field_of_study") => 7505078)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -202,12 +198,12 @@ end
             @test maximum(a) <= g.num_nodes
         end
         if haskey(g.edge_data[key], "edge_neg")
-          s, t = g.edge_data[key]["edge_neg"]
-          for a in (s, t)
-              @test a isa Vector{Int}
-              @test minimum(a) >= 1
-              @test maximum(a) <= g.num_nodes
-          end
+            s, t = g.edge_data[key]["edge_neg"]
+            for a in (s, t)
+                @test a isa Vector{Int}
+                @test minimum(a) >= 1
+                @test maximum(a) <= g.num_nodes
+            end
         end
     end
 end
@@ -220,15 +216,11 @@ end
     @test g == data[:]
     @test g isa MLDatasets.HeteroGraph
 
-    num_nodes = Dict(
-        "tag"   => 3683,
-        "movie" => 9742,
-        "user"  => 610
-        )
-    num_edges = Dict(
-        ("user", "rating", "movie") => 100836,
-        ("user", "tag", "movie")    => 3683
-    )
+    num_nodes = Dict("tag" => 3683,
+                     "movie" => 9742,
+                     "user" => 610)
+    num_edges = Dict(("user", "rating", "movie") => 100836,
+                     ("user", "tag", "movie") => 3683)
 
     for type in keys(num_nodes)
         @test type ∈ g.node_types
@@ -246,7 +238,7 @@ end
         @test length(g.edge_indices[type][2]) == num_edges[type]
         edge_data = g.edge_data[type]
         for (key, val) in edge_data
-            @test key in  [:timestamp, :tag_name, :rating]
+            @test key in [:timestamp, :tag_name, :rating]
             @test ndims(val) == 1
             @test size(val)[end] == num_edges[type]
         end
@@ -254,16 +246,16 @@ end
 end
 
 @testset "TUDataset - Cuneiform" begin
-    data  = TUDataset("Cuneiform")
+    data = TUDataset("Cuneiform")
 
     @test data.num_nodes == 5680
     @test data.num_edges == 23922
     @test data.num_graphs == 267
 
-    @test data.num_nodes == sum(g->g.num_nodes, data.graphs)
-    @test data.num_edges == sum(g->g.num_edges, data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[1]), data.graphs)
-    @test data.num_edges == sum(g->length(g.edge_index[2]), data.graphs)
+    @test data.num_nodes == sum(g -> g.num_nodes, data.graphs)
+    @test data.num_edges == sum(g -> g.num_edges, data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[1]), data.graphs)
+    @test data.num_edges == sum(g -> length(g.edge_index[2]), data.graphs)
     @test data.num_graphs == length(data) == length(data.graphs)
 
     i = rand(1:length(data))
@@ -276,7 +268,7 @@ end
     @test all(1 .<= g.edge_index[2] .<= g.num_nodes)
 
     # graph data
-    @test size(data.graph_data.targets) == (data.num_graphs, )
+    @test size(data.graph_data.targets) == (data.num_graphs,)
 
     # node data
     @test size(g.node_data.features) == (3, g.num_nodes)
@@ -284,5 +276,5 @@ end
 
     # edge data
     @test size(g.edge_data.features) == (2, g.num_edges)
-    @test size(g.edge_data.targets) == (g.num_edges, )
+    @test size(g.edge_data.targets) == (g.num_edges,)
 end

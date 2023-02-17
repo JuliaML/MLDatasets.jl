@@ -1,23 +1,19 @@
 function __init__smsspam()
-
     DEPNAME = "SMSSpamCollection"
     LINK = "https://raw.githubusercontent.com/mohitgupta-omg/Kaggle-SMS-Spam-Collection-Dataset-/master/"
     LINK = "https://archive.ics.uci.edu/ml/machine-learning-databases/00228/"
     DOCS = "https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection#"
     DATA = "smsspamcollection.zip"
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The SMS Spam Collection v.1
-        Website: $DOCS
-        """,
-        LINK .* [DATA],
-        "1587ea43e58e82b14ff1f5425c88e17f8496bfcdb67a583dbff9eefaf9963ce3",
-        post_fetch_method = unpack
-    ))
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The SMS Spam Collection v.1
+                     Website: $DOCS
+                     """,
+                     LINK .* [DATA],
+                     "1587ea43e58e82b14ff1f5425c88e17f8496bfcdb67a583dbff9eefaf9963ce3",
+                     post_fetch_method = unpack))
 end
-
 
 """
     SMSSpamCollection(; dir=nothing)
@@ -46,7 +42,7 @@ julia> summary(features)
 "5574-element Vector{Any}"
 """
 struct SMSSpamCollection <: SupervisedDataset
-    metadata::Dict{String,Any}
+    metadata::Dict{String, Any}
     features::Vector{String}
     targets::Vector{String}
 end
@@ -56,15 +52,14 @@ function SMSSpamCollection(; dir = nothing)
     path = datafile(DEPNAME, "SMSSpamCollection", dir)
     spam_data = open(readlines, path)
     spam_data = [split(str, "\t") for str in spam_data]
-    @assert all(x -> length(x)==2, spam_data)
-    targets = [s[1] for s in spam_data] 
-    features = [s[2] for s in spam_data] 
-    
-    metadata = Dict{String,Any}()
+    @assert all(x -> length(x) == 2, spam_data)
+    targets = [s[1] for s in spam_data]
+    features = [s[2] for s in spam_data]
+
+    metadata = Dict{String, Any}()
     metadata["n_observations"] = length(features)
     SMSSpamCollection(metadata, features, targets)
 end
-
 
 # DEPRECATED in V0.6
 function Base.getproperty(::Type{SMSSpamCollection}, s::Symbol)
@@ -74,9 +69,7 @@ function Base.getproperty(::Type{SMSSpamCollection}, s::Symbol)
     elseif s == :targets
         @warn "SMSSpamCollection.targets() is deprecated, use `SMSSpamCollection().targets` instead."
         return () -> SMSSpamCollection().targets
-    else 
+    else
         return getfield(SMSSpamCollection, s)
     end
 end
-
-

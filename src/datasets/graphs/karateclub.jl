@@ -40,7 +40,7 @@ function KarateClub()
         25, 25, 26, 26, 26, 27, 27, 28, 28, 28, 28, 29, 29, 29, 30, 30, 30,
         30, 31, 31, 31, 31, 32, 32, 32, 32, 32, 32, 33, 33, 33, 33, 33, 33,
         33, 33, 33, 33, 33, 33, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
-        34, 34, 34, 34, 34, 34
+        34, 34, 34, 34, 34, 34,
     ]
     target = [
         2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 18, 20, 22, 32, 1, 3, 4, 8,
@@ -51,23 +51,23 @@ function KarateClub()
         34, 26, 28, 32, 24, 25, 32, 30, 34, 3, 24, 25, 34, 3, 32, 34, 24,
         27, 33, 34, 2, 9, 33, 34, 1, 25, 26, 29, 33, 34, 3, 9, 15, 16, 19,
         21, 23, 24, 30, 31, 32, 34, 9, 10, 14, 15, 16, 19, 20, 21, 23, 24,
-        27, 28, 29, 30, 31, 32, 33
+        27, 28, 29, 30, 31, 32, 33,
     ]
 
     labels_clubs = [
-            1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     labels_comm = [
-                1, 1, 1, 1, 3, 3, 3, 1, 0, 1, 3, 1, 1, 1, 0, 0, 3, 1, 0, 1, 0, 1,
-                0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
-    
-    node_data = (; labels_clubs, labels_comm) 
-    g = Graph(; num_nodes=34, edge_index=(src, target), node_data)
+        1, 1, 1, 1, 3, 3, 3, 1, 0, 1, 3, 1, 1, 1, 0, 0, 3, 1, 0, 1, 0, 1,
+        0, 0, 2, 2, 0, 0, 2, 0, 0, 2, 0, 0]
+
+    node_data = (; labels_clubs, labels_comm)
+    g = Graph(; num_nodes = 34, edge_index = (src, target), node_data)
 
     metadata = Dict{String, Any}()
     return KarateClub(metadata, [g])
 end
 
-Base.length(d::KarateClub) = length(d.graphs) 
+Base.length(d::KarateClub) = length(d.graphs)
 Base.getindex(d::KarateClub, ::Colon) = d.graphs[1]
 Base.getindex(d::KarateClub, i) = d.graphs[i]

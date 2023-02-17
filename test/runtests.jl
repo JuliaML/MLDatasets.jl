@@ -29,8 +29,8 @@ no_ci_dataset_tests = [
     "datasets/vision/emnist.jl",
     "datasets/vision/omniglot.jl",
     "datasets/vision/svhn2.jl",
-    "datasets/meshes.jl"
-    ]
+    "datasets/meshes.jl",
+]
 
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
 
@@ -57,10 +57,8 @@ container_tests = [
     end
 end
 
-@testset "Containers" begin
-    for t in container_tests
-        include(t)
-    end
-end
+@testset "Containers" begin for t in container_tests
+    include(t)
+end end
 
 nothing

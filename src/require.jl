@@ -11,7 +11,9 @@ mutable struct RequireModule
     _require_loaded::Bool
 end
 RequireModule(uuid::UUID, name::String) = RequireModule(PkgId(uuid, name), false)
-Base.Docs.Binding(m::RequireModule, v::Symbol) = Base.Docs.Binding(checked_import(m._require_pkgid), v)
+function Base.Docs.Binding(m::RequireModule, v::Symbol)
+    Base.Docs.Binding(checked_import(m._require_pkgid), v)
+end
 function Base.show(io::IO, m::RequireModule)
     print(io, "RequireModule(", m._require_pkgid.name, ")")
 end
@@ -39,7 +41,6 @@ function require_import(m::RequireModule)
     end
     return Base.root_module(pkgid)
 end
-
 
 """
     @require import PkgName=UUID

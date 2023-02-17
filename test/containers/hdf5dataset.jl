@@ -3,7 +3,7 @@ function setup_hdf5dataset_test()
         ("d1", rand(2, 10)),
         ("g1/d1", rand(10)),
         ("g1/d2", string.('a':'j')),
-        ("g2/g1/d1", "test")
+        ("g2/g1/d1", "test"),
     ]
 
     fid = h5open("test.h5", "w")

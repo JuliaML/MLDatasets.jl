@@ -14,7 +14,7 @@
 # """
 function readimageheader(io::IO)
     magic_number = bswap(read(io, UInt32))
-    total_items  = bswap(read(io, UInt32))
+    total_items = bswap(read(io, UInt32))
     nrows = bswap(read(io, UInt32))
     ncols = bswap(read(io, UInt32))
     UInt32(magic_number), Int(total_items), Int(nrows), Int(ncols)
@@ -27,7 +27,7 @@ end
 # returns them interpreted as an MNIST-image-file header
 # """
 function readimageheader(file::AbstractString)
-    gzopen(readimageheader, file, "r")::Tuple{UInt32,Int,Int,Int}
+    gzopen(readimageheader, file, "r")::Tuple{UInt32, Int, Int, Int}
 end
 
 # """
@@ -41,7 +41,7 @@ end
 # """
 function readlabelheader(io::IO)
     magic_number = bswap(read(io, UInt32))
-    total_items  = bswap(read(io, UInt32))
+    total_items = bswap(read(io, UInt32))
     UInt32(magic_number), Int(total_items)
 end
 
@@ -52,5 +52,5 @@ end
 # returns them interpreted as an MNIST-label-file header
 # """
 function readlabelheader(file::AbstractString)
-    gzopen(readlabelheader, file, "r")::Tuple{UInt32,Int}
+    gzopen(readlabelheader, file, "r")::Tuple{UInt32, Int}
 end

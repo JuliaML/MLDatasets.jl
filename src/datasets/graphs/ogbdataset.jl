@@ -20,21 +20,19 @@ function __init__ogbdataset()
         return local_filepath
     end
 
-    register(DataDep(
-        DEPNAME,
-        """
-        Dataset: The $DEPNAME dataset.
-        Website: $DOCS
-        Download Link: $LINK
-        """,
-        ["https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/nodeproppred/master.csv",
-        "https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/linkproppred/master.csv",
-        "https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/graphproppred/master.csv",
-        ],
-        fetch_method=fetch_method
-    ))
+    register(DataDep(DEPNAME,
+                     """
+                     Dataset: The $DEPNAME dataset.
+                     Website: $DOCS
+                     Download Link: $LINK
+                     """,
+                     [
+                         "https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/nodeproppred/master.csv",
+                         "https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/linkproppred/master.csv",
+                         "https://raw.githubusercontent.com/snap-stanford/ogb/master/ogb/graphproppred/master.csv",
+                     ],
+                     fetch_method = fetch_method))
 end
-
 
 """
     OGBDataset(name; dir=nothing)
@@ -157,7 +155,9 @@ function read_ogb_metadata(fullname, dir = nothing)
     end
     df = read_csv(path_metadata)
     @assert fullname ∈ names(df)
-    metadata = Dict{String, Any}(String(r[1]) => r[2] isa AbstractString ? parse_pystring(r[2]) : r[2] for r in eachrow(df[!,[names(df)[1], fullname]]))
+    metadata = Dict{String, Any}(String(r[1]) => r[2] isa AbstractString ?
+                                                 parse_pystring(r[2]) : r[2]
+                                 for r in eachrow(df[!, [names(df)[1], fullname]]))
     # edge cases for additional node and edge files
     for additional_key in ["additional edge files", "additional node files"]
         if !isnothing(metadata[additional_key])
@@ -186,7 +186,7 @@ function makedir_ogb(fullname, url, dir = nothing)
         currdir = pwd()
         cd(root_dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(local_filepath)
-        unzipped = local_filepath[1:findlast('.', local_filepath)-1]
+        unzipped = local_filepath[1:(findlast('.', local_filepath) - 1)]
         # conditions when unzipped folder is our required data dir
         (unzipped == data_dir) || mv(unzipped, data_dir) # none of them are relative path
         for (root, dirs, files) in walkdir(data_dir)
@@ -208,19 +208,28 @@ end
 function read_ogb_graph(path, metadata)
     dict = Dict{String, Any}()
 
-    dict["edge_index"] = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int, transp=false)
+    dict["edge_index"] = read_ogb_file(joinpath(path, "raw", "edge.csv"), Int,
+                                       transp = false)
     dict["edge_index"] = dict["edge_index"] .+ 1 # from 0-indexing to 1-indexing
 
     dict["node_features"] = read_ogb_file(joinpath(path, "raw", "node-feat.csv"), Float32)
     dict["edge_features"] = read_ogb_file(joinpath(path, "raw", "edge-feat.csv"), Float32)
 
-    dict["num_nodes"] = read_ogb_file(joinpath(path, "raw", "num-node-list.csv"), Int; tovec=true)
-    dict["num_edges"] = read_ogb_file(joinpath(path, "raw", "num-edge-list.csv"), Int; tovec=true)
+    dict["num_nodes"] = read_ogb_file(joinpath(path, "raw", "num-node-list.csv"), Int;
+                                      tovec = true)
+    dict["num_edges"] = read_ogb_file(joinpath(path, "raw", "num-edge-list.csv"), Int;
+                                      tovec = true)
 
     # replace later with data from metadata?
     for file in readdir(joinpath(path, "raw"))
-    if file ∉ ["edge.csv", "num-node-list.csv", "num-edge-list.csv", "node-feat.csv", "edge-feat.csv"] && file[end-3:end] == ".csv"
-            propname = replace(split(file,".")[1], "-" => "_")
+        if file ∉ [
+            "edge.csv",
+            "num-node-list.csv",
+            "num-edge-list.csv",
+            "node-feat.csv",
+            "edge-feat.csv",
+        ] && file[(end - 3):end] == ".csv"
+            propname = replace(split(file, ".")[1], "-" => "_")
             dict[propname] = read_ogb_file(joinpath(path, "raw", file), Any)
 
             # from https://github.com/snap-stanford/ogb/blob/5e9d78e80ffd88787d9a1fdfdf4079f42d171565/ogb/io/read_graph_raw.py
@@ -244,12 +253,12 @@ function read_ogb_graph(path, metadata)
         graph = Dict{String, Any}()
         n, m = dict["num_nodes"][i], dict["num_edges"][i]
         graph["num_nodes"] = n
-        graph["num_edges"] = metadata["add_inverse_edge"] ? 2*m : m
+        graph["num_edges"] = metadata["add_inverse_edge"] ? 2 * m : m
 
         # EDGE FEATURES
         if metadata["add_inverse_edge"]
-            ei = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
-            s, t = ei[:,1], ei[:,2]
+            ei = dict["edge_index"][(num_edge_accum + 1):(num_edge_accum + m), :]
+            s, t = ei[:, 1], ei[:, 2]
             graph["edge_index"] = [s t; t s]
 
             for k in edge_keys
@@ -257,19 +266,20 @@ function read_ogb_graph(path, metadata)
                 if v === nothing
                     graph[k] = nothing
                 else
-                    x = v[:, num_edge_accum+1:num_edge_accum+m]
+                    x = v[:, (num_edge_accum + 1):(num_edge_accum + m)]
                     graph[k] = [x; x]
                 end
             end
         else
-            graph["edge_index"] = dict["edge_index"][num_edge_accum+1:num_edge_accum+m, :]
+            graph["edge_index"] = dict["edge_index"][(num_edge_accum + 1):(num_edge_accum + m),
+                                                     :]
 
             for k in edge_keys
                 v = dict[k]
                 if v === nothing
                     graph[k] = nothing
                 else
-                    graph[k] = v[:, num_edge_accum+1:num_edge_accum+m]
+                    graph[k] = v[:, (num_edge_accum + 1):(num_edge_accum + m)]
                 end
             end
         end
@@ -281,7 +291,7 @@ function read_ogb_graph(path, metadata)
             if v === nothing
                 graph[k] = nothing
             else
-                graph[k] = v[:, num_node_accum+1:num_node_accum+n]
+                graph[k] = v[:, (num_node_accum + 1):(num_node_accum + n)]
             end
         end
         num_node_accum += n
@@ -302,36 +312,41 @@ function read_ogb_graph(path, metadata)
              length(dlabels) == 1 ? first(dlabels)[2] : dlabels
 
     splits = readdir(joinpath(path, "split"))
-    @assert length(splits) == 1 "Current implementation supports only 1 split"
+    @assert length(splits)==1 "Current implementation supports only 1 split"
 
     graph_data = nothing
     if metadata["task level"] in ["node", "graph"]
-      split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"), Int; tovec=true),
-                  val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"), Int; tovec=true),
-                  test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"), Int; tovec=true))
+        split_idx = (train = read_ogb_file(joinpath(path, "split", splits[1], "train.csv"),
+                                           Int; tovec = true),
+                     val = read_ogb_file(joinpath(path, "split", splits[1], "valid.csv"),
+                                         Int; tovec = true),
+                     test = read_ogb_file(joinpath(path, "split", splits[1], "test.csv"),
+                                          Int; tovec = true))
 
-      if metadata["task level"] == "node"
-          # During the time of writing this piece of code,
-          # node level OGBDataset had only 1 graph.
-          # We need to implement splits for multiple graphs if that changes
-          @assert length(graphs) == 1
-          g = graphs[1]
+        if metadata["task level"] == "node"
+            # During the time of writing this piece of code,
+            # node level OGBDataset had only 1 graph.
+            # We need to implement splits for multiple graphs if that changes
+            @assert length(graphs) == 1
+            g = graphs[1]
 
-          # TODO: Implement for more than one split
-          for key in keys(split_idx)
-            if !isnothing(split_idx[key])
-              g["node_$(key)_mask"] = indexes2mask(split_idx[key] .+ 1, g["num_nodes"])
+            # TODO: Implement for more than one split
+            for key in keys(split_idx)
+                if !isnothing(split_idx[key])
+                    g["node_$(key)_mask"] = indexes2mask(split_idx[key] .+ 1,
+                                                         g["num_nodes"])
+                end
             end
-          end
-      else
-          split_mask = Dict()
-          for key in keys(split_idx)
-            if !isnothing(split_idx[key])
-              split_mask[Symbol("$(key)_mask")] = indexes2mask(split_idx[key] .+ 1, num_graphs)
+        else
+            split_mask = Dict()
+            for key in keys(split_idx)
+                if !isnothing(split_idx[key])
+                    split_mask[Symbol("$(key)_mask")] = indexes2mask(split_idx[key] .+ 1,
+                                                                     num_graphs)
+                end
             end
-          end
-          graph_data = clean_nt((; labels=maybesqueeze(labels), split_mask...))
-      end
+            graph_data = clean_nt((; labels = maybesqueeze(labels), split_mask...))
+        end
     elseif metadata["task level"] == "link"
         # During the time of writing this piece of code,
         # link level OGBDataset had only 1 graph.
@@ -340,44 +355,45 @@ function read_ogb_graph(path, metadata)
         g = graphs[1]
 
         split_dict = (train = read_pytorch(joinpath(path, "split", splits[1], "train.pt")),
-                    val = read_pytorch(joinpath(path, "split", splits[1], "valid.pt")),
-                    test = read_pytorch(joinpath(path, "split", splits[1], "test.pt")))
+                      val = read_pytorch(joinpath(path, "split", splits[1], "valid.pt")),
+                      test = read_pytorch(joinpath(path, "split", splits[1], "test.pt")))
 
         for key in keys(split_dict)
-          if !isnothing(split_dict[key])
-            for k in keys(split_dict[key])
-              if k in ["edge", "edge_neg"]
-                split_dict[key][k] .+= 1
-                ei = split_dict[key][k]
-                s, t = ei[:,1], ei[:,2]
-                if metadata["add_inverse_edge"]
-                  split_dict[key][k] = ([s;t], [t;s])
-                else
-                  split_dict[key][k] = (s, t)
+            if !isnothing(split_dict[key])
+                for k in keys(split_dict[key])
+                    if k in ["edge", "edge_neg"]
+                        split_dict[key][k] .+= 1
+                        ei = split_dict[key][k]
+                        s, t = ei[:, 1], ei[:, 2]
+                        if metadata["add_inverse_edge"]
+                            split_dict[key][k] = ([s; t], [t; s])
+                        else
+                            split_dict[key][k] = (s, t)
+                        end
+                    else
+                        if metadata["add_inverse_edge"]
+                            v = split_dict[key][k]
+                            split_dict[key][k] = [v; v]
+                        end
+                    end
                 end
-              else
-                if metadata["add_inverse_edge"]
-                  v = split_dict[key][k]
-                  split_dict[key][k] = [v; v]
-                end
-              end
+                g["edge_$(key)_dict"] = split_dict[key]
             end
-            g["edge_$(key)_dict"] = split_dict[key]
-          end
         end
     end
     return graphs, graph_data
 end
 
 function read_ogb_hetero_graph(path, metadata)
-
     dict = Dict{String, Any}()
     num_node_df = read_csv_asdf(joinpath(path, "raw", "num-node-dict.csv"))
-    dict["num_nodes"] = Dict(String(node) => Vector{Int}(num) for (node, num) in pairs(eachcol(num_node_df)))
+    dict["num_nodes"] = Dict(String(node) => Vector{Int}(num)
+                             for (node, num) in pairs(eachcol(num_node_df)))
     node_types = sort(collect(keys(dict["num_nodes"])))
     num_graphs = length(dict["num_nodes"][node_types[1]])
 
-    triplet_mat = read_ogb_file(joinpath(path, "raw", "triplet-type-list.csv"), String, transp=false)
+    triplet_mat = read_ogb_file(joinpath(path, "raw", "triplet-type-list.csv"), String,
+                                transp = false)
     @assert size(triplet_mat)[2] == 3
     triplets = sort([Tuple(triplet[:]) for triplet in eachrow(triplet_mat)])
 
@@ -387,18 +403,23 @@ function read_ogb_hetero_graph(path, metadata)
 
     for triplet in triplets
         subdir = joinpath(path, "raw", "relations", join(triplet, "___"))
-        dict["edge_indices"][triplet] = read_ogb_file(joinpath(subdir, "edge.csv"), Int, transp=false) .+ 1
-        dict["num_edges"][triplet] = read_ogb_file(joinpath(subdir, "num-edge-list.csv"), Int)
-        dict["edge_features"][triplet] = read_ogb_file(joinpath(subdir, "edge-feat.csv"), AbstractFloat)
+        dict["edge_indices"][triplet] = read_ogb_file(joinpath(subdir, "edge.csv"), Int,
+                                                      transp = false) .+ 1
+        dict["num_edges"][triplet] = read_ogb_file(joinpath(subdir, "num-edge-list.csv"),
+                                                   Int)
+        dict["edge_features"][triplet] = read_ogb_file(joinpath(subdir, "edge-feat.csv"),
+                                                       AbstractFloat)
     end
 
     # Check if the number of graphs are consistent accross node and edge data
-    @assert length(dict["num_nodes"][node_types[1]]) == length(dict["num_edges"][triplets[1]])
+    @assert length(dict["num_nodes"][node_types[1]]) ==
+            length(dict["num_edges"][triplets[1]])
 
     dict["node_features"] = Dict{String, Any}()
     for node_type in node_types
         subdir = joinpath(path, "raw", "node-feat", node_type)
-        dict["node_features"][node_type] = read_ogb_file(joinpath(subdir, "node-feat.csv"), AbstractFloat)
+        dict["node_features"][node_type] = read_ogb_file(joinpath(subdir, "node-feat.csv"),
+                                                         AbstractFloat)
     end
 
     for additional_file in metadata["additional node files"]
@@ -408,7 +429,8 @@ function read_ogb_hetero_graph(path, metadata)
         for node_type in node_types
             subdir = joinpath(path, "raw", "node-feat", node_type)
             node_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), Float32)
-            isnothing(node_feat) || @assert length(node_feat) == sum(dict["num_nodes"][node_type])
+            isnothing(node_feat) ||
+                @assert length(node_feat) == sum(dict["num_nodes"][node_type])
             node_add_feat[node_type] = node_feat
         end
         dict[additional_file] = node_add_feat
@@ -421,21 +443,28 @@ function read_ogb_hetero_graph(path, metadata)
         for triplet in triplets
             subdir = joinpath(path, "raw", "relations", join(triplet, "___"))
 
-            edge_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"), AbstractFloat)
+            edge_feat = read_ogb_file(joinpath(subdir, additional_file * ".csv"),
+                                      AbstractFloat)
             @assert length(edge_feat) == sum(dict["num_edges"][triplet])
             edge_add_feats[triplet] = edge_feat
         end
-    dict[additional_file] = edge_add_feats
+        dict[additional_file] = edge_add_feats
     end
 
     if metadata["task level"] == "node"
         dict["node_label"] = Dict()
-        nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw", "nodetype-has-label.csv"))
-        nodetype_has_label = Dict(String(node) => num[1] for (node, num) in pairs(eachcol(nodetype_has_label_df)))
+        nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw",
+                                                       "nodetype-has-label.csv"))
+        nodetype_has_label = Dict(String(node) => num[1]
+                                  for (node, num) in pairs(eachcol(nodetype_has_label_df)))
         for (node_type, has_label) in nodetype_has_label
             @assert node_type ∈ node_types
             if has_label
-                dict["node_label"][node_type] = read_ogb_file(joinpath(path, "raw", "node-label", node_type, "node-label.csv"), Int)
+                dict["node_label"][node_type] = read_ogb_file(joinpath(path, "raw",
+                                                                       "node-label",
+                                                                       node_type,
+                                                                       "node-label.csv"),
+                                                              Int)
             else
                 dict["node_label"][node_type] = nothing
             end
@@ -446,8 +475,8 @@ function read_ogb_hetero_graph(path, metadata)
     edge_keys = [k for k in keys(dict) if startswith(k, "edge_") && k != "edge_indices"]
 
     graphs = Dict[]
-    num_node_accums = Dict(node_type=> 0 for node_type in node_types)
-    num_edge_accums = Dict(triplet=> 0 for triplet in triplets)
+    num_node_accums = Dict(node_type => 0 for node_type in node_types)
+    num_edge_accums = Dict(triplet => 0 for triplet in triplets)
     graph_data = nothing
 
     for i in 1:num_graphs
@@ -464,7 +493,8 @@ function read_ogb_hetero_graph(path, metadata)
             num_edge_accum = num_edge_accums[triplet]
 
             if metadata["add_inverse_edge"]
-                edge_index = edge_indices[num_edge_accum+1:num_edge_accum+num_edge, :]
+                edge_index = edge_indices[(num_edge_accum + 1):(num_edge_accum + num_edge),
+                                          :]
                 # Compensate for the duplicate/inverse the edges
                 s, t = edge_index[:, 1], edge_index[:, 2]
                 graph["edge_indices"][triplet] = [s t; t s]
@@ -474,18 +504,20 @@ function read_ogb_hetero_graph(path, metadata)
                     if v === nothing
                         graph[k][triplet] = nothing
                     else
-                        x = v[:, num_edge_accum+1:num_edge_accum+num_edge]
+                        x = v[:, (num_edge_accum + 1):(num_edge_accum + num_edge)]
                         graph[k][triplet] = [x; x]
                     end
                 end
             else
-                graph["edge_indices"][triplet] = edge_indices[num_edge_accum+1:num_edge_accum+num_edge, :]
+                graph["edge_indices"][triplet] = edge_indices[(num_edge_accum + 1):(num_edge_accum + num_edge),
+                                                              :]
                 for k in edge_keys
                     v = dict[k][triplet]
                     if v === nothing
                         graph[k][triplet] = nothing
                     else
-                        graph[k][triplet] = v[:, num_edge_accum+1:num_edge_accum+num_edge]
+                        graph[k][triplet] = v[:,
+                                              (num_edge_accum + 1):(num_edge_accum + num_edge)]
                     end
                 end
             end
@@ -500,69 +532,83 @@ function read_ogb_hetero_graph(path, metadata)
                 if v === nothing
                     graph[k][node_type] = nothing
                 else
-                    graph[k][node_type] = v[:, num_node_accum+1:num_node_accum+num_node]
+                    graph[k][node_type] = v[:,
+                                            (num_node_accum + 1):(num_node_accum + num_node)]
                 end
             end
             num_node_accums[node_type] += num_node
         end
 
         push!(graphs, graph)
-      end
+    end
 
-      dlabels = Dict{String, Any}()
-      for k in keys(dict)
-          if contains(k, "label")
-              if k ∉ [node_keys; edge_keys]
-                  dlabels[k] = dict[k]
-              end
-          end
-      end
-      labels = isempty(dlabels) ? nothing :
-      length(dlabels) == 1 ? first(dlabels)[2] : dlabels
+    dlabels = Dict{String, Any}()
+    for k in keys(dict)
+        if contains(k, "label")
+            if k ∉ [node_keys; edge_keys]
+                dlabels[k] = dict[k]
+            end
+        end
+    end
+    labels = isempty(dlabels) ? nothing :
+             length(dlabels) == 1 ? first(dlabels)[2] : dlabels
 
-      # Similar to OGB Graphs
-      # Also see split implementation for normal ogb graphs
-      # for any possible issues
-      splits = readdir(joinpath(path, "split"))
-      @assert length(splits) == 1 "Current implementation supports only 1 split"
+    # Similar to OGB Graphs
+    # Also see split implementation for normal ogb graphs
+    # for any possible issues
+    splits = readdir(joinpath(path, "split"))
+    @assert length(splits)==1 "Current implementation supports only 1 split"
 
-      graph_data = nothing
-      split_dir = joinpath(path, "split", splits[1])
-      if metadata["task level"] == "node"
-          @assert length(graphs) == 1
-          g = graphs[1]
-          split_idx_dict = Dict{String, Dict{String, Vector{Int}}}()
-          split_idx_dict["train"] = Dict()
-          split_idx_dict["test"] = Dict()
-          split_idx_dict["val"] = Dict()
+    graph_data = nothing
+    split_dir = joinpath(path, "split", splits[1])
+    if metadata["task level"] == "node"
+        @assert length(graphs) == 1
+        g = graphs[1]
+        split_idx_dict = Dict{String, Dict{String, Vector{Int}}}()
+        split_idx_dict["train"] = Dict()
+        split_idx_dict["test"] = Dict()
+        split_idx_dict["val"] = Dict()
 
-          nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw", "nodetype-has-label.csv"))
-          nodetype_has_label = Dict(String(node) => num[1] for (node, num) in pairs(eachcol(nodetype_has_label_df)))
-          for (node_type, has_label) in nodetype_has_label
-              @assert node_type ∈ node_types
-              if has_label
-                  split_idx_dict["train"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "train.csv"), Int; tovec=true)
-                  split_idx_dict["test"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "test.csv"), Int; tovec=true)
-                  split_idx_dict["val"][node_type] = read_ogb_file(joinpath(split_dir, node_type, "valid.csv"), Int; tovec=true)
-              end
-          end
+        nodetype_has_label_df = read_csv_asdf(joinpath(path, "raw",
+                                                       "nodetype-has-label.csv"))
+        nodetype_has_label = Dict(String(node) => num[1]
+                                  for (node, num) in pairs(eachcol(nodetype_has_label_df)))
+        for (node_type, has_label) in nodetype_has_label
+            @assert node_type ∈ node_types
+            if has_label
+                split_idx_dict["train"][node_type] = read_ogb_file(joinpath(split_dir,
+                                                                            node_type,
+                                                                            "train.csv"),
+                                                                   Int; tovec = true)
+                split_idx_dict["test"][node_type] = read_ogb_file(joinpath(split_dir,
+                                                                           node_type,
+                                                                           "test.csv"), Int;
+                                                                  tovec = true)
+                split_idx_dict["val"][node_type] = read_ogb_file(joinpath(split_dir,
+                                                                          node_type,
+                                                                          "valid.csv"), Int;
+                                                                 tovec = true)
+            end
+        end
 
-          for key in keys(split_idx_dict)
+        for key in keys(split_idx_dict)
             g["node_$(key)_mask"] = Dict()
             for node_type in keys(split_idx_dict[key])
-              num_nodes = dict["num_nodes"][node_type][1]
-              g["node_$(key)_mask"][node_type] = indexes2mask(split_idx_dict[key][node_type] .+ 1, num_nodes)
+                num_nodes = dict["num_nodes"][node_type][1]
+                g["node_$(key)_mask"][node_type] = indexes2mask(split_idx_dict[key][node_type] .+
+                                                                1, num_nodes)
             end
-          end
-      elseif metadata["task level"] == "graph"
-          split_mask = Dict()
-          for key in keys(split_idx)
+        end
+    elseif metadata["task level"] == "graph"
+        split_mask = Dict()
+        for key in keys(split_idx)
             if !isnothing(split_idx[key])
-              split_mask[Symbol("$(key)_mask")] = indexes2mask(split_idx[key] .+ 1, num_graphs)
+                split_mask[Symbol("$(key)_mask")] = indexes2mask(split_idx[key] .+ 1,
+                                                                 num_graphs)
             end
-          end
-          graph_data = clean_nt((; labels=maybesqueeze(labels), split_mask...))
-      elseif metadata["task level"] == "link"
+        end
+        graph_data = clean_nt((; labels = maybesqueeze(labels), split_mask...))
+    elseif metadata["task level"] == "link"
         @assert length(graphs) == 1
         @warn "Link split for HeteroData has not been implemented yet."
 
@@ -572,12 +618,12 @@ function read_ogb_hetero_graph(path, metadata)
         #               val = read_pytorch(joinpath(split_dir, "valid.pt")),
         #               test = read_pytorch(joinpath(split_dir, "test.pt")))
 
-      end
+    end
     return graphs, graph_data
 end
 
 function read_ogb_file(p, T; tovec = false, transp = true)
-    res = isfile(p) ? read_csv(p, Matrix{T}, header=false) : nothing
+    res = isfile(p) ? read_csv(p, Matrix{T}, header = false) : nothing
     if tovec && res !== nothing
         @assert size(res, 1) == 1 || size(res, 2) == 1
         res = vec(res)
@@ -591,12 +637,14 @@ function read_ogb_file(p, T; tovec = false, transp = true)
     return res
 end
 
-
 function ogbdict2graph(d::Dict)
-    edge_index = d["edge_index"][:,1], d["edge_index"][:,2]
+    edge_index = d["edge_index"][:, 1], d["edge_index"][:, 2]
     num_nodes = d["num_nodes"]
-    node_data = Dict(Symbol(k[6:end]) => maybesqueeze(v) for (k,v) in d if startswith(k, "node_") && v !== nothing)
-    edge_data = Dict(Symbol(k[6:end]) => maybesqueeze(v) for (k,v) in d if startswith(k, "edge_") && k!="edge_index" && v !== nothing)
+    node_data = Dict(Symbol(k[6:end]) => maybesqueeze(v)
+                     for (k, v) in d if startswith(k, "node_") && v !== nothing)
+    edge_data = Dict(Symbol(k[6:end]) => maybesqueeze(v)
+                     for (k, v) in d
+                     if startswith(k, "edge_") && k != "edge_index" && v !== nothing)
     node_data = isempty(node_data) ? nothing : (; node_data...)
     edge_data = isempty(edge_data) ? nothing : (; edge_data...)
     return Graph(; num_nodes, edge_index, node_data, edge_data)
@@ -607,11 +655,13 @@ function ogbdict2heterograph(d::Dict)
     edge_indices = Dict(triplet => (ei[:, 1], ei[:, 2])
                         for (triplet, ei) in d["edge_indices"])
 
-    edge_data = Dict{Tuple{String, String, String}, Dict}(k => Dict{Symbol, Any}() for k in keys(edge_indices))
+    edge_data = Dict{Tuple{String, String, String}, Dict}(k => Dict{Symbol, Any}()
+                                                          for k in keys(edge_indices))
     for (feature_name, v) in d
         # v is a dict
         # the number of nothing values should not be equal to total number of values
-        if startswith(feature_name, "edge_") && feature_name != "edge_indices" && sum(isnothing.(values(v))) < length(v)
+        if startswith(feature_name, "edge_") && feature_name != "edge_indices" &&
+           sum(isnothing.(values(v))) < length(v)
             for (edge_key, edge_value) in v
                 if !isnothing(edge_value)
                     edge_data[edge_key][Symbol(feature_name[6:end])] = maybesqueeze(edge_value)
@@ -630,16 +680,18 @@ function ogbdict2heterograph(d::Dict)
             end
         end
     end
-    node_data = Dict(k => v for (k,v) in node_data if !isempty(v))
-    edge_data = Dict(k => v for (k,v) in edge_data if !isempty(v))
+    node_data = Dict(k => v for (k, v) in node_data if !isempty(v))
+    edge_data = Dict(k => v for (k, v) in edge_data if !isempty(v))
     # node_data = isempty(node_data) ? nothing : (; node_data...)
     # edge_data = map(x -> isempty(x) ? nothing : (; x...), edge_data)
 
-    return HeteroGraph(;num_nodes, edge_indices, edge_data, node_data)
+    return HeteroGraph(; num_nodes, edge_indices, edge_data, node_data)
 end
 
 Base.length(data::OGBDataset) = length(data.graphs)
-Base.getindex(data::OGBDataset{Nothing}, ::Colon) = length(data.graphs) == 1 ? data.graphs[1] : data.graphs
+function Base.getindex(data::OGBDataset{Nothing}, ::Colon)
+    length(data.graphs) == 1 ? data.graphs[1] : data.graphs
+end
 Base.getindex(data::OGBDataset, ::Colon) = (; data.graphs, data.graph_data.labels)
 Base.getindex(data::OGBDataset{Nothing}, i) = getobs(data.graphs, i)
 Base.getindex(data::OGBDataset, i) = getobs((; data.graphs, data.graph_data.labels), i)

@@ -21,7 +21,6 @@ end
 TableDataset(table::T) where {T} = TableDataset{T}(table)
 TableDataset(path::AbstractString) = TableDataset(read_csv(path))
 
-
 # slow accesses based on Tables.jl
 _getobs_row(x, i) = first(Iterators.peel(Iterators.drop(x, i - 1)))
 function _getobs_column(x, i)
@@ -54,7 +53,6 @@ end
 
 Base.getindex(dataset::TableDataset, i) = getobs_table(dataset.table, i)
 Base.length(dataset::TableDataset) = numobs_table(dataset.table)
-
 
 # fast access for DataFrame
 # Base.getindex(dataset::TableDataset{<:DataFrame}, i) = dataset.table[i, :]

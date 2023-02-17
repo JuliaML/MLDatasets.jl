@@ -60,19 +60,19 @@ julia> describe(dataset.dataframe)
 """
 struct Wine <: SupervisedDataset
     metadata::Dict{String, Any}
-    features
-    targets
-    dataframe
+    features::Any
+    targets::Any
+    dataframe::Any
 end
 
 function Wine(; as_df = true, dir = nothing)
-    @assert dir === nothing "custom `dir` is not supported at the moment."
+    @assert dir===nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "wine.csv")
     df = read_csv(path)
 
     features = df[!, DataFrames.Not(:Wine)]
     targets = df[!, [:Wine]]
-    
+
     metadata = Dict{String, Any}()
     metadata["path"] = path
     metadata["feature_names"] = names(features)

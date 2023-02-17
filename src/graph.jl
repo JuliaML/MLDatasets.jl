@@ -76,16 +76,15 @@ struct Graph <: AbstractGraph
     num_nodes::Int
     num_edges::Int
     edge_index::Tuple{Vector{Int}, Vector{Int}}
-    node_data
-    edge_data
+    node_data::Any
+    edge_data::Any
 end
 
 function Graph(;
-    num_nodes::Union{Int, Nothing} = nothing,
-    edge_index::Tuple{Vector{Int}, Vector{Int}} = (Int[], Int[]),
-    node_data = nothing,
-    edge_data = nothing)
-
+               num_nodes::Union{Int, Nothing} = nothing,
+               edge_index::Tuple{Vector{Int}, Vector{Int}} = (Int[], Int[]),
+               node_data = nothing,
+               edge_data = nothing)
     s, t = edge_index
     @assert length(s) == length(t)
     num_edges = length(s)
@@ -98,7 +97,6 @@ function Graph(;
     end
     return Graph(num_nodes, num_edges, edge_index, node_data, edge_data)
 end
-
 
 function Base.show(io::IO, d::Graph)
     print(io, "Graph($(d.num_nodes), $(d.num_edges))")
@@ -155,11 +153,10 @@ struct HeteroGraph <: AbstractGraph
 end
 
 function HeteroGraph(;
-    num_nodes::Union{Dict{String, Int}, Nothing}=nothing,
-    edge_indices,
-    node_data,
-    edge_data
-    )
+                     num_nodes::Union{Dict{String, Int}, Nothing} = nothing,
+                     edge_indices,
+                     node_data,
+                     edge_data)
     num_edges = Dict()
     node_types = isnothing(num_nodes) ? nothing : keys(num_nodes) |> collect
     edge_types = keys(edge_indices) |> collect
@@ -180,11 +177,13 @@ function HeteroGraph(;
         end
     end
     isnothing(node_types) && (node_types = keys(num_nodes) |> collect)
-    return HeteroGraph(node_types, edge_types, num_nodes, num_edges, edge_indices, node_data, edge_data)
+    return HeteroGraph(node_types, edge_types, num_nodes, num_edges, edge_indices,
+                       node_data, edge_data)
 end
 
 function Base.show(io::IO, d::HeteroGraph)
-    print(io, "HeteroGraph($(length(d.num_nodes)) node types, $(length(d.num_edges)) relations)")
+    print(io,
+          "HeteroGraph($(length(d.num_nodes)) node types, $(length(d.num_edges)) relations)")
 end
 
 function Base.show(io::IO, ::MIME"text/plain", d::HeteroGraph)
@@ -201,7 +200,7 @@ end
 
 # Transform an adjacency list to edge index.
 # If inneigs = true, assume neighbors from incoming edges.
-function adjlist2edgeindex(adj; inneigs=false)
+function adjlist2edgeindex(adj; inneigs = false)
     s, t = Int[], Int[]
     for i in 1:length(adj)
         for j in adj[i]
@@ -217,7 +216,7 @@ function adjlist2edgeindex(adj; inneigs=false)
     return s, t
 end
 
-function edgeindex2adjlist(s, t, num_nodes; inneigs=false)
+function edgeindex2adjlist(s, t, num_nodes; inneigs = false)
     adj = [Int[] for _ in 1:num_nodes]
     if inneigs
         s, t = t, s

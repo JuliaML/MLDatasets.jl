@@ -1,18 +1,15 @@
 function __init__polblogs()
     LINK = "https://netset.telecom-paris.fr/datasets/polblogs.tar.gz"
     DEPNAME = "PolBlogs"
-    
 
     register(DataDep(DEPNAME,
-    """
-    Dataset : The $DEPNAME dataset
-    Website : $LINK
-    """,
-    LINK,
-    post_fetch_method = unpack
-    ))
+                     """
+                     Dataset : The $DEPNAME dataset
+                     Website : $LINK
+                     """,
+                     LINK,
+                     post_fetch_method = unpack))
 end
-
 
 """
     PolBlogs(; dir=nothing)
@@ -31,13 +28,13 @@ struct PolBlogs <: AbstractDataset
     graphs::Vector{Graph}
 end
 
-function PolBlogs(; dir=nothing)
+function PolBlogs(; dir = nothing)
     DEPNAME = "PolBlogs"
     DATA = ["adjacency.tsv", "labels.tsv", "names.tsv"]
 
     path = datafile(DEPNAME, DATA[1], dir)
-    adj = 1 .+ Matrix{Int64}(readdlm(path, '\t')[:,1:2])
-    s, t = adj[:,1], adj[:,2]
+    adj = 1 .+ Matrix{Int64}(readdlm(path, '\t')[:, 1:2])
+    s, t = adj[:, 1], adj[:, 2]
 
     path = datafile(DEPNAME, DATA[2], dir)
     labels = Matrix{Int}(readdlm(path, '\t')) |> vec
@@ -47,12 +44,12 @@ function PolBlogs(; dir=nothing)
 
     metadata = Dict{String, Any}()
     g = Graph(; num_nodes = 1490,
-            edge_index = (s, t), 
-            node_data = (; labels, names))
+              edge_index = (s, t),
+              node_data = (; labels, names))
 
     return PolBlogs(metadata, [g])
 end
 
-Base.length(d::PolBlogs) = length(d.graphs) 
+Base.length(d::PolBlogs) = length(d.graphs)
 Base.getindex(d::PolBlogs, ::Colon) = d.graphs[1]
 Base.getindex(d::PolBlogs, i) = getindex(d.graphs, i)

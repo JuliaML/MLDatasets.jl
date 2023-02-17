@@ -53,19 +53,19 @@ julia> describe(dataset.dataframe)
 """
 struct Titanic <: SupervisedDataset
     metadata::Dict{String, Any}
-    features
-    targets
-    dataframe
+    features::Any
+    targets::Any
+    dataframe::Any
 end
 
 function Titanic(; as_df = true, dir = nothing)
-    @assert dir === nothing "custom `dir` is not supported at the moment."
+    @assert dir===nothing "custom `dir` is not supported at the moment."
     path = joinpath(@__DIR__, "..", "..", "..", "data", "titanic.csv")
     df = read_csv(path)
 
     features = df[!, DataFrames.Not(:Survived)]
     targets = df[!, [:Survived]]
-    
+
     metadata = Dict{String, Any}()
     metadata["path"] = path
     metadata["feature_names"] = names(features)
@@ -171,14 +171,14 @@ plsmo	(age, survived, group=sex, datadensity=T)
 function Base.getproperty(::Type{Titanic}, s::Symbol)
     if s == :features
         @warn "Titanic.features() is deprecated, use `Titanic().features` instead."
-        return () -> Titanic(as_df=false).features
+        return () -> Titanic(as_df = false).features
     elseif s == :targets
         @warn "Titanic.targets() is deprecated, use `Titanic().targets` instead."
-        return () -> Titanic(as_df=false).targets
+        return () -> Titanic(as_df = false).targets
     elseif s == :feature_names
         @warn "Titanic.feature_names() is deprecated, use `Titanic().feature_names` instead."
         return () -> Titanic().metadata["feature_names"]
-    else 
+    else
         return getfield(Titanic, s)
     end
 end

@@ -1,4 +1,5 @@
-function readimages!(buffer::Matrix{UInt8}, io::IO, index::Integer, nrows::Integer, ncols::Integer)
+function readimages!(buffer::Matrix{UInt8}, io::IO, index::Integer, nrows::Integer,
+                     ncols::Integer)
     seek(io, IMAGEOFFSET + nrows * ncols * (index - 1))
     read!(io, buffer)
 end
@@ -73,12 +74,12 @@ end
 function readimages(file::AbstractString, indices::AbstractVector)
     gzopen(file, "r") do io
         readimages(io, indices)
-    end::Array{UInt8,3}
+    end::Array{UInt8, 3}
 end
 
 function readimages(file::AbstractString)
     gzopen(file, "r") do io
         _, nimages, nrows, ncols = readimageheader(io)
         readimages(io, 1:nimages, nrows, ncols)
-    end::Array{UInt8,3}
+    end::Array{UInt8, 3}
 end

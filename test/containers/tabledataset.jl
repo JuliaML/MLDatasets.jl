@@ -24,14 +24,12 @@
     end
 
     @testset "TableDataset from DataFrames" begin
-        testtable = DataFrame(
-            col1 = [1, 2, 3, 4, 5],
-            col2 = ["a", "b", "c", "d", "e"],
-            col3 = [10, 20, 30, 40, 50],
-            col4 = ["A", "B", "C", "D", "E"],
-            col5 = [100.0, 200.0, 300.0, 400.0, 500.0],
-            split = ["train", "train", "train", "valid", "valid"],
-        )
+        testtable = DataFrame(col1 = [1, 2, 3, 4, 5],
+                              col2 = ["a", "b", "c", "d", "e"],
+                              col3 = [10, 20, 30, 40, 50],
+                              col4 = ["A", "B", "C", "D", "E"],
+                              col5 = [100.0, 200.0, 300.0, 400.0, 500.0],
+                              split = ["train", "train", "train", "valid", "valid"])
         td = TableDataset(testtable)
         @test td isa TableDataset{<:DataFrame}
 
@@ -52,14 +50,12 @@
     end
 
     @testset "TableDataset is a table" begin
-        testtable = DataFrame(
-            col1 = [1, 2, 3, 4, 5],
-            col2 = ["a", "b", "c", "d", "e"],
-            col3 = [10, 20, 30, 40, 50],
-            col4 = ["A", "B", "C", "D", "E"],
-            col5 = [100.0, 200.0, 300.0, 400.0, 500.0],
-            split = ["train", "train", "train", "valid", "valid"],
-        )
+        testtable = DataFrame(col1 = [1, 2, 3, 4, 5],
+                              col2 = ["a", "b", "c", "d", "e"],
+                              col3 = [10, 20, 30, 40, 50],
+                              col4 = ["A", "B", "C", "D", "E"],
+                              col5 = [100.0, 200.0, 300.0, 400.0, 500.0],
+                              split = ["train", "train", "train", "valid", "valid"])
         td = TableDataset(testtable)
         @testset for fn in (Tables.istable,
                             Tables.rowaccess, Tables.rows,

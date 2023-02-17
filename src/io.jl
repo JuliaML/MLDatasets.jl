@@ -8,7 +8,7 @@ end
 #     return x
 # end
 
-function read_csv(path, sink::Type{A}; kws...) where A <: AbstractMatrix
+function read_csv(path, sink::Type{A}; kws...) where {A <: AbstractMatrix}
     return A(read_csv(path; kws...))
 end
 
