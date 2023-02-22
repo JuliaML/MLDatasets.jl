@@ -2,18 +2,14 @@ const IMAGENET_WEBSITE = "https://image-net.org/"
 
 function __init__imagenet()
     DEPNAME = "ImageNet"
-    return register(
-        ManualDataDep(
-            DEPNAME,
-            """The ImageNet 2012 Classification Dataset (ILSVRC 2012-2017) can be downloaded at
-            $(IMAGENET_WEBSITE) after signing up and accepting the terms of access.
-            It is therefore required that you download this dataset manually.
+    return register(ManualDataDep(DEPNAME,
+                                  """The ImageNet 2012 Classification Dataset (ILSVRC 2012-2017) can be downloaded at
+                                  $(IMAGENET_WEBSITE) after signing up and accepting the terms of access.
+                                  It is therefore required that you download this dataset manually.
 
-            Please follow the instructions at
-            https://github.com/JuliaML/MLDatasets.jl/blob/master/docs/src/datasets/imagenet_installation.md.
-            """,
-        ),
-    )
+                                  Please follow the instructions at
+                                  https://github.com/JuliaML/MLDatasets.jl/blob/master/docs/src/datasets/imagenet_installation.md.
+                                  """))
 end
 
 """
@@ -107,29 +103,27 @@ julia> dataset.metadata["class_names"][y]
 [1]: [Russakovsky et al., ImageNet Large Scale Visual Recognition Challenge](https://arxiv.org/abs/1409.0575)
 """
 struct ImageNet <: SupervisedDataset
-    metadata::Dict{String,Any}
+    metadata::Dict{String, Any}
     split::Symbol
     dataset::FileDataset
     targets::Vector{Int}
     inverse_preprocess::Function
 end
 
-ImageNet(; split=:train, Tx=Float32, kws...) = ImageNet(Tx, split; kws...)
+ImageNet(; split = :train, Tx = Float32, kws...) = ImageNet(Tx, split; kws...)
 ImageNet(split::Symbol; kws...) = ImageNet(; split, kws...)
 ImageNet(Tx::Type; kws...) = ImageNet(; Tx, kws...)
 
-function ImageNet(
-    Tx::Type,
-    split::Symbol;
-    img_size::Tuple{Int,Int}=(224, 224),
-    preprocess=ImageNetReader.default_preprocess,
-    inverse_preprocess=ImageNetReader.default_inverse_preprocess,
-    dir=nothing,
-    train_dir="train",
-    val_dir="val",
-    test_dir="test",
-    devkit_dir="devkit",
-)
+function ImageNet(Tx::Type,
+                  split::Symbol;
+                  img_size::Tuple{Int, Int} = (224, 224),
+                  preprocess = ImageNetReader.default_preprocess,
+                  inverse_preprocess = ImageNetReader.default_inverse_preprocess,
+                  dir = nothing,
+                  train_dir = "train",
+                  val_dir = "val",
+                  test_dir = "test",
+                  devkit_dir = "devkit")
     @assert split ∈ (:train, :val, :test)
 
     DEPNAME = "ImageNet"
@@ -165,9 +159,8 @@ function ImageNet(
     dataset = ImageNetReader.get_file_dataset(Tx, img_size, preprocess, features_dir)
     @assert length(dataset) == n_observations
 
-    targets = [
-        metadata["wnid_to_label"][wnid] for wnid in ImageNetReader.get_wnids(dataset)
-    ]
+    targets = [metadata["wnid_to_label"][wnid]
+               for wnid in ImageNetReader.get_wnids(dataset)]
     @assert length(targets) == n_observations
     return ImageNet(metadata, split, dataset, targets, inverse_preprocess)
 end
@@ -180,7 +173,7 @@ const IMAGENET_MEM_WARNING = """Loading the entire ImageNet dataset into memory 
     If you are sure you want to load all of ImageNet, use `dataset[1:end]` instead of `dataset[:]`.
     """
 Base.getindex(::ImageNet, ::Colon) = throw(ArgumentError(IMAGENET_MEM_WARNING))
-Base.getindex(d::ImageNet, i::Integer) = (features=d.dataset[i], targets=d.targets[i])
+Base.getindex(d::ImageNet, i::Integer) = (features = d.dataset[i], targets = d.targets[i])
 function Base.getindex(d::ImageNet, is::AbstractVector)
-    return (features=d.dataset[is], targets=d.targets[is])
+    return (features = d.dataset[is], targets = d.targets[is])
 end

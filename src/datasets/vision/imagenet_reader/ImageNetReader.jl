@@ -11,13 +11,12 @@ const NCLASSES = 1000
 
 include("preprocess.jl")
 
-function get_file_dataset(
-    Tx::Type{<:Real}, img_size::Tuple{Int,Int}, preprocess::Function, dir::AbstractString
-)
+function get_file_dataset(Tx::Type{<:Real}, img_size::Tuple{Int, Int}, preprocess::Function,
+                          dir::AbstractString)
     # Construct a function that loads images from FileDataset path,
     # applies preprocessing and converts to type Tx.
     function load_image(file::AbstractString)
-        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size=img_size)
+        im = JpegTurbo.jpeg_decode(RGB{Tx}, file; preferred_size = img_size)
         return preprocess(im, img_size)
     end
     return FileDataset(load_image, dir, "*.JPEG")
@@ -33,7 +32,7 @@ function read_wordnet_metadata(file::AbstractString)
     # Sort classes by WNID for Metalhead compatibility
     I = sortperm(meta["WNID"][is_child])
 
-    metadata = Dict{String,Any}()
+    metadata = Dict{String, Any}()
     metadata["class_WNIDs"] = Vector{String}(meta["WNID"][is_child][I]) # WordNet IDs
     metadata["class_names"] = split.(meta["words"][is_child][I], ", ")
     metadata["class_description"] = Vector{String}(meta["gloss"][is_child][I])
