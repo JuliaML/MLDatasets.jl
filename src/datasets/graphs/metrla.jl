@@ -10,10 +10,20 @@ function __init__metrla()
 end
 
 struct METRLA 
-    graphs::Vector{Graph}
+    graph::Graph
 end
 
-function metrla_datadir(dir = nothing)
+function METRLA(;dir = nothing)
+    d = metrla_datadir(dir)
+    adj_matrix, node_features = read_metrla(d)
+
+    g = Graph(
+
+    )
+    return METRLA(g)
+end
+
+function metrla_datadir(;dir = nothing)
     dir = isnothing(dir) ? datadep"METR-LA" : dir
     dname = "METR-LA"
     LINK = "https://graphmining.ai/temporal_datasets/$dname.zip"
@@ -30,8 +40,7 @@ function metrla_datadir(dir = nothing)
     return d
 end
 
-function read_metrla()
-    d = metrla_datadir()
+function read_metrla(d)
     adj_matrix = npzread(joinpath(d, "adj_mat.npy"))
     node_features = npzread(joinpath(d, "node_values.npy"))
     return adj_matrix, node_features
