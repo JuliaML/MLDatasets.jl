@@ -34,6 +34,6 @@ function read_metrla()
     d = metrla_datadir()
     adj_matrix = npzread(joinpath(d, "adj_mat.npy"))
     node_features = npzread(joinpath(d, "node_values.npy"))
+    return adj_matrix, node_features
 end
     
-end
