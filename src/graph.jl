@@ -226,3 +226,19 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs = false)
     end
     return adj
 end
+
+function adjmatrix2edgeindex(adj; inneigs = false)
+    s, t = Int[], Int[]
+    for i in 1:size(adj,1)
+        for j in 1:size(adj,2)
+            push!(s, i)
+            push!(t, j)
+        end
+    end
+
+    if inneigs
+        s, t = t, s
+    end
+
+    return s, t
+end
