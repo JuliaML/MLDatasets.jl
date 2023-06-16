@@ -247,6 +247,9 @@ function adjmatrix2edgeindex(adj; weighted = true, inneigs = false)
     if inneigs
         s, t = t, s
     end
-
-    return s, t
+    if weighted
+        return s, t, w
+    else
+        return s, t
+    end
 end
