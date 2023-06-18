@@ -338,3 +338,17 @@ end
     data = OrganicMaterialsDB(split = :test)
     @test length(data) == 2500
 end
+
+@testset "METR-LA" begin
+    data = METRLA()
+    @test data isa AbstractDataset
+    @test length(data) == 1
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 207
+    @test g.num_edges == 1722
+    @test length(g.node_data.features) == 34248
+    @test length(g.node_data.targets) == 34248
+end
