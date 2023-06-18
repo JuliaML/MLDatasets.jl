@@ -12,6 +12,8 @@ using DelimitedFiles: readdlm
 using FileIO
 import CSV
 using LazyModules: @lazy
+using NPZ: npzread
+using Statistics: mean, std
 
 include("require.jl") # export @require
 
@@ -26,7 +28,7 @@ include("require.jl") # export @require
 @require import ImageShow = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
 @require import Chemfiles = "46823bd8-5fb3-5f92-9aa0-96921f3dd015"
 
-# @lazy import NPZ # lazy imported by FileIO
+# lazy imported by FileIO
 @lazy import Pickle = "fbb45041-c46e-462f-888f-7c521cafbc2c"
 @lazy import MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
 @lazy import HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
@@ -128,6 +130,8 @@ include("datasets/graphs/reddit.jl")
 export Reddit
 include("datasets/graphs/tudataset.jl")
 export TUDataset
+include("datasets/graphs/metrla.jl")
+export METRLA
 
 # Meshes
 
@@ -147,6 +151,7 @@ function __init__()
     __init__pubmed()
     __init__reddit()
     __init__tudataset()
+    __init__metrla()
 
     # misc
     __init__iris()
