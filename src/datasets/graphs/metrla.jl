@@ -31,7 +31,7 @@ function METRLA(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = no
     adj_matrix, node_values = read_metrla(d)
 
     node_values = permutedims(node_values,(1,3,2))
-    node_values = (node_values .- mean(node_values, dims=(3,1))) ./ std(node_values, dims=(3,1)) #Z-score normalization
+    node_values = (node_values .- Statistics.mean(node_values, dims=(3,1))) ./ Statistics.std(node_values, dims=(3,1)) #Z-score normalization
 
     s, t, w = adjmatrix2edgeindex(adj_matrix; weighted = true)
 
@@ -64,8 +64,8 @@ function metrla_datadir(dir = nothing)
 end
 
 function read_metrla(d::String)
-    adj_matrix = npzread(joinpath(d, "adj_mat.npy"))
-    node_features = npzread(joinpath(d, "node_values.npy"))
+    adj_matrix = NPZ.npzread(joinpath(d, "adj_mat.npy"))
+    node_features = NPZ.npzread(joinpath(d, "node_values.npy"))
     return adj_matrix, node_features
 end
     
