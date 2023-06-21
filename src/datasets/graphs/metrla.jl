@@ -26,16 +26,7 @@ struct METRLA <: AbstractDataset
 end
 
 function METRLA(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = nothing)
-    create_default_dir("METR-LA")
-    d = metrla_datadir(dir)
-    adj_matrix, node_values = read_metrla(d)
-
-    node_values = permutedims(node_values,(1,3,2))
-    node_values = (node_values .- Statistics.mean(node_values, dims=(3,1))) ./ Statistics.std(node_values, dims=(3,1)) #Z-score normalization
-
-    s, t, w = adjmatrix2edgeindex(adj_matrix; weighted = true)
-
-    x, y = metrla_generate_task(node_values, num_timesteps_in, num_timesteps_out)
+    s, t, w, x, y = processed_traffic("METR-LA", num_timesteps_in, num_timesteps_out, dir)
 
     g = Graph(; num_nodes = 207,
               edge_index = (s, t),
@@ -45,39 +36,6 @@ function METRLA(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = no
 
     )
     return METRLA([g])
-end
-
-function metrla_datadir(dir = nothing)
-    dir = isnothing(dir) ? datadep"METR-LA" : dir
-    dname = "METR-LA"
-    LINK = "https://graphmining.ai/temporal_datasets/$dname.zip"
-    if length(readdir((dir))) == 0
-        DataDeps.fetch_default(LINK, dir)
-        currdir = pwd()
-        cd(dir) # Needed since `unpack` extracts in working dir
-        DataDeps.unpack(joinpath(dir, "$dname.zip"))
-        # conditions when unzipped folder is our required data dir
-        cd(currdir)
-    end
-    @assert isdir(dir)
-    return dir
-end
-
-function read_metrla(d::String)
-    adj_matrix = NPZ.npzread(joinpath(d, "adj_mat.npy"))
-    node_features = NPZ.npzread(joinpath(d, "node_values.npy"))
-    return adj_matrix, node_features
-end
-    
-function metrla_generate_task(node_values::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
-    indices = [(i, i + num_timesteps_in + num_timesteps_out) for i in 1:(size(node_values,1) - num_timesteps_in - num_timesteps_out)]
-    features = []
-    targets = []
-    for (i,j) in indices
-        push!(features, node_values[i:i+num_timesteps_in-1,:,:])
-        push!(targets, reshape(node_values[i+num_timesteps_in:j-1,1,:], (num_timesteps_out, 1, size(node_values, 3))))
-    end
-    return features, targets
 end
 
 Base.length(d::METRLA) = length(d.graphs)
