@@ -69,7 +69,7 @@ function read_metrla(d::String)
     return adj_matrix, node_features
 end
     
-function generate_task(node_values::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
+function metrla_generate_task(node_values::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
     indices = [(i, i + num_timesteps_in + num_timesteps_out) for i in 1:(size(node_values,1) - num_timesteps_in - num_timesteps_out)]
     features=[]
     targets=[]
