@@ -12,6 +12,7 @@ using DelimitedFiles: readdlm
 using FileIO
 import CSV
 using LazyModules: @lazy
+using Statistics
 
 include("require.jl") # export @require
 
@@ -26,7 +27,6 @@ include("require.jl") # export @require
 @require import ImageShow = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
 @require import Chemfiles = "46823bd8-5fb3-5f92-9aa0-96921f3dd015"
 @require import NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
-@require import Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 # lazy imported by FileIO
 @lazy import Pickle = "fbb45041-c46e-462f-888f-7c521cafbc2c"
