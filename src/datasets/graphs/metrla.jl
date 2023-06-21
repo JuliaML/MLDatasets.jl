@@ -35,7 +35,7 @@ function METRLA(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = no
 
     s, t, w = adjmatrix2edgeindex(adj_matrix; weighted = true)
 
-    x, y = generate_task(node_values, num_timesteps_in, num_timesteps_out)
+    x, y = metrla_generate_task(node_values, num_timesteps_in, num_timesteps_out)
 
     g = Graph(; num_nodes = 207,
               edge_index = (s, t),
