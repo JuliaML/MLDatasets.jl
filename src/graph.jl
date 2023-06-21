@@ -227,10 +227,10 @@ function edgeindex2adjlist(s, t, num_nodes; inneigs = false)
     return adj
 end
 
-function adjmatrix2edgeindex(adj; weighted = true, inneigs = false)
+function adjmatrix2edgeindex(adj::AbstractMatrix{T}; weighted = true, inneigs = false) where T
     s, t = Int[], Int[]
     if weighted 
-        w = Float64[]
+        w = T[]
     end
     for i in 1:size(adj,1)
         for j in 1:size(adj,2)
