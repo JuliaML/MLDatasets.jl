@@ -73,7 +73,7 @@ Dict{String, Any} with 17 entries:
   "is hetero"             => false
   "task level"            => "node"
   ⋮                       => ⋮
-```
+
 julia> data = OGBDataset("ogbn-mag")
 OGBDataset ogbn-mag:
   metadata    =>    Dict{String, Any} with 17 entries
@@ -87,6 +87,7 @@ Heterogeneous Graph:
   edge_indices  =>    Dict{Tuple{String, String, String}, Tuple{Vector{Int64}, Vector{Int64}}} with 4 entries
   node_data     =>    (year = "Dict{String, Vector{Float32}} with 1 entry", features = "Dict{String, Matrix{Float32}} with 1 entry", label = "Dict{String, Vector{Int64}} with 1 entry")
   edge_data     =>    (reltype = "Dict{Tuple{String, String, String}, Vector{Float32}} with 4 entries",)
+```
 
 ## Edge prediction task
 
