@@ -109,6 +109,7 @@ include("graph.jl")
 # export Graph
 
 include("datasets/graphs/planetoid.jl")
+include("datasets/graphs/traffic.jl")
 # export read_planetoid_data
 include("datasets/graphs/cora.jl")
 export Cora
@@ -132,6 +133,8 @@ include("datasets/graphs/tudataset.jl")
 export TUDataset
 include("datasets/graphs/metrla.jl")
 export METRLA
+include("datasets/graphs/pemsbay.jl")
+export PEMSBAY
 
 # Meshes
 
@@ -152,6 +155,7 @@ function __init__()
     __init__reddit()
     __init__tudataset()
     __init__metrla()
+    __init__pemsbay()
 
     # misc
     __init__iris()
