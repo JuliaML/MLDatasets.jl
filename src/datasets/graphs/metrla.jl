@@ -71,11 +71,11 @@ end
     
 function metrla_generate_task(node_values::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
     indices = [(i, i + num_timesteps_in + num_timesteps_out) for i in 1:(size(node_values,1) - num_timesteps_in - num_timesteps_out)]
-    features=[]
-    targets=[]
+    features = []
+    targets = []
     for (i,j) in indices
-        push!(features,node_values[i:i+num_timesteps_in-1,:,:])
-        push!(targets,reshape(node_values[i+num_timesteps_in:j-1,1,:], (num_timesteps_out, 1, size(node_values, 3))))
+        push!(features, node_values[i:i+num_timesteps_in-1,:,:])
+        push!(targets, reshape(node_values[i+num_timesteps_in:j-1,1,:], (num_timesteps_out, 1, size(node_values, 3))))
     end
     return features, targets
 end
