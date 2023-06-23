@@ -352,3 +352,17 @@ end
     @test length(g.node_data.features) == 34248
     @test length(g.node_data.targets) == 34248
 end
+
+@testset "PEMS-BAY" begin
+    data = PEMSBAY()
+    @test data isa AbstractDataset
+    @test length(data) == 1
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 325
+    @test g.num_edges == 2694
+    @test length(g.node_data.features) == 52081
+    @test length(g.node_data.targets) == 52081
+end
