@@ -1,6 +1,6 @@
 function __init__pemsbay()
     DEPNAME = "PEMS-BAY"
-    LINK = "https://graphmining.ai/temporal_datasets/"
+    LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/index.html"
     register(ManualDataDep(DEPNAME,
                            """
                            Dataset: $DEPNAME
@@ -9,7 +9,7 @@ function __init__pemsbay()
 end
 
 """
-    PEMSBAY(; num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir=nothing)
+    PEMSBAY(; num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir=nothing, normalize = true)
 
 The PEMS-BAY dataset described in the [Diffusion Convolutional Recurrent Neural Network: Data-Driven Traffic Forecasting](https://arxiv.org/abs/1707.01926) paper.
 It is collected by California Transportation Agencies (Cal-
@@ -21,22 +21,22 @@ The edge weights `w` are contained as a feature array in `edge_data` and represe
 
 The node features are the traffic speed and the time of the measurements collected by the sensors, divided into `num_timesteps_in` time steps. 
 
-The target values are the traffic speed and the time of the measurements collected by the sensors, divided into `num_timesteps_out` time steps.
+The target values are the traffic speed of the measurements collected by the sensors, divided into `num_timesteps_out` time steps.
+
+The `normalize` flag indicates whether the data are normalized using Z-score normalization.
 """
 struct PEMSBAY <: AbstractDataset
     graphs::Vector{Graph}
 end
 
-function PEMSBAY(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = nothing)
-    s, t, w, x, y = processed_traffic("PEMS-BAY", num_timesteps_in, num_timesteps_out, dir)
+function PEMSBAY(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = nothing, normalize = true)
+    s, t, w, x, y = processed_traffic("PEMS-BAY", num_timesteps_in, num_timesteps_out, dir, normalize)
 
     g = Graph(; num_nodes = 325,
               edge_index = (s, t),
               edge_data = w,
-            node_data = (features = x, targets = y)
-
-
-    )
+            node_data = (features = x, targets = y))
+            
     return PEMSBAY([g])
 end
 
