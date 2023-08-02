@@ -135,10 +135,10 @@ Nodes are indexed in `1:num_nodes`.
 - `num_edges`: Dictionary containing the number of edges for each relation.
 - `edge_indices`: Dictionary containing the `edge_index` for each edge relation. An `edge_index` is a tuple containing two vectors with length equal to the number of edges for the relation.
     The first vector contains the list of the source nodes of each edge, the second contains the target nodes.
-- `node_data`: node-related data. Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of node can be accessed 
+- `node_data`: node-related data. Can be `nothing`, Dictionary of a dictionary of arrays. Data of a specific type of node can be accessed 
             using node_data[node_type].The array's last dimension size should be equal to the number of nodes.
             Default `nothing`.
-- `edge_data`: Can be `nothing`, Dictionary of a dictionary of arrays. Data of a speific type of edge can be accessed 
+- `edge_data`: Can be `nothing`, Dictionary of a dictionary of arrays. Data of a specific type of edge can be accessed 
             using edge_data[edge_type].The array's last dimension size should be equal to the number of nodes.
             Default `nothing`.
 """

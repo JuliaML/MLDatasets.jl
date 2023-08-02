@@ -135,7 +135,7 @@ julia> iris.targets
 
 ## MLUtils compatibility
 
-MLDatasets.jl garuantees compatibility with the [getobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.getobs) and [numobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.numobs) interface defined in [MLUtils.jl](https://github.com/JuliaML/MLUtils.jl).
+MLDatasets.jl guarantees compatibility with the [getobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.getobs) and [numobs](https://juliaml.github.io/MLUtils.jl/dev/api/#MLUtils.numobs) interface defined in [MLUtils.jl](https://github.com/JuliaML/MLUtils.jl).
 In practice, applying `getobs` and `numobs` on datasets is equivalent to applying indexing and `length`.
 
 ## Conditional module loading
@@ -181,7 +181,7 @@ overwrite this on a case by case basis, it is possible to specify
 a data directory directly in the dataset constructor (e.g. `MNIST(dir = <directory>)`).
 
 In order to download datasets without having to manually confirm the download, 
-you can set to true the following enviromental variable:
+you can set to true the following environmental variable:
 
 ```julia
 ENV["DATADEPS_ALWAYS_ACCEPT"] = true

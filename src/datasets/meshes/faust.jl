@@ -143,7 +143,7 @@ julia> label = dataset.labels[1] # The ground-truth/labels for each vertices in 
  0
 ```
 
-# Refereneces
+# References
 
 1. [MPI Faust Website](http://faust.is.tue.mpg.de/)
 

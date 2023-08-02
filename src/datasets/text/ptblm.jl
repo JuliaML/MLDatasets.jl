@@ -26,7 +26,7 @@ end
 The PTBLM dataset consists of Penn Treebank sentences
 for language modeling, available from https://github.com/tomsercu/lstm.
 The unknown words are replaced with <unk> so that the
-total vocaburary size becomes 10000.
+total vocabulary size becomes 10000.
 """
 struct PTBLM <: SupervisedDataset
     metadata::Dict{String, Any}
