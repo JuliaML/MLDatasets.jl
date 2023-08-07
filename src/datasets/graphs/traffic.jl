@@ -23,18 +23,17 @@ function read_traffic(d::String, dname::String)
     return adj_matrix, node_features
 end
     
-function traffic_generate_task(node_values::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
-    indices = [(i, i + num_timesteps_in + num_timesteps_out) for i in 1:(size(node_values,1) - num_timesteps_in - num_timesteps_out)]
+function traffic_generate_task(node_values::AbstractArray, num_timesteps::Int)
     features = []
     targets = []
-    for (i,j) in indices
-        push!(features, node_values[i:i+num_timesteps_in-1,:,:])
-        push!(targets, reshape(node_values[i+num_timesteps_in:j-1,1,:], (num_timesteps_out, 1, size(node_values, 3))))
+    for i in 1:size(node_values,1)-num_timesteps
+        push!(features, node_values[i:i+num_timesteps-1,:,:])
+        push!(targets, reshape(node_values[i+1:i+num_timesteps,1,:], (num_timesteps, 1, size(node_values, 3))))
     end
     return features, targets
 end
 
-function processed_traffic(dname::String, num_timesteps_in::Int, num_timesteps_out::Int, dir = nothing, normalize = true)
+function processed_traffic(dname::String, num_timesteps::Int, dir = nothing, normalize = true)
     create_default_dir(dname)
     d = traffic_datadir(dname, dir)
     adj_matrix, node_values = read_traffic(d, dname)
@@ -44,7 +43,7 @@ function processed_traffic(dname::String, num_timesteps_in::Int, num_timesteps_o
     end
     
     s, t, w = adjmatrix2edgeindex(adj_matrix; weighted = true)
-    x, y = traffic_generate_task(node_values, num_timesteps_in, num_timesteps_out)
+    x, y = traffic_generate_task(node_values, num_timesteps )
     
     return s, t, w, x, y
 end

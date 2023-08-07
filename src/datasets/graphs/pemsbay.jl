@@ -1,5 +1,5 @@
 function __init__pemsbay()
-    DEPNAME = "PEMS-BAY"
+    DEPNAME = "PEMSBAY"
     LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/index.html"
     register(ManualDataDep(DEPNAME,
                            """
@@ -29,8 +29,8 @@ struct PEMSBAY <: AbstractDataset
     graphs::Vector{Graph}
 end
 
-function PEMSBAY(;num_timesteps_in::Int = 12, num_timesteps_out::Int=12, dir = nothing, normalize = true)
-    s, t, w, x, y = processed_traffic("PEMS-BAY", num_timesteps_in, num_timesteps_out, dir, normalize)
+function PEMSBAY(;num_timesteps::Int = 12, dir = nothing, normalize = true)
+    s, t, w, x, y = processed_traffic("PEMSBAY", num_timesteps, dir, normalize)
 
     g = Graph(; num_nodes = 325,
               edge_index = (s, t),
