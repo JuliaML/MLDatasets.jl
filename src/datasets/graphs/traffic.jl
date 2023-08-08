@@ -20,15 +20,16 @@ end
 function read_traffic(d::String, dname::String)
     adj_matrix = load(joinpath(d, "$(dname).jld2"), "adj_matrix")
     node_features = load(joinpath(d, "$(dname).jld2"), "node_features")
+    node_features = permutedims(node_features,(2,3,1))
     return adj_matrix, node_features
 end
     
 function traffic_generate_task(node_values::AbstractArray, num_timesteps::Int)
     features = []
     targets = []
-    for i in 1:size(node_values,1)-num_timesteps
-        push!(features, node_values[i:i+num_timesteps-1,:,:])
-        push!(targets, reshape(node_values[i+1:i+num_timesteps,1,:], (num_timesteps, 1, size(node_values, 3))))
+    for i in 1:size(node_values,3)-num_timesteps
+        push!(features, node_values[:,:,i:i+num_timesteps-1])
+        push!(targets, reshape(node_values[1,:,i+1:i+num_timesteps], (1, size(node_values, 2),num_timesteps)))
     end
     return features, targets
 end
