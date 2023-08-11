@@ -349,8 +349,7 @@ end
 
     @test g.num_nodes == 207
     @test g.num_edges == 1722
-    @test length(g.node_data.features) == 34248
-    @test length(g.node_data.targets) == 34248
+    @test all(g.node_data.features[1][:,:,1][2:end,1] == g.node_data.targets[1][:,:,1][1:end-1])
 end
 
 @testset "PEMS-BAY" begin
@@ -363,6 +362,5 @@ end
 
     @test g.num_nodes == 325
     @test g.num_edges == 2694
-    @test length(g.node_data.features) == 52081
-    @test length(g.node_data.targets) == 52081
+    @test all(g.node_data.features[1][:,:,1][2:end,1] == g.node_data.targets[1][:,:,1][1:end-1])
 end
