@@ -24,6 +24,7 @@ CIFAR10
 CIFAR100
 EMNIST
 FashionMNIST
+ImageNet
 MNIST
 Omniglot
 SVHN2

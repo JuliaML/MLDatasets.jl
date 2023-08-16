@@ -34,6 +34,8 @@ include("require.jl") # export @require
 @lazy import HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 # @lazy import JLD2
 
+@lazy import JpegTurbo="b835a17e-a41a-41e7-81f0-2f016b05efe0" # Required for ImageNet
+
 export getobs, numobs # From MLUtils.jl
 
 include("abstract_datasets.jl")
@@ -94,6 +96,9 @@ include("datasets/vision/omniglot.jl")
 export Omniglot
 include("datasets/vision/svhn2.jl")
 export SVHN2
+include("datasets/vision/imagenet_reader/ImageNetReader.jl")
+include("datasets/vision/imagenet.jl")
+export ImageNet
 
 ## Text
 
@@ -171,6 +176,7 @@ function __init__()
     __init__cifar100()
     __init__emnist()
     __init__fashionmnist()
+    __init__imagenet()
     __init__mnist()
     __init__omniglot()
     __init__svhn2()
