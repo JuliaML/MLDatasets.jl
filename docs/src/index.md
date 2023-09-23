@@ -15,7 +15,7 @@ This package is a part of the
 
 To install `MLDatasets.jl`, start up Julia and type the following
 code snippet into the REPL. It makes use of the native Julia
-package manger.
+package manager.
 
 ```julia
 Pkg.add("MLDatasets")
@@ -53,7 +53,7 @@ dataset MNIST:
   features    =>    28×28×60000 Array{Float32, 3}
   targets     =>    60000-element Vector{Int64}
 
-julia> length(d)
+julia> length(trainset)
 60000
 
 julia> trainset[1]  # return first observation as a NamedTuple
@@ -169,9 +169,9 @@ dataset Iris:
 
 ## Download location
 
-MLDatasets.jl is build on top of the package
+MLDatasets.jl is built on top of the package
 [`DataDeps.jl`](https://github.com/oxinabox/DataDeps.jl).
-To load the data the package looks for the necessary files in
+To load the data, the package looks for the necessary files in
 various locations (see
 [`DataDeps.jl`](https://github.com/oxinabox/DataDeps.jl#configuration)
 for more information on how to configure such defaults). If the
