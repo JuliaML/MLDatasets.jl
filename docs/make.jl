@@ -23,7 +23,6 @@ makedocs(modules = [MLDatasets],
                                        "Vision" => "datasets/vision.md"],
                      "Creating Datasets" => Any["containers/overview.md"], # still experimental
                      "LICENSE.md"],
-         strict = true,
          checkdocs = :exports)
 
 deploydocs(repo = "github.com/JuliaML/MLDatasets.jl.git")
