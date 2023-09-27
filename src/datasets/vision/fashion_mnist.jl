@@ -32,7 +32,7 @@ end
     FashionMNIST([Tx, split])
 
 FashionMNIST is a dataset of Zalando's article images consisting
-of a training set of 60_000 examples and a test set of 10_000
+of a training set of 60000 examples and a test set of 10000
 examples. Each example is a 28x28 grayscale image, associated
 with a label from 10 classes. It can serve as a drop-in
 replacement for MNIST.
