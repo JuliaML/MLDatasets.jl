@@ -198,6 +198,62 @@ function Base.show(io::IO, ::MIME"text/plain", d::HeteroGraph)
     end
 end
 
+struct TemporalSnapshotsGraph <: AbstractGraph
+    num_nodes::Vector{Int}
+    num_edges::Vector{Int}
+    num_snapshots::Int
+    snapshots::Vector{Graph}
+    graph_data::Any
+end
+
+function TemporalSnapshotsGraph(;
+    num_nodes::Vector{Int},
+    edge_index::Tuple{Vector{Int}, Vector{Int}, Vector{Int}} = (Int[], Int[], Int[]),
+    node_data:: Union{Vector,Nothing} = nothing,
+    edge_data:: Union{Vector,Nothing} = nothing,
+    graph_data = nothing)
+
+    u, v, t = edge_index
+    @assert length(u) == length(v) == length(t)
+    num_snapshots = maximum(t)
+    if !isnothing(node_data) && !isnothing(edge_data)
+        @assert length(node_data) == length(edge_data) == num_snapshots
+    end
+
+    snapshots = Vector{Graph}(undef, num_snapshots)
+    num_edges = Vector{Int}(undef, num_snapshots)
+    for i in 1:num_snapshots
+        if !isnothing(node_data) && !isnothing(edge_data)
+            snapshot = Graph(num_nodes[i], sum(t.==i), (u[t.==i], v[t.==i]), node_data[i], edge_data[i])
+        elseif !isnothing(node_data)
+            snapshot = Graph(num_nodes[i], sum(t.==i), (u[t.==i], v[t.==i]), node_data[i],nothing)
+        elseif !isnothing(edge_data)
+            snapshot = Graph(num_nodes[i], sum(t.==i), (u[t.==i], v[t.==i]), nothing, edge_data[i])
+        else
+            snapshot = Graph(num_nodes[i], sum(t.==i), (u[t.==i], v[t.==i]), nothing, nothing)
+        end
+        snapshots[i] = snapshot
+        num_edges[i] = sum(t.==i)
+    end
+return TemporalSnapshotsGraph(num_nodes, num_edges, num_snapshots, snapshots, graph_data)
+end
+
+function Base.show(io::IO, d::TemporalSnapshotsGraph)
+    print(io, "TemporalSnapshotsGraph($(d.num_nodes), $(d.num_edges), $(d.num_snapshots))")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", d::TemporalSnapshotsGraph)
+    recur_io = IOContext(io, :compact => false)
+    print(io, "TemporalSnapshotsGraph:")
+    for f in fieldnames(TemporalSnapshotsGraph)
+        if !startswith(string(f), "_")
+            fstring = leftalign(string(f), 10)
+            print(recur_io, "\n  $fstring  =>    ")
+            print(recur_io, "$(_summary(getfield(d, f)))")
+        end
+    end
+end
+
 # Transform an adjacency list to edge index.
 # If inneigs = true, assume neighbors from incoming edges.
 function adjlist2edgeindex(adj; inneigs = false)
