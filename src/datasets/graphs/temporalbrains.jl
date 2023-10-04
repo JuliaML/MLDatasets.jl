@@ -8,9 +8,6 @@ function __init__temporalbrains()
                            """))
 end
 
-struct TemporalBrains <: AbstractDataset
-    graphs::Vector{TemporalSnapshotsGraphs}
-end
 
 function tb_datadir(dir = nothing)
     dir = isnothing(dir) ? datadep"TemporalBrains" : dir
@@ -27,7 +24,7 @@ function tb_datadir(dir = nothing)
     return dir
 end
 
-function create_dataset(dir)
+function create_tbdataset(dir)
     name_filelabels = joinpath(dir, "LabelledTBN", "labels.txt")
     filelabels = open(name_filelabels, "r")
     temporalgraphs = Vector{MLDatasets.TemporalSnapshotsGrapgs}(undef, 1000)
@@ -40,7 +37,22 @@ function create_dataset(dir)
         data = readdlm(name_network_file,','; skipstart = 1) 
         edata = [data[data[:,3].==t,4] for t in 1:27]
 
-        temporalgraphs[i] = TemporalSnapshotsGraphs(num_nodes=ones(27).*102, edge_index = (data[:,1],data[:,2],data[:,3]), edge_data = edata, graph_data= (g = gender, a = age))
+        temporalgraphs[i] = TemporalSnapshotsGraph(num_nodes=ones(27).*102, edge_index = (data[:,1],data[:,2],data[:,3]), edge_data = edata, graph_data= (g = gender, a = age))
     end
     return temporalgraphs
 end
+
+struct TemporalBrains <: AbstractDataset
+    graphs::Vector{TemporalSnapshotsGraph}
+end
+
+function TemporalBrains(; dir=nothing)
+    create_default_dir("TemporalBrains")
+    dir = tb_datadir(dir)
+    graphs = create_tbdataset(dir)
+    return TemporalBrains(graphs)
+end
+
+Base.length(d::TemporalBrains) = length(d.graphs)
+Base.getindex(d::TemporalBrains, ::Colon) = d.graphs[1]
+Base.getindex(d::TemporalBrains, i) = getindex(d.graphs, i)
