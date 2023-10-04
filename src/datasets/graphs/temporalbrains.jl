@@ -1,4 +1,4 @@
-function __init__metrla()
+function __init__temporalbrains()
     DEPNAME = "TemporalBrains"
     LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/index.html"
     register(ManualDataDep(DEPNAME,
@@ -9,7 +9,7 @@ function __init__metrla()
 end
 
 struct TemporalBrains <: AbstractDataset
-    graphs::Vector{Graph}
+    graphs::Vector{TemporalSnapshotsGraphs}
 end
 
 function tb_datadir(dir = nothing)
@@ -25,4 +25,22 @@ function tb_datadir(dir = nothing)
     end
     @assert isdir(dir)
     return dir
+end
+
+function create_dataset(dir)
+    name_filelabels = joinpath(dir, "LabelledTBN", "labels.txt")
+    filelabels = open(name_filelabels, "r")
+    temporalgraphs = Vector{MLDatasets.TemporalSnapshotsGrapgs}(undef, 1000)
+
+    for (i,line) in enumerate(eachline(filelabels))
+        id, gender, age = split(line)
+        
+        name_network_file = joinpath(dir, "LabelledTBN", "networks", id * "_ws60_wo30_tuk0_pearson_schaefer_100.txt")
+        
+        data = readdlm(name_network_file,','; skipstart = 1) 
+        edata = [data[data[:,3].==t,4] for t in 1:27]
+
+        temporalgraphs[i] = TemporalSnapshotsGraphs(num_nodes=ones(27).*102, edge_index = (data[:,1],data[:,2],data[:,3]), edge_data = edata, graph_data= (g = gender, a = age))
+    end
+    return temporalgraphs
 end
