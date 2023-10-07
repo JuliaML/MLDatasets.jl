@@ -364,3 +364,16 @@ end
     @test g.num_edges == 2694
     @test all(g.node_data.features[1][:,:,1][2:end,1] == g.node_data.targets[1][:,:,1][1:end-1])
 end
+
+@testset "TemporalBrains" begin
+    data = TemporalBrains()
+    @test data isa AbstractDataset
+    @test length(data) == 1000
+    g = data[1]
+    @test g isa MLDatasets.TemporalSnapshotsGraph
+
+    @test g.num_nodes == [102 for _ in 1:27]
+    @test g.num_snapshots == 27
+    @test g.snapshots[1] isa MLDatasets.Graph
+    @test length(g.snapshots[1].node_data) == 102
+end
