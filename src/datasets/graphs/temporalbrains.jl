@@ -57,9 +57,9 @@ end
 
 The TemporalBrains dataset contains a collection of temporal brain networks of 1000 subjects obtained from resting-state fMRI data from the [Human Connectome Project (HCP)](https://www.humanconnectome.org/study/hcp-young-adult/document/extensively-processed-fmri-data-documentation).
 
-The number of nodes is fixed for each of the 27 snapshots at 102, instead the edges change over time.
+The number of nodes is fixed for each of the 27 snapshots at 102, instead, the edges change over time.
     
-Each node feature, representing its average activation at each snapshot, is contained in `node_data`.
+The feature of a node represents the average activation of the node in that snapshot.
 
 Each graph has a label representing their gender ("M" for male and "F" for female) and age range (22-25, 26-30,31-35 and 36+) contained as a named tuple in `graph_data`.
 
