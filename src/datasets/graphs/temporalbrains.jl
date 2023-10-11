@@ -55,7 +55,7 @@ end
 """
     TemporalBrains(; dir = nothing, threshold_value = 0.6)
 
-The TemporalBrains dataset contains a collection of temporal brain networks of 1000 subjects obtained from resting-state fMRI data from the Human Connectome Project (HCP).
+The TemporalBrains dataset contains a collection of temporal brain networks of 1000 subjects obtained from resting-state fMRI data from the [Human Connectome Project (HCP)](https://www.humanconnectome.org/study/hcp-young-adult/document/extensively-processed-fmri-data-documentation).
 
 The number of nodes is fixed for each of the 27 snapshots at 102, instead the edges change over time.
     
