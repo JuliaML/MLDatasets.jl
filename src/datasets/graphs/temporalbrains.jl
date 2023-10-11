@@ -42,7 +42,7 @@ function create_tbdataset(dir, thre)
         activation = [zeros(Float32, 102) for _ in 1:27]
         for t in 1:27
              for n in 1:102
-                rows = (view(data_thre_int,:,1).==n .&& view(data_thre_int,:,3).==t)
+                rows = ((view(data_thre_int,:,1).==n) .& (view(data_thre_int,:,3).==t))
                 activation[t][n] = mean(view(data_thre,rows,4))
              end
         end
