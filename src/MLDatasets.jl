@@ -143,6 +143,8 @@ export TemporalBrains
 include("datasets/meshes/faust.jl")
 export FAUST
 
+include("datasets/fastaidatasets.jl")
+
 function __init__()
     # TODO automatically find and execute __init__xxx functions
 
@@ -180,6 +182,9 @@ function __init__()
 
     # mesh
     __init__faust()
+
+    # fastai datasets
+    __init__fastai_datasets()
 end
 
 end #module
