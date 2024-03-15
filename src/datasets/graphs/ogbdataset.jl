@@ -268,7 +268,7 @@ function read_ogb_graph(path, metadata)
                     graph[k] = nothing
                 else
                     x = v[:, (num_edge_accum + 1):(num_edge_accum + m)]
-                    graph[k] = [x; x]
+                    graph[k] = [x x]
                 end
             end
         else
@@ -374,7 +374,7 @@ function read_ogb_graph(path, metadata)
                     else
                         if metadata["add_inverse_edge"]
                             v = split_dict[key][k]
-                            split_dict[key][k] = [v; v]
+                            split_dict[key][k] = [v v]
                         end
                     end
                 end
