@@ -1,9 +1,16 @@
 # Define the StackedMNIST type
-struct StackedMNIST
+struct StackedMNIST <: SupervisedDataset
     features::Array{<:Any, 3}
     targets::Vector{Int}
     index::Vector{Tuple{Int, Int, Int}}
 end
+
+# Convenience constructors for StackedMNIST
+function StackedMNIST(; split = :train, Tx = UInt8, dir = nothing)
+    StackedMNIST(Tx = Tx, split = split, dir = dir)
+end
+StackedMNIST(split::Symbol; kws...) = StackedMNIST(; split, kws...)
+StackedMNIST(Tx::Type; kws...) = StackedMNIST(; Tx, kws...)
 
 function StackedMNIST(
         Tx::Type,
