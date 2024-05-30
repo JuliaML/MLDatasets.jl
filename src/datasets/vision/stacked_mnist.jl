@@ -1,8 +1,3 @@
-using Images
-using DataDeps
-using Flux
-using Random
-
 # Define the StackedMNIST type
 struct StackedMNIST
     features::Array{<:Any, 3}
