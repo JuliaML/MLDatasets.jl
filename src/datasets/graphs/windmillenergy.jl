@@ -32,24 +32,24 @@ function generate_task(data::AbstractArray, num_timesteps_in::Int, num_timesteps
     return features, targets
 end
 
-function create_windmillenergy_dataset(size::String, normalize::Bool, num_timesteps_in::Int, num_timesteps_out::Int, dir)
-    name_file = joinpath(dir, "windmill_output_$(size).json")
+function create_windmillenergy_dataset(s::String, normalize::Bool, num_timesteps_in::Int, num_timesteps_out::Int, dir)
+    name_file = joinpath(dir, "windmill_output_$(s).json")
     data = read_json(name_file)
     src = zeros(Int, length(data["edges"]))
     dst = zeros(Int, length(data["edges"]))
-    for (i, edge) in data["edges"]
+    for (i, edge) in enumerate(data["edges"])
         src[i] = edge[1] + 1
         dst[i] = edge[2] + 1
     end
     weights = Float32.(data["weights"])
-    feat = stack(Float32.(data["block"]))
-    feat = reshape(feat, (1, size(feat, 1), size(feat, 2)))
+    f = Float32.(stack(data["block"]))
+    f = reshape(f, 1, size(f, 1), size(f, 2))
 
     if normalize
-        feat = (feat .- Statistics.mean(feat, dims=(2))) ./ Statistics.std(feat, dims=(2)) #Z-score normalization
+        f = (f .- Statistics.mean(f, dims=(2))) ./ Statistics.std(f, dims=(2)) #Z-score normalization
     end
 
-    x, y = generate_task(feat, num_timesteps_in, num_timesteps_out)
+    x, y = generate_task(f, num_timesteps_in, num_timesteps_out)
 
     g = Graph(; edge_index = (src, dst),
                 edge_data = weights,
