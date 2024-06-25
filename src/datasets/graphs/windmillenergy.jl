@@ -74,6 +74,10 @@ The node features and targets are the hourly energy output of the windmills.
 - `num_timesteps_out::Int`: The number of time steps for the target values. Default is `8`.
 - `dir::String`: The directory to save the dataset. Default is `nothing`.
 """
+struct WindMillEnergy <: AbstractDataset
+    graphs::Vector{Graph}
+end
+
 function WindMillEnergy(;size::String, normalize::Bool = true, num_timesteps_in::Int = 8 , num_timesteps_out::Int = 8, dir = nothing)
     create_default_dir("WindMillEnergy")
     dir = windmillenergy_datadir(size, dir)
