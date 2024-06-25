@@ -388,5 +388,5 @@ end
 
     @test g.num_nodes == 11
     @test g.num_edges == 121
-    @test all(g.node_data.features[1][:,:,2:end] == g.node_data.features[1][:,:,1:end-1])
+    @test g.node_data.features[1][:,:,2:end] == g.node_data.features[2][:,:,1:end-1]
 end
