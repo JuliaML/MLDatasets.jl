@@ -137,6 +137,8 @@ include("datasets/graphs/pemsbay.jl")
 export PEMSBAY
 include("datasets/graphs/temporalbrains.jl")
 export TemporalBrains
+include("datasets/graphs/windmillenergy.jl")
+export WindMillEnergy
 
 # Meshes
 
@@ -159,6 +161,7 @@ function __init__()
     __init__metrla()
     __init__pemsbay()
     __init__temporalbrains()
+    __init__windmillenergy()
 
     # misc
     __init__iris()
