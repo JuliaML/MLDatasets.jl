@@ -377,3 +377,16 @@ end
     @test g.snapshots[1] isa MLDatasets.Graph
     @test length(g.snapshots[1].node_data) == 102
 end
+
+@testset "WindMillEnergy" begin
+    data = WindMillEnergy(size = "small")
+    @test data isa AbstractDataset
+    @test length(data) == 1
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 11
+    @test g.num_edges == 676
+    @test all(g.node_data.features[1][:,:,2:end] == g.node_data.features[1][:,:,1:end-1])
+end
