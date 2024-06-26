@@ -111,6 +111,8 @@ include("graph.jl")
 include("datasets/graphs/planetoid.jl")
 include("datasets/graphs/traffic.jl")
 # export read_planetoid_data
+include("datasets/graphs/chickenpox.jl")
+export ChickenPox
 include("datasets/graphs/cora.jl")
 export Cora
 include("datasets/graphs/citeseer.jl")
@@ -149,6 +151,7 @@ function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__chickenpox()
     __init__citeseer()
     __init__cora()
     __init__movielens()
@@ -162,6 +165,7 @@ function __init__()
     __init__pemsbay()
     __init__temporalbrains()
     __init__windmillenergy()
+
 
     # misc
     __init__iris()
