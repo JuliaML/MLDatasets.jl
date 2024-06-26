@@ -20,6 +20,7 @@ MLDatasets.HeteroGraph
 ```
 
 ```@docs
+ChickenPox
 CiteSeer
 Cora
 KarateClub
