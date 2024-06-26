@@ -392,3 +392,17 @@ end
     @test g.num_edges == 121
     @test g.node_data.features[1][:,:,2:end] == g.node_data.features[2][:,:,1:end-1]
 end
+
+@testset "ChickenPox" begin
+    data = ChickenPox()
+    @test data isa AbstractDataset
+    @test data.metadata isa Dict
+    @test length(data) == 1
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 20
+    @test g.num_edges == 102
+    @test g.node_data.features[1][:,:,2:end] == g.node_data.features[2][:,:,1:end-1]
+end
