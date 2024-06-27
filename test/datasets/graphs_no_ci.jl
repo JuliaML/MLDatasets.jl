@@ -405,4 +405,10 @@ end
     @test g.num_nodes == 20
     @test g.num_edges == 102
     @test g.node_data.features[1][:,:,2:end] == g.node_data.features[2][:,:,1:end-1]
+
+    @test data.metadata[:BUDAPEST] == 5
+    @test data.metadata[:BACS] == 1
+    @test data.metadata[:ZALA] == 20
+    @test data.metadata[:HEVES] == 10
+    @test data.metadata isa Dict{Symbol, Any}
 end
