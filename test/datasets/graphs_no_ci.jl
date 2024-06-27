@@ -198,6 +198,8 @@ end
                          d.graph_data.test_mask,
                          d.graph_data.val_mask,
                      ])) == length(d)
+    g = d[1].graphs
+    @test size(g.edge_data.features, 2) == g.num_edges
 end
 
 @testset "Reddit_full" begin
