@@ -110,6 +110,7 @@ include("graph.jl")
 
 include("datasets/graphs/planetoid.jl")
 include("datasets/graphs/traffic.jl")
+include("datasets/graphs/graphsage.jl")
 # export read_planetoid_data
 include("datasets/graphs/cora.jl")
 export Cora
@@ -137,6 +138,8 @@ include("datasets/graphs/pemsbay.jl")
 export PEMSBAY
 include("datasets/graphs/temporalbrains.jl")
 export TemporalBrains
+include("datasets/graphs/ppi.jl")
+export PPI
 
 # Meshes
 
@@ -159,6 +162,7 @@ function __init__()
     __init__metrla()
     __init__pemsbay()
     __init__temporalbrains()
+    __init__ppi()
 
     # misc
     __init__iris()
