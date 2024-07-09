@@ -18,7 +18,7 @@ function chickenpox_datadir(dir = nothing)
     return dir
 end
 
-function generate_task(data::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
+function generate_task_chickenpox(data::AbstractArray, num_timesteps_in::Int, num_timesteps_out::Int)
     features = []
     targets = []
     for i in 1:(size(data,3)-num_timesteps_in-num_timesteps_out)
@@ -46,7 +46,7 @@ function create_chickenpox_dataset( normalize::Bool, num_timesteps_in::Int, num_
         f = (f .- Statistics.mean(f, dims=(2))) ./ Statistics.std(f, dims=(2)) #Z-score normalization
     end
 
-    x, y = generate_task(f, num_timesteps_in, num_timesteps_out)
+    x, y = generate_task_chickenpox(f, num_timesteps_in, num_timesteps_out)
 
     g = Graph(; edge_index = (src, dst),
                 node_data = (features = x, targets = y))
