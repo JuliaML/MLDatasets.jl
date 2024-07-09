@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Vision · MLDatasets.jl</title><meta name="title" content="Vision · MLDatasets.jl"/><meta property="og:title" content="Vision · MLDatasets.jl"/><meta property="twitter:title" content="Vision · MLDatasets.jl"/><meta name="description" content="Documentation for MLDatasets.jl."/><meta property="og:description" content="Documentation for MLDatasets.jl."/><meta property="twitter:description" content="Documentation for MLDatasets.jl."/><meta property="og:url" content="https://juliadata.github.io/MLDatasets.jl/stable/datasets/vision/"/><meta property="twitter:url" content="https://juliadata.github.io/MLDatasets.jl/stable/datasets/vision/"/><link rel="canonical" href="https://juliadata.github.io/MLDatasets.jl/stable/datasets/vision/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="MLDatasets.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">MLDatasets.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Datasets</span><ul><li><a class="tocitem" href="../graphs/">Graphs</a></li><li><a class="tocitem" href="../meshes/">Meshes</a></li><li><a class="tocitem" href="../misc/">Miscellaneous</a></li><li><a class="tocitem" href="../text/">Text</a></li><li class="is-active"><a class="tocitem" href>Vision</a><ul class="internal"><li><a class="tocitem" href="#Index"><span>Index</span></a></li><li><a class="tocitem" href="#Documentation"><span>Documentation</span></a></li></ul></li></ul></li><li><span class="tocitem">Creating Datasets</span><ul><li><a class="tocitem" href="../../containers/overview/">Dataset Containers</a></li></ul></li><li><a class="tocitem" href="../../LICENSE/">LICENSE</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Datasets</a></li><li class="is-active"><a href>Vision</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Vision</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaML/MLDatasets.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaML/MLDatasets.jl/blob/master/docs/src/datasets/vision.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Vision-Datasets"><a class="docs-heading-anchor" href="#Vision-Datasets">Vision Datasets</a><a id="Vision-Datasets-1"></a><a class="docs-heading-anchor-permalink" href="#Vision-Datasets" title="Permalink"></a></h1><p>A collection of datasets for 2d computer vision. </p><p>Numerical arrays can be converted to color images using  <a href="#MLDatasets.convert2image"><code>convert2image</code></a>, and displayed in the terminal with the package <a href="https://github.com/JuliaImages/ImageInTerminal.jl"><code>ImageInTerminal.jl</code></a></p><h2 id="Index"><a class="docs-heading-anchor" href="#Index">Index</a><a id="Index-1"></a><a class="docs-heading-anchor-permalink" href="#Index" title="Permalink"></a></h2><ul><li><a href="#MLDatasets.CIFAR10"><code>MLDatasets.CIFAR10</code></a></li><li><a href="#MLDatasets.CIFAR100"><code>MLDatasets.CIFAR100</code></a></li><li><a href="#MLDatasets.EMNIST"><code>MLDatasets.EMNIST</code></a></li><li><a href="#MLDatasets.FashionMNIST"><code>MLDatasets.FashionMNIST</code></a></li><li><a href="#MLDatasets.MNIST"><code>MLDatasets.MNIST</code></a></li><li><a href="#MLDatasets.Omniglot"><code>MLDatasets.Omniglot</code></a></li><li><a href="#MLDatasets.SVHN2"><code>MLDatasets.SVHN2</code></a></li><li><a href="#MLDatasets.convert2image"><code>MLDatasets.convert2image</code></a></li></ul><h2 id="Documentation"><a class="docs-heading-anchor" href="#Documentation">Documentation</a><a id="Documentation-1"></a><a class="docs-heading-anchor-permalink" href="#Documentation" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.convert2image" href="#MLDatasets.convert2image"><code>MLDatasets.convert2image</code></a> — <span class="docstring-category">Function</span></header><section><div><pre><code class="language-julia hljs">convert2image(d, i)
+convert2image(d, x)
+convert2image(DType, x)</code></pre><p>Convert the observation(s) <code>i</code> from dataset <code>d</code> to image(s). It can also convert a numerical array <code>x</code>.</p><p>In order to support a new dataset, e.g. <code>MyDataset</code>,  implement <code>convert2image(::Type{MyDataset}, x::AbstractArray)</code>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets, ImageInTerminal
+
+julia&gt; d = MNIST()
+
+julia&gt; convert2image(d, 1:2) 
+# You should see 2 images in the terminal
+
+julia&gt; x = d[1].features;
+
+julia&gt; convert2image(MNIST, x) # or convert2image(d, x)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/utils.jl#L76-L101">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.CIFAR10" href="#MLDatasets.CIFAR10"><code>MLDatasets.CIFAR10</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">CIFAR10(; Tx=Float32, split=:train, dir=nothing)
+CIFAR10([Tx, split])</code></pre><p>The CIFAR10 dataset is a labeled subsets of the 80 million tiny images dataset. It consists of 60000 32x32 colour images in 10 classes, with 6000 images per class.</p><p><strong>Arguments</strong></p><ul><li><p>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</p></li><li><p><code>split</code>: selects the data partition. Can take the values <code>:train</code> or <code>:test</code>. </p></li></ul><p><strong>Fields</strong></p><ul><li><p><code>metadata</code>: A dictionary containing additional information on the dataset.</p></li><li><p><code>features</code>: An array storing the data features.</p></li><li><p><code>targets</code>: An array storing the targets for supervised learning.</p></li><li><p><code>split</code>.</p></li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>RGB</code> images.</p></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets: CIFAR10
+
+julia&gt; dataset = CIFAR10()
+CIFAR10:
+  metadata    =&gt;    Dict{String, Any} with 2 entries
+  split       =&gt;    :train
+  features    =&gt;    32×32×3×50000 Array{Float32, 4}
+  targets     =&gt;    50000-element Vector{Int64}
+
+julia&gt; dataset[1:5].targets
+5-element Vector{Int64}:
+ 6
+ 9
+ 9
+ 4
+ 1
+
+julia&gt; X, y = dataset[:];
+
+julia&gt; dataset = CIFAR10(Tx=Float64, split=:test)
+CIFAR10:
+  metadata    =&gt;    Dict{String, Any} with 2 entries
+  split       =&gt;    :test
+  features    =&gt;    32×32×3×10000 Array{Float64, 4}
+  targets     =&gt;    10000-element Vector{Int64}
+
+julia&gt; dataset.metadata
+Dict{String, Any} with 2 entries:
+  &quot;n_observations&quot; =&gt; 10000
+  &quot;class_names&quot;    =&gt; [&quot;airplane&quot;, &quot;automobile&quot;, &quot;bird&quot;, &quot;cat&quot;, &quot;deer&quot;, &quot;dog&quot;, &quot;frog&quot;, &quot;horse&quot;, &quot;ship&quot;, &quot;truck&quot;]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/cifar10.jl#L36-L94">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.CIFAR100" href="#MLDatasets.CIFAR100"><code>MLDatasets.CIFAR100</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">CIFAR100(; Tx=Float32, split=:train, dir=nothing)
+CIFAR100([Tx, split])</code></pre><p>The CIFAR100 dataset is a labeled subsets of the 80 million tiny images dataset. It consists of 60000 32x32 colour images in 100 classes and 20 superclasses, with 600 images per class.</p><p>Return the CIFAR-100 <strong>trainset</strong> labels (coarse and fine) corresponding to the given <code>indices</code> as a tuple of two <code>Int</code> or two <code>Vector{Int}</code>. The variables returned are the coarse label(s) (<code>Yc</code>) and the fine label(s) (<code>Yf</code>) respectively.</p><p><strong>Arguments</strong></p><ul><li><p>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</p></li><li><p><code>split</code>: selects the data partition. Can take the values <code>:train</code> or <code>:test</code>. </p></li></ul><p><strong>Fields</strong></p><ul><li><p><code>metadata</code>: A dictionary containing additional information on the dataset.</p></li><li><p><code>features</code>: An array storing the data features.</p></li><li><p><code>targets</code>: An array storing the targets for supervised learning.</p></li><li><p><code>split</code>.</p></li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>RGB</code> images.</p></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; dataset = CIFAR100()
+CIFAR100:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    32×32×3×50000 Array{Float32, 4}
+  targets     =&gt;    (coarse = &quot;50000-element Vector{Int64}&quot;, fine = &quot;50000-element Vector{Int64}&quot;)
+
+julia&gt; dataset[1:5].targets
+(coarse = [11, 15, 4, 14, 1], fine = [19, 29, 0, 11, 1])
+
+julia&gt; X, y = dataset[:];
+
+julia&gt; dataset.metadata
+Dict{String, Any} with 3 entries:
+  &quot;n_observations&quot;     =&gt; 50000
+  &quot;class_names_coarse&quot; =&gt; [&quot;aquatic_mammals&quot;, &quot;fish&quot;, &quot;flowers&quot;, &quot;food_containers&quot;, &quot;fruit_and_vegetables&quot;, &quot;household_electrical_devices&quot;, &quot;household_furniture&quot;, &quot;insects&quot;, &quot;large_carnivores&quot;, &quot;large_man-made_…
+  &quot;class_names_fine&quot;   =&gt; [&quot;apple&quot;, &quot;aquarium_fish&quot;, &quot;baby&quot;, &quot;bear&quot;, &quot;beaver&quot;, &quot;bed&quot;, &quot;bee&quot;, &quot;beetle&quot;, &quot;bicycle&quot;, &quot;bottle&quot;  …  &quot;train&quot;, &quot;trout&quot;, &quot;tulip&quot;, &quot;turtle&quot;, &quot;wardrobe&quot;, &quot;whale&quot;, &quot;willow_tree&quot;, &quot;wolf&quot;, &quot;w…</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/cifar100.jl#L41-L91">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.EMNIST" href="#MLDatasets.EMNIST"><code>MLDatasets.EMNIST</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">EMNIST(name; Tx=Float32, split=:train, dir=nothing)
+EMNIST(name, [Tx, split])</code></pre><p>The EMNIST dataset is a set of handwritten character digits derived from the NIST Special Database 19 (https://www.nist.gov/srd/nist-special-database-19) and converted to a 28x28 pixel image format and dataset structure that directly matches the MNIST dataset (http://yann.lecun.com/exdb/mnist/). Further information on the dataset contents and conversion process can be found in the paper available at https://arxiv.org/abs/1702.05373v1.</p><p><strong>Arguments</strong></p><ul><li><code>name</code>: name of the EMNIST dataset. Possible values are: <code>:balanced, :byclass, :bymerge, :digits, :letters, :mnist</code>.</li><li><code>split</code>: selects the data partition. Can take the values <code>:train</code> or <code>:test</code>. </li><li>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</li></ul><p><strong>Fields</strong></p><ul><li><code>name</code>.</li><li><code>split</code>.</li><li><code>metadata</code>: A dictionary containing additional information on the dataset.</li><li><code>features</code>: An array storing the data features.</li><li><code>targets</code>: An array storing the targets for supervised learning.</li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>Gray</code> images.</p></li></ul><p><strong>Examples</strong></p><p>The images are loaded as a multi-dimensional array of eltype <code>Tx</code>. If <code>Tx &lt;: Integer</code>, then all values will be within <code>0</code> and <code>255</code>,  otherwise the values are scaled to be between <code>0</code> and <code>1</code>. <code>EMNIST().features</code> is a 3D array (i.e. a <code>Array{Tx,3}</code>), in WHN format (width, height, num_images). Labels are stored as a vector of integers in <code>EMNIST().targets</code>. </p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets: EMNIST
+
+julia&gt; dataset = EMNIST(:letters, split=:train)
+EMNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    28×28×60000 Array{Float32, 3}
+  targets     =&gt;    60000-element Vector{Int64}
+
+julia&gt; dataset[1:5].targets
+5-element Vector{Int64}:
+7
+2
+1
+0
+4
+
+julia&gt; X, y = dataset[:];
+
+julia&gt; dataset = EMNIST(:balanced, Tx=UInt8, split=:test)
+EMNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :test
+  features    =&gt;    28×28×10000 Array{UInt8, 3}
+  targets     =&gt;    10000-element Vector{Int64}</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/emnist.jl#L36-L100">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.FashionMNIST" href="#MLDatasets.FashionMNIST"><code>MLDatasets.FashionMNIST</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">FashionMNIST(; Tx=Float32, split=:train, dir=nothing)
+FashionMNIST([Tx, split])</code></pre><p>FashionMNIST is a dataset of Zalando&#39;s article images consisting of a training set of 60000 examples and a test set of 10000 examples. Each example is a 28x28 grayscale image, associated with a label from 10 classes. It can serve as a drop-in replacement for MNIST.</p><ul><li>Authors: Han Xiao, Kashif Rasul, Roland Vollgraf</li><li>Website: https://github.com/zalandoresearch/fashion-mnist</li></ul><p>See <a href="#MLDatasets.MNIST"><code>MNIST</code></a> for details of the interface.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/fashion_mnist.jl#L30-L44">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.MNIST" href="#MLDatasets.MNIST"><code>MLDatasets.MNIST</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">MNIST(; Tx=Float32, split=:train, dir=nothing)
+MNIST([Tx, split])</code></pre><p>The MNIST database of handwritten digits.</p><ul><li>Authors: Yann LeCun, Corinna Cortes, Christopher J.C. Burges</li><li>Website: http://yann.lecun.com/exdb/mnist/</li></ul><p>MNIST is a classic image-classification dataset that is often used in small-scale machine learning experiments. It contains 70,000 images of handwritten digits. Each observation is a 28x28 pixel gray-scale image that depicts a handwritten version of 1 of the 10 possible digits (0-9).</p><p><strong>Arguments</strong></p><ul><li><p>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</p></li><li><p><code>split</code>: selects the data partition. Can take the values <code>:train</code> or <code>:test</code>. </p></li></ul><p><strong>Fields</strong></p><ul><li><p><code>metadata</code>: A dictionary containing additional information on the dataset.</p></li><li><p><code>features</code>: An array storing the data features.</p></li><li><p><code>targets</code>: An array storing the targets for supervised learning.</p></li><li><p><code>split</code>.</p></li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>Gray</code> images.</p></li></ul><p><strong>Examples</strong></p><p>The images are loaded as a multi-dimensional array of eltype <code>Tx</code>. If <code>Tx &lt;: Integer</code>, then all values will be within <code>0</code> and <code>255</code>,  otherwise the values are scaled to be between <code>0</code> and <code>1</code>. <code>MNIST().features</code> is a 3D array (i.e. a <code>Array{Tx,3}</code>), in WHN format (width, height, num_images). Labels are stored as a vector of integers in <code>MNIST().targets</code>. </p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets: MNIST
+
+julia&gt; dataset = MNIST(:train)
+MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    28×28×60000 Array{Float32, 3}
+  targets     =&gt;    60000-element Vector{Int64}
+
+julia&gt; dataset[1:5].targets
+5-element Vector{Int64}:
+7
+2
+1
+0
+4
+
+julia&gt; X, y = dataset[:];
+
+julia&gt; dataset = MNIST(UInt8, :test)
+MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :test
+  features    =&gt;    28×28×10000 Array{UInt8, 3}
+  targets     =&gt;    10000-element Vector{Int64}</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/mnist.jl#L34-L100">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.Omniglot" href="#MLDatasets.Omniglot"><code>MLDatasets.Omniglot</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">Omniglot(; Tx=Float32, split=:train, dir=nothing)
+Omniglot([Tx, split])</code></pre><p>Omniglot data set for one-shot learning</p><ul><li>Authors: Brenden M. Lake, Ruslan Salakhutdinov, Joshua B. Tenenbaum</li><li>Website: https://github.com/brendenlake/omniglot</li></ul><p>The Omniglot data set is designed for developing more human-like learning algorithms. It contains 1623 different handwritten characters from 50 different alphabets. Each of the 1623 characters was drawn online via Amazon&#39;s Mechanical Turk by 20 different people. Each image is paired with stroke data, a sequences of [x,y,t] coordinates with time (t) in milliseconds.</p><p><strong>Arguments</strong></p><ul><li><p>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</p></li><li><p><code>split</code>: selects the data partition. Can take the values <code>:train</code>, <code>:test</code>, <code>:small1</code>, or <code>:small2</code>. </p></li></ul><p><strong>Fields</strong></p><ul><li><p><code>metadata</code>: A dictionary containing additional information on the dataset.</p></li><li><p><code>features</code>: An array storing the data features.</p></li><li><p><code>targets</code>: An array storing the targets for supervised learning.</p></li><li><p><code>split</code>.</p></li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>Gray</code> images.</p></li></ul><p><strong>Examples</strong></p><p>The images are loaded as a multi-dimensional array of eltype <code>Tx</code>. All values will be <code>0</code> or <code>1</code>. <code>Omniglot().features</code> is a 3D array (i.e. a <code>Array{Tx,3}</code>), in WHN format (width, height, num_images). Labels are stored as a vector of strings in <code>Omniglot().targets</code>. </p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets: Omniglot
+
+julia&gt; dataset = Omniglot(:train)
+Omniglot:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    105×105×19280 Array{Float32, 3}
+  targets     =&gt;    19280-element Vector{Int64}
+
+julia&gt; dataset[1:5].targets
+5-element Vector{String}:
+ &quot;Arcadian&quot;
+ &quot;Arcadian&quot;
+ &quot;Arcadian&quot;
+ &quot;Arcadian&quot;
+ &quot;Arcadian&quot;
+
+julia&gt; X, y = dataset[:];
+
+julia&gt; dataset = Omniglot(UInt8, :test)
+Omniglot:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :test
+  features    =&gt;    105×105×13180 Array{UInt8, 3}
+  targets     =&gt;    13180-element Vector{Int64}</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/omniglot.jl#L31-L95">source</a></section></article><article class="docstring"><header><a class="docstring-article-toggle-button fa-solid fa-chevron-down" href="javascript:;" title="Collapse docstring"></a><a class="docstring-binding" id="MLDatasets.SVHN2" href="#MLDatasets.SVHN2"><code>MLDatasets.SVHN2</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">SVHN2(; Tx=Float32, split=:train, dir=nothing)
+SVHN2([Tx, split])</code></pre><p>The Street View House Numbers (SVHN) Dataset.</p><ul><li>Authors: Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo Wu, Andrew Y. Ng</li><li>Website: http://ufldl.stanford.edu/housenumbers</li></ul><p>SVHN was obtained from house numbers in Google Street View images. As such they are quite diverse in terms of orientation and image background. Similar to MNIST, SVHN has 10 classes (the digits 0-9), but unlike MNIST there is more data and the images are a little bigger (32x32 instead of 28x28) with an additional RGB color channel. The dataset is split up into three subsets: 73257 digits for training, 26032 digits for testing, and 531131 additional to use as extra training data.</p><p><strong>Arguments</strong></p><ul><li><p>You can pass a specific <code>dir</code> where to load or download the dataset, otherwise uses the default one.</p></li><li><p><code>split</code>: selects the data partition. Can take the values <code>:train</code>, <code>:test</code> or <code>:extra</code>. </p></li></ul><p><strong>Fields</strong></p><ul><li><p><code>metadata</code>: A dictionary containing additional information on the dataset.</p></li><li><p><code>features</code>: An array storing the data features.</p></li><li><p><code>targets</code>: An array storing the targets for supervised learning.</p></li><li><p><code>split</code>.</p></li></ul><p><strong>Methods</strong></p><ul><li><p><code>dataset[i]</code>: Return observation(s) <code>i</code> as a named tuple of features and targets.</p></li><li><p><code>dataset[:]</code>: Return all observations as a named tuple of features and targets.</p></li><li><p><code>length(dataset)</code>: Number of observations.</p></li><li><p><a href="#MLDatasets.convert2image"><code>convert2image</code></a> converts features to <code>RGB</code> images.</p></li></ul><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; using MLDatasets: SVHN2
+
+julia&gt; using MLDatasets: SVHN2
+
+julia&gt; dataset = SVHN2()
+SVHN2:
+  metadata    =&gt;    Dict{String, Any} with 2 entries
+  split       =&gt;    :train
+  features    =&gt;    32×32×3×73257 Array{Float32, 4}
+  targets     =&gt;    73257-element Vector{Int64}
+
+julia&gt; dataset[1:5].targets
+5-element Vector{Int64}:
+ 1
+ 9
+ 2
+ 3
+ 2
+
+julia&gt; dataset.metadata
+Dict{String, Any} with 2 entries:
+  &quot;n_observations&quot; =&gt; 73257
+  &quot;class_names&quot;    =&gt; [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;0&quot;]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/JuliaML/MLDatasets.jl/blob/6b7d256f0609957a1a2e0030ad0f9dc961509828/src/datasets/vision/svhn2.jl#L38-L98">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../text/">« Text</a><a class="docs-footer-nextpage" href="../../containers/overview/">Dataset Containers »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Tuesday 9 July 2024 15:06">Tuesday 9 July 2024</span>. Using Julia version 1.10.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
