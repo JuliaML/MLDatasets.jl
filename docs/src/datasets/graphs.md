@@ -20,18 +20,19 @@ MLDatasets.HeteroGraph
 ```
 
 ```@docs
+ChickenPox
 CiteSeer
 Cora
 KarateClub
+METRLA
 MovieLens
 OGBDataset
 OrganicMaterialsDB
+PEMSBAY
 PolBlogs
 PubMed
 Reddit
-TUDataset
-METRLA
-PEMSBAY
 TemporalBrains
+TUDataset
 WindMillEnergy
 ```
