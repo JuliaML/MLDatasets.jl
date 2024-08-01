@@ -119,6 +119,8 @@ include("datasets/graphs/citeseer.jl")
 export CiteSeer
 include("datasets/graphs/karateclub.jl")
 export KarateClub
+include("datasets/graphs/AQSOL.jl")
+export AQSOL
 include("datasets/graphs/movielens.jl")
 export MovieLens
 include("datasets/graphs/ogbdataset.jl")
