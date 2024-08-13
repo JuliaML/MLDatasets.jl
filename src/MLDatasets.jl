@@ -13,6 +13,8 @@ using FileIO
 import CSV
 using LazyModules: @lazy
 using Statistics
+using Random
+using Colors
 
 include("require.jl") # export @require
 
@@ -90,6 +92,8 @@ export FashionMNIST
 include("datasets/vision/mnist_reader/MNISTReader.jl")
 include("datasets/vision/mnist.jl")
 export MNIST
+include("datasets/vision/stacked_mnist.jl")
+export StackedMNIST
 include("datasets/vision/omniglot.jl")
 export Omniglot
 include("datasets/vision/svhn2.jl")
@@ -175,6 +179,7 @@ function __init__()
     __init__emnist()
     __init__fashionmnist()
     __init__mnist()
+    __init__stackedmist()
     __init__omniglot()
     __init__svhn2()
 

@@ -25,6 +25,7 @@ CIFAR100
 EMNIST
 FashionMNIST
 MNIST
+Stacked_MNIST
 Omniglot
 SVHN2
 ```
