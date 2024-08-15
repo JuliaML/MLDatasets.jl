@@ -74,9 +74,10 @@ StackedMNIST:
 ```
 """
 struct StackedMNIST <: SupervisedDataset
-    features::Array{<:Any, 3}
+    features::Any
     split::Symbol
-    index::Vector{Tuple{Int, Int, Int}}
+    targets::Vector{Tuple{Int, Int, Int}}
+    size::Int
 end
 
 # Convenience constructors for StackedMNIST
@@ -87,46 +88,58 @@ StackedMNIST(Tx::Type; kws...) = StackedMNIST(; Tx, kws...)
 function StackedMNIST(
         Tx::Type,
         split::Symbol = :train,
-        ; dir = nothing)
+        ; size = 60000, dir = nothing)
     mnist = MNIST(Tx, split; dir = dir)
-    features = mnist.features
     split = mnist.split
-    #targets = vec(mnist.targets)
 
-    num_images = 2 * size(features, 3)
-    index1 = vcat(1:size(features, 3), 1:size(features, 3))
-    index2 = vcat(1:size(features, 3), 1:size(features, 3))
-    index3 = vcat(1:size(features, 3), 1:size(features, 3))
+    mnist_targets = vec(mnist.targets)
+    targets = Vector{Tuple{Int, Int, Int}}(undef, size)
+    features = Array{Tx, 4}(undef, 28, 28, 3, size)
+    # Randomly select 3 numbers from the list 60,000 times and store them as tuples
 
-    shuffle!(index1)
-    shuffle!(index2)
-    shuffle!(index3)
+    function random_three_unique(vec)
+        indices = randperm(length(vec))[1:3]
+        return (vec[indices[1]], vec[indices[2]], vec[indices[3]])
+    end
 
-    index = [(index1[i], index2[i], index3[i]) for i in 1:num_images]
+    for i in 1:size
+        label1, label2, label3 = random_three_unique(mnist_targets)
+        index1 = findall(x -> x == label1, mnist_targets)
+        random_index1 = rand(index1)
+        red_channel = mnist.features[:, :, random_index1]
 
-    StackedMNIST(features, split, index)
+        index2 = findall(x -> x == label2, mnist_targets)
+        random_index2 = rand(index2)
+        green_channel = mnist.features[:, :, random_index2]
+
+        index3 = findall(x -> x == label3, mnist_targets)
+        random_index3 = rand(index3)
+        blue_channel = mnist.features[:, :, random_index3]
+
+        targets[i] = label1, label2, label3
+        # Combine the channels into an RGB image and store in the features array
+        features[:, :, 1, i] = red_channel
+        features[:, :, 2, i] = green_channel
+        features[:, :, 3, i] = blue_channel
+    end
+
+    StackedMNIST(features, split, targets, size)
 end
 
 # Define the length function
-Base.length(sm::StackedMNIST) = sm.num_images
+Base.length(sm::StackedMNIST) = sm.size
 
 # Define the getindex function
 function Base.getindex(sm::StackedMNIST, idx::Int)
-    img = zeros(N0f8, 28, 28, 3)
-    target = 0
+    return sm.features[idx], d.targets[idx]
+end
 
-    for i in 1:3
-        img_ = sm.features[:, :, sm.index[idx][i]]
-        #target_ = sm.targets[sm.index[idx][i]]
-        img[:, :, i] .= N0f8.(img_)
-        #target += target_ * 10^(2 - (i - 1))
-    end
+# Function to extract and show an RGB image
+function show_rgb_image(features, index)
+    red_channel = features[:, :, 1, index]  # Extract and convert red channel
+    green_channel = features[:, :, 2, index]  # Extract and convert green channel
+    blue_channel = features[:, :, 3, index]  # Extract and convert blue channel
 
-    # Manually construct the RGB image
-    red_channel = img[:, :, 1]
-    green_channel = img[:, :, 2]
-    blue_channel = img[:, :, 3]
-    rgb_img = Colors.RGB.(red_channel, green_channel, blue_channel)
-
-    return rgb_img, target
+    img_rgb = Colors.RGB.(red_channel, green_channel, blue_channel)  # Combine into RGB image
+    return img_rgb # Plot as an RGB image
 end
