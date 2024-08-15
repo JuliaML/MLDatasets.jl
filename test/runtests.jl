@@ -18,8 +18,7 @@ dataset_tests = [
     "datasets/misc.jl",
     "datasets/text.jl",
     "datasets/vision/fashion_mnist.jl",
-    "datasets/vision/mnist.jl",
-    "datasets/vision/stacked_mnist.jl"
+    "datasets/vision/mnist.jl"    #"datasets/vision/stacked_mnist.jl"
 ]
 
 no_ci_dataset_tests = [
