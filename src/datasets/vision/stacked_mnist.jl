@@ -31,46 +31,44 @@ The StackedMNIST dataset is a variant of the classic MNIST dataset where each ob
 
 # Fields
 
-- `features`: A 3D array of MNIST images with dimensions `(28, 28, num_images)`, where `num_images` is twice the number of images in the selected split due to the shuffling and stacking process.
-- `targets`: A vector of integers, where each integer represents the combined label for the stacked RGB image.
-- `index`: A vector of tuples, each containing three integers. These tuples indicate which original MNIST images were combined to create each RGB image.
+- `features`: A 4D array of MNIST images with dimensions `(28, 28, 3, num_images)`, where `num_images` is the number of images in the selected split.
+- `targets`: A vector of tuples, each containing three integers representing the combined labels for the stacked RGB image.
+- `size`: The total number of images in the dataset.
 
 # Methods
 
-- [`convert2image`](@ref) converts features to RGB images.
+- `convert2image`: Converts feature arrays to RGB images.
 - `Base.length(sm::StackedMNIST)`: Returns the number of images in the dataset.
 - `Base.getindex(sm::StackedMNIST, idx::Int)`: Returns the RGB image and its corresponding target label at the specified index.
 
 # Examples
 
-The images in the StackedMNIST dataset are loaded as a multi-dimensional array of type `Tx`. The dataset's `features` field is a 3D array in WHN format (width, height, num_images). Labels are stored as a vector of integers in `StackedMNIST().targets`. The images are constructed by stacking three randomly chosen MNIST digits as RGB channels. Resulting in 1,000 explicit modes in a uniform distribution corresponding to the number of possible triples of digits.
+The images in the StackedMNIST dataset are loaded as a multi-dimensional array of type `Tx`. The dataset's `features` field is a 4D array in WHCN format (width, height, channels, num_images). Labels are stored as a vector of tuples in `StackedMNIST().targets`. The images are constructed by stacking three randomly chosen MNIST digits as RGB channels, resulting in 1,000 explicit modes corresponding to the number of possible triples of digits.
 
 ```julia-repl
 julia> using MLDatasets: StackedMNIST
 
 julia> dataset = StackedMNIST(:train)
 StackedMNIST:
-features    =>    28×28×60000 Array{Float32, 3}
-targets     =>    60000-element Vector{Int64}
-index       =>    60000-element Vector{Tuple{Int, Int, Int}}
+features    =>    28×28×3×60000 Array{Float32, 4}
+targets     =>    60000-element Vector{Tuple{Int, Int, Int}}
 
 julia> dataset[1:5].targets
-5-element Vector{Int64}:
-721
-238
-153
-409
-745
+5-element Vector{Tuple{Int, Int, Int}}:
+(7, 2, 1)
+(2, 3, 8)
+(1, 5, 3)
+(4, 0, 9)
+(7, 4, 5)
 
 julia> img, label = dataset[1]
-RGB Image with dimensions 28×28, label: 721
+RGB Image with dimensions 28×28, label: (7, 2, 1)
 
 julia> dataset = StackedMNIST(UInt8, :test)
 StackedMNIST:
-    features    =>    28×28×10000 Array{UInt8, 3}
+    features    =>    28×28×3×10000 Array{UInt8, 4}
     split       =>    :test
-    targets     =>    10000-element Vector{Int64}
-    index       =>    10000-element Vector{Tuple{Int, Int, Int}}
+    targets     =>    10000-element Vector{Tuple{Int, Int, Int}}
 ```
 """
 struct StackedMNIST <: SupervisedDataset
@@ -84,6 +82,9 @@ end
 StackedMNIST(; split = :train, Tx = Float32, dir = nothing) = StackedMNIST(Tx, split; dir)
 StackedMNIST(split::Symbol; kws...) = StackedMNIST(; split, kws...)
 StackedMNIST(Tx::Type; kws...) = StackedMNIST(; Tx, kws...)
+function StackedMNIST(size::Integer; split = :train, Tx = Float32, dir = nothing)
+    StackedMNIST(Tx, split; size = size, dir = dir)
+end
 
 function StackedMNIST(
         Tx::Type,
@@ -131,7 +132,7 @@ Base.length(sm::StackedMNIST) = sm.size
 
 # Define the getindex function
 function Base.getindex(sm::StackedMNIST, idx::Int)
-    return sm.features[idx], d.targets[idx]
+    return sm.features[idx], sm.targets[idx]
 end
 
 # Function to extract and show an RGB image
@@ -142,4 +143,16 @@ function show_rgb_image(features, index)
 
     img_rgb = Colors.RGB.(red_channel, green_channel, blue_channel)  # Combine into RGB image
     return img_rgb # Plot as an RGB image
+end
+
+function convert2image(::Type{<:StackedMNIST}, x::AbstractArray{<:Integer})
+    # Reinterpret the input array as N0f8 and convert it to StackedMNIST-compatible format
+    return convert2image(StackedMNIST, reinterpret(N0f8, convert(Array{UInt8}, x)))
+end
+
+function convert2image(::Type{<:StackedMNIST}, x::AbstractArray{T, N}) where {T, N}
+    @assert N == 3 || N == 4
+    x = permutedims(x, (2, 1, 3:N...))
+    img_rgb = Colors.RGB{T}.(x[:, :, 1, :], x[:, :, 2, :], x[:, :, 3, :])
+    return reshape(img_rgb, size(img_rgb, 1), size(img_rgb, 2), size(img_rgb, 3))
 end
