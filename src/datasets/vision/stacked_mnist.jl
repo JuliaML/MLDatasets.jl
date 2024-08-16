@@ -134,7 +134,7 @@ Base.length(sm::StackedMNIST) = sm.size
 
 # Define the getindex function
 function Base.getindex(sm::StackedMNIST, idx::Int)
-    return sm.features[idx], sm.targets[idx]
+    return (features = sm.features[:, :, :, idx], targets = sm.targets[idx])
 end
 
 # Function to extract and show an RGB image

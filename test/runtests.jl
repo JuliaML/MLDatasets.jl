@@ -21,7 +21,7 @@ dataset_tests = [
     "datasets/vision/mnist.jl",
     "datasets/vision/stacked_mnist.jl"
 ]
-#=
+
 no_ci_dataset_tests = [
     "datasets/graphs_no_ci.jl",
     "datasets/text_no_ci.jl",
@@ -32,8 +32,7 @@ no_ci_dataset_tests = [
     "datasets/vision/svhn2.jl",
     "datasets/meshes.jl"
 ]
-=#
-#=
+
 @assert isempty(intersect(dataset_tests, no_ci_dataset_tests))
 
 container_tests = [
@@ -43,7 +42,6 @@ container_tests = [
     # "containers/jld2dataset.jl",
     "containers/cacheddataset.jl"
 ]
-=#
 
 @testset "Datasets" begin
     @testset "$(split(t,"/")[end])" for t in dataset_tests
