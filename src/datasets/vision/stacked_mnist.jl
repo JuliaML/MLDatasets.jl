@@ -79,7 +79,9 @@ struct StackedMNIST <: SupervisedDataset
 end
 
 # Convenience constructors for StackedMNIST
-StackedMNIST(; split = :train, Tx = Float32, dir = nothing) = StackedMNIST(Tx, split; dir)
+function StackedMNIST(; split = :train, Tx = Float32, size = 60000, dir = nothing)
+    StackedMNIST(Tx, split; size, dir)
+end
 StackedMNIST(split::Symbol; kws...) = StackedMNIST(; split, kws...)
 StackedMNIST(Tx::Type; kws...) = StackedMNIST(; Tx, kws...)
 function StackedMNIST(size::Integer; split = :train, Tx = Float32, dir = nothing)
