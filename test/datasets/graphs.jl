@@ -280,11 +280,13 @@ end
 end
 
 @testset "AQSOL" begin
+    split_counts = Dict(:train => 7985, :val => 998, :test => 999)
     for split in [:train, :val, :test]
         data = AQSOL(split=split)
         @test data isa AbstractDataset
         @test data.split == split
         @test length(data) == data.metadata["n_observations"]
+        @test length(data.graphs) == split_counts[split]
 
         for (i, g) in enumerate(data)
             @test g isa MLDatasets.Graph
