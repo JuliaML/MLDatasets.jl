@@ -278,3 +278,22 @@ end
     @test size(g.edge_data.features) == (2, g.num_edges)
     @test size(g.edge_data.targets) == (g.num_edges,)
 end
+
+@testset "AQSOL" begin
+    for split in [:train, :val, :test]
+        data = AQSOL(split=split)
+        @test data isa AbstractDataset
+        @test data.split == split
+        @test length(data) == data.metadata["n_observations"]
+
+        for (i, g) in enumerate(data)
+            @test g isa MLDatasets.Graph
+
+            s, t = g.edge_index
+            @test length(s) == length(t) == size(g.edge_data.features, 2) 
+            @test all(1 .<= s .<= g.num_nodes)
+            @test all(1 .<= t .<= g.num_nodes)
+
+        end
+    end
+end

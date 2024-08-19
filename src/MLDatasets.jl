@@ -167,7 +167,7 @@ function __init__()
     __init__pemsbay()
     __init__temporalbrains()
     __init__windmillenergy()
-
+    __init__aqsol()
 
     # misc
     __init__iris()
