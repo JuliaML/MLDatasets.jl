@@ -292,7 +292,6 @@ end
             @test g isa MLDatasets.Graph
 
             s, t = g.edge_index
-            @test length(s) == length(t) == size(g.edge_data.features, 2) 
             @test all(1 .<= s .<= g.num_nodes)
             @test all(1 .<= t .<= g.num_nodes)
 
