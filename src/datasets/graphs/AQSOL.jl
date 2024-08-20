@@ -16,6 +16,31 @@ struct AQSOL <: AbstractDataset
     graphs::Vector{Graph}
 end
 
+"""
+    AQSOL(; split=:train, dir=nothing)
+
+The AQSOL (Aqueous Solubility) dataset from the paper 
+[Graph Neural Network for Predicting Aqueous Solubility of Organic Molecules](http://arxiv.org/abs/2003.00982).
+
+The dataset contains 9,882 graphs representing small organic molecules. Each graph represents a molecule, where nodes correspond to atoms and edges to bonds. The node features represent the atomic number, and the edge features represent the bond type. The target is the aqueous solubility of the molecule, measured in mol/L.
+
+# Arguments
+
+- `split`: Which split of the dataset to load. Can be one of `:train`, `:val`, or `:test`. Defaults to `:train`.
+- `dir`: Directory in which the dataset is in.
+
+# Examples
+
+```julia-repl
+julia> using MLDatasets
+
+julia> dataset = AQSOL()
+dataset AQSOL:
+  split     =>    :train
+  metadata  =>    Dict{String, Any} with 1 entry
+  graphs    =>    7985-element Vector{Graph}
+```
+"""
 function AQSOL(;split=:train, dir=nothing)
     @assert split ∈ [:train, :val, :test]
     DEPNAME = "AQSOL"
