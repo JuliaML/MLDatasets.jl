@@ -119,6 +119,8 @@ include("datasets/graphs/citeseer.jl")
 export CiteSeer
 include("datasets/graphs/karateclub.jl")
 export KarateClub
+include("datasets/graphs/AQSOL.jl")
+export AQSOL
 include("datasets/graphs/movielens.jl")
 export MovieLens
 include("datasets/graphs/ogbdataset.jl")
@@ -151,6 +153,7 @@ function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__aqsol()    
     __init__chickenpox()
     __init__citeseer()
     __init__cora()
@@ -165,7 +168,6 @@ function __init__()
     __init__pemsbay()
     __init__temporalbrains()
     __init__windmillenergy()
-
 
     # misc
     __init__iris()

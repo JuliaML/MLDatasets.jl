@@ -278,3 +278,23 @@ end
     @test size(g.edge_data.features) == (2, g.num_edges)
     @test size(g.edge_data.targets) == (g.num_edges,)
 end
+
+@testset "AQSOL" begin
+    split_counts = Dict(:train => 7985, :val => 998, :test => 999)
+    for split in [:train, :val, :test]
+        data = AQSOL(split=split)
+        @test data isa AbstractDataset
+        @test data.split == split
+        @test length(data) == data.metadata["n_observations"]
+        @test length(data.graphs) == split_counts[split]
+
+        i = rand(1:length(data))
+        g = data[i]
+        @test g isa MLDatasets.Graph
+        s, t = g.edge_index
+        @test all(1 .<= s .<= g.num_nodes)
+        @test all(1 .<= t .<= g.num_nodes)
+        @test length(s) == g.num_edges
+        @test length(t) == g.num_edges
+    end
+end
