@@ -153,6 +153,7 @@ function __init__()
     # TODO automatically find and execute __init__xxx functions
 
     # graph
+    __init__aqsol()    
     __init__chickenpox()
     __init__citeseer()
     __init__cora()
@@ -167,7 +168,6 @@ function __init__()
     __init__pemsbay()
     __init__temporalbrains()
     __init__windmillenergy()
-    __init__aqsol()
 
     # misc
     __init__iris()
