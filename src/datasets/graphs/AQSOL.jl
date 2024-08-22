@@ -65,7 +65,7 @@ julia> g.node_data.features
  1
 
 julia> g.edge_index
-([2, 3], [3, 2])
+([2, 3, 3, 4, 4, 5, 5, 6, 6, 7  …  18, 19, 19, 20, 20, 21, 20, 22, 20, 23], [3, 2, 4, 3, 5, 4, 6, 5, 7, 6  …  19, 18, 20, 19, 21, 20, 22, 20, 23, 20])
 ```
 """
 function AQSOL(;split=:train, dir=nothing)
@@ -86,7 +86,7 @@ function create_aqsol_graph(x, edge_attr, edge_index, y)
     if size(edge_index, 2) == 0
         s, t = Int[], Int[] 
     else
-        s, t = edge_index[:,1], edge_index[:,2]
+        s, t = edge_index[1, :], edge_index[2, :]
     end
 
     return Graph(; num_nodes = length(x),
