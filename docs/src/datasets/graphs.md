@@ -20,6 +20,7 @@ MLDatasets.HeteroGraph
 ```
 
 ```@docs
+AQSOL
 ChickenPox
 CiteSeer
 Cora
