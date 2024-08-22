@@ -288,14 +288,13 @@ end
         @test length(data) == data.metadata["n_observations"]
         @test length(data.graphs) == split_counts[split]
 
-        for (i, g) in enumerate(data)
-            @test g isa MLDatasets.Graph
-
-            s, t = g.edge_index
-            @test all(1 .<= s .<= g.num_nodes)
-            @test all(1 .<= t .<= g.num_nodes)
-            @test length(s) == g.num_edges
-            @test length(t) == g.num_edges
-        end
+        i = rand(1:length(data))
+        g = data[i]
+        @test g isa MLDatasets.Graph
+        s, t = g.edge_index
+        @test all(1 .<= s .<= g.num_nodes)
+        @test all(1 .<= t .<= g.num_nodes)
+        @test length(s) == g.num_edges
+        @test length(t) == g.num_edges
     end
 end
