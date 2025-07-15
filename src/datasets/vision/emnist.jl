@@ -28,7 +28,7 @@ function __init__emnist()
                      the website to make sure you want to download the
                      dataset.
                      """,
-                     "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip",
+                     "https://biometrics.nist.gov/cs_links/EMNIST/matlab.zip",
                      "e1fa805cdeae699a52da0b77c2db17f6feb77eed125f9b45c022e7990444df95",
                      post_fetch_method = DataDeps.unpack))
 end
@@ -74,28 +74,30 @@ a vector of integers in `EMNIST().targets`.
 julia> using MLDatasets: EMNIST
 
 julia> dataset = EMNIST(:letters, split=:train)
-EMNIST:
-  metadata    =>    Dict{String, Any} with 3 entries
-  split       =>    :train
-  features    =>    28×28×60000 Array{Float32, 3}
-  targets     =>    60000-element Vector{Int64}
+dataset EMNIST:
+  metadata  =>    Dict{String, Any} with 1 entry
+  name      =>    :letters
+  split     =>    :train
+  features  =>    28×28×124800 Array{Float32, 3}
+  targets   =>    124800-element Vector{Int64}
 
 julia> dataset[1:5].targets
 5-element Vector{Int64}:
-7
-2
-1
-0
-4
+ 23
+  7
+ 16
+ 15
+ 23
 
 julia> X, y = dataset[:];
 
 julia> dataset = EMNIST(:balanced, Tx=UInt8, split=:test)
-EMNIST:
-  metadata    =>    Dict{String, Any} with 3 entries
-  split       =>    :test
-  features    =>    28×28×10000 Array{UInt8, 3}
-  targets     =>    10000-element Vector{Int64}
+dataset EMNIST:
+  metadata  =>    Dict{String, Any} with 1 entry
+  name      =>    :balanced
+  split     =>    :test
+  features  =>    28×28×18800 Array{UInt8, 3}
+  targets   =>    18800-element Vector{Int64}
 ```
 """
 struct EMNIST <: SupervisedDataset
