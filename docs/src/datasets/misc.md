@@ -11,6 +11,7 @@ Pages = ["misc.md"]
 ```@docs
 BostonHousing
 Iris
+MatMiner
 Mutagenesis
 Titanic
 Wine
