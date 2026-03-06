@@ -123,7 +123,58 @@ end
         @test maximum(a) == g.num_nodes
     end
 end
+@testset "AmazonComputers" begin
+    data = AmazonComputers()
+    @test data isa AbstractDataset
+    @test length(data) == 1
 
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 13752
+    @test g.num_edges == 491722
+
+    @test size(g.node_data.features) == (767, g.num_nodes)
+    @test size(g.node_data.targets) == (g.num_nodes,)
+
+    @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
+
+    s, t = g.edge_index
+    for a in (s, t)
+        @test a isa Vector{Int}
+        @test length(a) == g.num_edges
+        @test minimum(a) == 1
+        @test maximum(a) == g.num_nodes
+    end
+end
+
+
+@testset "AmazonPhoto" begin
+    data = AmazonPhoto()
+    @test data isa AbstractDataset
+    @test length(data) == 1
+
+    g = data[1]
+    @test g === data[:]
+    @test g isa MLDatasets.Graph
+
+    @test g.num_nodes == 7650
+    @test g.num_edges == 238162
+
+    @test size(g.node_data.features) == (745, g.num_nodes)
+    @test size(g.node_data.targets) == (g.num_nodes,)
+
+    @test g.edge_index isa Tuple{Vector{Int}, Vector{Int}}
+
+    s, t = g.edge_index
+    for a in (s, t)
+        @test a isa Vector{Int}
+        @test length(a) == g.num_edges
+        @test minimum(a) == 1
+        @test maximum(a) == g.num_nodes
+    end
+end
 # maybe, maybe, maybe??
 Sys.iswindows() || @testset "OGBn-mag" begin
     data = OGBDataset("ogbn-mag")
