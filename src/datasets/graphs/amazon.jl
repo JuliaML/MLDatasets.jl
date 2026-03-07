@@ -4,6 +4,7 @@ using SparseArrays
 
 function __init__amazon()
 
+    ENV["DATADEPS_ALWAYS_ACCEPT"] = "true"
     DEPNAME = "Amazon"
     LINK = "https://github.com/shchur/gnn-benchmark/raw/master/data/npz"
     DOCS = "https://github.com/shchur/gnn-benchmark"
