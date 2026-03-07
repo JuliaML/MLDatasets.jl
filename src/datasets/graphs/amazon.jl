@@ -21,7 +21,7 @@ function __init__amazon()
         Website: $DOCS
         """,
         map(x -> "$LINK/$x", DATA),
-        "98b9c971b900ac86d8b4bd64a969c42db4519e1b8697316e95b30b1bdccd72e3"
+        "ceda5f611b7aa82c9e81eea9625526f2d7560e72e5c24dc010082915e52fb8b6"
     ))
 end
 
