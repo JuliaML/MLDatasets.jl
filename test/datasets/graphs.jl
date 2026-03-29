@@ -175,6 +175,18 @@ end
         @test maximum(a) == g.num_nodes
     end
 end
+@testset "ZINC" begin
+    data = ZINC(split=:train, subset=true)
+    @test data isa AbstractDataset
+    @test length(data) == 10000
+    g, y = data[1]
+    @test g isa MLDatasets.Graph
+    @test g.num_nodes > 0
+    @test g.num_edges > 0
+    @test y isa Float32
+    @test all(1 .<= g.node_data.features .<= 28)
+    @test all(1 .<= g.edge_data.bond_type .<= 4)
+end
 # maybe, maybe, maybe??
 Sys.iswindows() || @testset "OGBn-mag" begin
     data = OGBDataset("ogbn-mag")
