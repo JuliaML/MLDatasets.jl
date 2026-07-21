@@ -4,3 +4,6 @@ MLDatasets = "eb30cadb-4394-5ae3-aed4-317e484a6458"
 
 [sources]
 MLDatasets = {path = ".."}
+
+[compat]
+Documenter = "1.17.0"
