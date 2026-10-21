@@ -15,7 +15,7 @@ function __init__ogbdataset()
             local_filepath = joinpath(local_directory_path, "graphproppred_metadata.csv")
             download(remote_filepath, local_filepath)
         else
-            local_filepath = DataDeps.fetch_default(remote_filepath, local_directory_path)
+            local_filepath = datadeps_fetch(remote_filepath, local_directory_path)
         end
         return local_filepath
     end
@@ -183,7 +183,7 @@ function makedir_ogb(fullname, url, dir = nothing)
     prefix, name = split(fullname, "-")
     data_dir = joinpath(root_dir, name)
     if !isdir(data_dir)
-        local_filepath = DataDeps.fetch_default(url, root_dir)
+        local_filepath = datadeps_fetch(url, root_dir)
         currdir = pwd()
         cd(root_dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(local_filepath)

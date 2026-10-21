@@ -133,7 +133,7 @@ function tudataset_datadir(name, dir = nothing)
     LINK = "https://www.chrsmrrs.com/graphkerneldatasets/$name.zip"
     d = joinpath(dir, name)
     if !isdir(d)
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(joinpath(dir, "$name.zip"))

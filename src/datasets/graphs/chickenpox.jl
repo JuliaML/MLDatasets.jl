@@ -12,7 +12,7 @@ function chickenpox_datadir(dir = nothing)
     dir = isnothing(dir) ? datadep"ChickenPox" : dir
     LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/data/chickenpox.json"
     if length(readdir((dir))) == 0
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
     end
     @assert isdir(dir)
     return dir

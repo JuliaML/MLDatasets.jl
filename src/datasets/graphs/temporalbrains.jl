@@ -13,7 +13,7 @@ function tb_datadir(dir = nothing)
     dir = isnothing(dir) ? datadep"TemporalBrains" : dir
     LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/data/LabelledTBN.zip"
     if length(readdir((dir))) == 0
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(joinpath(dir, "LabelledTBN.zip"))

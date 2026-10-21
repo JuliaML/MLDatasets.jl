@@ -514,7 +514,7 @@ function movielens_datadir(name, dir = nothing)
     LINK = "https://files.grouplens.org/datasets/movielens/$dname.zip"
     d = joinpath(dir, dname)
     if !isdir(d)
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(joinpath(dir, "$dname.zip"))

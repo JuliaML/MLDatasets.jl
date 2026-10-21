@@ -6,7 +6,7 @@ function traffic_datadir(dname ::String, dir = nothing)
     end
     LINK = "http://www-sop.inria.fr/members/Aurora.Rossi/data/$dname.zip"
     if length(readdir((dir))) == 0
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
         currdir = pwd()
         cd(dir) # Needed since `unpack` extracts in working dir
         DataDeps.unpack(joinpath(dir, "$dname.zip"))
