@@ -16,7 +16,7 @@ function windmillenergy_datadir(size::String, dir = nothing)
         print("Please choose a valid size: small, medium or large")
     end 
     if isfile(joinpath(dir, "windmill_output_$(size).json")) == false
-        DataDeps.fetch_default(LINK, dir)
+        datadeps_fetch(LINK, dir)
     end
     @assert isdir(dir)
     return dir

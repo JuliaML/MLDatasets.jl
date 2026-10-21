@@ -1,3 +1,13 @@
+# DataDeps 1.0 renamed `fetch_default` to `fetch` and moved `download(::DataDep, dir)`
+# from `Base.download` to `Downloads.download`.
+if isdefined(DataDeps, :fetch_default)
+    const datadeps_fetch = DataDeps.fetch_default
+    const datadeps_download = Base.download
+else
+    const datadeps_fetch = DataDeps.fetch
+    const datadeps_download = DataDeps.Downloads.download
+end
+
 function with_accept(f, manual_overwrite)
     auto_accept = if manual_overwrite === nothing
         get(ENV, "DATADEPS_ALWAYS_ACCEPT", false)
@@ -19,7 +29,7 @@ function datadir(depname, dir = nothing; i_accept_the_terms_of_use = nothing)
             else
                 DataDeps.env_bool("DATADEPS_DISABLE_DOWNLOAD") &&
                     error("DATADEPS_DISABLE_DOWNLOAD enviroment variable set. Can not trigger download.")
-                DataDeps.download(DataDeps.registry[depname], dir)
+                datadeps_download(DataDeps.registry[depname], dir)
                 dir
             end
         end
@@ -48,7 +58,7 @@ function datafile(depname, filename, dir = nothing; recurse = true, kw...)
 end
 
 function download_dep(depname, dir = DataDeps.determine_save_path(depname); kw...)
-    DataDeps.download(DataDeps.registry[depname], dir; kw...)
+    datadeps_download(DataDeps.registry[depname], dir; kw...)
 end
 
 function download_docstring(modname, depname)
@@ -56,7 +66,7 @@ function download_docstring(modname, depname)
     The corresponding resource file(s) of the dataset is/are
     expected to be located in the specified directory `dir`. If
     `dir` is omitted the directories in
-    `DataDeps.default_loadpath` will be searched for an existing
+    the DataDeps load path will be searched for an existing
     `$(depname)` subfolder. In case no such subfolder is found,
     `dir` will default to `~/.julia/datadeps/$(depname)`. In the
     case that `dir` does not yet exist, a download prompt will be
